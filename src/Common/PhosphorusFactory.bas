@@ -2,6 +2,14 @@ Attribute VB_Name = "PhosphorusFactory"
 '@Folder Common
 Option Explicit
 
+Public Configuration As Phosphorus.ConfigurationReader
+
+Public Sub GetConfigurationReader()
+  If Configuration Is Nothing Then
+    Set Configuration = New Phosphorus.ConfigurationReader
+  End If
+End Sub
+
 Public Function GetNewPhosphorusPPath() As Phosphorus.PPath
   Set GetNewPhosphorusPPath = New Phosphorus.PPath
 End Function

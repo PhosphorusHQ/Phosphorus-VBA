@@ -206,10 +206,10 @@ Private Sub InitialiseNavigablePropertyIDsDictionary()
   NavigablePropertyIDs.Add 30163, "VisualEffects"
 End Sub
 
-Public Function ValueExists(Value As String, dictionary As Scripting.dictionary) As Boolean
+Public Function ValueExists(value As String, dictionary As Scripting.dictionary) As Boolean
   Dim key As Variant
   For Each key In dictionary.Keys
-    If dictionary(key) = Value Then
+    If dictionary(key) = value Then
       ValueExists = True
       Exit Function
     End If

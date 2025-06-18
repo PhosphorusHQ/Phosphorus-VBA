@@ -300,11 +300,11 @@ Public Function Evaluate( _
         larrTopLevelFunctionArray(i - 1) = varValue
       Next i
 '      PPathWS.Activate
-      PPathWS.Range("A1:A" & c).Value = Application.Transpose(larrTopLevelFunctionArray)
+      PPathWS.Range("A1:A" & c).value = Application.Transpose(larrTopLevelFunctionArray)
 '      varValue = PPathWS.Evaluate(this.PPathReturnClass.TopLevelFunctionPrefix & "A1:A" & c & this.PPathReturnClass.TopLevelFunctionSuffix)
       PPathWS.Range("B1").Formula = "=" & this.PPathReturnClass.TopLevelFunctionPrefix & "A1:A" & c & this.PPathReturnClass.TopLevelFunctionSuffix
       PPathWS.Range("B1").Calculate
-      varValue = PPathWS.Range("B1").Value
+      varValue = PPathWS.Range("B1").value
       PPathWS.Cells.ClearContents
       VBA.Interaction.DoEvents
 '      Excel.Application.ScreenUpdating = True

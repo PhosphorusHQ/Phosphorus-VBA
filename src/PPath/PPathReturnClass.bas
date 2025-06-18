@@ -221,8 +221,8 @@ Property Get TopLevelFunctionSuffix() As String
 End Property
 
 
-Property Let ReturnedValue(Value As Variant)
-  this.ReturnedValue = Value
+Property Let ReturnedValue(value As Variant)
+  this.ReturnedValue = value
 End Property
 
 Property Get ReturnedValue() As Variant

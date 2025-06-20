@@ -32,7 +32,8 @@ Sub TestLogger1()
 
   myLogger.Flush
   Debug.Print "Log file: " & myLogger.GetFilePath
-
+  Set myLogger = Nothing
+  
 End Sub
 
 Sub TestLogger2()
@@ -82,6 +83,7 @@ Sub TestLogger2()
  
   myLogger.Flush
   Debug.Print "Log file: " & myLogger.GetFilePath
+  Set myLogger = Nothing
 
 End Sub
 

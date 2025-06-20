@@ -1,2 +1,4 @@
 *Phosphorus*.xlam
 *.ini
+/Logs
+/LogReader.xlsx

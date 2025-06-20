@@ -3,6 +3,8 @@ Attribute VB_Name = "PhosphorusFactory"
 Option Explicit
 
 Public Configuration As Phosphorus.ConfigurationReader
+'Public global variable for the log root folder
+Public LogRootFolder As String
 
 Public Sub GetConfigurationReader()
   If Configuration Is Nothing Then

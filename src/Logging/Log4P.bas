@@ -123,9 +123,9 @@ Private Sub Class_Initialize()
 
   logFilePath = _
     rootFolder & _
-    Format(Now, "yyyymmdd_hhmmss") & "_" & _
-    Environ$("COMPUTERNAME") & "_" & _
-    Environ$("USERNAME") & ".txt"
+    VBA.Strings.Format(Now, "yyyymmdd_hhmmss") & "_" & _
+    VBA.Interaction.Environ$("COMPUTERNAME") & "_" & _
+    VBA.Interaction.Environ$("USERNAME") & ".txt"
     
   currentLogLevel = EXTERNAL_INFO
   previousLogLevel = EXTERNAL_INFO
@@ -291,20 +291,20 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
   #End If
     
   timestamp = _
-    Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & _
-    Right("000" & Format(Timer * 1000 Mod 1000, "0"), 3)
+    VBA.Strings.Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & _
+    VBA.Strings.Right("000" & Format(Timer * 1000 Mod 1000, "0"), 3)
     
   #If VBA7 Then
      logEntry = _
-       timestamp & " | " & _
-       levelStr & " | " & _
-       ChrW(916) & Format(timeDiff, "0.000") & "ms | " & _
+       timestamp & VBA.Constants.vbTab & _
+       levelStr & VBA.Constants.vbTab & _
+       VBA.Strings.ChrW(916) & VBA.Strings.Format(timeDiff, "0.000") & "ms" & VBA.Constants.vbTab & _
        message & vbCrLf
   #Else
      logEntry = _
-       timestamp & " | " & _
-       levelStr & " | " & _
-       ChrW(916) & Format(timeDiff, "0.00") & "ms | " & _
+       timestamp & VBA.Constants.vbTab & _
+       levelStr & VBA.Constants.vbTab & _
+       VBA.Strings.ChrW(916) & VBA.Strings.Format(timeDiff, "0.00") & "ms | " & _
        message & vbCrLf
   #End If
     

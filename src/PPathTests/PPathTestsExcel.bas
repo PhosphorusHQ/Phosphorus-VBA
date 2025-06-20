@@ -17,6 +17,9 @@ Private llongExpectedNumberOfMatchingElements As Long
 
 '@ModuleInitialize
 Private Sub ModuleInitialize()
+  PhosphorusFactory.GetLogger
+  Logger.SetTempLevel LogLevel.INTERNAL_INFO
+  Logger.InternalInfo "Logger Started"
 End Sub
 
 '@ModuleCleanup
@@ -26,6 +29,8 @@ Private Sub ModuleCleanup()
   CloseTestWorkbook
   PPathWorkbook.CloseWB
   Utils.CloseAllOtherWorkbooks
+  Logger.InternalInfo "Logger Stopped"
+  Set Logger = Nothing
 End Sub
 
 '@TestInitialize

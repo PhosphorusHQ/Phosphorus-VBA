@@ -16,5 +16,4 @@ Public Sub CloseAllOtherWorkbooks()
      wb.Close savechanges:=False
    End If
  Next
- MsgBox "Closed Workbooks!"
 End Sub

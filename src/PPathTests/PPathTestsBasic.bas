@@ -25,6 +25,9 @@ Private Sub ModuleInitialize()
   Set Assert = CreateObject("Rubberduck.AssertClass")
   Set Fakes = CreateObject("Rubberduck.FakesProvider")
   Set eleExcelRootElement = FindExcelRootElement
+  PhosphorusFactory.GetLogger
+  Logger.SetTempLevel LogLevel.INTERNAL_INFO
+  Logger.InternalInfo "Logger Started"
 End Sub
 
 '@ModuleCleanup
@@ -33,6 +36,8 @@ Private Sub ModuleCleanup()
   Set Assert = Nothing
   Set Fakes = Nothing
   Utils.CloseAllOtherWorkbooks
+  Logger.InternalInfo "Logger Stopped"
+  Set Logger = Nothing
 End Sub
 
 '@TestInitialize

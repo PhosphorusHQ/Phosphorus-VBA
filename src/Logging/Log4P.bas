@@ -10,22 +10,6 @@ Attribute VB_Exposed = False
 '@Folder Logging
 Option Explicit
 
-' Private Enum for log levels
-Private Enum logLevel
-  INTERNAL_TRACE = -6
-  INTERNAL_DEBUG = -5
-  INTERNAL_INFO = -4
-  INTERNAL_WARNING = -3
-  INTERNAL_ERROR = -2
-  INTERNAL_FATAL = -1
-  EXTERNAL_TRACE = 0
-  EXTERNAL_DEBUG = 1
-  EXTERNAL_INFO = 2
-  EXTERNAL_WARNING = 3
-  EXTERNAL_ERROR = 4
-  EXTERNAL_FATAL = 5
-End Enum
-
 ' Windows API Declarations
 #If VBA7 Then
   Private Declare PtrSafe Function CreateFileW Lib "kernel32" ( _
@@ -117,8 +101,8 @@ Private logFilePath As String
   Private hFile As Long
   Private lastLogTime As Double
 #End If
-Private currentLogLevel As logLevel
-Private previousLogLevel As logLevel
+Private currentLogLevel As LogLevel
+Private previousLogLevel As LogLevel
 Private writeCount As Long
 Private flushInterval As Long
 Private logBuffer As String
@@ -268,7 +252,7 @@ Private Function StringToUtf8Bytes(ByVal str As String) As Byte()
 
 End Function
 
-Private Sub LogMessage(message As String, level As logLevel, Optional forceFlush As Boolean = False)
+Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush As Boolean = False)
     
   If level < currentLogLevel Then Exit Sub
     

@@ -94,12 +94,14 @@ Private Const CP_UTF8 As Long = 65001 ' Code page for UTF-8
 
 Private logFilePath As String
 #If VBA7 Then
-  Private hFile As LongPtr
-  Private lastLogTicks As LongLong
-  Private perfFrequency As LongLong
+    Private hFile As LongPtr
+    Private lastLogTicks As LongLong
+    Private perfFrequency As LongLong
+    Private startTicks As LongLong
 #Else
-  Private hFile As Long
-  Private lastLogTime As Double
+    Private hFile As Long
+    Private lastLogTime As Double
+    Private startTime As Double
 #End If
 Private currentLogLevel As LogLevel
 Private previousLogLevel As LogLevel
@@ -138,9 +140,11 @@ Private Sub Class_Initialize()
      If QueryPerformanceFrequency(perfFrequency) = 0 Then
        Err.Raise vbObjectError + 1, "Logger", "Failed to get performance frequency"
      End If
-     QueryPerformanceCounter lastLogTicks
+     QueryPerformanceCounter startTicks
+     lastLogTicks = startTicks
   #Else
-    lastLogTime = Timer
+     startTime = Timer
+     lastLogTime = startTime
   #End If
     
   ' Open file with CreateFileW for Unicode path
@@ -260,7 +264,8 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
   Dim levelStr As String
   Dim logEntry As String
   Dim timeDiff As Double
-    
+  Dim microSeconds As Long
+  
   Select Case level
     Case INTERNAL_TRACE: levelStr = "INTERNAL_TRACE"
     Case INTERNAL_DEBUG: levelStr = "INTERNAL_DEBUG"
@@ -280,6 +285,9 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
      Dim currentTicks As LongLong
      QueryPerformanceCounter currentTicks
      timeDiff = CDbl(currentTicks - lastLogTicks) / CDbl(perfFrequency) * 1000
+     ' Calculate microseconds since start for timestamp
+     microSeconds = CLng((CDbl(currentTicks - startTicks) / CDbl(perfFrequency)) * 1000000) Mod 1000000
+     timestamp = Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & Right("000000" & microSeconds, 6)
   #Else
      Dim currentTime As Double
      currentTime = Timer
@@ -288,11 +296,10 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
      Else
        timeDiff = (currentTime - lastLogTime) * 1000
      End If
+     ' Use Timer for milliseconds (less precise)
+     microSeconds = CLng((currentTime - startTime) * 1000) Mod 1000
+     timestamp = Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & Right("000" & microSeconds, 3)
   #End If
-    
-  timestamp = _
-    VBA.Strings.Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & _
-    VBA.Strings.Right("000" & Format(Timer * 1000 Mod 1000, "0"), 3)
     
   #If VBA7 Then
      logEntry = _

@@ -2,6 +2,9 @@ Attribute VB_Name = "Log4PStatic"
 '@Folder Logging
 Option Explicit
 
+'Global Logger object available for use
+Public Logger As Log4P
+
 'Public global variable for the log root folder
 Public LogRootFolder As String
 
@@ -20,3 +23,9 @@ Public Enum LogLevel
   EXTERNAL_ERROR = 4
   EXTERNAL_FATAL = 5
 End Enum
+
+Public Sub GetLogger()
+  If Logger Is Nothing Then
+    Set Logger = New Phosphorus.Log4P
+  End If
+End Sub

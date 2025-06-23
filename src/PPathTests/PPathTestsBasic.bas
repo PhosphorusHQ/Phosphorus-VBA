@@ -25,7 +25,7 @@ Private Sub ModuleInitialize()
   Set Assert = CreateObject("Rubberduck.AssertClass")
   Set Fakes = CreateObject("Rubberduck.FakesProvider")
   Set eleExcelRootElement = FindExcelRootElement
-  PhosphorusFactory.GetLogger
+  Log4PStatic.GetLogger
   Logger.SetTempLevel LogLevel.INTERNAL_INFO
   Logger.InternalInfo "Logger Started"
 End Sub

@@ -4,18 +4,9 @@ Option Explicit
 
 Public Configuration As Phosphorus.ConfigurationReader
 
-'Global Logger object available for use
-Public Logger As Log4P
-
 Public Sub GetConfigurationReader()
   If Configuration Is Nothing Then
     Set Configuration = New Phosphorus.ConfigurationReader
-  End If
-End Sub
-
-Public Sub GetLogger()
-  If Logger Is Nothing Then
-    Set Logger = New Phosphorus.Log4P
   End If
 End Sub
 

@@ -5,7 +5,7 @@ Option Explicit
 Sub TestLogger1()
 
   ' Set a root folder that doesn’t exist (will be created)
-  'LogRootFolder = ThisWorkbook.Path & "\Logs" - This will be the default folder anyway!
+  'Log4PStatic.LogRootFolder = ThisWorkbook.Path & "\Logs" - This will be the default folder anyway!
 
   Dim myLogger As Log4P
   Set myLogger = New Log4P

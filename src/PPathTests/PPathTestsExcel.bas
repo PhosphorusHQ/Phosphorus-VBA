@@ -17,7 +17,7 @@ Private llongExpectedNumberOfMatchingElements As Long
 
 '@ModuleInitialize
 Private Sub ModuleInitialize()
-  PhosphorusFactory.GetLogger
+  Log4PStatic.GetLogger
   Logger.SetTempLevel LogLevel.INTERNAL_INFO
   Logger.InternalInfo "Logger Started"
 End Sub

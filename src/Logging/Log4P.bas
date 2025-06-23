@@ -113,8 +113,8 @@ Private isBufferingEnabled As Boolean
 Private Sub Class_Initialize()
   
   Dim rootFolder As String
-  If Len(LogRootFolder) > 0 Then
-    rootFolder = LogRootFolder
+  If Len(Log4PStatic.LogRootFolder) > 0 Then
+    rootFolder = Log4PStatic.LogRootFolder
   Else
     rootFolder = ThisWorkbook.Path & "\Logs\"
   End If

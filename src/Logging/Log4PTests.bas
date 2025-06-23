@@ -1,4 +1,4 @@
-Attribute VB_Name = "Log4PTest"
+Attribute VB_Name = "Log4PTests"
 '@Folder Logging
 Option Explicit
 

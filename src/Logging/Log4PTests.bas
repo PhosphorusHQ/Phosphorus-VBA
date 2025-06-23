@@ -7,6 +7,9 @@ Sub TestLogger1()
   ' Set a root folder that doesn’t exist (will be created)
   'Log4PStatic.LogRootFolder = ThisWorkbook.Path & "\Logs" - This will be the default folder anyway!
 
+  Log4PStatic.LogFileNameDynamicPart1 = "Log4PTests"
+  Log4PStatic.LogFileNameDynamicPart2 = "TestLogger1"
+
   Dim myLogger As Log4P
   Set myLogger = New Log4P
 
@@ -37,6 +40,9 @@ Sub TestLogger1()
 End Sub
 
 Sub TestLogger2()
+
+  Log4PStatic.LogFileNameDynamicPart1 = "Log4PTests"
+  Log4PStatic.LogFileNameDynamicPart2 = "TestLogger2"
 
   Dim myLogger As Log4P
   Set myLogger = New Log4P

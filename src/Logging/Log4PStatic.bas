@@ -4,9 +4,10 @@ Option Explicit
 
 'Global Logger object available for use
 Public Logger As Log4P
-
 'Public global variable for the log root folder
 Public LogRootFolder As String
+Public LogFileNameDynamicPart1 As String
+Public LogFileNameDynamicPart2 As String
 
 ' Public Enum for log levels
 Public Enum LogLevel

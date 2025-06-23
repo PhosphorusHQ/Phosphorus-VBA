@@ -126,6 +126,8 @@ Private Sub Class_Initialize()
   logFilePath = _
     rootFolder & _
     VBA.Strings.Format(Now, "yyyymmdd_hhmmss") & "_" & _
+    Log4PStatic.LogFileNameDynamicPart1 & "_" & _
+    Log4PStatic.LogFileNameDynamicPart2 & "_" & _
     VBA.Interaction.Environ$("COMPUTERNAME") & "_" & _
     VBA.Interaction.Environ$("USERNAME") & ".txt"
     

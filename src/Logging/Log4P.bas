@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder Logging
 Option Explicit
+Option Base 1
 
 ' Windows API Declarations
 #If VBA7 Then
@@ -110,6 +111,10 @@ Private flushInterval As Long
 Private logBuffer As String
 Private isBufferingEnabled As Boolean
 
+'Allow user to apply nested analysis code to the log ouptput
+Private LogAnalysisCodes(10) As String
+Private LogAnalysisCodeLevel As Integer
+
 Private Sub Class_Initialize()
   
   Dim rootFolder As String
@@ -170,6 +175,18 @@ Private Sub Class_Initialize()
     
   InternalInfo "Logger initialized with file: " & logFilePath
 
+  'Always log file opened & header message - these can be filtered out in the log reader
+  Dim strHeaderLine As String
+  strHeaderLine = "Timestamp" & VBA.Constants.vbTab
+  For LogAnalysisCodeLevel = 1 To UBound(LogAnalysisCodes)
+    strHeaderLine = strHeaderLine & "LogAnalysisCode" & LogAnalysisCodeLevel & VBA.Constants.vbTab
+  Next LogAnalysisCodeLevel
+  LogAnalysisCodeLevel = 0
+  strHeaderLine = strHeaderLine & "LogLevel" & VBA.Constants.vbTab & "Delta" & VBA.Constants.vbTab & "Message"
+    
+  LogMessage strHeaderLine, EXTERNAL_FATAL
+  LogMessage "Log file opened", EXTERNAL_FATAL, True
+    
 End Sub
 
 Private Sub CreateFolder(folderPath As String)
@@ -197,13 +214,14 @@ Private Sub CreateFolder(folderPath As String)
 End Sub
 
 Private Sub Class_Terminate()
+  'Always log file closed message - these can be filtered out in the log reader
+  LogMessage "Log file closed", EXTERNAL_FATAL
   If Len(logBuffer) > 0 Then WriteBuffer
   If hFile <> 0 Then
     FlushFileBuffers hFile
     CloseHandle hFile
     hFile = 0
   End If
-  InternalInfo "Logger terminated"
 End Sub
 
 Public Property Let level(value As Long)
@@ -221,6 +239,20 @@ End Sub
 
 Public Sub RestoreLevel()
   currentLogLevel = previousLogLevel
+End Sub
+
+Public Sub NextAnalysisCodeLevel(strAnalysisCodeValue As String)
+  If Not LogAnalysisCodeLevel = UBound(LogAnalysisCodes) Then
+    LogAnalysisCodeLevel = LogAnalysisCodeLevel + 1
+    LogAnalysisCodes(LogAnalysisCodeLevel) = strAnalysisCodeValue
+  End If
+End Sub
+
+Public Sub PreviousAnalysisCodeLevel()
+  If Not LogAnalysisCodeLevel = 0 Then
+    LogAnalysisCodes(LogAnalysisCodeLevel) = ""
+    LogAnalysisCodeLevel = LogAnalysisCodeLevel - 1
+  End If
 End Sub
 
 Private Sub WriteBuffer()
@@ -282,40 +314,57 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
     Case EXTERNAL_ERROR: levelStr = "EXTERNAL_ERROR"
     Case EXTERNAL_FATAL: levelStr = "EXTERNAL_FATAL"
   End Select
+  
+  'Do not change the log entry if we are writign the header row to the log file
+  If VBA.Strings.InStr(1, message, "Timestamp") = 1 Then
+    logEntry = message & vbCrLf
+  Else
+  
+    #If VBA7 Then
+       Dim currentTicks As LongLong
+       QueryPerformanceCounter currentTicks
+       timeDiff = CDbl(currentTicks - lastLogTicks) / CDbl(perfFrequency) * 1000
+       ' Calculate microseconds since start for timestamp
+       microSeconds = CLng((CDbl(currentTicks - startTicks) / CDbl(perfFrequency)) * 1000000) Mod 1000000
+       timestamp = Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & Right("000000" & microSeconds, 6)
+    #Else
+       Dim currentTime As Double
+       currentTime = Timer
+       If currentTime < lastLogTime Then
+         timeDiff = ((currentTime + 86400) - lastLogTime) * 1000
+       Else
+         timeDiff = (currentTime - lastLogTime) * 1000
+       End If
+       ' Use Timer for milliseconds (less precise)
+       microSeconds = CLng((currentTime - startTime) * 1000) Mod 1000
+       timestamp = Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & Right("000" & microSeconds, 3)
+    #End If
+      
+    'Build up the log entry
+    logEntry = timestamp & VBA.Constants.vbTab
     
-  #If VBA7 Then
-     Dim currentTicks As LongLong
-     QueryPerformanceCounter currentTicks
-     timeDiff = CDbl(currentTicks - lastLogTicks) / CDbl(perfFrequency) * 1000
-     ' Calculate microseconds since start for timestamp
-     microSeconds = CLng((CDbl(currentTicks - startTicks) / CDbl(perfFrequency)) * 1000000) Mod 1000000
-     timestamp = Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & Right("000000" & microSeconds, 6)
-  #Else
-     Dim currentTime As Double
-     currentTime = Timer
-     If currentTime < lastLogTime Then
-       timeDiff = ((currentTime + 86400) - lastLogTime) * 1000
-     Else
-       timeDiff = (currentTime - lastLogTime) * 1000
-     End If
-     ' Use Timer for milliseconds (less precise)
-     microSeconds = CLng((currentTime - startTime) * 1000) Mod 1000
-     timestamp = Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & Right("000" & microSeconds, 3)
-  #End If
+    'Output the actual analysis codes
+    Dim i As Integer
+    For i = 1 To UBound(LogAnalysisCodes)
+      logEntry = logEntry & LogAnalysisCodes(i) & VBA.Constants.vbTab
+    Next i
     
-  #If VBA7 Then
-     logEntry = _
-       timestamp & VBA.Constants.vbTab & _
-       levelStr & VBA.Constants.vbTab & _
-       VBA.Strings.ChrW(916) & VBA.Strings.Format(timeDiff, "0.000") & "ms" & VBA.Constants.vbTab & _
-       message & vbCrLf
-  #Else
-     logEntry = _
-       timestamp & VBA.Constants.vbTab & _
-       levelStr & VBA.Constants.vbTab & _
-       VBA.Strings.ChrW(916) & VBA.Strings.Format(timeDiff, "0.00") & "ms | " & _
-       message & vbCrLf
-  #End If
+    'Add the log level string
+    logEntry = logEntry & levelStr & VBA.Constants.vbTab
+       
+    'The accurary of the delta varies
+    #If VBA7 Then
+       logEntry = logEntry & _
+         VBA.Strings.ChrW(916) & VBA.Strings.Format(timeDiff, "0.000") & "ms" & VBA.Constants.vbTab
+    #Else
+       logEntry = logEntry & _
+         VBA.Strings.ChrW(916) & VBA.Strings.Format(timeDiff, "0.00") & "ms | "
+    #End If
+   
+    ' Add the messabe
+    logEntry = logEntry & message & vbCrLf
+    
+  End If
     
   If isBufferingEnabled Then
     

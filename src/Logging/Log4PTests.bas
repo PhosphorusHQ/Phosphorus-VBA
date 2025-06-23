@@ -15,18 +15,38 @@ Sub TestLogger1()
 
   ' Test all log levels using public methods
   myLogger.level = -5 ' Enable all levels (INTERNAL_DEBUG)
+  
+  myLogger.NextAnalysisCodeLevel "Group1"
+  myLogger.NextAnalysisCodeLevel "Group1.1"
+  myLogger.NextAnalysisCodeLevel "Group1.1.1"
   myLogger.InternalTrace "Testing internal trace"
+  myLogger.PreviousAnalysisCodeLevel
+  myLogger.NextAnalysisCodeLevel "Group1.1.2"
+  myLogger.PreviousAnalysisCodeLevel
   myLogger.InternalDebug "Testing internal debug"
+  myLogger.PreviousAnalysisCodeLevel
+  myLogger.NextAnalysisCodeLevel "Group1.2"
   myLogger.InternalInfo "Testing internal info"
   myLogger.InternalWarning "Testing internal warning"
+  myLogger.PreviousAnalysisCodeLevel
+  myLogger.NextAnalysisCodeLevel "Group1.3"
   myLogger.InternalError "Testing internal error"
   myLogger.InternalFatal "Testing internal fatal"
+  myLogger.PreviousAnalysisCodeLevel
+  myLogger.PreviousAnalysisCodeLevel
+  
+  myLogger.NextAnalysisCodeLevel "Group2"
   myLogger.ExternalTrace "Testing external debug"
   myLogger.ExternalDebug "Testing external debug"
+  myLogger.PreviousAnalysisCodeLevel
   myLogger.ExternalInfo "Testing external info"
   myLogger.ExternalWarning "Testing external warning"
+  myLogger.PreviousAnalysisCodeLevel
+  
+  myLogger.NextAnalysisCodeLevel "Group3"
   myLogger.ExternalError "Testing external error"
   myLogger.ExternalFatal "Testing external critical", True ' Force flush
+  myLogger.PreviousAnalysisCodeLevel
 
   ' Test filtering
   myLogger.level = -2 ' INTERNAL_ERROR
@@ -49,6 +69,8 @@ Sub TestLogger2()
     
   ' Test all log levels with Unicode characters built using ChrW
   myLogger.level = -5 ' Enable all levels (INTERNAL_DEBUG)
+  
+  myLogger.NextAnalysisCodeLevel "Group1"
   myLogger.InternalDebug "Testing internal debug with Unicode: " & _
     ChrW(&H3053) & ChrW(&H3093) & ChrW(&H306B) & ChrW(&H3061) & ChrW(&H306F) & _
     ChrW(&H4E16) & ChrW(&H754C) & _
@@ -60,6 +82,9 @@ Sub TestLogger2()
     ChrW(&H4F60) & ChrW(&H597D) & _
     ChrW(&HFF0C) & _
     ChrW(&H4E16) & ChrW(&H754C) & ChrW(&HFF01)
+  myLogger.PreviousAnalysisCodeLevel
+  
+  myLogger.NextAnalysisCodeLevel "Group2"
   myLogger.InternalError "Testing internal error with Unicode: " & _
     ChrW(&HA1) & ChrW(&H48) & ChrW(&H6F) & ChrW(&H6C) & ChrW(&H61) & _
     ", " & ChrW(&H6D) & ChrW(&H75) & ChrW(&H6E) & ChrW(&H64) & ChrW(&H6F) & ChrW(&H21)
@@ -70,6 +95,9 @@ Sub TestLogger2()
   myLogger.ExternalDebug "Testing application debug with Unicode: " & _
     ChrW(&H48) & ChrW(&H61) & ChrW(&H6C) & ChrW(&H6C) & ChrW(&H6F) & _
     " " & ChrW(&H57) & ChrW(&H65) & ChrW(&H6C) & ChrW(&H74) & ChrW(&H21)
+  myLogger.PreviousAnalysisCodeLevel
+  
+  myLogger.NextAnalysisCodeLevel "Group3"
   myLogger.ExternalWarning "Testing application warning with Unicode: " & _
     ChrW(&H645) & ChrW(&H631) & ChrW(&H62D) & ChrW(&H628) & ChrW(&H627) & _
     " " & ChrW(&H628) & ChrW(&H627) & ChrW(&H644) & ChrW(&H639) & ChrW(&H627) & ChrW(&H644) & ChrW(&H645)
@@ -79,13 +107,16 @@ Sub TestLogger2()
   myLogger.ExternalFatal "Testing application critical with Unicode: " & _
     ChrW(&H4F) & ChrW(&H6C) & ChrW(&HE1) & _
     " " & ChrW(&H4D) & ChrW(&H75) & ChrW(&H6E) & ChrW(&H64) & ChrW(&H6F) & ChrW(&H21), True ' Mundo!
+  myLogger.PreviousAnalysisCodeLevel
     
+  myLogger.NextAnalysisCodeLevel "Group4"
   ' Test filtering
   myLogger.level = -2 ' INTERNAL_ERROR
   myLogger.InternalWarning "This won’t log" ' Skipped
   myLogger.InternalError "This will log with Unicode: " & _
     ChrW(&H417) & ChrW(&H434) & ChrW(&H440) & ChrW(&H430) & ChrW(&H432) & ChrW(&H441) & ChrW(&H442) & _
     ChrW(&H432) & ChrW(&H443) & ChrW(&H439) & ChrW(&H442) & ChrW(&H435) & ChrW(&H21)  ' !
+  myLogger.PreviousAnalysisCodeLevel
  
   myLogger.Flush
   Debug.Print "Log file: " & myLogger.GetFilePath

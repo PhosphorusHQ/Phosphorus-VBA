@@ -1,5 +1,6 @@
 Attribute VB_Name = "AssertionsTests"
-'' Assertions.cls
+'@Folder Assertions
+' Assertions.cls
 'Option Explicit
 
 'Sub RunAssertionTests()

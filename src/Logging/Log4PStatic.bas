@@ -30,3 +30,8 @@ Public Sub GetLogger()
     Set Logger = New Phosphorus.Log4P
   End If
 End Sub
+
+Public Sub CloseLogger()
+  Set Logger = Nothing
+End Sub
+

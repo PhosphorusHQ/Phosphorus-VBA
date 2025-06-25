@@ -28,13 +28,26 @@ Sub TestLogger1()
   myLogger.NextAnalysisCodeLevel "Group1.2"
   myLogger.InternalInfo "Testing internal info"
   myLogger.InternalWarning "Testing internal warning"
+  
+  myLogger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="Test Output", _
+    AnalysisCode2:="Test1", _
+    message:="Fixed Message"
+  
   myLogger.PreviousAnalysisCodeLevel
   myLogger.NextAnalysisCodeLevel "Group1.3"
   myLogger.InternalError "Testing internal error"
   myLogger.InternalFatal "Testing internal fatal"
-  myLogger.PreviousAnalysisCodeLevel
-  myLogger.PreviousAnalysisCodeLevel
   
+  myLogger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="Test Output", _
+    AnalysisCode2:="Test2", _
+    message:="Fixed Message"
+  
+  myLogger.PreviousAnalysisCodeLevel
+  myLogger.PreviousAnalysisCodeLevel
   myLogger.NextAnalysisCodeLevel "Group2"
   myLogger.ExternalTrace "Testing external debug"
   myLogger.ExternalDebug "Testing external debug"

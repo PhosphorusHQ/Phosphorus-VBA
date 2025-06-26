@@ -121,13 +121,17 @@ Option Explicit
 
 Private testCount As Long
 Private failedCount As Long
-Private HasCriticalFailure As Boolean
+
+Private Type FileIOType
+  HasCriticalFailure As Boolean
+End Type
+Private this As FileIOType
 
 ' Initialize the counters when the class is created
 Private Sub Class_Initialize()
     testCount = 0
     failedCount = 0
-    HasCriticalFailure = False
+    this.HasCriticalFailure = False
 End Sub
 
 ' Get total number of tests run
@@ -141,8 +145,8 @@ Public Property Get FailedTests() As Long
 End Property
 
 ' Get whether a critical assertion has failed
-Public Property Get pjgHasCriticalFailure() As Boolean
-    pjgHasCriticalFailure = HasCriticalFailure
+Public Property Get HasCriticalFailure() As Boolean
+    HasCriticalFailure = this.HasCriticalFailure
 End Property
 
 ' Assert that two values are equal
@@ -150,7 +154,7 @@ Public Sub AssertEqual(expected As Variant, actual As Variant, Optional message 
     testCount = testCount + 1
     If Not AreEqual(expected, actual) Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Expected '" & expected & "' but got '" & actual & "'" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -165,7 +169,7 @@ Public Sub AssertNotEqual(expected As Variant, actual As Variant, Optional messa
     testCount = testCount + 1
     If AreEqual(expected, actual) Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Expected '" & expected & "' to be different from '" & actual & "'" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -180,7 +184,7 @@ Public Sub AssertTrue(condition As Boolean, Optional message As String = "", Opt
     testCount = testCount + 1
     If Not condition Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Expected True but got False" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -195,7 +199,7 @@ Public Sub AssertFalse(condition As Boolean, Optional message As String = "", Op
     testCount = testCount + 1
     If condition Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Expected False but got True" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -210,7 +214,7 @@ Public Sub AssertNull(value As Variant, Optional message As String = "", Optiona
     testCount = testCount + 1
     If Not IsNull(value) Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Expected Null but got '" & value & "'" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -225,7 +229,7 @@ Public Sub AssertNotNull(value As Variant, Optional message As String = "", Opti
     testCount = testCount + 1
     If IsNull(value) Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Expected non-Null value but got Null" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -258,7 +262,7 @@ Public Sub AssertInRange(value As Variant, minValue As Variant, maxValue As Vari
     
     If Not isInRange Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Value '" & value & "' not in range [" & minValue & ", " & maxValue & "]" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -294,7 +298,7 @@ Public Sub AssertContains(collection As Variant, item As Variant, Optional messa
     
     If Not found Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Item '" & item & "' not found in collection" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -314,7 +318,7 @@ Public Sub AssertStringMatches(actual As String, pattern As String, Optional mes
     
     If Not matches Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: String '" & actual & "' doesn't match pattern '" & pattern & "'" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -332,7 +336,7 @@ Public Sub AssertApproximatelyEqual(expected As Double, actual As Double, tolera
     
     If difference > tolerance Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Expected '" & expected & "' ±" & tolerance & " but got '" & actual & "'" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -350,7 +354,7 @@ Public Sub AssertObjectExists(obj As Object, Optional message As String = "", Op
     
     If Not exists Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Object is Nothing" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -377,7 +381,7 @@ Public Sub AssertThrows(codeToRun As String, expectedError As Long, Optional mes
     
     If Not errorOccurred Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Expected error " & expectedError & " but didn't occur or different error occurred" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -402,7 +406,7 @@ Public Sub AssertEmpty(collection As Variant, Optional message As String = "", O
     
     If Not isEmpty Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Collection is not empty" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -420,7 +424,7 @@ Public Sub AssertType(value As Variant, expectedTypeName As String, Optional mes
     
     If LCase(actualType) <> LCase(expectedTypeName) Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Expected type '" & expectedTypeName & "' but got '" & actualType & "'" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -441,7 +445,7 @@ Public Sub AssertGreaterThan(value As Variant, threshold As Variant, Optional me
     
     If Not isGreater Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Value '" & value & "' not greater than '" & threshold & "'" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -462,7 +466,7 @@ Public Sub AssertLessThan(value As Variant, threshold As Variant, Optional messa
     
     If Not isLess Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Value '" & value & "' not less than '" & threshold & "'" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -480,7 +484,7 @@ Public Sub AssertFileExists(filePath As String, Optional message As String = "",
     
     If Not exists Then
         failedCount = failedCount + 1
-        If isCritical Then HasCriticalFailure = True
+        If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: File '" & filePath & "' does not exist" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")

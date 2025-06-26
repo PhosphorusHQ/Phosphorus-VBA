@@ -46,7 +46,7 @@ Sub RunTests()
     assert.AssertEqual 5, 5, "Numbers should be equal"
     assert.AssertTrue (2 + 2 = 4), "Basic math should be true", True ' Critical assertion
     assert.AssertFalse (1 > 2), "Comparison should be false"
-    If assert.pjgHasCriticalFailure Then
+    If assert.HasCriticalFailure Then
         Debug.Print "Step 1 aborted due to critical failure"
         Exit Sub
     End If
@@ -55,7 +55,7 @@ Sub RunTests()
     Debug.Print vbNewLine & "Test Step 2:"
     assert.AssertEqual 5, 6, "This should fail", True ' Critical assertion that will fail
     assert.AssertNotEqual "test", "test", "This should fail too"
-    If assert.pjgHasCriticalFailure Then
+    If assert.HasCriticalFailure Then
         Debug.Print "Step 2 aborted due to critical failure"
         Exit Sub
     End If
@@ -85,7 +85,7 @@ Sub TestAdditionalAssertions()
     assert.AssertObjectExists Application, "Application object should exist"
     
     ' Check for critical failure
-    If assert.pjgHasCriticalFailure Then
+    If assert.HasCriticalFailure Then
         Debug.Print "Step 1 aborted due to critical failure"
         Exit Sub
     End If
@@ -109,7 +109,7 @@ Sub TestAllAssertions()
     assert.AssertFileExists "C:\Windows\explorer.exe", "Windows Explorer should exist"
     
     ' Check for critical failure
-    If assert.pjgHasCriticalFailure Then
+    If assert.HasCriticalFailure Then
         Debug.Print "Step 1 aborted due to critical failure"
         Exit Sub
     End If

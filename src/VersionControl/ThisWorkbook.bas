@@ -12,7 +12,9 @@ Option Explicit
 
 'Always Save Code Changes on Closing Workbootk
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
-  ThisWorkbook.Save
+  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
+    ThisWorkbook.Save
+  End If
 End Sub
 
 Private Sub SetModulesToKeep()

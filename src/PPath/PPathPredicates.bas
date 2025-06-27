@@ -128,7 +128,7 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
           On Error Resume Next
           boolCurrentPredicateTestPasses = True
           boolCurrentPredicateTestPasses = Application.Evaluate(lstrCurrentPredicateTest)
-          If Err.Number = 13 Then
+          If err.Number = 13 Then
             this.PPathReturnClass.SetErrorMessage = Phosphorus.PPathConstants.INVALID_PREDICATE & " [" & strCurrentGroupAttributesPPath & "] => " & lstrCurrentPredicateTest
             Exit Sub
           End If
@@ -320,7 +320,7 @@ Private Function SourcePPathContainedAnAttributeCheck( _
           varPropertyValue = "#"
         Else
           varPropertyValue = eleCurrentContextUIElement.GetCurrentPropertyValue(key)
-          If Not IsEmpty(varPropertyValue) Then
+          If Not isEmpty(varPropertyValue) Then
             If varPropertyValue <> "" Then
               If VBA.Strings.InStr(1, varPropertyValue, "@") > 0 Then
                 varPropertyValue = VBA.Strings.Replace(varPropertyValue, "@", "{AtSign}")
@@ -335,7 +335,7 @@ Private Function SourcePPathContainedAnAttributeCheck( _
             If UBound(varPropertyValue) = -1 Then
               varPropertyValue = ""
             Else
-              If Not IsEmpty(varPropertyValue) Then
+              If Not isEmpty(varPropertyValue) Then
                 Dim i As Integer
                 Dim strArrayOfValues As String
                 strArrayOfValues = ""
@@ -351,7 +351,7 @@ Private Function SourcePPathContainedAnAttributeCheck( _
           End If
         End If
 
-If IsEmpty(varPropertyValue) Then
+If isEmpty(varPropertyValue) Then
  ' Debug.Print varPropertyValue
   varPropertyValue = ""
 ElseIf varPropertyValue = "" Then
@@ -424,7 +424,7 @@ End If
             Dim strSourcePredicateString As String
             strSourcePredicateString = "@" & strAttributeName & strComparisonOperator
             If boolAttributeValueIsString Then
-              strSourcePredicateString = strSourcePredicateString & Chr(34) & strAttributeValue & Chr(34)
+              strSourcePredicateString = strSourcePredicateString & VBA.Strings.Chr(34) & strAttributeValue & VBA.Strings.Chr(34)
             Else
               strSourcePredicateString = strSourcePredicateString & strAttributeValue
             End If
@@ -435,7 +435,7 @@ End If
               lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, strSourcePredicateString, "FALSE")
             End If
           Else
-            varPropertyValue = Chr(34) & varPropertyValue & Chr(34)
+            varPropertyValue = VBA.Strings.Chr(34) & varPropertyValue & VBA.Strings.Chr(34)
             lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, "@" & strAttributeName, varPropertyValue)
           End If
         End If
@@ -451,7 +451,7 @@ Private Sub ProcessTextAndValueChecks(eleCurrentContextUIElement As UIAutomation
   If VBA.Strings.InStr(1, lstrCurrentPredicateTest, "text()") > 0 Then
     Dim strCurrentText As String
     strCurrentText = this.NodeTests.GetTextValue(eleCurrentContextUIElement)
-    lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, "text()", Chr(34) & strCurrentText & Chr(34))
+    lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, "text()", VBA.Strings.Chr(34) & strCurrentText & VBA.Strings.Chr(34))
   End If
   If VBA.Strings.InStr(1, lstrCurrentPredicateTest, "value()") > 0 Then
     Dim varCurrentValue As Variant

@@ -23,7 +23,7 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional Proje
   With Application.VBE
     If ProjectName = "" Then
       Set vbProj = ThisWorkbook.VBProject
-      basePath = ThisWorkbook.Path & SubFolderForExport
+      basePath = ThisWorkbook.path & SubFolderForExport
     Else
       Dim projFound As Boolean
       projFound = False
@@ -31,7 +31,7 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional Proje
         If vbProj.Name = ProjectName Then
           projFound = True
           basePath = vbProj.Filename
-          basePath = Left(basePath, InStrRev(basePath, "\")) & "VBA_Modules_Export\"
+          basePath = VBA.Strings.Left(basePath, VBA.Strings.InStrRev(basePath, "\")) & "VBA_Modules_Export\"
           Exit For
         End If
       Next vbProj
@@ -55,9 +55,9 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional Proje
   For Each vbComp In vbProj.VBComponents
     folderName = "Uncategorized"
     If vbComp.CodeModule.CountOfLines > 0 Then
-      firstLine = Trim(vbComp.CodeModule.Lines(1, 1))
-      If Left(firstLine, 9) = "'@Folder " Then
-        folderName = Trim(Mid(firstLine, 9))
+      firstLine = VBA.Strings.Trim(vbComp.CodeModule.Lines(1, 1))
+      If VBA.Strings.Left(firstLine, 9) = "'@Folder " Then
+        folderName = VBA.Strings.Trim(Mid(firstLine, 9))
       End If
     End If
     
@@ -75,7 +75,7 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional Proje
         With CreateObject("Scripting.FileSystemObject")
           fileText = .OpenTextFile(filePath, 1).ReadAll
           Set file = .CreateTextFile(filePath, True)
-          If Left(firstLine, 7) = "@Folder " Then
+          If VBA.Strings.Left(firstLine, 7) = "@Folder " Then
             file.WriteLine firstLine
           End If
           file.Write fileText
@@ -134,14 +134,14 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, ProjectName As 
   With Application.VBE
     If ProjectName = "" Then
       Set vbProj = ThisWorkbook.VBProject
-      importPath = ThisWorkbook.Path & "\" & SubFolderForExport
+      importPath = ThisWorkbook.path & "\" & SubFolderForExport
     Else
       projFound = False
       For Each vbProj In .VBProjects
         If vbProj.Name = ProjectName Then
           projFound = True
           importPath = vbProj.Filename
-          importPath = Left(importPath, InStrRev(importPath, "\")) & "\" & SubFolderForExport
+          importPath = VBA.Strings.Left(importPath, VBA.Strings.InStrRev(importPath, "\")) & "\" & SubFolderForExport
           Exit For
         End If
       Next vbProj
@@ -171,7 +171,7 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, ProjectName As 
   Dim keep As Boolean
   
   For Each file In folder.Files
-    If LCase(Right(file.Name, 4)) = ".bas" Then
+    If VBA.Strings.LCase(Right(file.Name, 4)) = ".bas" Then
      keep = False
       If IsArray(ModulesToKeep) Then
         For i = LBound(ModulesToKeep) To UBound(ModulesToKeep)
@@ -181,7 +181,7 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, ProjectName As 
           End If
         Next i
         If Not keep Then
-          vbProj.VBComponents.Import file.Path
+          vbProj.VBComponents.Import file.path
         End If
       End If
     End If
@@ -189,7 +189,7 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, ProjectName As 
     
   For Each subFolder In folder.SubFolders
     For Each file In subFolder.Files
-      If LCase(Right(file.Name, 4)) = ".bas" Then
+      If VBA.Strings.LCase(Right(file.Name, 4)) = ".bas" Then
         keep = False
         If IsArray(ModulesToKeep) Then
           For i = LBound(ModulesToKeep) To UBound(ModulesToKeep)
@@ -199,7 +199,7 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, ProjectName As 
             End If
           Next i
           If Not keep Then
-            vbProj.VBComponents.Import file.Path
+            vbProj.VBComponents.Import file.path
           End If
         End If
       End If

@@ -70,7 +70,7 @@ Public Function xp_starts_with(str1 As String, str2 As String) As Boolean
 End Function
 
 Public Function xp_format_number(var1 As Variant, strFormat As String) As String
-  xp_format_number = Application.WorksheetFunction.Text(var1, strFormat)
+  xp_format_number = Application.WorksheetFunction.text(var1, strFormat)
 End Function
 
 Public Function xp_normalize_space(str As String) As String
@@ -183,8 +183,8 @@ Public Function udf_text_between(ByVal strMain As String, str1 As String, str2 A
       udf_text_between = strMain
       Exit Function
     End If
-    If j = 0 Then j = VBA.Strings.Len(strMain) + Len(str2) 'just to make it arbitrarily large
-    If i = 0 Then i = VBA.Strings.Len(strMain) + Len(str1) 'just to make it arbitrarily large
+    If j = 0 Then j = VBA.Strings.Len(strMain) + VBA.Strings.Len(str2) 'just to make it arbitrarily large
+    If i = 0 Then i = VBA.Strings.Len(strMain) + VBA.Strings.Len(str1) 'just to make it arbitrarily large
     If i > j And j <> 0 Then 'swap order
       temp = j
       j = i
@@ -193,8 +193,8 @@ Public Function udf_text_between(ByVal strMain As String, str1 As String, str2 A
       str2 = str1
       str1 = temp
     End If
-    i = i + Len(str1)
-    udf_text_between = Mid(strMain, i, j - i)
+    i = i + VBA.Strings.Len(str1)
+    udf_text_between = VBA.Strings.Mid(strMain, i, j - i)
     Exit Function
 'errhandler:
 '  MsgBox "Error extracting strings. Check your input" & vbNewLine & vbNewLine & "Aborting", , "Strings not found"

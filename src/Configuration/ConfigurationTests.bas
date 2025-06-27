@@ -14,7 +14,7 @@ Public Sub TestConfigReader()
   Dim maxRetries As Long
     
   ' Initialize with the path to the INI file
-  Configuration.Initialize ThisWorkbook.Path & "\config.ini"
+  Configuration.Initialize ThisWorkbook.path & "\config.ini"
     
   If Configuration.IsInitialized Then
         

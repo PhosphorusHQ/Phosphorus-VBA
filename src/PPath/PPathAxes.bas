@@ -92,7 +92,7 @@ Private Sub GetParents( _
   strCurrentStepAxis As String, _
   strInitialPPath As String, _
   boolGetAllAncestors As Boolean, _
-  Optional ByRef AllAncestorsOrSelfRuntimeIDs As Collection)
+  Optional ByRef AllAncestorsOrSelfRuntimeIDs As collection)
   
   'The parent:: axis is a reverse axis, but as we only get one node it doesn't make any difference which order it's in!?
   'Also, this method already returns ancestor nodes in reverse document order, so there is no need to reverse.
@@ -167,7 +167,7 @@ Private Sub GetSiblings( _
     Dim strCurrentChildElementRuntimeID As String
     strCurrentChildElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(eleChildUIElement)
     strCurrentControlType = this.AutomationDictionaries.ControlTypeIDs(eleChildUIElement.CurrentControlType)
-    If controls.Exists(strCurrentControlType) Then
+    If controls.exists(strCurrentControlType) Then
       intInstanceNumber = controls(strCurrentControlType) + 1
       controls(strCurrentControlType) = intInstanceNumber
     Else
@@ -211,7 +211,7 @@ Private Sub GetChildren( _
   Axis As String, _
   strInitialPPath As String, _
   boolGetGrandChildren As Boolean, _
-  Optional ByRef AllAncestorsOrSelfRuntimeIDs As Collection, _
+  Optional ByRef AllAncestorsOrSelfRuntimeIDs As collection, _
   Optional ByRef boolPrecedingOrFollowingRootElementFound As Boolean)
   
   Dim eleChildrenUIElementArray As UIAutomationClient.IUIAutomationElementArray
@@ -251,7 +251,7 @@ Private Sub GetChildren( _
       End If
       Set eleArrayOfChildrenUIElements(intCurrentSizeOfArray) = eleChildUIElement
       strCurrentControlType = this.AutomationDictionaries.ControlTypeIDs(eleChildUIElement.CurrentControlType)
-      If controls.Exists(strCurrentControlType) Then
+      If controls.exists(strCurrentControlType) Then
         intInstanceNumber = controls(strCurrentControlType) + 1
         controls(strCurrentControlType) = intInstanceNumber
       Else
@@ -327,8 +327,8 @@ Private Sub GetPrecedingOrFollowing( _
   Axis As String)
   
   'Create a collection of self or parent runtime ID's
-  Dim colAllAncestorsOrSelfRuntimeIDs As Collection
-  Set colAllAncestorsOrSelfRuntimeIDs = New Collection
+  Dim colAllAncestorsOrSelfRuntimeIDs As collection
+  Set colAllAncestorsOrSelfRuntimeIDs = New collection
   
   'Add the current element to the list
   colAllAncestorsOrSelfRuntimeIDs.Add PPathRuntimeIDs.GetElementRuntimeID(eleCurrentUIElement)
@@ -367,7 +367,7 @@ Public Sub GetAttributes( _
         If UBound(propValue) = -1 Then
           propValue = ""
         Else
-          If Not IsEmpty(propValue) Then
+          If Not isEmpty(propValue) Then
             Dim i As Integer
             Dim strArrayOfValues As String
             strArrayOfValues = ""
@@ -383,7 +383,7 @@ Public Sub GetAttributes( _
       End If
     End If
      
-    If Not IsEmpty(propValue) And propValue <> "" Then
+    If Not isEmpty(propValue) And propValue <> "" Then
       Dim strPropertyString As String
       If propValue = "True" Or propValue = "False" Or VBA.Information.IsNumeric(propValue) Then
         strPropertyString = propValue

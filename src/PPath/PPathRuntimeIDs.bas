@@ -114,11 +114,11 @@ Public Function GetElementRuntimeID(ByRef MatchingElement As UIAutomationClient.
     
       ' 4. (Optional) Convert to UIAutomation element (if needed)
       Dim UIAutomation As IUIAutomation
-      Dim Element As IUIAutomationElement
+      Dim element As IUIAutomationElement
       Set UIAutomation = New CUIAutomation
-      Set Element = UIAutomation.ElementFromIAccessible(iAccessible, childId)
+      Set element = UIAutomation.ElementFromIAccessible(iAccessible, childId)
 
-      If Not Element Is Nothing Then
+      If Not element Is Nothing Then
         MsgBox "Converted to UIAutomation element = - no we need to get th eruntime ID!"
         'Now you can use the UIAutomation Element
       Else
@@ -162,20 +162,20 @@ End Function
 Private Function StringToGUID(strGuid As String, GUID As GUID)
 
   Dim bytes() As Byte
-  bytes = StrConv(strGuid, vbFromUnicode)
+  bytes = VBA.Strings.StrConv(strGuid, vbFromUnicode)
 
   With GUID
-    .Data1 = CLng("&H" & VBA.Strings.Mid(strGuid, 2, 8))
-    .Data2 = CInt("&H" & VBA.Strings.Mid(strGuid, 11, 4))
-    .Data3 = CInt("&H" & VBA.Strings.Mid(strGuid, 16, 4))
-    .Data4(0) = CByte("&H" & VBA.Strings.Mid(strGuid, 21, 2))
-    .Data4(1) = CByte("&H" & VBA.Strings.Mid(strGuid, 23, 2))
-    .Data4(2) = CByte("&H" & VBA.Strings.Mid(strGuid, 26, 2))
-    .Data4(3) = CByte("&H" & VBA.Strings.Mid(strGuid, 27, 2))
-    .Data4(4) = CByte("&H" & VBA.Strings.Mid(strGuid, 29, 2))
-    .Data4(5) = CByte("&H" & VBA.Strings.Mid(strGuid, 32, 2))
-    .Data4(6) = CByte("&H" & VBA.Strings.Mid(strGuid, 33, 2))
-    .Data4(7) = CByte("&H" & VBA.Strings.Mid(strGuid, 35, 2))
+    .Data1 = VBA.Conversion.CLng("&H" & VBA.Strings.Mid(strGuid, 2, 8))
+    .Data2 = VBA.Conversion.CInt("&H" & VBA.Strings.Mid(strGuid, 11, 4))
+    .Data3 = VBA.Conversion.CInt("&H" & VBA.Strings.Mid(strGuid, 16, 4))
+    .Data4(0) = VBA.Conversion.CByte("&H" & VBA.Strings.Mid(strGuid, 21, 2))
+    .Data4(1) = VBA.Conversion.CByte("&H" & VBA.Strings.Mid(strGuid, 23, 2))
+    .Data4(2) = VBA.Conversion.CByte("&H" & VBA.Strings.Mid(strGuid, 26, 2))
+    .Data4(3) = VBA.Conversion.CByte("&H" & VBA.Strings.Mid(strGuid, 27, 2))
+    .Data4(4) = VBA.Conversion.CByte("&H" & VBA.Strings.Mid(strGuid, 29, 2))
+    .Data4(5) = VBA.Conversion.CByte("&H" & VBA.Strings.Mid(strGuid, 32, 2))
+    .Data4(6) = VBA.Conversion.CByte("&H" & VBA.Strings.Mid(strGuid, 33, 2))
+    .Data4(7) = VBA.Conversion.CByte("&H" & VBA.Strings.Mid(strGuid, 35, 2))
   End With
 
 End Function
@@ -186,7 +186,7 @@ Private Sub TestAccessibleObjectFromWindow()
 
   Dim hwnd As LongPtr
   Dim iAccessible As iAccessible
-  Dim Element As IUIAutomationElement
+  Dim element As IUIAutomationElement
   Dim UIAutomation As IUIAutomation
 '  Dim accessible As Object 'Used to receive the IAccessible interface
 
@@ -211,16 +211,16 @@ Private Sub TestAccessibleObjectFromWindow()
 
     ' 4. (Optional) Convert to UIAutomation element (if needed)
     Set UIAutomation = New CUIAutomation
-    Set Element = UIAutomation.ElementFromIAccessible(iAccessible, 0)
+    Set element = UIAutomation.ElementFromIAccessible(iAccessible, 0)
 
-    If Not Element Is Nothing Then
+    If Not element Is Nothing Then
 '      Debug.Print "Converted to UIAutomation element"
       'Now you can use the UIAutomation Element
     Else
  '     Debug.Print "Failed to convert to UIAutomation element"
     End If
 
-    Set Element = Nothing
+    Set element = Nothing
     Set UIAutomation = Nothing
 
   Else
@@ -232,12 +232,12 @@ Private Sub TestAccessibleObjectFromWindow()
 End Sub
 
 'Helper function to get the window from an element
-Private Function GetWindowFromElement(Element As IUIAutomationElement) As LongPtr
+Private Function GetWindowFromElement(element As IUIAutomationElement) As LongPtr
 
   On Error Resume Next 'Handle errors
 
   Dim tempElement As IUIAutomationElement
-  Set tempElement = Element
+  Set tempElement = element
 
   Do While Not tempElement Is Nothing
     GetWindowFromElement = tempElement.GetCurrentPropertyValue(UIAutomationClient.UIA_PropertyIds.UIA_NativeWindowHandlePropertyId)

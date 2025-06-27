@@ -3,7 +3,7 @@ Attribute VB_Name = "PPathTestsCommon"
 '@TestModule
 Option Explicit
 
-Public Assert As Object
+Public assert As Object
 Public Fakes As Object
 
 Public Sub OutputActualXPaths(strActualXPaths() As String)
@@ -53,10 +53,10 @@ Public Sub TestExpectedAndActualAllElementsPPath(strExpectedPPaths As String, Ev
 '    If intXPathLoopCounter = 999 Then
       If strExpectedXPathsArray(intXPathLoopCounter - 1) <> strActualXPathsArray(intXPathLoopCounter) Then
         Debug.Print "Number: "; intXPathLoopCounter
-        Debug.Print "Expected:", strExpectedXPathsArray(intXPathLoopCounter - 1), Len(strExpectedXPathsArray(intXPathLoopCounter - 1))
-        Debug.Print "Actual:", strActualXPathsArray(intXPathLoopCounter), Len(strActualXPathsArray(intXPathLoopCounter))
+        Debug.Print "Expected:", strExpectedXPathsArray(intXPathLoopCounter - 1), VBA.Strings.Len(strExpectedXPathsArray(intXPathLoopCounter - 1))
+        Debug.Print "Actual:", strActualXPathsArray(intXPathLoopCounter), VBA.Strings.Len(strActualXPathsArray(intXPathLoopCounter))
         Dim i As Integer
-        For i = 1 To Len(strExpectedXPathsArray(intXPathLoopCounter - 1))
+        For i = 1 To VBA.Strings.Len(strExpectedXPathsArray(intXPathLoopCounter - 1))
           If VBA.Strings.Mid(strExpectedXPathsArray(intXPathLoopCounter - 1), i, 1) <> VBA.Strings.Mid(strActualXPathsArray(intXPathLoopCounter), i, 1) Then
             Dim lngExpectedUnicode As Long
             Dim lngActualUnicode As Long
@@ -77,8 +77,8 @@ Public Sub TestExpectedAndActualAllElementsPPath(strExpectedPPaths As String, Ev
         Next i
       End If
 '    End If
-    Assert.AreEqual strExpectedXPathsArray(intXPathLoopCounter - 1), strActualXPathsArray(intXPathLoopCounter), "GetAllElementsXPaths (" & intXPathLoopCounter & ")"
+    assert.AreEqual strExpectedXPathsArray(intXPathLoopCounter - 1), strActualXPathsArray(intXPathLoopCounter), "GetAllElementsXPaths (" & intXPathLoopCounter & ")"
   Next intXPathLoopCounter
-  Assert.AreEqual intExpectedNumberOfXPaths, intActualNumberOfXPaths, "GetAllElementsXpath_NumberOfXPaths"
+  assert.AreEqual intExpectedNumberOfXPaths, intActualNumberOfXPaths, "GetAllElementsXpath_NumberOfXPaths"
 End Sub
 

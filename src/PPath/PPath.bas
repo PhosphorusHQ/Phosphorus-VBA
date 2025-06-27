@@ -119,7 +119,7 @@ Public Function Evaluate( _
     Dim strCurrentTopLevelFunction As String
     Dim intNumberOfAddtionalParameters As Integer
     
-    Dim TopLevelFunction As Collection
+    Dim TopLevelFunction As collection
     For Each TopLevelFunction In PPathExceTopLevelFunctions.TopLevelFunctions
       strCurrentTopLevelFunction = TopLevelFunction("FunctionName")
       intNumberOfAddtionalParameters = TopLevelFunction("NumberOfAddtionalParameters")
@@ -363,9 +363,9 @@ Private Function PreValidateFullPPathExpression(PPath As String) As Boolean
       If strCharacter = "@" Then
         intStartOfProperty = intCharacter + 1
       End If
-      If (Not boolInsideAString) And (strCharacter = Chr(34)) Then
+      If (Not boolInsideAString) And (strCharacter = VBA.Strings.Chr(34)) Then
         boolInsideAString = True
-      ElseIf boolInsideAString And (strCharacter = Chr(34)) Then
+      ElseIf boolInsideAString And (strCharacter = VBA.Strings.Chr(34)) Then
         boolInsideAString = False
       ElseIf (strCharacter = "<") Or (strCharacter = "=") Or (strCharacter = ">") Or (Not boolInsideAString And (strCharacter = " ")) Then
         intEndOfProperty = intCharacter
@@ -402,7 +402,7 @@ End Function
 
 Public Function GetCountOfInstancesOfACharacterInAString(Character As String, SourceString As String)
   'https://stackoverflow.com/questions/9260982/how-to-find-number-of-occurences-of-slash-from-a-strings
-  GetCountOfInstancesOfACharacterInAString = Len(SourceString) - Len(Replace(SourceString, Character, ""))
+  GetCountOfInstancesOfACharacterInAString = VBA.Strings.Len(SourceString) - VBA.Strings.Len(Replace(SourceString, Character, ""))
 End Function
 
 Function FindUnexpectedBracket(PPath As String) As Long
@@ -414,8 +414,8 @@ Function FindUnexpectedBracket(PPath As String) As Long
   bracketStack = ""
     
   ' Iterate through each character
-  For i = 1 To Len(PPath)
-    char = Mid(PPath, i, 1)
+  For i = 1 To VBA.Strings.Len(PPath)
+    char = VBA.Strings.Mid(PPath, i, 1)
        
     Select Case char
       Case "("
@@ -426,20 +426,20 @@ Function FindUnexpectedBracket(PPath As String) As Long
         bracketStack = bracketStack & "["
       Case ")"
         ' Check if closing round bracket matches last opening bracket
-        If Len(bracketStack) = 0 Or Right(bracketStack, 1) <> "(" Then
+        If VBA.Strings.Len(bracketStack) = 0 Or VBA.Strings.Right(bracketStack, 1) <> "(" Then
           FindUnexpectedBracket = i
           Exit Function
         End If
         ' Pop the last opening bracket
-        bracketStack = Left(bracketStack, Len(bracketStack) - 1)
+        bracketStack = VBA.Strings.Left(bracketStack, VBA.Strings.Len(bracketStack) - 1)
       Case "]"
         ' Check if closing square bracket matches last opening bracket
-        If Len(bracketStack) = 0 Or Right(bracketStack, 1) <> "[" Then
+        If VBA.Strings.Len(bracketStack) = 0 Or VBA.Strings.Right(bracketStack, 1) <> "[" Then
           FindUnexpectedBracket = i
           Exit Function
         End If
         ' Pop the last opening bracket
-        bracketStack = Left(bracketStack, Len(bracketStack) - 1)
+        bracketStack = VBA.Strings.Left(bracketStack, VBA.Strings.Len(bracketStack) - 1)
     End Select
   Next i
     

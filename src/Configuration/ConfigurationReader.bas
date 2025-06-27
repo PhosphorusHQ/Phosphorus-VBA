@@ -51,25 +51,25 @@ Private Function LoadConfigFile() As Boolean
     
   While Not EOF(fileNum)
     Line Input #fileNum, line
-    line = Trim(line)
+    line = VBA.Strings.Trim(line)
         
     ' Skip empty lines or comments
-    If Len(line) = 0 Or Left(line, 1) = ";" Or Left(line, 1) = "#" Then
+    If VBA.Strings.Len(line) = 0 Or VBA.Strings.Left(line, 1) = ";" Or VBA.Strings.Left(line, 1) = "#" Then
       GoTo Continue
     End If
         
     ' Check for section header
-    If Left(line, 1) = "[" And Right(line, 1) = "]" Then
-      currentSection = Mid(line, 2, Len(line) - 2)
+    If VBA.Strings.Left(line, 1) = "[" And VBA.Strings.Right(line, 1) = "]" Then
+      currentSection = VBA.Strings.Mid(line, 2, VBA.Strings.Len(line) - 2)
       GoTo Continue
     End If
         
     ' Parse key-value pair
-    pos = InStr(line, "=")
+    pos = VBA.Strings.InStr(line, "=")
     If pos > 0 Then
-      key = Trim(Left(line, pos - 1))
-      value = Trim(Mid(line, pos + 1))
-      If Len(currentSection) > 0 Then
+      key = VBA.Strings.Trim(Left(line, pos - 1))
+      value = VBA.Strings.Trim(Mid(line, pos + 1))
+      If VBA.Strings.Len(currentSection) > 0 Then
         this.configData.Add currentSection & "." & key, value
       Else
         this.configData.Add key, value
@@ -85,7 +85,7 @@ Continue:
 
 ErrorHandler:
   If Not fileNum = 0 Then Close #fileNum
-  MsgBox "Error loading configuration file: " & Err.Description, vbCritical
+  MsgBox "Error loading configuration file: " & err.Description, vbCritical
   LoadConfigFile = False
   
 End Function
@@ -95,7 +95,7 @@ Public Function GetValue(ByVal section As String, ByVal key As String, Optional 
   Dim lookupKey As String
   If IsInitialized Then
     lookupKey = IIf(Len(section) > 0, section & "." & key, key)
-    If this.configData.Exists(lookupKey) Then
+    If this.configData.exists(lookupKey) Then
       GetValue = this.configData(lookupKey)
     Else
       GetValue = defaultValue
@@ -110,7 +110,7 @@ Public Function GetInteger(ByVal section As String, ByVal key As String, Optiona
   Dim value As String
   value = GetValue(section, key, CStr(defaultValue))
   If IsNumeric(value) Then
-    GetInteger = CLng(value)
+    GetInteger = VBA.Conversion.CLng(value)
   Else
     GetInteger = defaultValue
   End If
@@ -119,7 +119,7 @@ End Function
 ' Get a configuration value as a boolean
 Public Function GetBoolean(ByVal section As String, ByVal key As String, Optional ByVal defaultValue As Boolean = False) As Boolean
   Dim value As String
-  value = UCase(GetValue(section, key, CStr(defaultValue)))
+  value = VBA.Strings.UCase(GetValue(section, key, CStr(defaultValue)))
   If value = "TRUE" Or value = "1" Or value = "YES" Then
     GetBoolean = True
   ElseIf value = "FALSE" Or value = "0" Or value = "NO" Then

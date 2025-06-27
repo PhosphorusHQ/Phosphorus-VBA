@@ -85,41 +85,41 @@ Sub TestLogger2()
   
   myLogger.NextAnalysisCodeLevel "Group1"
   myLogger.InternalDebug "Testing internal debug with Unicode: " & _
-    ChrW(&H3053) & ChrW(&H3093) & ChrW(&H306B) & ChrW(&H3061) & ChrW(&H306F) & _
-    ChrW(&H4E16) & ChrW(&H754C) & _
-    " " & ChrW(&HD83C) & ChrW(&HDF0D)
+    VBA.Strings.ChrW(&H3053) & VBA.Strings.ChrW(&H3093) & VBA.Strings.ChrW(&H306B) & VBA.Strings.ChrW(&H3061) & VBA.Strings.ChrW(&H306F) & _
+    VBA.Strings.ChrW(&H4E16) & VBA.Strings.ChrW(&H754C) & _
+    " " & VBA.Strings.ChrW(&HD83C) & VBA.Strings.ChrW(&HDF0D)
   myLogger.InternalInfo "Testing internal info with Unicode: " & _
-    ChrW(&H41F) & ChrW(&H440) & ChrW(&H438) & ChrW(&H432) & ChrW(&H435) & ChrW(&H442) & _
-    ", " & ChrW(&H43C) & ChrW(&H438) & ChrW(&H440) & ChrW(&H21)
+    VBA.Strings.ChrW(&H41F) & VBA.Strings.ChrW(&H440) & VBA.Strings.ChrW(&H438) & VBA.Strings.ChrW(&H432) & VBA.Strings.ChrW(&H435) & VBA.Strings.ChrW(&H442) & _
+    ", " & VBA.Strings.ChrW(&H43C) & VBA.Strings.ChrW(&H438) & VBA.Strings.ChrW(&H440) & VBA.Strings.ChrW(&H21)
   myLogger.InternalWarning "Testing internal warning with Unicode: " & _
-    ChrW(&H4F60) & ChrW(&H597D) & _
-    ChrW(&HFF0C) & _
-    ChrW(&H4E16) & ChrW(&H754C) & ChrW(&HFF01)
+    VBA.Strings.ChrW(&H4F60) & VBA.Strings.ChrW(&H597D) & _
+    VBA.Strings.ChrW(&HFF0C) & _
+    VBA.Strings.ChrW(&H4E16) & VBA.Strings.ChrW(&H754C) & VBA.Strings.ChrW(&HFF01)
   myLogger.PreviousAnalysisCodeLevel
   
   myLogger.NextAnalysisCodeLevel "Group2"
   myLogger.InternalError "Testing internal error with Unicode: " & _
-    ChrW(&HA1) & ChrW(&H48) & ChrW(&H6F) & ChrW(&H6C) & ChrW(&H61) & _
-    ", " & ChrW(&H6D) & ChrW(&H75) & ChrW(&H6E) & ChrW(&H64) & ChrW(&H6F) & ChrW(&H21)
+    VBA.Strings.ChrW(&HA1) & VBA.Strings.ChrW(&H48) & VBA.Strings.ChrW(&H6F) & VBA.Strings.ChrW(&H6C) & VBA.Strings.ChrW(&H61) & _
+    ", " & VBA.Strings.ChrW(&H6D) & VBA.Strings.ChrW(&H75) & VBA.Strings.ChrW(&H6E) & VBA.Strings.ChrW(&H64) & VBA.Strings.ChrW(&H6F) & VBA.Strings.ChrW(&H21)
   myLogger.InternalFatal "Testing internal critical with Unicode: " & _
-    ChrW(&H42) & ChrW(&H6F) & ChrW(&H6E) & ChrW(&H6A) & ChrW(&H6F) & ChrW(&H75) & ChrW(&H72) & _
-    " " & ChrW(&H6C) & ChrW(&H65) & " " & _
-    ChrW(&H6D) & ChrW(&H6F) & ChrW(&H6E) & ChrW(&H64) & ChrW(&H65) & ChrW(&H21) ' monde!
+    VBA.Strings.ChrW(&H42) & VBA.Strings.ChrW(&H6F) & VBA.Strings.ChrW(&H6E) & VBA.Strings.ChrW(&H6A) & VBA.Strings.ChrW(&H6F) & VBA.Strings.ChrW(&H75) & VBA.Strings.ChrW(&H72) & _
+    " " & VBA.Strings.ChrW(&H6C) & VBA.Strings.ChrW(&H65) & " " & _
+    VBA.Strings.ChrW(&H6D) & VBA.Strings.ChrW(&H6F) & VBA.Strings.ChrW(&H6E) & VBA.Strings.ChrW(&H64) & VBA.Strings.ChrW(&H65) & VBA.Strings.ChrW(&H21) ' monde!
   myLogger.ExternalDebug "Testing application debug with Unicode: " & _
-    ChrW(&H48) & ChrW(&H61) & ChrW(&H6C) & ChrW(&H6C) & ChrW(&H6F) & _
-    " " & ChrW(&H57) & ChrW(&H65) & ChrW(&H6C) & ChrW(&H74) & ChrW(&H21)
+    VBA.Strings.ChrW(&H48) & VBA.Strings.ChrW(&H61) & VBA.Strings.ChrW(&H6C) & VBA.Strings.ChrW(&H6C) & VBA.Strings.ChrW(&H6F) & _
+    " " & VBA.Strings.ChrW(&H57) & VBA.Strings.ChrW(&H65) & VBA.Strings.ChrW(&H6C) & VBA.Strings.ChrW(&H74) & VBA.Strings.ChrW(&H21)
   myLogger.PreviousAnalysisCodeLevel
   
   myLogger.NextAnalysisCodeLevel "Group3"
   myLogger.ExternalWarning "Testing application warning with Unicode: " & _
-    ChrW(&H645) & ChrW(&H631) & ChrW(&H62D) & ChrW(&H628) & ChrW(&H627) & _
-    " " & ChrW(&H628) & ChrW(&H627) & ChrW(&H644) & ChrW(&H639) & ChrW(&H627) & ChrW(&H644) & ChrW(&H645)
+    VBA.Strings.ChrW(&H645) & VBA.Strings.ChrW(&H631) & VBA.Strings.ChrW(&H62D) & VBA.Strings.ChrW(&H628) & VBA.Strings.ChrW(&H627) & _
+    " " & VBA.Strings.ChrW(&H628) & VBA.Strings.ChrW(&H627) & VBA.Strings.ChrW(&H644) & VBA.Strings.ChrW(&H639) & VBA.Strings.ChrW(&H627) & VBA.Strings.ChrW(&H644) & VBA.Strings.ChrW(&H645)
   myLogger.ExternalError "Testing application error with Unicode: " & _
-    ChrW(&H43) & ChrW(&H69) & ChrW(&H61) & ChrW(&H6F) & _
-    " " & ChrW(&H6D) & ChrW(&H6F) & ChrW(&H6E) & ChrW(&H64) & ChrW(&H6F) & ChrW(&H21)
+    VBA.Strings.ChrW(&H43) & VBA.Strings.ChrW(&H69) & VBA.Strings.ChrW(&H61) & VBA.Strings.ChrW(&H6F) & _
+    " " & VBA.Strings.ChrW(&H6D) & VBA.Strings.ChrW(&H6F) & VBA.Strings.ChrW(&H6E) & VBA.Strings.ChrW(&H64) & VBA.Strings.ChrW(&H6F) & VBA.Strings.ChrW(&H21)
   myLogger.ExternalFatal "Testing application critical with Unicode: " & _
-    ChrW(&H4F) & ChrW(&H6C) & ChrW(&HE1) & _
-    " " & ChrW(&H4D) & ChrW(&H75) & ChrW(&H6E) & ChrW(&H64) & ChrW(&H6F) & ChrW(&H21), True ' Mundo!
+    VBA.Strings.ChrW(&H4F) & VBA.Strings.ChrW(&H6C) & VBA.Strings.ChrW(&HE1) & _
+    " " & VBA.Strings.ChrW(&H4D) & VBA.Strings.ChrW(&H75) & VBA.Strings.ChrW(&H6E) & VBA.Strings.ChrW(&H64) & VBA.Strings.ChrW(&H6F) & VBA.Strings.ChrW(&H21), True ' Mundo!
   myLogger.PreviousAnalysisCodeLevel
     
   myLogger.NextAnalysisCodeLevel "Group4"
@@ -127,8 +127,8 @@ Sub TestLogger2()
   myLogger.level = -2 ' INTERNAL_ERROR
   myLogger.InternalWarning "This won’t log" ' Skipped
   myLogger.InternalError "This will log with Unicode: " & _
-    ChrW(&H417) & ChrW(&H434) & ChrW(&H440) & ChrW(&H430) & ChrW(&H432) & ChrW(&H441) & ChrW(&H442) & _
-    ChrW(&H432) & ChrW(&H443) & ChrW(&H439) & ChrW(&H442) & ChrW(&H435) & ChrW(&H21)  ' !
+    VBA.Strings.ChrW(&H417) & VBA.Strings.ChrW(&H434) & VBA.Strings.ChrW(&H440) & VBA.Strings.ChrW(&H430) & VBA.Strings.ChrW(&H432) & VBA.Strings.ChrW(&H441) & VBA.Strings.ChrW(&H442) & _
+    VBA.Strings.ChrW(&H432) & VBA.Strings.ChrW(&H443) & VBA.Strings.ChrW(&H439) & VBA.Strings.ChrW(&H442) & VBA.Strings.ChrW(&H435) & VBA.Strings.ChrW(&H21)  ' !
   myLogger.PreviousAnalysisCodeLevel
  
   myLogger.Flush

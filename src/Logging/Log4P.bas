@@ -42,7 +42,7 @@ Option Base 1
     ByRef lpFrequency As LongLong) As Long
 
   Private Declare PtrSafe Function WideCharToMultiByte Lib "kernel32" ( _
-    ByVal CodePage As Long, _
+    ByVal codePage As Long, _
     ByVal dwFlags As Long, _
     ByVal lpWideCharStr As LongPtr, _
     ByVal cchWideChar As Long, _
@@ -119,15 +119,15 @@ Private LogFixedAnalysisCodes() As String
 Private Sub Class_Initialize()
   
   Dim rootFolder As String
-  If Len(Log4PStatic.LogRootFolder) > 0 Then
+  If VBA.Strings.Len(Log4PStatic.LogRootFolder) > 0 Then
     rootFolder = Log4PStatic.LogRootFolder
   Else
-    rootFolder = ThisWorkbook.Path & "\Logs\"
+    rootFolder = ThisWorkbook.path & "\Logs\"
   End If
 
   CreateFolder rootFolder
   'This must run AFTER the create folder method
-  If Right(rootFolder, 1) <> "\" Then rootFolder = rootFolder & "\"
+  If VBA.Strings.Right(rootFolder, 1) <> "\" Then rootFolder = rootFolder & "\"
 
   logFilePath = _
     rootFolder & _
@@ -146,7 +146,7 @@ Private Sub Class_Initialize()
     
   #If VBA7 Then
      If QueryPerformanceFrequency(perfFrequency) = 0 Then
-       Err.Raise vbObjectError + 1, "Logger", "Failed to get performance frequency"
+       err.Raise vbObjectError + 1, "Logger", "Failed to get performance frequency"
      End If
      QueryPerformanceCounter startTicks
      lastLogTicks = startTicks
@@ -159,7 +159,7 @@ Private Sub Class_Initialize()
   hFile = CreateFileW(StrPtr(logFilePath), GENERIC_WRITE, FILE_SHARE_READ, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0)
   If hFile = -1 Then
     LogMessage "Failed to open log file: " & logFilePath, INTERNAL_ERROR
-    Err.Raise vbObjectError + 1, "Logger", "Failed to open log file"
+    err.Raise vbObjectError + 1, "Logger", "Failed to open log file"
   End If
     
   ' Write UTF-8 BOM
@@ -171,7 +171,7 @@ Private Sub Class_Initialize()
   If WriteFile(hFile, bom(0), 3, bytesWritten, 0) = 0 Then
     CloseHandle hFile
     LogMessage "Failed to write UTF-8 BOM", INTERNAL_ERROR
-    Err.Raise vbObjectError + 1, "Logger", "Failed to initialize log file"
+    err.Raise vbObjectError + 1, "Logger", "Failed to initialize log file"
   End If
     
   InternalInfo "Logger initialized with file: " & logFilePath
@@ -196,17 +196,17 @@ Private Sub CreateFolder(folderPath As String)
   Dim i As Long
   Dim currentPath As String
     
-  If Right(folderPath, 1) = "\" Then folderPath = Left(folderPath, Len(folderPath) - 1)
-  parts = Split(folderPath, "\")
+  If VBA.Strings.Right(folderPath, 1) = "\" Then folderPath = VBA.Strings.Left(folderPath, VBA.Strings.Len(folderPath) - 1)
+  parts = VBA.Strings.Split(folderPath, "\")
   currentPath = parts(0) & "\"
   For i = 1 To UBound(parts)
     currentPath = currentPath & parts(i) & "\"
     If Dir(currentPath, vbDirectory) = "" Then
       On Error Resume Next
       MkDir currentPath
-      If Err.Number <> 0 Then
-        LogMessage "Failed to create folder: " & currentPath & " (Error " & Err.Number & ")", INTERNAL_ERROR
-        Err.Raise vbObjectError + 1, "Logger", "Failed to create folder"
+      If err.Number <> 0 Then
+        LogMessage "Failed to create folder: " & currentPath & " (Error " & err.Number & ")", INTERNAL_ERROR
+        err.Raise vbObjectError + 1, "Logger", "Failed to create folder"
       End If
       On Error GoTo 0
     End If
@@ -217,7 +217,7 @@ End Sub
 Private Sub Class_Terminate()
   'Always log file closed message - these can be filtered out in the log reader
   LogMessage "Log file closed", EXTERNAL_FATAL
-  If Len(logBuffer) > 0 Then WriteBuffer
+  If VBA.Strings.Len(logBuffer) > 0 Then WriteBuffer
   If hFile <> 0 Then
     FlushFileBuffers hFile
     CloseHandle hFile
@@ -257,13 +257,13 @@ Public Sub PreviousAnalysisCodeLevel()
 End Sub
 
 Private Sub WriteBuffer()
-  If hFile <> 0 And Len(logBuffer) > 0 Then
+  If hFile <> 0 And VBA.Strings.Len(logBuffer) > 0 Then
     Dim bytes() As Byte
     bytes = StringToUtf8Bytes(logBuffer)
     Dim bytesWritten As Long
     If WriteFile(hFile, bytes(0), UBound(bytes) + 1, bytesWritten, 0) = 0 Then
       LogMessage "Failed to write buffer to log file", INTERNAL_ERROR
-      Err.Raise vbObjectError + 1, "Logger", "Failed to write buffer to log file"
+      err.Raise vbObjectError + 1, "Logger", "Failed to write buffer to log file"
     End If
     logBuffer = ""
   End If
@@ -271,21 +271,21 @@ End Sub
 
 Private Function StringToUtf8Bytes(ByVal str As String) As Byte()
 
-  If Len(str) = 0 Then
+  If VBA.Strings.Len(str) = 0 Then
     StringToUtf8Bytes = vbNullString
     Exit Function
   End If
     
   ' Get required buffer size
   Dim byteCount As Long
-  byteCount = WideCharToMultiByte(CP_UTF8, 0, StrPtr(str), Len(str), 0, 0, 0, 0)
+  byteCount = WideCharToMultiByte(CP_UTF8, 0, StrPtr(str), VBA.Strings.Len(str), 0, 0, 0, 0)
     
   ' Allocate byte array
   Dim bytes() As Byte
   ReDim bytes(0 To byteCount - 1)
     
   ' Convert to UTF-8
-  byteCount = WideCharToMultiByte(CP_UTF8, 0, StrPtr(str), Len(str), VarPtr(bytes(0)), byteCount, 0, 0)
+  byteCount = WideCharToMultiByte(CP_UTF8, 0, StrPtr(str), VBA.Strings.Len(str), VarPtr(bytes(0)), byteCount, 0, 0)
     
   StringToUtf8Bytes = bytes
 
@@ -324,10 +324,10 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
     #If VBA7 Then
        Dim currentTicks As LongLong
        QueryPerformanceCounter currentTicks
-       timeDiff = CDbl(currentTicks - lastLogTicks) / CDbl(perfFrequency) * 1000
+       timeDiff = VBA.Conversion.CDbl(currentTicks - lastLogTicks) / VBA.Conversion.CDbl(perfFrequency) * 1000
        ' Calculate microseconds since start for timestamp
-       microSeconds = CLng((CDbl(currentTicks - startTicks) / CDbl(perfFrequency)) * 1000000) Mod 1000000
-       timestamp = Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & Right("000000" & microSeconds, 6)
+       microSeconds = VBA.Conversion.CLng((VBA.Conversion.CDbl(currentTicks - startTicks) / VBA.Conversion.CDbl(perfFrequency)) * 1000000) Mod 1000000
+       timestamp = VBA.Strings.Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & VBA.Strings.Right("000000" & microSeconds, 6)
     #Else
        Dim currentTime As Double
        currentTime = Timer
@@ -337,8 +337,8 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
          timeDiff = (currentTime - lastLogTime) * 1000
        End If
        ' Use Timer for milliseconds (less precise)
-       microSeconds = CLng((currentTime - startTime) * 1000) Mod 1000
-       timestamp = Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & Right("000" & microSeconds, 3)
+       microSeconds = VBA.Conversion.CLng((currentTime - startTime) * 1000) Mod 1000
+       timestamp = VBA.Strings.Format(Now, "yyyy-mm-dd hh:nn:ss") & "." & VBA.Strings.Right("000" & microSeconds, 3)
     #End If
       
     'Build up the log entry
@@ -385,7 +385,7 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
     logBuffer = logBuffer & logEntry
       
     ' Estimate UTF-8 byte size (conservative: up to 4 bytes per char)
-    If Len(logBuffer) * 4 >= BUFFER_SIZE Then
+    If VBA.Strings.Len(logBuffer) * 4 >= BUFFER_SIZE Then
       WriteBuffer
     End If
         
@@ -407,7 +407,7 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
     Dim bytesWritten As Long
     If hFile <> 0 Then
       If WriteFile(hFile, bytes(0), UBound(bytes) + 1, bytesWritten, 0) = 0 Then
-        Err.Raise vbObjectError + 1, "Logger", "Failed to write to log file"
+        err.Raise vbObjectError + 1, "Logger", "Failed to write to log file"
       End If
     End If
     writeCount = writeCount + 1
@@ -505,12 +505,12 @@ Public Sub LogFixedLevelMessage( _
 End Sub
 
 Public Sub Flush()
-  If Len(logBuffer) > 0 Then WriteBuffer
+  If VBA.Strings.Len(logBuffer) > 0 Then WriteBuffer
   If hFile <> 0 Then FlushFileBuffers hFile
 End Sub
 
 Public Sub DisableBuffering()
-  If Len(logBuffer) > 0 Then WriteBuffer
+  If VBA.Strings.Len(logBuffer) > 0 Then WriteBuffer
   isBufferingEnabled = False
   flushInterval = 0
 End Sub

@@ -2,7 +2,7 @@ Attribute VB_Name = "PPathExceTopLevelFunctions"
 '@Folder PPath
 Option Explicit
 
-Public TopLevelFunctions As Collection
+Public TopLevelFunctions As collection
 
 Public Sub ClearDownTopLevelFunctions()
   Set TopLevelFunctions = Nothing
@@ -10,7 +10,7 @@ End Sub
 
 Public Sub InitialiseTopLevelFunctions()
   If TopLevelFunctions Is Nothing Then
-    Set TopLevelFunctions = New Collection
+    Set TopLevelFunctions = New collection
     AddATopLevelFunction "sum"
     AddATopLevelFunction "count"
     AddATopLevelFunction "not"
@@ -26,8 +26,8 @@ Public Sub InitialiseTopLevelFunctions()
 End Sub
 
 Private Sub AddATopLevelFunction(strFunctionName As String, Optional intNumberOfAddtionalParameters As Integer)
-  Dim TopLevelFunction As Collection
-  Set TopLevelFunction = New Collection
+  Dim TopLevelFunction As collection
+  Set TopLevelFunction = New collection
   TopLevelFunction.Add strFunctionName, "FunctionName"
   TopLevelFunction.Add intNumberOfAddtionalParameters, "NumberOfAddtionalParameters"
   TopLevelFunctions.Add TopLevelFunction
@@ -36,7 +36,7 @@ End Sub
 Private Sub test()
   PPathExceTopLevelFunctions.ClearDownTopLevelFunctions
   PPathExceTopLevelFunctions.InitialiseTopLevelFunctions
-  Dim TopLevelFunction As Collection
+  Dim TopLevelFunction As collection
   For Each TopLevelFunction In PPathExceTopLevelFunctions.TopLevelFunctions
     Dim strFunctionName As String
     Dim intNumberOfAddtionalParameters As Integer

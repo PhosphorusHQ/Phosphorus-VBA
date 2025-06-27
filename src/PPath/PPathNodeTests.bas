@@ -116,7 +116,7 @@ Public Sub GetValuesOfDataType(UIElement As UIAutomationClient.IUIAutomationElem
       Dim dtDate As Date
       On Error Resume Next
       dtDate = CDate(varValue)
-      If Err.Number = 13 Then
+      If err.Number = 13 Then
         strElementDataType = "string"
       Else
         strElementDataType = "date"

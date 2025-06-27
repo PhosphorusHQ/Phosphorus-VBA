@@ -3,14 +3,14 @@ Attribute VB_Name = "References"
 Option Explicit
 
 ' Declare a global Collection to store added reference details (FullPath and Workbook)
-Private AddedReferences As Collection
+Private AddedReferences As collection
 
 'Trust Settings: Ensure "Trust access to the VBA project object model" is enabled in Excel's Trust Center (File > Options > Trust Center > Trust Center Settings > Macro Settings).
 'NOTE: We don't seem to be able to add a reference while running debug mode!
 
-' Initialize the collection (call this before adding references)
+' Initialize the Collection (call this before adding references)
 Sub InitialiseAddedReferences()
-  Set AddedReferences = New Collection
+  Set AddedReferences = New collection
 End Sub
 
 ' Add a reference to a macro-enabled workbook and save its FullPath and Workbook
@@ -18,7 +18,7 @@ Sub AddReferenceToWorkbook(targetWb As Workbook)
   
   Dim vbProj As VBProject
   Dim ref As Reference
-  Dim refDetails As Collection ' To store FullPath and Workbook
+  Dim refDetails As collection ' To store FullPath and Workbook
     
   ' Initialize the collection if not already done
   If AddedReferences Is Nothing Then InitialiseAddedReferences
@@ -46,7 +46,7 @@ Sub AddReferenceToWorkbook(targetWb As Workbook)
   Set ref = vbProj.References.AddFromFile(targetWb.FullName)
      
   ' Create a collection to store reference details
-  Set refDetails = New Collection
+  Set refDetails = New collection
   refDetails.Add targetWb.FullName, "FullPath" ' Store the filepath
   refDetails.Add targetWb, "Workbook"         ' Store the Workbook object
     
@@ -63,7 +63,7 @@ Sub RemoveAllAddedReferences()
     
   Dim vbProj As Object ' VBProject
   Dim ref As Object ' Reference
-  Dim refDetails As Collection
+  Dim refDetails As collection
   Dim removedCount As Long
     
   ' Check if collection is initialized
@@ -97,7 +97,7 @@ Sub RemoveAllAddedReferences()
   On Error GoTo 0
     
   ' Clear the collection
-  Set AddedReferences = New Collection
+  Set AddedReferences = New collection
     
 'MsgBox "Added Reference"
     

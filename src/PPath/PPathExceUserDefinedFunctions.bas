@@ -52,10 +52,10 @@ Public Function udf_reversetext(strText) As String
     strReturn = ""
   Else
     Dim i As Integer
-    Dim c As String
+    Dim C As String
     For i = 1 To VBA.Strings.Len(strText)
-      c = VBA.Strings.Mid(strText, i, 1)
-      strReturn = c & strReturn
+      C = VBA.Strings.Mid(strText, i, 1)
+      strReturn = C & strReturn
     Next i
   End If
   udf_reversetext = strReturn

@@ -10,7 +10,7 @@ Private Sub test()
 '  dog.Speak
 '  cat.Speak
   
-  Dim c As Object
-  Set c = cat
-  c.Speak
+  Dim C As Object
+  Set C = cat
+  C.Speak
 End Sub

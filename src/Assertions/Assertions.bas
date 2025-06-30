@@ -112,7 +112,7 @@ Attribute VB_Exposed = False
 '  Logger.InternalInfo "Total Tests: " & testCount
 '  Logger.InternalInfo "Passed: " & (testCount - failedCount)
 '  Logger.InternalInfo "Failed: " & failedCount
-'  Logger.InternalInfo "Success Rate: " & Format((testCount - failedCount) / testCount, "0%")
+'  Logger.InternalInfo "Success Rate: " & VBA.Strings.Format((testCount - failedCount) / testCount, "0%")
 'End Sub
 
 
@@ -243,7 +243,7 @@ End Sub
 Private Function AreEqual(value1 As Variant, value2 As Variant) As Boolean
     On Error Resume Next
     AreEqual = (value1 = value2)
-    If Err.Number <> 0 Then
+    If err.Number <> 0 Then
         AreEqual = False
     End If
     On Error GoTo 0
@@ -257,7 +257,7 @@ Public Sub AssertInRange(value As Variant, minValue As Variant, maxValue As Vari
     On Error Resume Next
     Dim isInRange As Boolean
     isInRange = (value >= minValue And value <= maxValue)
-    If Err.Number <> 0 Then isInRange = False
+    If err.Number <> 0 Then isInRange = False
     On Error GoTo 0
     
     If Not isInRange Then
@@ -374,7 +374,7 @@ Public Sub AssertThrows(codeToRun As String, expectedError As Long, Optional mes
     
     On Error Resume Next
     ExecuteScript codeToRun
-    If Err.Number = expectedError Then
+    If err.Number = expectedError Then
         errorOccurred = True
     End If
     On Error GoTo 0
@@ -422,7 +422,7 @@ Public Sub AssertType(value As Variant, expectedTypeName As String, Optional mes
     Dim actualType As String
     actualType = TypeName(value)
     
-    If LCase(actualType) <> LCase(expectedTypeName) Then
+    If VBA.Strings.LCase(actualType) <> VBA.Strings.LCase(expectedTypeName) Then
         failedCount = failedCount + 1
         If isCritical Then this.HasCriticalFailure = True
         Debug.Print "FAIL: Expected type '" & expectedTypeName & "' but got '" & actualType & "'" & _
@@ -440,7 +440,7 @@ Public Sub AssertGreaterThan(value As Variant, threshold As Variant, Optional me
     Dim isGreater As Boolean
     On Error Resume Next
     isGreater = (value > threshold)
-    If Err.Number <> 0 Then isGreater = False
+    If err.Number <> 0 Then isGreater = False
     On Error GoTo 0
     
     If Not isGreater Then
@@ -461,7 +461,7 @@ Public Sub AssertLessThan(value As Variant, threshold As Variant, Optional messa
     Dim isLess As Boolean
     On Error Resume Next
     isLess = (value < threshold)
-    If Err.Number <> 0 Then isLess = False
+    If err.Number <> 0 Then isLess = False
     On Error GoTo 0
     
     If Not isLess Then
@@ -501,7 +501,6 @@ Private Sub ExecuteScript(code As String)
     Application.VBE.ActiveVBProject.VBComponents.Remove Application.VBE.ActiveVBProject.VBComponents("TempModule")
 End Sub
 
-
 ' Print summary of test results
 Public Sub PrintSummary()
     Debug.Print vbNewLine & "Test Summary:"
@@ -509,6 +508,6 @@ Public Sub PrintSummary()
     Debug.Print "Passed: " & (testCount - failedCount)
     Debug.Print "Failed: " & failedCount
     Debug.Print "Critical Failure Occurred: " & IIf(HasCriticalFailure, "Yes", "No")
-    Debug.Print "Success Rate: " & Format((testCount - failedCount) / testCount, "0%")
+    Debug.Print "Success Rate: " & VBA.Strings.Format((testCount - failedCount) / testCount, "0%")
 End Sub
 

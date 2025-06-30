@@ -24,7 +24,7 @@ End Sub
 
 '@ModuleCleanup
 Private Sub ModuleCleanup()
-  Set assert = Nothing
+  Set Assert = Nothing
   Set Fakes = Nothing
   CloseTestWorkbook
   PPathWorkbook.CloseWB
@@ -40,8 +40,8 @@ Private Sub TestInitialize()
     CreateTestWorkbook
   End If
   'Test117 loses these references
-  If assert Is Nothing Then
-    Set assert = CreateObject("Rubberduck.AssertClass")
+  If Assert Is Nothing Then
+    Set Assert = CreateObject("Rubberduck.AssertClass")
   End If
   If Fakes Is Nothing Then
     Set Fakes = CreateObject("Rubberduck.FakesProvider")
@@ -125,11 +125,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel001, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -140,11 +140,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel002, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -155,11 +155,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 6
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel003, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -170,11 +170,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 5
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel004, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -185,11 +185,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel005, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -200,11 +200,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 2
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel006, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -215,11 +215,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 3
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel007, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -230,11 +230,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 6
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel008, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -245,11 +245,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel009, EvaluatedPPath
-  assert.AreEqual llongExpectedNumberOfMatchingElements, VBA.Conversion.CLng(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, VBA.Conversion.CLng(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -260,11 +260,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel009, EvaluatedPPath
-  assert.AreEqual 1423.77, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual 1423.77, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -275,11 +275,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel009, EvaluatedPPath
-  assert.AreEqual 142.377, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual 142.377, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -290,11 +290,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel009, EvaluatedPPath
-  assert.AreEqual "204.529890075863", VBA.Conversion.CStr(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual "204.529890075863", VBA.Conversion.CStr(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -305,11 +305,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel009, EvaluatedPPath
-  assert.AreEqual 204.53, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual 204.53, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -320,11 +320,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel009, EvaluatedPPath
-  assert.AreEqual 204.52989, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual 204.52989, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -335,11 +335,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel009, EvaluatedPPath
-  assert.AreEqual -1, VBA.Conversion.CInt(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual -1, VBA.Conversion.CInt(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -350,11 +350,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel009, EvaluatedPPath
-  assert.AreEqual 521.01, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual 521.01, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -365,11 +365,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel009, EvaluatedPPath
-  assert.AreEqual 205, VBA.Conversion.CInt(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual 205, VBA.Conversion.CInt(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -380,11 +380,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel009, EvaluatedPPath
-  assert.AreEqual 204.5298, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual 204.5298, VBA.Conversion.CDbl(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -395,11 +395,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 10
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel009, EvaluatedPPath
-  assert.AreEqual "-4252982755186.95", VBA.Conversion.CStr(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual "-4252982755186.95", VBA.Conversion.CStr(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 'Use text() function
@@ -411,11 +411,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel100, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'PPath in Excel can levereage any Excel forumulas in predicates
@@ -427,11 +427,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel100, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -442,11 +442,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel100, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -457,11 +457,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel100, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'REM This is slow and fails randomly - us VBA Web Service Call instead? @TestMethod("PPath Evaluation Excel")
@@ -472,11 +472,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel100, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'User defined function local to Phosphorus
@@ -488,11 +488,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel100, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -503,11 +503,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel106, EvaluatedPPath
-  assert.AreEqual 404.36, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual 404.36, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'Excel formula with parameters
@@ -519,11 +519,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel107, EvaluatedPPath
-  assert.AreEqual -1, VBA.Conversion.CInt(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual -1, VBA.Conversion.CInt(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -534,11 +534,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel108, EvaluatedPPath
-  assert.AreEqual -1, VBA.Conversion.CInt(EvaluatedPPath.ReturnedValue), "ReturnedValue"
+  Assert.AreEqual -1, VBA.Conversion.CInt(EvaluatedPPath.ReturnedValue), "ReturnedValue"
 End Sub
 
 '@TestMethod("PPath Evaluation Excel")
@@ -549,11 +549,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel109, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'User defined function to replicate an xpath function
@@ -565,11 +565,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel110, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'User defined function to replicate an xpath function
@@ -581,11 +581,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel111, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'User defined function to replicate an xpath function
@@ -597,11 +597,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel112, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'User defined function to replicate an xpath function
@@ -613,11 +613,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel113, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'User defined function to replicate an xpath function
@@ -629,11 +629,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel114, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'User defined function to replicate an xpath function
@@ -645,11 +645,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel114, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'User defined function to replicate an xpath function
@@ -661,11 +661,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel114, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'References to workbooks of End-User user defined functions can be added through the framework
@@ -699,11 +699,11 @@ Arrange:
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
 
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel117, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
     
 'Tidy up
   RemoveAllAddedReferences
@@ -724,11 +724,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel114, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'User defined function to replicate an xpath function
@@ -740,11 +740,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel114, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'User defined function to replicate an xpath function
@@ -756,11 +756,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel114, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'User defined function to replicate an xpath function
@@ -772,11 +772,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel114, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'Test for mapping a renamed a user defined function
@@ -792,11 +792,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 1
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
-assert:
-  assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
-  assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
+Assert:
+  Assert.AreEqual "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage"
+  Assert.AreEqual llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   TestExpectedAndActualAllElementsPPath PPathTestsExpectedResults.TestExcel114, EvaluatedPPath
-  assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
+  Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
 'Unit test for a user defined function
@@ -806,8 +806,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = udf_reversetext("abc")
-assert:
-  assert.AreEqual "cba", strReturn
+Assert:
+  Assert.AreEqual "cba", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -817,8 +817,8 @@ Arrange:
   Dim boolReturn As Boolean
 Act:
   boolReturn = xp_contains("Rabbit", "abb")
-assert:
-  assert.AreEqual True, boolReturn
+Assert:
+  Assert.AreEqual True, boolReturn
 End Sub
 
 'Unit test for a user defined function
@@ -828,8 +828,8 @@ Arrange:
   Dim boolReturn As Boolean
 Act:
   boolReturn = xp_contains("Rabbit", "cat")
-assert:
-  assert.AreEqual False, boolReturn
+Assert:
+  Assert.AreEqual False, boolReturn
 End Sub
 
 'Unit test for a user defined function
@@ -839,8 +839,8 @@ Arrange:
   Dim boolReturn As Boolean
 Act:
   boolReturn = xp_starts_with("Rabbit", "Rabbi")
-assert:
-  assert.AreEqual True, boolReturn
+Assert:
+  Assert.AreEqual True, boolReturn
 End Sub
 
 'Unit test for a user defined function
@@ -850,8 +850,8 @@ Arrange:
   Dim boolReturn As Boolean
 Act:
   boolReturn = xp_starts_with("Rabbit", "Rob")
-assert:
-  assert.AreEqual False, boolReturn
+Assert:
+  Assert.AreEqual False, boolReturn
 End Sub
 
 'Unit test for a user defined function
@@ -861,8 +861,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_format_number(45735, "dd/mm/yyyy")
-assert:
-  assert.AreEqual "19/03/2025", strReturn
+Assert:
+  Assert.AreEqual "19/03/2025", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -872,8 +872,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_normalize_space(" " & "One" & vbCrLf & "Two" & vbCr & "Three" & vbLf & "Four" & vbTab & "Five" & "        " & "Six" & " ")
-assert:
-  assert.AreEqual "OneTwoThreeFourFive Six", strReturn
+Assert:
+  Assert.AreEqual "OneTwoThreeFourFive Six", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -883,8 +883,8 @@ Arrange:
   Dim intReturn As Integer
 Act:
   intReturn = xp_string_length(" " & "One" & vbCrLf & "Two" & vbCr & "Three" & vbLf & "Four" & vbTab & "Five" & "        " & "Six" & " ")
-assert:
-  assert.AreEqual 37, intReturn
+Assert:
+  Assert.AreEqual 37, intReturn
 End Sub
 
 
@@ -895,8 +895,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_substring("Rabbit", 2, 4)
-assert:
-  assert.AreEqual "abb", strReturn
+Assert:
+  Assert.AreEqual "abb", strReturn
 End Sub
   
 'Unit test for a user defined function
@@ -906,8 +906,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_substring("Rabbit", 4)
-assert:
-  assert.AreEqual "bit", strReturn
+Assert:
+  Assert.AreEqual "bit", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -917,8 +917,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_string_after("Extraneous", "")
-assert:
-  assert.AreEqual "Extraneous", strReturn
+Assert:
+  Assert.AreEqual "Extraneous", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -928,8 +928,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_string_after("Extraneous", "ran")
-assert:
-  assert.AreEqual "eous", strReturn
+Assert:
+  Assert.AreEqual "eous", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -939,8 +939,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_string_after("Extraneous", "run")
-assert:
-  assert.AreEqual "Extraneous", strReturn
+Assert:
+  Assert.AreEqual "Extraneous", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -950,8 +950,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_string_before("Extraneous", "ran")
-assert:
-  assert.AreEqual "Ext", strReturn
+Assert:
+  Assert.AreEqual "Ext", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -961,8 +961,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_string_before("Extraneous", "run")
-assert:
-  assert.AreEqual "Extraneous", strReturn
+Assert:
+  Assert.AreEqual "Extraneous", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -972,8 +972,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_translate("bar", "abc", "ABC")
-assert:
-  assert.AreEqual "BAr", strReturn
+Assert:
+  Assert.AreEqual "BAr", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -983,8 +983,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_translate("--aaa--", "abc-", "ABC")
-assert:
-  assert.AreEqual "AAA", strReturn
+Assert:
+  Assert.AreEqual "AAA", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -994,8 +994,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = xp_translate("abcdabc", "abc", "AB")
-assert:
-  assert.AreEqual "ABdAB", strReturn
+Assert:
+  Assert.AreEqual "ABdAB", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -1005,8 +1005,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = udf_text_between("USER: myusername ADDRESS: unknown", "USER:", "ADDRESS:")
-assert:
-  assert.AreEqual " myusername ", strReturn
+Assert:
+  Assert.AreEqual " myusername ", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -1016,8 +1016,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = udf_text_between("abc-123-xyz-000", "-", "-")
-assert:
-  assert.AreEqual "123", strReturn
+Assert:
+  Assert.AreEqual "123", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -1027,8 +1027,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = udf_text_between("abc-123-xyz-000", "-", "-", True)
-assert:
-  assert.AreEqual "xyz", strReturn
+Assert:
+  Assert.AreEqual "xyz", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -1038,8 +1038,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = udf_text_between("How now brown cow", "now", "anyrandomstring")
-assert:
-  assert.AreEqual " brown cow", strReturn
+Assert:
+  Assert.AreEqual " brown cow", strReturn
 End Sub
 
 'Unit test for a user defined function
@@ -1049,8 +1049,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = udf_text_between("C:\Users\Ryan\Documents\readme.txt", "\", ".txt", True)
-assert:
-  assert.AreEqual "readme", strReturn
+Assert:
+  Assert.AreEqual "readme", strReturn
 End Sub
 
 'Unit test for a test user defined function
@@ -1060,8 +1060,8 @@ Arrange:
   Dim boolReturn As Boolean
 Act:
   boolReturn = udf_test_starts_with("Rabbit", "Rab")
-assert:
-  assert.AreEqual True, boolReturn
+Assert:
+  Assert.AreEqual True, boolReturn
 End Sub
 
 'Unit test for a test user defined function
@@ -1071,8 +1071,8 @@ Arrange:
   Dim boolReturn As Boolean
 Act:
   boolReturn = udf_test_ends_with("Rabbit", "bit")
-assert:
-  assert.AreEqual True, boolReturn
+Assert:
+  Assert.AreEqual True, boolReturn
 End Sub
 
 'Unit test for a user defined function renaming
@@ -1082,8 +1082,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = RenameExcelFunctions("ceiling_math()")
-assert:
-  assert.AreEqual "ceiling.math()", strReturn
+Assert:
+  Assert.AreEqual "ceiling.math()", strReturn
 End Sub
 
 'Unit test for a user defined function renaming
@@ -1093,8 +1093,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = RenameExcelFunctions("floor_math()")
-assert:
-  assert.AreEqual "floor.math()", strReturn
+Assert:
+  Assert.AreEqual "floor.math()", strReturn
 End Sub
 
 'Unit test for a user defined function renaming
@@ -1104,8 +1104,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = RenameExcelFunctions("xp:format-number()")
-assert:
-  assert.AreEqual "xp_format_number()", strReturn
+Assert:
+  Assert.AreEqual "xp_format_number()", strReturn
 End Sub
 
 'Unit test for a user defined function renaming
@@ -1115,8 +1115,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = RenameExcelFunctions("xp:starts-with()")
-assert:
-  assert.AreEqual "xp_starts_with()", strReturn
+Assert:
+  Assert.AreEqual "xp_starts_with()", strReturn
 End Sub
 
 'Unit test for a user defined function renaming
@@ -1126,8 +1126,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = RenameExcelFunctions("xp:normalize-space()")
-assert:
-  assert.AreEqual "xp_normalize_space()", strReturn
+Assert:
+  Assert.AreEqual "xp_normalize_space()", strReturn
 End Sub
 
 'Unit test for a user defined function renaming
@@ -1137,8 +1137,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = RenameExcelFunctions("xp:substring()")
-assert:
-  assert.AreEqual "xp_substring()", strReturn
+Assert:
+  Assert.AreEqual "xp_substring()", strReturn
 End Sub
 
 'Unit test for a user defined function renaming
@@ -1148,8 +1148,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = RenameExcelFunctions("xp:string-length()")
-assert:
-  assert.AreEqual "xp_string_length()", strReturn
+Assert:
+  Assert.AreEqual "xp_string_length()", strReturn
 End Sub
 
 'Unit test for a user defined function renaming
@@ -1160,8 +1160,8 @@ Arrange:
   PPathExceUserDefinedFunctions.ClearDownFunctionNameMappings
 Act:
   strReturn = RenameExcelFunctions("xp:string-after()")
-assert:
-  assert.AreEqual "xp_string_after()", strReturn
+Assert:
+  Assert.AreEqual "xp_string_after()", strReturn
 End Sub
 
 'Unit test for a user defined function renaming
@@ -1171,8 +1171,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = PPathExceUserDefinedFunctions.RenameExcelFunctions("xp:string-before()")
-assert:
-  assert.AreEqual "xp_string_before()", strReturn
+Assert:
+  Assert.AreEqual "xp_string_before()", strReturn
 End Sub
 
 'Unit test for a user defined function renaming
@@ -1182,8 +1182,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = PPathExceUserDefinedFunctions.RenameExcelFunctions("xp:translate()")
-assert:
-  assert.AreEqual "xp_translate()", strReturn
+Assert:
+  Assert.AreEqual "xp_translate()", strReturn
 End Sub
 
 'Unit test for a user defined function renaming
@@ -1193,8 +1193,8 @@ Arrange:
   Dim strReturn As String
 Act:
   strReturn = PPathExceUserDefinedFunctions.RenameExcelFunctions("udf:text-between()")
-assert:
-  assert.AreEqual "udf_text_between()", strReturn
+Assert:
+  Assert.AreEqual "udf_text_between()", strReturn
 End Sub
 
 'Unit test for a temporarily renamed user defined function
@@ -1217,10 +1217,10 @@ Arrange:
 Act:
   strReturn3 = PPathExceUserDefinedFunctions.RenameExcelFunctions("udftest:starts-with()")
   strReturn4 = PPathExceUserDefinedFunctions.RenameExcelFunctions("udftest:ends-with()")
-assert:
-  assert.AreEqual "udftest:starts-with()", strReturn1, "strReturn1"
-  assert.AreEqual "udftest:ends-with()", strReturn2, "strReturn2"
-  assert.AreEqual "udf_test_starts_with()", strReturn3, "strReturn3"
-  assert.AreEqual "udf_test_ends_with()", strReturn4, "strReturn4"
+Assert:
+  Assert.AreEqual "udftest:starts-with()", strReturn1, "strReturn1"
+  Assert.AreEqual "udftest:ends-with()", strReturn2, "strReturn2"
+  Assert.AreEqual "udf_test_starts_with()", strReturn3, "strReturn3"
+  Assert.AreEqual "udf_test_ends_with()", strReturn4, "strReturn4"
 End Sub
 

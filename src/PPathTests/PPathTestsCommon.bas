@@ -3,7 +3,7 @@ Attribute VB_Name = "PPathTestsCommon"
 '@TestModule
 Option Explicit
 
-Public assert As Object
+Public Assert As Object
 Public Fakes As Object
 
 Public Sub OutputActualXPaths(strActualXPaths() As String)
@@ -77,8 +77,8 @@ Public Sub TestExpectedAndActualAllElementsPPath(strExpectedPPaths As String, Ev
         Next i
       End If
 '    End If
-    assert.AreEqual strExpectedXPathsArray(intXPathLoopCounter - 1), strActualXPathsArray(intXPathLoopCounter), "GetAllElementsXPaths (" & intXPathLoopCounter & ")"
+    Assert.AreEqual strExpectedXPathsArray(intXPathLoopCounter - 1), strActualXPathsArray(intXPathLoopCounter), "GetAllElementsXPaths (" & intXPathLoopCounter & ")"
   Next intXPathLoopCounter
-  assert.AreEqual intExpectedNumberOfXPaths, intActualNumberOfXPaths, "GetAllElementsXpath_NumberOfXPaths"
+  Assert.AreEqual intExpectedNumberOfXPaths, intActualNumberOfXPaths, "GetAllElementsXpath_NumberOfXPaths"
 End Sub
 

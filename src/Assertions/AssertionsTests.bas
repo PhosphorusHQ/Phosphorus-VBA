@@ -2,113 +2,349 @@ Attribute VB_Name = "AssertionsTests"
 '@Folder Assertions
 Option Explicit
 
-Sub RunAssertionTests()
+Dim Assert As Assertions
+
+Sub RunAllAssertionTests()
 
   Log4PStatic.LogFileNameDynamicPart1 = "AssertionsTests"
   Log4PStatic.LogFileNameDynamicPart2 = "RunAssertionTests"
 
   Log4PStatic.GetLogger
   Logger.level = LogLevel.EXTERNAL_TRACE 'Log everything
-
-  Dim Assert As New Assertions
-
-  ' Test examples
-  Assert.AssertEqual 5, 5, "Numbers should be equal"
-  Assert.AssertEqual "test", "test", "Strings should be equal"
-  Assert.AssertNotEqual 5, 6, "Numbers should not be equal"
-  Assert.AssertTrue (2 + 2 = 4), "Basic math should be true"
-  Assert.AssertFalse (1 > 2), "Comparison should be false"
-  Assert.AssertNull Null, "Value should be null"
-  Assert.AssertNotNull "hello", "Value should not be null"
-
-  ' Intentionally failing tests for demonstration
-  Assert.AssertEqual 5, 6, "This should fail"
-  Assert.AssertTrue False, "This should fail too"
-
-  ' Print results
-  Assert.PrintSummary
-
+  
+  'TODO: Remove this after lsoign Rubberduck
+  'AssertionsStatic.GetAssert
+  
+  RunAssertionTests1
+  RunAssertionTests2
+  RunAssertionTests3
+  RunAssertionTests4
+  
   Logger.Flush
-  Debug.Print "Log file: " & Logger.GetFilePath
-
   Log4PStatic.CloseLogger
 
 End Sub
 
-Sub RunTests()
-    Dim Assert As New Assertions
-    
-    ' Test Step 1
-    Debug.Print "Test Step 1:"
-    Assert.AssertEqual 5, 5, "Numbers should be equal"
-    Assert.AssertTrue (2 + 2 = 4), "Basic math should be true", True ' Critical assertion
-    Assert.AssertFalse (1 > 2), "Comparison should be false"
-    If Assert.HasCriticalFailure Then
-        Debug.Print "Step 1 aborted due to critical failure"
-        Exit Sub
-    End If
-    
-    ' Test Step 2
-    Debug.Print vbNewLine & "Test Step 2:"
-    Assert.AssertEqual 5, 6, "This should fail", True ' Critical assertion that will fail
-    Assert.AssertNotEqual "test", "test", "This should fail too"
-    If Assert.HasCriticalFailure Then
-        Debug.Print "Step 2 aborted due to critical failure"
-        Exit Sub
-    End If
-    
-    ' Test Step 3 (won't run if critical failure occurred)
-    Debug.Print vbNewLine & "Test Step 3:"
-    Assert.AssertNotNull "hello", "Value should not be null"
-    
-    ' Print results
-    Assert.PrintSummary
+Sub RunAssertionTests1()
+  
+  ' Test examples
+  
+  Set Assert = New Phosphorus.Assertions
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests1", _
+    AnalysisCode2:="AssertEqual", _
+    AnalysisCode3:="Numbers", _
+    message:="Numbers should be equal"
+  Assert.Equal 5, 5, "Numbers should be equal"
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests1", _
+    AnalysisCode2:="AssertEqual", _
+    AnalysisCode3:="Strings", _
+    message:="Strings should be equal"
+  Assert.Equal "test", "test", "Strings should be equal"
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests1", _
+    AnalysisCode2:="AssertNotEqual", _
+    AnalysisCode3:="Numbers", _
+    message:="Numbers should not be equal"
+  Assert.NotEqual 5, 6, "Numbers should not be equal"
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests1", _
+    AnalysisCode2:="AssertTrue", _
+    AnalysisCode3:="Basic math", _
+    message:="Basic math should be true"
+  Assert.IsTrue (2 + 2 = 4), "Basic math should be true"
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests1", _
+    AnalysisCode2:="AssertFalse", _
+    AnalysisCode3:="Comparison", _
+    message:="Comparison should be false"
+  Assert.IsFalse (1 > 2), "Comparison should be false"
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests1", _
+    AnalysisCode2:="AssertNull", _
+    AnalysisCode3:="Comparison", _
+    message:="Value should be null"
+  Assert.ThisIsNull Null, "Value should be null"
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests1", _
+    AnalysisCode2:="AssertNotNull", _
+    AnalysisCode3:="Comparison", _
+    message:="Value should not be null"
+  Assert.ThisIsNotNull "hello", "Value should not be null"
+
+  ' Intentionally failing tests for demonstration
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests1", _
+    AnalysisCode2:="AssertEqual", _
+    AnalysisCode3:="Comparison", _
+    message:="Numbers should not be equal - This should fail"
+  Assert.Equal 5, 6, "This should fail"
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests1", _
+    AnalysisCode2:="AssertTrue", _
+    AnalysisCode3:="False", _
+    message:="True is not False - This should fail too"
+  Assert.IsTrue False, "This should fail too"
+
+  ' Print results
+  Assert.PrintSummary
+  
+  Set Assert = Nothing
+
 End Sub
 
-Sub TestAdditionalAssertions()
-    Dim Assert As New Assertions
-    Dim testArray(1 To 3) As Integer
+Sub RunAssertionTests2()
+    
+  Set Assert = New Phosphorus.Assertions
+  
+  ' Test Step 1
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests2", _
+    AnalysisCode2:="Test Step 1", _
+    message:="Test Step 1"
+    
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests2", _
+    AnalysisCode2:="Test Step 1", _
+    AnalysisCode3:="Numbers should be equal", _
+    message:="Assert 5 = 5"
+  Assert.Equal 5, 5, "Numbers should be equal"
+
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests2", _
+    AnalysisCode2:="Test Step 1", _
+    AnalysisCode3:="Basic math should be true", _
+    message:="Assert 2 + 2 = 4"
+  Assert.IsTrue (2 + 2 = 4), "Basic math should be true", True ' Critical assertion
+    
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests2", _
+    AnalysisCode2:="Test Step 1", _
+    AnalysisCode3:="Comparison should be false", _
+    message:="Assert 2 + 2 = 4"
+  Assert.IsFalse (1 > 2), "Comparison should be false"
+  
+  'No Critical Failures
+  If Assert.HasCriticalFailure Then
+    Logger.LogFixedLevelMessage _
+      level:=LogLevel.EXTERNAL_INFO, _
+      AnalysisCode1:="AssertionTests2", _
+      AnalysisCode2:="Check for Has Critical Failure", _
+      message:="Step 1 aborted due to critical failure"
+    Exit Sub
+  End If
+    
+  ' Test Step 2
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests2", _
+    AnalysisCode2:="Test Step 2", _
+    message:="Test Step 2"
+    
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests2", _
+    AnalysisCode2:="Test Step 2", _
+    AnalysisCode3:="Numbers should not be equal - this should fail - critical", _
+    message:="Assert 5 = 5"
+  Assert.Equal 5, 6, "This should fail", True ' Critical assertion that will fail
+    
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests2", _
+    AnalysisCode2:="Test Step 2", _
+    AnalysisCode3:="The same string is not not equal - this should fail too", _
+    message:="Assert 5 = 5"
+  Assert.NotEqual "test", "test", "This should fail too"
+    
+  If Assert.HasCriticalFailure Then
+    Logger.LogFixedLevelMessage _
+      level:=LogLevel.EXTERNAL_INFO, _
+      AnalysisCode1:="AssertionTests2", _
+      AnalysisCode2:="Check for Has Critical Failure", _
+      message:="Step 2 aborted due to critical failure"
+    GoTo PrintSummary
+  End If
+    
+  ' Test Step 3 (won't run if critical failure occurred)
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests2", _
+    AnalysisCode2:="Test Step 3", _
+    message:="Test Step 3"
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests2", _
+    AnalysisCode2:="Test Step 3", _
+    AnalysisCode3:="A string is not null - this should not run", _
+    message:="Assert 'hello' is not "
+  Assert.ThisIsNotNull "hello", "Value should not be null"
+
+PrintSummary:
+  ' Print results
+  Assert.PrintSummary
+
+  Set Assert = Nothing
+
+End Sub
+
+Sub RunAssertionTests3()
+  
+  Set Assert = New Phosphorus.Assertions
+  
+  Dim testArray(1 To 3) As Integer
     testArray(1) = 1
     testArray(2) = 2
     testArray(3) = 3
     
-    ' Test Step 1
-    Debug.Print "Test Step 1:"
-    Assert.AssertInRange 5, 1, 10, "Value should be in range"
-    Assert.AssertContains testArray, 2, "Array should contain 2", True
-    Assert.AssertStringMatches "Hello123", "*[0-9]*", "String should contain numbers"
-    Assert.AssertApproximatelyEqual 10#, 10.1, 0.2, "Values should be approximately equal"
-    Assert.AssertObjectExists Application, "Application object should exist"
+  ' Test Step 1
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests3", _
+    AnalysisCode2:="Test Step 1", _
+    message:="Test Step 1"
     
-    ' Check for critical failure
-    If Assert.HasCriticalFailure Then
-        Debug.Print "Step 1 aborted due to critical failure"
-        Exit Sub
-    End If
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests3", _
+    AnalysisCode2:="Test Step 1", _
+    AnalysisCode3:="Value should be in range", _
+    message:="Assert 5 is between 1 and 10"
+  Assert.InRange 5, 1, 10, "Value should be in range"
+
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests3", _
+    AnalysisCode2:="Test Step 1", _
+    AnalysisCode3:="Array should contain", _
+    message:="Array should contain 2"
+  Assert.Contains testArray, 2, "Array should contain 2", True
+
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests3", _
+    AnalysisCode2:="Test Step 1", _
+    AnalysisCode3:="String should contain numbers", _
+    message:="'Hello123' contain '*[0-9]*'"
+  Assert.StringMatchesSimplePattern "Hello123", "*[0-9]*", "String should contain numbers"
     
-    Assert.PrintSummary
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests3", _
+    AnalysisCode2:="Test Step 1", _
+    AnalysisCode3:="Values should be approximately equal", _
+    message:="'Hello123' contain '*[0-9]*'"
+  Assert.ApproximatelyEqual 10#, 10.1, 0.2, "Values should be approximately equal"
+    
+  Assert.ObjectExists Application, "Application object should exist"
+    
+  ' Check for critical failure
+  If Assert.HasCriticalFailure Then
+    Debug.Print "Step 1 aborted due to critical failure"
+    Exit Sub
+  End If
+    
+  Assert.PrintSummary
+
+  Set Assert = Nothing
+
 End Sub
 
-' TestModule.bas
-Sub TestAllAssertions()
-    Dim Assert As New Assertions
-    Dim emptyArray() As Integer
-    Dim testCollection As New collection
+Sub RunAssertionTests4()
+
+  Set Assert = New Phosphorus.Assertions
+  
+  Assert.Throws "AssertionThrowsErrTest", 5, "Should raise error 5"
     
-    ' Test Step 1
-    Debug.Print "Test Step 1:"
-    Assert.AssertThrows "Sub Test() : Err.Raise 5 : End Sub", 5, "Should raise error 5"
-    Assert.AssertEmpty testCollection, "Collection should be empty", True
-    Assert.AssertType "Hello", "String", "Should be string type"
-    Assert.AssertGreaterThan 10, 5, "10 should be greater than 5"
-    Assert.AssertLessThan 3, 7, "3 should be less than 7"
-    Assert.AssertFileExists "C:\Windows\explorer.exe", "Windows Explorer should exist"
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests4", _
+    AnalysisCode2:="AssertEmpty", _
+    AnalysisCode3:="Collection", _
+    message:="Collection should be empty"
+  Dim testCollection As New collection
+  Assert.IsEmpty testCollection, "Collection should be empty", True
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests4", _
+    AnalysisCode2:="AssertEmpty", _
+    AnalysisCode3:="Array", _
+    message:="Array should be empty"
+  Dim emptyArray() As Integer
+  Assert.IsEmpty emptyArray(), "Array should be empty", True
     
-    ' Check for critical failure
-    If Assert.HasCriticalFailure Then
-        Debug.Print "Step 1 aborted due to critical failure"
-        Exit Sub
-    End If
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests4", _
+    AnalysisCode2:="AssertType", _
+    AnalysisCode3:="String", _
+    message:="Should be string type"
+  Assert.IsType "Hello", "String", "Should be string type"
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests4", _
+    AnalysisCode2:="AssertGreaterThan", _
+    AnalysisCode3:="Numbers 10, 5", _
+    message:="10 should be greater than 5"
+  Assert.GreaterThan 10, 5, "10 should be greater than 5"
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests4", _
+    AnalysisCode2:="AssertLessThan", _
+    AnalysisCode3:="Numbers 3, 7", _
+    message:="3 should be less than 7"
+  Assert.LessThan 3, 7, "3 should be less than 7"
+  
+  Logger.LogFixedLevelMessage _
+    level:=LogLevel.EXTERNAL_INFO, _
+    AnalysisCode1:="AssertionTests4", _
+    AnalysisCode2:="AssertFileExists", _
+    AnalysisCode3:="C:\Windows\explorer.exe", _
+    message:="Windows Explorer should exist"
+  Assert.FileExists "C:\Windows\explorer.exe", "Windows Explorer should exist"
     
-    Assert.PrintSummary
+  ' Check for critical failure
+  If Assert.HasCriticalFailure Then
+    Debug.Print "Step 1 aborted due to critical failure"
+    Exit Sub
+  End If
+    
+  Assert.PrintSummary
+  
+  Set Assert = Nothing
+    
 End Sub
+
+'Test method called in Assert.Throws test above
+Public Sub AssertionThrowsErrTest()
+  On Error Resume Next
+  err.Raise 5
+End Sub
+

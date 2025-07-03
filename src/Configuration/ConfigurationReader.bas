@@ -67,8 +67,8 @@ Private Function LoadConfigFile() As Boolean
     ' Parse key-value pair
     pos = VBA.Strings.InStr(line, "=")
     If pos > 0 Then
-      key = VBA.Strings.Trim(Left(line, pos - 1))
-      value = VBA.Strings.Trim(Mid(line, pos + 1))
+      key = VBA.Strings.Trim(VBA.Strings.Left(line, pos - 1))
+      value = VBA.Strings.Trim(VBA.Strings.Mid(line, pos + 1))
       If VBA.Strings.Len(currentSection) > 0 Then
         this.configData.Add currentSection & "." & key, value
       Else

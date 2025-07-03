@@ -367,7 +367,7 @@ Public Sub GetAttributes( _
         If UBound(propValue) = -1 Then
           propValue = ""
         Else
-          If Not isEmpty(propValue) Then
+          If Not IsEmpty(propValue) Then
             Dim i As Integer
             Dim strArrayOfValues As String
             strArrayOfValues = ""
@@ -383,7 +383,7 @@ Public Sub GetAttributes( _
       End If
     End If
      
-    If Not isEmpty(propValue) And propValue <> "" Then
+    If Not IsEmpty(propValue) And propValue <> "" Then
       Dim strPropertyString As String
       If propValue = "True" Or propValue = "False" Or VBA.Information.IsNumeric(propValue) Then
         strPropertyString = propValue

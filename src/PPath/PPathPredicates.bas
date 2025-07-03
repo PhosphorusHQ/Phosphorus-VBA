@@ -320,7 +320,7 @@ Private Function SourcePPathContainedAnAttributeCheck( _
           varPropertyValue = "#"
         Else
           varPropertyValue = eleCurrentContextUIElement.GetCurrentPropertyValue(key)
-          If Not isEmpty(varPropertyValue) Then
+          If Not IsEmpty(varPropertyValue) Then
             If varPropertyValue <> "" Then
               If VBA.Strings.InStr(1, varPropertyValue, "@") > 0 Then
                 varPropertyValue = VBA.Strings.Replace(varPropertyValue, "@", "{AtSign}")
@@ -335,7 +335,7 @@ Private Function SourcePPathContainedAnAttributeCheck( _
             If UBound(varPropertyValue) = -1 Then
               varPropertyValue = ""
             Else
-              If Not isEmpty(varPropertyValue) Then
+              If Not IsEmpty(varPropertyValue) Then
                 Dim i As Integer
                 Dim strArrayOfValues As String
                 strArrayOfValues = ""
@@ -351,7 +351,7 @@ Private Function SourcePPathContainedAnAttributeCheck( _
           End If
         End If
 
-If isEmpty(varPropertyValue) Then
+If IsEmpty(varPropertyValue) Then
  ' Debug.Print varPropertyValue
   varPropertyValue = ""
 ElseIf varPropertyValue = "" Then

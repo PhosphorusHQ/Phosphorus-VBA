@@ -2,7 +2,7 @@ Attribute VB_Name = "FrameworkTest"
 '@Folder _FrameworkTest
 Option Explicit
 
-Private Sub test()
+Private Sub Test()
   Dim dog As A
   Dim cat As B
   Set dog = New A

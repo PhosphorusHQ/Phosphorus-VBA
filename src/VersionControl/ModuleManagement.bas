@@ -57,7 +57,7 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional Proje
     If vbComp.CodeModule.CountOfLines > 0 Then
       firstLine = VBA.Strings.Trim(vbComp.CodeModule.Lines(1, 1))
       If VBA.Strings.Left(firstLine, 9) = "'@Folder " Then
-        folderName = VBA.Strings.Trim(Mid(firstLine, 9))
+        folderName = VBA.Strings.Trim(VBA.Strings.Mid(firstLine, 9))
       End If
     End If
     
@@ -171,7 +171,7 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, ProjectName As 
   Dim keep As Boolean
   
   For Each file In folder.Files
-    If VBA.Strings.LCase(Right(file.Name, 4)) = ".bas" Then
+    If VBA.Strings.LCase(VBA.Strings.Right(file.Name, 4)) = ".bas" Then
      keep = False
       If IsArray(ModulesToKeep) Then
         For i = LBound(ModulesToKeep) To UBound(ModulesToKeep)
@@ -189,7 +189,7 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, ProjectName As 
     
   For Each subFolder In folder.SubFolders
     For Each file In subFolder.Files
-      If VBA.Strings.LCase(Right(file.Name, 4)) = ".bas" Then
+      If VBA.Strings.LCase(VBA.Strings.Right(file.Name, 4)) = ".bas" Then
         keep = False
         If IsArray(ModulesToKeep) Then
           For i = LBound(ModulesToKeep) To UBound(ModulesToKeep)

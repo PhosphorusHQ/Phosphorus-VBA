@@ -85,7 +85,7 @@ Continue:
 
 ErrorHandler:
   If Not fileNum = 0 Then Close #fileNum
-  MsgBox "Error loading configuration file: " & err.Description, vbCritical
+  MsgBox "Error loading configuration file: " & Err.Description, vbCritical
   LoadConfigFile = False
   
 End Function

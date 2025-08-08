@@ -128,7 +128,7 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
           On Error Resume Next
           boolCurrentPredicateTestPasses = True
           boolCurrentPredicateTestPasses = Application.Evaluate(lstrCurrentPredicateTest)
-          If err.Number = 13 Then
+          If Err.Number = 13 Then
             this.PPathReturnClass.SetErrorMessage = Phosphorus.PPathConstants.INVALID_PREDICATE & " [" & strCurrentGroupAttributesPPath & "] => " & lstrCurrentPredicateTest
             Exit Sub
           End If

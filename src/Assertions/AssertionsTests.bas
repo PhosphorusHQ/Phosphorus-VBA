@@ -14,7 +14,7 @@ Sub RunAllAssertionTests()
   
   'TODO: Remove this after lsoign Rubberduck
   'AssertionsStatic.GetAssert
-  
+    
   RunAssertionTests1
   RunAssertionTests2
   RunAssertionTests3
@@ -345,6 +345,6 @@ End Sub
 'Test method called in Assert.Throws test above
 Public Sub AssertionThrowsErrTest()
   On Error Resume Next
-  err.Raise 5
+  Err.Raise 5
 End Sub
 

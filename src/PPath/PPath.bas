@@ -280,9 +280,9 @@ Public Function Evaluate( _
     this.PPathReturnClass.ReturnedValue = (this.PPathReturnClass.GetFinalNumberOfMatchingElements > 0)
   ElseIf this.PPathReturnClass.TopLevelFunctionPrefix <> "" Then
     Dim i As Integer
-    Dim C As Integer
-    C = this.PPathReturnClass.GetFinalNumberOfMatchingElements
-    If C = 0 Then
+    Dim c As Integer
+    c = this.PPathReturnClass.GetFinalNumberOfMatchingElements
+    If c = 0 Then
       this.PPathReturnClass.ReturnedValue = 0
     Else
 '      Excel.Application.ScreenUpdating = False
@@ -296,15 +296,15 @@ Public Function Evaluate( _
       Dim varValue As Variant
       Dim larrTopLevelFunctionArray() As Variant
       Erase larrTopLevelFunctionArray
-      ReDim larrTopLevelFunctionArray(C - 1)
-      For i = 1 To C
+      ReDim larrTopLevelFunctionArray(c - 1)
+      For i = 1 To c
         varValue = PPathUtils.GetValue(this.PPathReturnClass.GetMatchingElement(i))
         larrTopLevelFunctionArray(i - 1) = varValue
       Next i
 '      PPathWS.Activate
-      PPathWS.Range("A1:A" & C).value = Application.Transpose(larrTopLevelFunctionArray)
+      PPathWS.Range("A1:A" & c).value = Application.Transpose(larrTopLevelFunctionArray)
 '      varValue = PPathWS.Evaluate(this.PPathReturnClass.TopLevelFunctionPrefix & "A1:A" & c & this.PPathReturnClass.TopLevelFunctionSuffix)
-      PPathWS.Range("B1").Formula = "=" & this.PPathReturnClass.TopLevelFunctionPrefix & "A1:A" & C & this.PPathReturnClass.TopLevelFunctionSuffix
+      PPathWS.Range("B1").Formula = "=" & this.PPathReturnClass.TopLevelFunctionPrefix & "A1:A" & c & this.PPathReturnClass.TopLevelFunctionSuffix
       PPathWS.Range("B1").Calculate
       varValue = PPathWS.Range("B1").value
       PPathWS.Cells.ClearContents
@@ -400,9 +400,9 @@ Fail:
 
 End Function
 
-Public Function GetCountOfInstancesOfACharacterInAString(Character As String, SourceString As String)
+Public Function GetCountOfInstancesOfACharacterInAString(character As String, SourceString As String)
   'https://stackoverflow.com/questions/9260982/how-to-find-number-of-occurences-of-slash-from-a-strings
-  GetCountOfInstancesOfACharacterInAString = VBA.Strings.Len(SourceString) - VBA.Strings.Len(Replace(SourceString, Character, ""))
+  GetCountOfInstancesOfACharacterInAString = VBA.Strings.Len(SourceString) - VBA.Strings.Len(Replace(SourceString, character, ""))
 End Function
 
 Function FindUnexpectedBracket(PPath As String) As Long

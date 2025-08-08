@@ -281,7 +281,7 @@ Private Sub GetChildren( _
         Dim boolCurrentElementIsAnAncestorOrSelfOfPrecedingOrFollowingRootElement As Boolean
         boolCurrentElementIsAnAncestorOrSelfOfPrecedingOrFollowingRootElement = False
         Dim i As Integer
-        For i = 1 To AllAncestorsOrSelfRuntimeIDs.Count
+        For i = 1 To AllAncestorsOrSelfRuntimeIDs.count
           If strCurrentElementRuntimeID = AllAncestorsOrSelfRuntimeIDs(i) Then
             boolCurrentElementIsAnAncestorOrSelfOfPrecedingOrFollowingRootElement = True
             Exit For

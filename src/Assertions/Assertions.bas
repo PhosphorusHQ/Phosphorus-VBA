@@ -75,7 +75,7 @@ End Sub
 Private Function AreEqual(value1 As Variant, value2 As Variant) As Boolean
   On Error Resume Next
   AreEqual = (value1 = value2)
-  If err.Number <> 0 Then
+  If Err.Number <> 0 Then
     AreEqual = False
   End If
   On Error GoTo 0
@@ -147,7 +147,7 @@ Public Sub InRange(value As Variant, minValue As Variant, maxValue As Variant, O
   On Error Resume Next
   Dim isInRange As Boolean
   isInRange = (value >= minValue And value <= maxValue)
-  If err.Number <> 0 Then isInRange = False
+  If Err.Number <> 0 Then isInRange = False
   On Error GoTo 0
     
   If Not isInRange Then
@@ -177,7 +177,7 @@ Public Sub Contains(collection As Variant, item As Variant, Optional message As 
         Exit For
       End If
     Next i
-  ElseIf TypeName(collection) = "Collection" Then
+  ElseIf typeName(collection) = "Collection" Then
     Dim element As Variant
     For Each element In collection
       If AreEqual(element, item) Then
@@ -274,7 +274,7 @@ Public Sub Throws(methodToRun As String, expectedError As Long, Optional message
   'An On Error Resume Next statement becomes inactive when another procedure is called, so you should execute an On Error Resume Next statement in each called routine if you want inline error handling within that routine.
   'So the method being called must use On Error Resume Next to pass the error back to this assertion
   Application.Run methodToRun
-  If err.Number = expectedError Then
+  If Err.Number = expectedError Then
     errorOccurred = True
   End If
   'Always reset error handling
@@ -307,8 +307,8 @@ Public Sub IsEmpty(collection As Variant, Optional message As String = "", Optio
     u = UBound(collection)
     On Error GoTo 0
     IsEmpty = (u = 0 And l = 0)
-  ElseIf TypeName(collection) = "Collection" Then
-    IsEmpty = (collection.Count = 0)
+  ElseIf typeName(collection) = "Collection" Then
+    IsEmpty = (collection.count = 0)
   Else
     IsEmpty = False ' Non-collection types considered not empty
   End If
@@ -331,7 +331,7 @@ Public Sub IsType(value As Variant, expectedTypeName As String, Optional message
     
   testCount = testCount + 1
   Dim actualType As String
-  actualType = TypeName(value)
+  actualType = typeName(value)
     
   If VBA.Strings.LCase(actualType) <> VBA.Strings.LCase(expectedTypeName) Then
     failedCount = failedCount + 1
@@ -353,7 +353,7 @@ Public Sub GreaterThan(value As Variant, threshold As Variant, Optional message 
   Dim isGreater As Boolean
   On Error Resume Next
   isGreater = (value > threshold)
-  If err.Number <> 0 Then isGreater = False
+  If Err.Number <> 0 Then isGreater = False
   On Error GoTo 0
     
   If Not isGreater Then
@@ -376,7 +376,7 @@ Public Sub LessThan(value As Variant, threshold As Variant, Optional message As 
   Dim isLess As Boolean
   On Error Resume Next
   isLess = (value < threshold)
-  If err.Number <> 0 Then isLess = False
+  If Err.Number <> 0 Then isLess = False
   On Error GoTo 0
     
   If Not isLess Then

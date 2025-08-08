@@ -9,10 +9,10 @@ Public Fakes As Object
 Public Sub OutputActualXPaths(strActualXPaths() As String)
   Dim strPath As String
   strPath = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "") & "Phosphorus Ouput " & VBA.Strings.Replace(VBA.Strings.Replace(Now(), "/", "-"), ":", "") & ".txt"
-  Dim fso As Object
-  Set fso = CreateObject("Scripting.FileSystemObject")
+  Dim FSO As Object
+  Set FSO = CreateObject("Scripting.FileSystemObject")
   Dim oFile As Object
-  Set oFile = fso.CreateTextFile(strPath)
+  Set oFile = FSO.CreateTextFile(strPath)
   Dim i As Integer
   Dim upper As Integer
   upper = 0
@@ -23,7 +23,7 @@ Public Sub OutputActualXPaths(strActualXPaths() As String)
     oFile.WriteLine strActualXPaths(i)
   Next
   oFile.Close
-  Set fso = Nothing
+  Set FSO = Nothing
   Set oFile = Nothing
 End Sub
 

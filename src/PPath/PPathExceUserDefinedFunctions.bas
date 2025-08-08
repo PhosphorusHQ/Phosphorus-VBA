@@ -52,10 +52,10 @@ Public Function udf_reversetext(strText) As String
     strReturn = ""
   Else
     Dim i As Integer
-    Dim C As String
+    Dim c As String
     For i = 1 To VBA.Strings.Len(strText)
-      C = VBA.Strings.Mid(strText, i, 1)
-      strReturn = C & strReturn
+      c = VBA.Strings.Mid(strText, i, 1)
+      strReturn = c & strReturn
     Next i
   End If
   udf_reversetext = strReturn
@@ -70,7 +70,7 @@ Public Function xp_starts_with(str1 As String, str2 As String) As Boolean
 End Function
 
 Public Function xp_format_number(var1 As Variant, strFormat As String) As String
-  xp_format_number = Application.WorksheetFunction.text(var1, strFormat)
+  xp_format_number = Application.WorksheetFunction.Text(var1, strFormat)
 End Function
 
 Public Function xp_normalize_space(str As String) As String

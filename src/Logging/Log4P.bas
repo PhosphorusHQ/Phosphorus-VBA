@@ -128,14 +128,6 @@ Private Sub Class_Initialize()
   CreateFolder rootFolder
   'This must run AFTER the create folder method
   If VBA.Strings.Right(rootFolder, 1) <> "\" Then rootFolder = rootFolder & "\"
-
-  logFilePath = _
-    rootFolder & _
-    VBA.Strings.Format(Now, "yyyymmdd_hhmmss") & "_" & _
-    Log4PStatic.LogFileNameDynamicPart1 & "_" & _
-    Log4PStatic.LogFileNameDynamicPart2 & "_" & _
-    VBA.Interaction.Environ$("COMPUTERNAME") & "_" & _
-    VBA.Interaction.Environ$("USERNAME") & ".txt"
     
   currentLogLevel = EXTERNAL_INFO
   previousLogLevel = EXTERNAL_INFO
@@ -146,7 +138,7 @@ Private Sub Class_Initialize()
     
   #If VBA7 Then
      If QueryPerformanceFrequency(perfFrequency) = 0 Then
-       err.Raise vbObjectError + 1, "Logger", "Failed to get performance frequency"
+       Err.Raise vbObjectError + 1, "Logger", "Failed to get performance frequency"
      End If
      QueryPerformanceCounter startTicks
      lastLogTicks = startTicks
@@ -155,11 +147,30 @@ Private Sub Class_Initialize()
      lastLogTime = startTime
   #End If
     
+  'Build file path
+  logFilePath = _
+    rootFolder & _
+    VBA.Strings.Format(Now, "yyyymmdd_hhmmss") & "_" & _
+    Log4PStatic.LogFileNameDynamicPart1 & "_" & _
+    Log4PStatic.LogFileNameDynamicPart2 & "_" & _
+    VBA.Interaction.Environ$("COMPUTERNAME") & "_" & _
+    VBA.Interaction.Environ$("USERNAME") & ".txt"
+  If Dir(logFilePath) <> "" Then
+    'Wait 1 second and create new filename
+    Application.Wait (Now + TimeValue("0:00:01"))
+    logFilePath = _
+      rootFolder & _
+      VBA.Strings.Format(Now, "yyyymmdd_hhmmss") & "_" & _
+      Log4PStatic.LogFileNameDynamicPart1 & "_" & _
+      Log4PStatic.LogFileNameDynamicPart2 & "_" & _
+      VBA.Interaction.Environ$("COMPUTERNAME") & "_" & _
+      VBA.Interaction.Environ$("USERNAME") & ".txt"
+  End If
   ' Open file with CreateFileW for Unicode path
   hFile = CreateFileW(StrPtr(logFilePath), GENERIC_WRITE, FILE_SHARE_READ, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0)
   If hFile = -1 Then
     LogMessage "Failed to open log file: " & logFilePath, INTERNAL_ERROR
-    err.Raise vbObjectError + 1, "Logger", "Failed to open log file"
+    Err.Raise vbObjectError + 1, "Logger", "Failed to open log file"
   End If
     
   ' Write UTF-8 BOM
@@ -171,7 +182,7 @@ Private Sub Class_Initialize()
   If WriteFile(hFile, bom(0), 3, bytesWritten, 0) = 0 Then
     CloseHandle hFile
     LogMessage "Failed to write UTF-8 BOM", INTERNAL_ERROR
-    err.Raise vbObjectError + 1, "Logger", "Failed to initialize log file"
+    Err.Raise vbObjectError + 1, "Logger", "Failed to initialize log file"
   End If
     
   InternalInfo "Logger initialized with file: " & logFilePath
@@ -204,9 +215,9 @@ Private Sub CreateFolder(folderPath As String)
     If Dir(currentPath, vbDirectory) = "" Then
       On Error Resume Next
       MkDir currentPath
-      If err.Number <> 0 Then
-        LogMessage "Failed to create folder: " & currentPath & " (Error " & err.Number & ")", INTERNAL_ERROR
-        err.Raise vbObjectError + 1, "Logger", "Failed to create folder"
+      If Err.Number <> 0 Then
+        LogMessage "Failed to create folder: " & currentPath & " (Error " & Err.Number & ")", INTERNAL_ERROR
+        Err.Raise vbObjectError + 1, "Logger", "Failed to create folder"
       End If
       On Error GoTo 0
     End If
@@ -263,7 +274,7 @@ Private Sub WriteBuffer()
     Dim bytesWritten As Long
     If WriteFile(hFile, bytes(0), UBound(bytes) + 1, bytesWritten, 0) = 0 Then
       LogMessage "Failed to write buffer to log file", INTERNAL_ERROR
-      err.Raise vbObjectError + 1, "Logger", "Failed to write buffer to log file"
+      Err.Raise vbObjectError + 1, "Logger", "Failed to write buffer to log file"
     End If
     logBuffer = ""
   End If
@@ -407,7 +418,7 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
     Dim bytesWritten As Long
     If hFile <> 0 Then
       If WriteFile(hFile, bytes(0), UBound(bytes) + 1, bytesWritten, 0) = 0 Then
-        err.Raise vbObjectError + 1, "Logger", "Failed to write to log file"
+        Err.Raise vbObjectError + 1, "Logger", "Failed to write to log file"
       End If
     End If
     writeCount = writeCount + 1

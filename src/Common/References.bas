@@ -23,8 +23,8 @@ Sub AddReferenceToWorkbook(TargetWorkbookFilepath As String, Optional vbProj As 
   ' Initialize the collection if not already done
   If AddedReferences Is Nothing Then InitialiseAddedReferences
     
-  On Error Resume Next
-    
+    On Error Resume Next
+  
 '  ' Validate the target workbook
 '  If TargetWb Is Nothing Then
 '    'We need a wb ref
@@ -52,7 +52,7 @@ Sub AddReferenceToWorkbook(TargetWorkbookFilepath As String, Optional vbProj As 
   ' Add the reference to the target workbook
 '  Set ref = vbProj.References.AddFromFile(TargetWb.FullName)
   Set ref = vbProj.References.AddFromFile(TargetWorkbookFilepath)
-     
+
   ' Create a collection to store reference details
   Set refDetails = New collection
 '  refDetails.Add TargetWb.FullName, "FullPath"     ' Store the filepath

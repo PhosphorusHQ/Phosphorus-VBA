@@ -690,7 +690,7 @@ Arrange:
   End If
 
   If Not wbUDFs Is Nothing Then
-    AddReferenceToWorkbook wbUDFs
+    AddReferenceToWorkbook wbUDFs.FullName
   End If
     
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[udf:alldogsarecats(text())=""Cat""]"

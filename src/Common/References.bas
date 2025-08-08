@@ -14,9 +14,9 @@ Sub InitialiseAddedReferences()
 End Sub
 
 ' Add a reference to a macro-enabled workbook and save its FullPath and Workbook
-Sub AddReferenceToWorkbook(targetWb As Workbook)
+Sub AddReferenceToWorkbook(TargetWorkbookFilepath As String, Optional vbProj As VBProject)
   
-  Dim vbProj As VBProject
+'  Dim vbProj As VBProject
   Dim ref As Reference
   Dim refDetails As collection ' To store FullPath and Workbook
     
@@ -25,30 +25,40 @@ Sub AddReferenceToWorkbook(targetWb As Workbook)
     
   On Error Resume Next
     
-  ' Validate the target workbook
-  If targetWb Is Nothing Then
-'    MsgBox "No valid workbook provided."
-    Exit Sub
-  End If
-    
+'  ' Validate the target workbook
+'  If TargetWb Is Nothing Then
+'    'We need a wb ref
+'    Exit Sub
+'  End If
+  
+'  If TargetWorkbookFilepath = "" Then
+'    TargetWorkbookFilepath = TargetWb.FullName
+'  End If
+  
   ' Get the VBProject of the current workbook
-  Set vbProj = ThisWorkbook.VBProject
-    
+  If vbProj Is Nothing Then
+    Set vbProj = ThisWorkbook.VBProject
+  End If
+  
   ' Check if reference already exists
   For Each ref In vbProj.References
-    If ref.FullPath = targetWb.FullName Then
+    If ref.FullPath = TargetWorkbookFilepath Then
+'    If ref.FullPath = TargetWb.FullName Then
 '      MsgBox "Reference to " & targetWb.FullName & " already exists."
       Exit Sub
     End If
   Next ref
     
   ' Add the reference to the target workbook
-  Set ref = vbProj.References.AddFromFile(targetWb.FullName)
+'  Set ref = vbProj.References.AddFromFile(TargetWb.FullName)
+  Set ref = vbProj.References.AddFromFile(TargetWorkbookFilepath)
      
   ' Create a collection to store reference details
   Set refDetails = New collection
-  refDetails.Add targetWb.FullName, "FullPath" ' Store the filepath
-  refDetails.Add targetWb, "Workbook"         ' Store the Workbook object
+'  refDetails.Add TargetWb.FullName, "FullPath"     ' Store the filepath
+  refDetails.Add TargetWorkbookFilepath, "FullPath" ' Store the filepath
+'  refDetails.Add TargetWb, "Workbook"              ' Store the Workbook object
+  refDetails.Add vbProj, "Project"                  ' Store the Project object
     
   ' Save the reference details to the global collection
   AddedReferences.Add refDetails
@@ -61,7 +71,7 @@ End Sub
 ' Remove all references stored in the AddedReferences collection
 Sub RemoveAllAddedReferences()
     
-  Dim vbProj As Object ' VBProject
+'  Dim vbProj As Object ' VBProject
   Dim ref As Object ' Reference
   Dim refDetails As collection
   Dim removedCount As Long
@@ -72,7 +82,7 @@ Sub RemoveAllAddedReferences()
     Exit Sub
   End If
     
-  Set vbProj = ThisWorkbook.VBProject
+'  Set vbProj = ThisWorkbook.VBProject
   removedCount = 0
 
   ' Iterate through the saved reference details
@@ -82,7 +92,9 @@ Sub RemoveAllAddedReferences()
     ' Get the FullPath from the refDetails collection
     Dim refPath As String
     refPath = refDetails("FullPath")
-        
+    Dim vbProj As Object ' VBProject
+    Set vbProj = refDetails("Project")
+    
     ' Find and remove the reference in the VBProject
     For Each ref In vbProj.References
       If ref.FullPath = refPath Then
@@ -122,8 +134,8 @@ Sub TestAddReference()
   End If
   
   If Not wb Is Nothing Then
-    AddReferenceToWorkbook wb
-    MsgBox Application.Run("AllDogsAreCats", "Dog")
+    AddReferenceToWorkbook wb.FullName
+    MsgBox Application.Run("udf_alldogsarecats", "Dog")
     RemoveAllAddedReferences
     wb.Close
   Else

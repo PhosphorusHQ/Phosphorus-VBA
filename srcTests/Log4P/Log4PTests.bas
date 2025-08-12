@@ -1,5 +1,5 @@
 Attribute VB_Name = "Log4PTests"
-'@Folder Logging
+'@Folder Log4P
 Option Explicit
 
 Sub TestLogger1()
@@ -10,9 +10,9 @@ Sub TestLogger1()
   Log4PStatic.LogFileNameDynamicPart1 = "Log4PTests"
   Log4PStatic.LogFileNameDynamicPart2 = "TestLogger1"
 
-  Dim myLogger As Log4P
-  Set myLogger = New Log4P
-
+  Dim myLogger As Phosphorus.Log4P
+  Set myLogger = Phosphorus.Factory.GetNewPhosphorusLog4P
+  
   ' Test all log levels using public methods
   myLogger.level = -5 ' Enable all levels (INTERNAL_DEBUG)
   
@@ -77,8 +77,8 @@ Sub TestLogger2()
   Log4PStatic.LogFileNameDynamicPart1 = "Log4PTests"
   Log4PStatic.LogFileNameDynamicPart2 = "TestLogger2"
 
-  Dim myLogger As Log4P
-  Set myLogger = New Log4P
+  Dim myLogger As Phosphorus.Log4P
+  Set myLogger = Phosphorus.Factory.GetNewPhosphorusLog4P
     
   ' Test all log levels with Unicode characters built using ChrW
   myLogger.level = -5 ' Enable all levels (INTERNAL_DEBUG)

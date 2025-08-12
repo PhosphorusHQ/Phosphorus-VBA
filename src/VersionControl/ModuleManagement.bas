@@ -30,12 +30,10 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional proje
       For Each vbProj In .VBProjects
         If vbProj.Name = projectName Then
           projFound = True
-          basePath = vbProj.Filename
-          basePath = VBA.Strings.Left(basePath, VBA.Strings.InStrRev(basePath, "\")) & "VBA_Modules_Export\"
+          basePath = VBA.Strings.Left(vbProj.Filename, VBA.Strings.InStrRev(vbProj.Filename, "\", -1) - 1) & SubFolderForExport
           Exit For
         End If
       Next vbProj
-            
       If Not projFound Then
         MsgBox "Project '" & projectName & "' not found.", vbCritical
         Exit Sub

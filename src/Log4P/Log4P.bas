@@ -6,8 +6,8 @@ Attribute VB_Name = "Log4P"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = False
-'@Folder Logging
+Attribute VB_Exposed = True
+'@Folder Log4P
 Option Explicit
 Option Base 1
 

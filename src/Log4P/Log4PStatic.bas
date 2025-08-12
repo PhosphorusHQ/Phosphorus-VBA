@@ -1,5 +1,5 @@
 Attribute VB_Name = "Log4PStatic"
-'@Folder Logging
+'@Folder Log4P
 Option Explicit
 
 'Global Logger object available for use

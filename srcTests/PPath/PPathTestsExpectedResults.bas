@@ -1,5 +1,5 @@
 Attribute VB_Name = "PPathTestsExpectedResults"
-'@Folder PPathTests
+'@Folder PPath
 Option Explicit
 
 Public TestWorkbookName As String

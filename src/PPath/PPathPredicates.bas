@@ -202,7 +202,7 @@ Private Function SourcePPathContainedATopLevelFunction( _
     Dim NestedPPath As Phosphorus.PPath
     Dim EvaluatedNestedPPath As Phosphorus.PPathReturnClass
     Dim varReturnValue As Variant
-    Set NestedPPath = Phosphorus.PhosphorusFactory.GetNewPhosphorusPPath
+    Set NestedPPath = Phosphorus.Factory.GetNewPhosphorusPPath
     NestedPPath.Initialise
     Set EvaluatedNestedPPath = NestedPPath.Evaluate(lstrNestedPPath, eleCurrentContextUIElement, strInitialPPath)
     'Raise any error?
@@ -259,7 +259,7 @@ Private Function SourcePPathContainedANestedPPath( _
     Dim NestedPPath As Phosphorus.PPath
     Dim EvaluatedNestedPPath As Phosphorus.PPathReturnClass
     Dim varReturnValue As Variant
-    Set NestedPPath = Phosphorus.PhosphorusFactory.GetNewPhosphorusPPath
+    Set NestedPPath = Phosphorus.Factory.GetNewPhosphorusPPath
     NestedPPath.Initialise
     Set EvaluatedNestedPPath = NestedPPath.Evaluate(lstrNestedPPath, eleCurrentContextUIElement, strInitialPPath)
     'Raise any error?

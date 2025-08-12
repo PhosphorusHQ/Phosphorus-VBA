@@ -1,5 +1,5 @@
 Attribute VB_Name = "PPathTestsCommon"
-'@Folder PPathTests
+'@Folder PPath
 '@TestModule
 Option Explicit
 

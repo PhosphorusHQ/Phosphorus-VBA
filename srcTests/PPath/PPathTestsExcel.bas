@@ -1,5 +1,5 @@
 Attribute VB_Name = "PPathTestsExcel"
-'@Folder PPathTests
+'@Folder PPath
 '@TestModule
 
 Option Explicit
@@ -49,7 +49,7 @@ Private Sub TestInitialize()
   
   FindExcelRootElement
   Set PPath = Nothing
-  Set PPath = Phosphorus.PhosphorusFactory.GetNewPhosphorusPPath
+  Set PPath = Phosphorus.Factory.GetNewPhosphorusPPath
   PPath.Initialise
   PPath.SetApplicationRootElement eleExcelRootElement
 End Sub

@@ -29,7 +29,7 @@ Sub RunAssertionTests1()
   
   ' Test examples
   
-  Set Assert = New Phosphorus.Assertions
+  Set Assert = Phosphorus.Factory.GetNewPhosphorusAssertions
   
   Logger.LogFixedLevelMessage _
     level:=LogLevel.EXTERNAL_INFO, _
@@ -114,7 +114,7 @@ End Sub
 
 Sub RunAssertionTests2()
     
-  Set Assert = New Phosphorus.Assertions
+  Set Assert = Phosphorus.Factory.GetNewPhosphorusAssertions
   
   ' Test Step 1
   Logger.LogFixedLevelMessage _
@@ -214,7 +214,7 @@ End Sub
 
 Sub RunAssertionTests3()
   
-  Set Assert = New Phosphorus.Assertions
+  Set Assert = Phosphorus.Factory.GetNewPhosphorusAssertions
   
   Dim testArray(1 To 3) As Integer
     testArray(1) = 1
@@ -276,7 +276,7 @@ End Sub
 
 Sub RunAssertionTests4()
 
-  Set Assert = New Phosphorus.Assertions
+  Set Assert = Phosphorus.Factory.GetNewPhosphorusAssertions
   
   Assert.Throws "AssertionThrowsErrTest", 5, "Should raise error 5"
     

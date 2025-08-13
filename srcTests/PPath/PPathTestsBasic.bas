@@ -83,6 +83,7 @@ End Function
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre001()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre001"
 Arrange:
   strTestPPath = "((((()))"
 Act:
@@ -96,6 +97,7 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre002()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre002"
 Arrange:
   strTestPPath = "[[[]]]]]"
 Act:
@@ -109,6 +111,7 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre003()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre003"
 Arrange:
   strTestPPath = "@NotAUIProperty"
 Act:
@@ -122,6 +125,8 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre004()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre004"
+Arrange:
   strTestPPath = "./..*"
   llongExpectedNumberOfMatchingElements = 1
 Act:
@@ -135,13 +140,13 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre005()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre005"
+Arrange:
 '  PPath.SetDebugMode = True
-  
   strTestPPath = "/Edit"
   Set InterimEvaluatedPPath1 = InterimPPath.Evaluate(strTestPPath)
   llongExpectedNumberOfMatchingElements = 1
   Assert.AreEqual llongExpectedNumberOfMatchingElements, InterimEvaluatedPPath1.GetFinalNumberOfMatchingElements, "GetMatchingElements"
-  
   strTestPPath = "/Edit"
 Act:
   Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
@@ -155,6 +160,7 @@ End Sub
 'Union of expressions, 3 context nodes, 3 uses
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre006()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre006"
 Arrange:
 '  PPath.SetDebugMode = True
   
@@ -191,6 +197,7 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre007()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre007"
 Arrange:
   strTestPPath = "([)]"
 Act:
@@ -204,6 +211,7 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre008()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre008"
 Arrange:
   strTestPPath = "(()])["
 Act:
@@ -217,6 +225,7 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre009()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre009"
 Arrange:
   strTestPPath = "]["
 Act:
@@ -230,6 +239,7 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre010()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre010"
 Arrange:
   strTestPPath = "[)]("
 Act:
@@ -243,6 +253,7 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre011()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre011"
 Arrange:
   strTestPPath = "//*[And(count(./Button)>=1,count(./SplitButton)>1,count(./ComboBox)>1)]/Button[position)(=6]"
 Act:
@@ -256,6 +267,7 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre012()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre012"
 Arrange:
   strTestPPath = "/button"
 Act:
@@ -269,6 +281,7 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre013()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre013"
 Arrange:
   strTestPPath = "/abc"
 Act:
@@ -282,6 +295,7 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre014()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre014"
 Arrange:
   strTestPPath = "//Button/attribute::isenabled"
 Act:
@@ -295,6 +309,7 @@ End Sub
 
 '@TestMethod("PPath PreValidation")
 Private Sub Test01Pre015()
+  Logger.ExternalInfo "Running PPathTestsBasic - Test01Pre015"
 Arrange:
   strTestPPath = "//Button/attribute::NotANavigableAttribute"
 Act:
@@ -308,6 +323,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval001()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval001"
 Arrange:
   strTestPPath = ""
   llongExpectedNumberOfMatchingElements = 0
@@ -322,6 +338,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval002()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval002"
 Arrange:
   strTestPPath = "( | )"
   llongExpectedNumberOfMatchingElements = 0
@@ -336,6 +353,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval003()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval003"
 Arrange:
   strTestPPath = "/"
   llongExpectedNumberOfMatchingElements = 0
@@ -350,6 +368,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval004() 'Ignore spaces at start and end of PPath
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval004"
 Arrange:
   strTestPPath = "    /    "
   llongExpectedNumberOfMatchingElements = 0
@@ -364,6 +383,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval005()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval005"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/*"
@@ -379,6 +399,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval006() 'Unrecognised predicate
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval006"
 Arrange:
   strTestPPath = "/*a"
   llongExpectedNumberOfMatchingElements = 0
@@ -394,6 +415,7 @@ End Sub
 'TODO Test 7
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval007()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval007"
 Arrange:
   strTestPPath = "( /* | / )"
   llongExpectedNumberOfMatchingElements = 0
@@ -408,6 +430,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval008()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval008"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "(/* | /*)"
@@ -423,6 +446,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval009()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval009"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//*"
@@ -438,6 +462,7 @@ End Sub
  
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval010()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval010"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//* | //*"
@@ -453,6 +478,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval011()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval011"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane"
@@ -468,6 +494,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval012()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval012"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "( /Pane | /Pane )"
@@ -483,6 +510,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval013()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval013"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//MenuItem"
@@ -498,6 +526,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval014()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval014"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/child::*"
@@ -513,6 +542,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval015()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval015"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/descendant::*"
@@ -529,6 +559,7 @@ End Sub
 'Self Node shorthand
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval016()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval016"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/.*"
@@ -545,6 +576,7 @@ End Sub
 'Self Node
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval017()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval017"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/self::*"
@@ -561,6 +593,7 @@ End Sub
 'Parent shorthand - root element
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval018()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval018"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/..*"
@@ -577,6 +610,7 @@ End Sub
 'Parent shorthand
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval019()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval019"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Edit"
@@ -598,6 +632,7 @@ End Sub
 'Parent
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval020()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval020"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Edit"
@@ -619,6 +654,7 @@ End Sub
 'Ancestor
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval021()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval021"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//StatusBar"
@@ -640,6 +676,7 @@ End Sub
 'AncestorOrSelf
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval022()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval022"
 Arrange:
 '  PPath.SetDebugMode = True
   
@@ -661,6 +698,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval023()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval023"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/descendant-or-self::*"
@@ -677,6 +715,7 @@ End Sub
 'PrecedingSibling
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval024()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval024"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Edit"
@@ -698,6 +737,7 @@ End Sub
 'FollowingSibling
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval025()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval025"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Edit"
@@ -719,6 +759,7 @@ End Sub
 'Preceding - Nothing before first element test
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval026()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval026"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane"
@@ -740,6 +781,7 @@ End Sub
 'Preceding - Lots before last child root element test
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval027()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval027"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/TitleBar"
@@ -761,6 +803,7 @@ End Sub
 'Preceding - Lots before middle low level element test
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval028()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval028"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//MenuItem"
@@ -782,6 +825,7 @@ End Sub
 'Following - Nothing after last root element test
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval029()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval029"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/TitleBar"
@@ -803,6 +847,7 @@ End Sub
 'Following - Lots after the first child root element test
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval030()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval030"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane"
@@ -824,6 +869,7 @@ End Sub
 'Following - Lots after middle low level element test
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval031()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval031"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//MenuItem"
@@ -844,6 +890,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval032()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval032"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/child::Pane"
@@ -859,6 +906,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval033()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval033"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/descendant::Button"
@@ -875,6 +923,7 @@ End Sub
 'Self Node shorthand
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval034()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval034"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/.Window"
@@ -891,6 +940,7 @@ End Sub
 'Self Node
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval035()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval035"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/self::Window"
@@ -907,6 +957,7 @@ End Sub
 'Parent shorthand - root element
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval036()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval036"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/..Window"
@@ -923,6 +974,7 @@ End Sub
 'Parent shorthand
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval037()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval037"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Edit"
@@ -944,6 +996,7 @@ End Sub
 'Parent
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval038()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval038"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Edit"
@@ -965,6 +1018,7 @@ End Sub
 'Ancestor
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval039()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval039"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//StatusBar"
@@ -986,6 +1040,7 @@ End Sub
 'AncestorOrSelf
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval040()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval040"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Edit"
@@ -1006,6 +1061,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval041()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval041"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane"
@@ -1028,6 +1084,7 @@ End Sub
 'PrecedingSibling
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval042()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval042"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//SplitButton"
@@ -1049,6 +1106,7 @@ End Sub
 'FollowingSibling
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval043()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval043"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Button"
@@ -1069,6 +1127,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval044()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval044"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Slider"
@@ -1088,6 +1147,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval045()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval045"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Button"
@@ -1110,6 +1170,7 @@ End Sub
 'Attribute
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval046()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval046"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Button"
@@ -1133,6 +1194,7 @@ End Sub
 'Attribute
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval047()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval047"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Button"
@@ -1154,6 +1216,7 @@ End Sub
 'Node()
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval048()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval048"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Slider"
@@ -1176,6 +1239,7 @@ End Sub
 'Element()
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval049()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval049"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Slider"
@@ -1197,6 +1261,7 @@ End Sub
 'Text()
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval050()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval050"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Slider"
@@ -1219,6 +1284,7 @@ End Sub
 'Text()
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval051()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval051"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//*"
@@ -1241,6 +1307,7 @@ End Sub
 'Element() by kind - integer
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval052()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval052"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//element(*, integer)"
@@ -1257,6 +1324,7 @@ End Sub
 'Element() by kind - string
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval053()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval053"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//element(*, string)"
@@ -1273,6 +1341,7 @@ End Sub
 'Nested steps
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval054()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval054"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/TitleBar/*"
@@ -1289,6 +1358,7 @@ End Sub
 'Nested steps
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval055()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval055"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//SplitButton/Button"
@@ -1305,6 +1375,7 @@ End Sub
 'Nested steps
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval056()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval056"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ToolBar/attribute::*"
@@ -1321,6 +1392,7 @@ End Sub
 'Nested steps
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval057()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval057"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/TitleBar/node()/attribute::AutomationId"
@@ -1337,6 +1409,7 @@ End Sub
 'Union of expressions, no context node
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval058()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval058"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane | /Edit"
@@ -1353,6 +1426,7 @@ End Sub
 'Union of expressions, context node, 1 use
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval059()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval059"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Tab"
@@ -1374,6 +1448,7 @@ End Sub
 'Union of expressions, 1 context node, 2 uses
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval060()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval060"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ToolBar"
@@ -1395,6 +1470,7 @@ End Sub
 'Missing Context mode initial PPath
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval061()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval061"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//StatusBar"
@@ -1414,6 +1490,7 @@ End Sub
 'Union of expressions, 3 context nodes, 3 uses
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval062()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval062"
 Arrange:
 '  PPath.SetDebugMode = True
   Dim strInitialPPaths(3) As String
@@ -1450,6 +1527,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval063()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval063"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane[2]"
@@ -1465,6 +1543,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval064()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval064"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "(//Button)[1]"
@@ -1480,6 +1559,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval065()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval065"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Button[2]"
@@ -1495,6 +1575,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval066()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval066"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "(//Button[2])[4]"
@@ -1510,6 +1591,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval067()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval067"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane[position()=2]"
@@ -1525,6 +1607,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval068()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval068"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane[first()]"
@@ -1540,6 +1623,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval069()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval069"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "(//Button[2])[first()]"
@@ -1555,6 +1639,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval070()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval070"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "(//Button[2])[first()+1]"
@@ -1570,6 +1655,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval071()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval071"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "(/Pane)[last()]"
@@ -1585,6 +1671,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval072()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval072"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Button[last()]"
@@ -1600,6 +1687,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval073()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval073"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Button[last()-1]"
@@ -1615,6 +1703,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval074()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval074"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Button[And(position()>1,position()<last())]"
@@ -1630,6 +1719,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval075()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval075"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "(//Button[Or(position()=1,position()=last())])[And(position()>1,Or(position()=1,position()=last()-1))]"
@@ -1645,6 +1735,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval076()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval076"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "count(//StatusBar/Button)"
@@ -1660,6 +1751,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval077()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval077"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//StatusBar[count(./Button)=6]"
@@ -1676,6 +1768,7 @@ End Sub
 '@TestMethod("PPath Evaluation")
 'Missing "." in nested ppath
 Private Sub Test02Eval078()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval078"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//StatusBar[count(/Button)=6]"
@@ -1689,6 +1782,7 @@ End Sub
 '@TestMethod("PPath Evaluation")
 'Invalid funciton name in nested ppath
 Private Sub Test02Eval079()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval079"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//StatusBar[notafunction(/Button)=6]"
@@ -1701,6 +1795,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval080()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval080"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//*[And(count(./Button)>=1,count(./SplitButton)>1,count(./ComboBox)>1)]"
@@ -1716,6 +1811,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval081()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval081"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Tab[not(./Button)]"
@@ -1732,6 +1828,7 @@ End Sub
 'Test 3 step levels
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval082()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval082"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane/ComboBox/Edit"
@@ -1747,6 +1844,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval083()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval083"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane[count(./ComboBox)=1]/ComboBox/Edit[1]"
@@ -1762,6 +1860,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval084()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval084"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//MenuItem[./preceding-sibling::Button]"
@@ -1777,6 +1876,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval085()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval085"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//MenuItem[./following-sibling::Button]"
@@ -1792,6 +1892,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval086()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval086"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//MenuItem[Or(./preceding-sibling::Button, ./following-sibling::Button)]"
@@ -1807,6 +1908,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval087()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval087"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ToolBar[@Name=" & VBA.Strings.Chr(34) & "Quick Access Toolbar" & VBA.Strings.Chr(34) & "]"
@@ -1822,6 +1924,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval088()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval088"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Button[@AcceleratorKey=" & VBA.Strings.Chr(34) & "Ctrl+S" & VBA.Strings.Chr(34) & "]"
@@ -1837,6 +1940,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval089()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval089"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Button[@AccessKey=" & VBA.Strings.Chr(34) & "Alt+Down Arrow" & VBA.Strings.Chr(34) & "]"
@@ -1852,6 +1956,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval090()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval090"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Text[@AriaProperties=" & VBA.Strings.Chr(34) & VBA.Strings.Chr(34) & "]"
@@ -1867,6 +1972,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval091()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval091"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@AriaRole=" & VBA.Strings.Chr(34) & "" & VBA.Strings.Chr(34) & "]"
@@ -1882,6 +1988,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval092()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval092"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//*[@AutomationId=" & VBA.Strings.Chr(34) & "AutoSaveSwitch" & VBA.Strings.Chr(34) & "]"
@@ -1897,6 +2004,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval093()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval093"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//TabItem[@BoundingRectangle=" & VBA.Strings.Chr(34) & "#" & VBA.Strings.Chr(34) & "]"
@@ -1912,6 +2020,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval094()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval094"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@CenterPoint=""""]"
@@ -1927,6 +2036,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval095()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval095"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//*[@ClassName=" & VBA.Strings.Chr(34) & "DropShadow" & VBA.Strings.Chr(34) & "]"
@@ -1942,6 +2052,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval096()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval096"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@Culture=0]"
@@ -1957,6 +2068,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval097()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval097"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@FillColor=""""]"
@@ -1972,6 +2084,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval098()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval098"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@FillType=0]"
@@ -1987,6 +2100,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval099()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval099"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@FrameworkId=""Win32""]"
@@ -2002,6 +2116,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval100()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval100"
 Arrange:
 '  PPath.SetDebugMode = True
   'Use //* to test for not matching long descriptions
@@ -2018,6 +2133,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval101()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval101"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Button[@FullDescription=""Like the look of a particular selection? You can apply that look to other content in the document.\n\nTo get started: \n1. Select content with the formatting you like\n2. Click Format Painter\n3. Select something else to automatically apply the formatting\n\nFYI: To apply the formatting in multiple places, double-click Format Painter.""]"
@@ -2031,9 +2147,9 @@ Assert:
   Assert.AreEqual True, EvaluatedPPath.ReturnedValue, "ReturnedValue"
 End Sub
 
-
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval102()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval102"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane[@HasKeyboardFocus=False]"
@@ -2049,6 +2165,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval103()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval103"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ToolBar[@HeadingLevel=80050]"
@@ -2064,6 +2181,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval104()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval104"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Pane/ToolBar[@HelpText=""Ribbon toolbar""]"
@@ -2079,6 +2197,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval105()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval105"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Tab[@IsContentElement=True]"
@@ -2094,6 +2213,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval106()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval106"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/TitleBar//MenuItem[@IsControlElement=True]"
@@ -2109,6 +2229,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval107()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval107"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/TitleBar//MenuItem[@IsDataValidForForm=False]"
@@ -2124,6 +2245,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval108()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval108"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/TitleBar//MenuItem[@IsDialog=False]"
@@ -2139,6 +2261,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval109()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval109"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@IsEnabled=False]"
@@ -2154,6 +2277,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval110()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval110"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Text[@IsKeyboardFocusable=True]"
@@ -2169,6 +2293,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval111()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval111"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//*[@IsOffscreen=True]"
@@ -2184,6 +2309,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval112()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval112"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Text[@IsPassword=False]"
@@ -2199,6 +2325,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval113()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval113"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Edit[@IsPeripheral=False]"
@@ -2214,6 +2341,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval114()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval114"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Text[@IsRequiredForForm=False]"
@@ -2229,6 +2357,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval115()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval115"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//*[@ItemStatus<>""""]"
@@ -2244,6 +2373,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval116()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval116"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Edit[@ItemType=""Edit Formula""]"
@@ -2259,6 +2389,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval117()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval117"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Edit[@LandmarkType=0]"
@@ -2274,6 +2405,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval118()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval118"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "/Edit[@Level=0]"
@@ -2289,6 +2421,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval119()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval119"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@LiveSetting=2]"
@@ -2304,6 +2437,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval120()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval120"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@LocalizedControlType=""ComboBox""]"
@@ -2319,6 +2453,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval121()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval121"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@LocalizedLandmarkType=""""]"
@@ -2334,6 +2469,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval122()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval122"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//*[@Name=""Zoom 10%""]"
@@ -2349,6 +2485,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval123()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval123"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@NativeWindowHandle=""#""]"
@@ -2364,6 +2501,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval124()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval124"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@OptimizeForVisualContent=False]"
@@ -2379,6 +2517,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval125()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval125"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@Orientation=1]"
@@ -2394,6 +2533,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval126()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval126"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//*[@PositionInSet=13]"
@@ -2409,6 +2549,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval127()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval127"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@ProcessId=""#""]"
@@ -2424,6 +2565,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval128()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval128"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@ProviderDescription=""#""]"
@@ -2439,6 +2581,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval129()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval129"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@Rotation=""""]"
@@ -2454,6 +2597,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval130()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval130"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//*[@SizeOfSet=2]"
@@ -2469,6 +2613,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval131()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval131"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//ComboBox[@VisualEffects=0]"
@@ -2484,6 +2629,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval132()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval132"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//MenuItem[position()<=2][1]"
@@ -2499,6 +2645,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval133()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval133"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//MenuItem[And(./preceding-sibling::Button,./following-sibling::SplitButton)]"
@@ -2515,6 +2662,7 @@ End Sub
 'Variation of #133
 '@TestMethod("PPath Evaluation")
 Private Sub Test02Eval134()
+  Logger.ExternalInfo "Running PPath Evaluation - Test02Eval134"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//MenuItem[./preceding-sibling::Button][./following-sibling::SplitButton]"

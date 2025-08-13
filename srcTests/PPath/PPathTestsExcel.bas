@@ -119,6 +119,7 @@ End Function
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel001()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel001"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]"
@@ -134,6 +135,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel002()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel002"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//DataItem[@Name=""A1""]"
@@ -149,6 +151,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel003()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel003"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)"
@@ -164,6 +167,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel004()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel004"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, integer)"
@@ -179,6 +183,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel005()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel005"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, decimal)"
@@ -194,6 +199,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel006()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel006"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, hyperlink)"
@@ -209,6 +215,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel007()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel007"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, date)"
@@ -224,6 +231,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel008()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel008"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, boolean)"
@@ -239,6 +247,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel009()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel009"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "count(//Pane[@Name=""Sheet Sheet1""]//element(*, decimal))"
@@ -254,6 +263,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel010()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel010"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "sum(//Pane[@Name=""Sheet Sheet1""]//element(*, decimal))"
@@ -269,6 +279,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel011()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel011"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "average(//Pane[@Name=""Sheet Sheet1""]//element(*, decimal))"
@@ -284,6 +295,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel012()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel012"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "stdeva(//Pane[@Name=""Sheet Sheet1""]//element(*, decimal))"
@@ -299,6 +311,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel013()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel013"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "round(stdeva((//Pane[@Name=""Sheet Sheet1""]//element(*, decimal))),2)"
@@ -314,6 +327,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel014()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel014"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "round(stdeva((//Pane[@Name=""Sheet Sheet1""]//element(*, decimal))),6)"
@@ -329,6 +343,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel015()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel015"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "min(//Pane[@Name=""Sheet Sheet1""]//element(*, decimal))"
@@ -344,6 +359,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel016()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel016"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "max(//Pane[@Name=""Sheet Sheet1""]//element(*, decimal))"
@@ -359,6 +375,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel017()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel017"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "roundup(stdeva((//Pane[@Name=""Sheet Sheet1""]//element(*, decimal))),0)"
@@ -374,6 +391,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel018()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel018"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "rounddown(stdeva((//Pane[@Name=""Sheet Sheet1""]//element(*, decimal))),4)"
@@ -389,6 +407,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test05Excel019()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test05Excel019"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "product(//Pane[@Name=""Sheet Sheet1""]//element(*, decimal))"
@@ -405,6 +424,7 @@ End Sub
 'Use text() function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel100()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel100"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//DataItem[text()=""Cat""]"
@@ -421,6 +441,7 @@ End Sub
 'PPath in Excel can levereage any Excel forumulas in predicates
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel101()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel101"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//DataItem[lower(text())=""cat""]"
@@ -436,6 +457,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel102()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel102"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//DataItem[upper(text())=""CAT""]"
@@ -451,6 +473,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel103()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel103"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "(//Pane[@Name=""Sheet Sheet1""]//DataItem[@Name=""A2""])[upper(substitute(text(),""at"",""ure""))=""CURE""]"
@@ -466,6 +489,7 @@ End Sub
 
 'REM This is slow and fails randomly - us VBA Web Service Call instead? @TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel104()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel104"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "(//Pane[@Name=""Sheet Sheet1""]//DataItem[@Name=""A2""])[translate(text(),""en"",""fr"")=""Chat""]"
@@ -482,6 +506,7 @@ End Sub
 'User defined function local to Phosphorus
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel105()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel105"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "(//Pane[@Name=""Sheet Sheet1""]//DataItem[@Name=""A2""])[udf:reversetext(text())=""taC""]"
@@ -497,6 +522,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel106()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel106"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "sum(//Pane[@Name=""Sheet Sheet1""]//element(*, decimal)[ceiling_math(value())=405])"
@@ -513,6 +539,7 @@ End Sub
 'Excel formula with parameters
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel107()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel107"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "sum(//Pane[@Name=""Sheet Sheet1""]//element(*, integer)[ceiling_math(value(),6,TRUE)=-6])"
@@ -528,6 +555,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel108()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel108"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "sum(//Pane[@Name=""Sheet Sheet1""]//element(*, decimal)[floor_math(value(),5,false)=-5])"
@@ -543,6 +571,7 @@ End Sub
 
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel109()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel109"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[concat(text(),text(),text())=""RabbitRabbitRabbit""]"
@@ -559,6 +588,7 @@ End Sub
 'User defined function to replicate an xpath function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel110()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel110"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, hyperlink)[xp:contains(text(),""google"")]"
@@ -575,6 +605,7 @@ End Sub
 'User defined function to replicate an xpath function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel111()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel111"
 Arrange:
 '  PPath.SetDebugMode = True  '[@Name=""B6""]
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, date)[xp:format-number(text(),""ddmmyyyy"")=""06042003""]"
@@ -591,6 +622,7 @@ End Sub
 'User defined function to replicate an xpath function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel112()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel112"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[xp:starts-with(text(),""1st April"")]"
@@ -607,6 +639,7 @@ End Sub
 'User defined function to replicate an xpath function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel113()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel113"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[xp:normalize-space(text())=""OneTwoThreeFourFive Six""]"
@@ -623,6 +656,7 @@ End Sub
 'User defined function to replicate an xpath function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel114()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel114"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[xp:string-length(text())=6]"
@@ -639,6 +673,7 @@ End Sub
 'User defined function to replicate an xpath function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel115()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel115"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[xp:substring(text(),4)=""bit""]"
@@ -655,6 +690,7 @@ End Sub
 'User defined function to replicate an xpath function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel116()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel116"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[xp:substring(text(),2,5)=""abbi""]"
@@ -671,6 +707,7 @@ End Sub
 'References to workbooks of End-User user defined functions can be added through the framework
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel117()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel117"
 Arrange:
 '  PPath.SetDebugMode = True
   
@@ -718,6 +755,7 @@ End Sub
 'User defined function to replicate an xpath function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel118()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel118"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[xp:string-after(text(),""abb"")=""it""]"
@@ -734,6 +772,7 @@ End Sub
 'User defined function to replicate an xpath function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel119()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel119"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[xp:string-before(text(),""bit"")=""Rab""]"
@@ -750,6 +789,7 @@ End Sub
 'User defined function to replicate an xpath function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel120()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel120"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[xp:translate(text(),""bit"",""BIT"")=""RabBIT""]"
@@ -766,6 +806,7 @@ End Sub
 'User defined function to replicate an xpath function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel121()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel121"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[udf:text-between(text(),""Ra"",""it"")=""bb""]"
@@ -782,6 +823,7 @@ End Sub
 'Test for mapping a renamed a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test06Excel122()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel122"
 Arrange:
 '  PPath.SetDebugMode = True
   PPathExceUserDefinedFunctions.ClearDownFunctionNameMappings
@@ -802,6 +844,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel201()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel201"
 Arrange:
   Dim strReturn As String
 Act:
@@ -813,6 +856,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel202()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel202"
 Arrange:
   Dim boolReturn As Boolean
 Act:
@@ -824,6 +868,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel203()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel203"
 Arrange:
   Dim boolReturn As Boolean
 Act:
@@ -835,6 +880,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel204()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel204"
 Arrange:
   Dim boolReturn As Boolean
 Act:
@@ -846,6 +892,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel205()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel205"
 Arrange:
   Dim boolReturn As Boolean
 Act:
@@ -857,6 +904,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel206()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel206"
 Arrange:
   Dim strReturn As String
 Act:
@@ -868,6 +916,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel207()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel207"
 Arrange:
   Dim strReturn As String
 Act:
@@ -879,6 +928,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel208()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel208"
 Arrange:
   Dim intReturn As Integer
 Act:
@@ -891,6 +941,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel209()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel209"
 Arrange:
   Dim strReturn As String
 Act:
@@ -902,6 +953,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel210()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel210"
 Arrange:
   Dim strReturn As String
 Act:
@@ -913,6 +965,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel211()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel211"
 Arrange:
   Dim strReturn As String
 Act:
@@ -924,6 +977,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel212()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel212"
 Arrange:
   Dim strReturn As String
 Act:
@@ -935,6 +989,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel213()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel213"
 Arrange:
   Dim strReturn As String
 Act:
@@ -946,6 +1001,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel214()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel214"
 Arrange:
   Dim strReturn As String
 Act:
@@ -957,6 +1013,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel215()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel215"
 Arrange:
   Dim strReturn As String
 Act:
@@ -968,6 +1025,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel216()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel216"
 Arrange:
   Dim strReturn As String
 Act:
@@ -979,6 +1037,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel217()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel217"
 Arrange:
   Dim strReturn As String
 Act:
@@ -990,6 +1049,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel218()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel218"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1001,6 +1061,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel219()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel219"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1012,6 +1073,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel220()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel220"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1023,6 +1085,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel221()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel221"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1034,6 +1097,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel222()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel222"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1045,6 +1109,7 @@ End Sub
 'Unit test for a user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel223()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel223"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1056,6 +1121,7 @@ End Sub
 'Unit test for a test user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel224()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel224"
 Arrange:
   Dim boolReturn As Boolean
 Act:
@@ -1067,6 +1133,7 @@ End Sub
 'Unit test for a test user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test04Excel225()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test04Excel225"
 Arrange:
   Dim boolReturn As Boolean
 Act:
@@ -1078,6 +1145,7 @@ End Sub
 'Unit test for a user defined function renaming
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel300()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel300"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1089,6 +1157,7 @@ End Sub
 'Unit test for a user defined function renaming
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel301()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel301"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1100,6 +1169,7 @@ End Sub
 'Unit test for a user defined function renaming
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel302()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel302"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1111,6 +1181,7 @@ End Sub
 'Unit test for a user defined function renaming
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel303()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel303"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1122,6 +1193,7 @@ End Sub
 'Unit test for a user defined function renaming
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel304()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel304"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1133,6 +1205,7 @@ End Sub
 'Unit test for a user defined function renaming
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel305()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel305"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1144,6 +1217,7 @@ End Sub
 'Unit test for a user defined function renaming
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel306()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel306"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1155,6 +1229,7 @@ End Sub
 'Unit test for a user defined function renaming
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel307()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel307"
 Arrange:
   Dim strReturn As String
   PPathExceUserDefinedFunctions.ClearDownFunctionNameMappings
@@ -1167,6 +1242,7 @@ End Sub
 'Unit test for a user defined function renaming
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel308()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel308"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1178,6 +1254,7 @@ End Sub
 'Unit test for a user defined function renaming
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel309()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel309"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1189,6 +1266,7 @@ End Sub
 'Unit test for a user defined function renaming
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel310()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel310"
 Arrange:
   Dim strReturn As String
 Act:
@@ -1200,6 +1278,7 @@ End Sub
 'Unit test for a temporarily renamed user defined function
 '@TestMethod("PPath Evaluation Excel")
 Private Sub Test03Excel311()
+  Logger.ExternalInfo "Running PPath Evaluation Excel - Test03Excel311"
 Arrange:
   
   PPathExceUserDefinedFunctions.ClearDownFunctionNameMappings

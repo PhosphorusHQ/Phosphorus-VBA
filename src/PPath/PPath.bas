@@ -95,7 +95,7 @@ Public Function Evaluate( _
   Optional UnitTestingMode As Boolean _
   ) As Phosphorus.PPathReturnClass
 
-  Logger.InternalInfo "Evaluating PPath: " & FullLocationPathExpression
+  Logger.ExternalInfo "Evaluating PPath: " & FullLocationPathExpression
 
   If Not ContextNode Is Nothing Then 'An InitialPPath should also be provided
     'Add first context node

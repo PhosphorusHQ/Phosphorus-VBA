@@ -6,8 +6,8 @@ Attribute VB_Name = "StringBuilder"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = True
-'@Folder Common
+Attribute VB_Exposed = False
+'@Folder pUnit
 Option Explicit
 
 Private buffer As String
@@ -38,3 +38,5 @@ End Function
 Public Property Get Length() As Long
   Length = bufferLength
 End Property
+
+

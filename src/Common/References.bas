@@ -14,16 +14,17 @@ Sub InitialiseAddedReferences()
 End Sub
 
 ' Add a reference to a macro-enabled workbook and save its FullPath and Workbook
-Sub AddReferenceToWorkbook(TargetWorkbookFilepath As String, Optional vbProj As VBProject)
+Sub AddReferenceToWorkbook(TargetWorkbookFilepath As String, Optional vbTargetProjName As String)
   
-'  Dim vbProj As VBProject
+  Dim vbProj As VBProject
+  
   Dim ref As Reference
   Dim refDetails As collection ' To store FullPath and Workbook
     
   ' Initialize the collection if not already done
   If AddedReferences Is Nothing Then InitialiseAddedReferences
     
-    On Error Resume Next
+  On Error Resume Next
   
 '  ' Validate the target workbook
 '  If TargetWb Is Nothing Then
@@ -34,6 +35,15 @@ Sub AddReferenceToWorkbook(TargetWorkbookFilepath As String, Optional vbProj As 
 '  If TargetWorkbookFilepath = "" Then
 '    TargetWorkbookFilepath = TargetWb.FullName
 '  End If
+  
+  Dim vbOpenProject As VBProject
+  If vbTargetProjName <> "" Then
+     For Each vbOpenProject In Application.VBE.VBProjects
+       If vbOpenProject.Name = vbTargetProjName Then
+         Set vbProj = vbOpenProject
+       End If
+     Next vbOpenProject
+  End If
   
   ' Get the VBProject of the current workbook
   If vbProj Is Nothing Then

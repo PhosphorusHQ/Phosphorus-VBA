@@ -25,7 +25,7 @@ Public Function Test004() As String
 End Function
 
 Public Function Test005() As String
-  Test005 = _
+    Test005 = _
     "/Pane[1][@Name='DropShadowTop']" & vbCrLf & _
     "/Pane[2][@Name='']" & vbCrLf & _
     "/Pane[3][@Name='']" & vbCrLf & _
@@ -63,13 +63,17 @@ Public Function Test009() As String
 
   Test009 = Test009 & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[3][@Name='Page Layout']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']" & vbCrLf & _
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']"
+
+'NOTE: The zoom & zoom slider seems to display a thumbnail dynamically so this has been disabled from the status bar ... Status Bar > Right Mouse Click > Unticked
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 100%']" & vbCrLf & _
+
+  Test009 = Test009 & vbCrLf & _
     "/Pane[3][@Name='']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']"
     
@@ -94,14 +98,15 @@ Public Function Test009() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/TitleBar[1][@Name='Excel']/MenuItem[1][@Name='Excel']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[1][@Name='Type to search and use the up and down arrow keys to navigate']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[1][@Name='Type to search and use the up and down arrow keys to navigate']/Edit[1][@Name='Microsoft search']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[2][@Name='Lynn Gale']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='My Benefits']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[2][@Name='Lynn Gale']"
+    '& vbCrLf & _
+    '"/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='My Benefits']"
     
   Test009 = Test009 & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Minimize']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Restore Down']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='Close']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='File Tab']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='Minimize']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Restore Down']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Close']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='File Tab']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[1][@Name='Home']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[2][@Name='Insert']" & vbCrLf & _
@@ -118,11 +123,12 @@ Public Function Test009() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[11][@Name='Help']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[12][@Name='Acrobat']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[13][@Name='Power Pivot']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[14][@Name='Phosphorus']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[1][@Name='Comments']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[2][@Name='Catch up']"
     
   Test009 = Test009 & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[6][@Name='Feedback']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='Feedback']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[1][@Name='Clipboard']" & vbCrLf & _
@@ -224,13 +230,16 @@ Public Function Test009() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[7][@Name='Editing']/MenuItem[3][@Name='Sort & Filter']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[7][@Name='Editing']/MenuItem[4][@Name='Find & Select']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']/Button[1][@Name='Add" & Excel.Application.WorksheetFunction.Unichar(8209) & "ins']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']/Button[1][@Name='Analyze Data']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[10][@Name='Adobe Acrobat']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']/Button[1][@Name='Add" & Excel.Application.WorksheetFunction.Unichar(8209) & "ins']"
+
+'REMOVED    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']" & vbCrLf & _
+'REMOVED    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']/Button[1][@Name='Analyze Data']" & vbCrLf & _
+
+  Test009 = Test009 & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Adobe Acrobat']"
   
   Test009 = Test009 & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[10][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']"
 
 'Not always visible?
 '  Test009_ExpectedAllElementsXpath = Test009_ExpectedAllElementsXpath & vbCrLf & _
@@ -396,10 +405,10 @@ Public Function Test027() As String
     "/Pane[4][@Name='']/ComboBox[1][@Name='Name Box']" & vbCrLf & _
     "/Pane[4][@Name='']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[3][@Name='Ribbon Display Options']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[10][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[10][@Name='Adobe Acrobat']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']/Button[1][@Name='Analyze Data']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Adobe Acrobat']"
+
+  Test027 = Test027 & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']/Button[1][@Name='Add" & Excel.Application.WorksheetFunction.Unichar(8209) & "ins']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[7][@Name='Editing']/MenuItem[4][@Name='Find & Select']" & vbCrLf & _
@@ -493,9 +502,10 @@ Public Function Test027() As String
 
   Test027 = Test027 & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[6][@Name='Feedback']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='Feedback']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[2][@Name='Catch up']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[1][@Name='Comments']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[14][@Name='Phosphorus']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[13][@Name='Power Pivot']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[12][@Name='Acrobat']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[11][@Name='Help']" & vbCrLf & _
@@ -510,13 +520,16 @@ Public Function Test027() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[2][@Name='Insert']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[1][@Name='Home']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='File Tab']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='Close']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Restore Down']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='File Tab']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Close']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Restore Down']"
     
   Test027 = Test027 & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Minimize']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='My Benefits']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='Minimize']"
+
+'REMOVED    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='My Benefits']" & vbCrLf & _
+
+  Test027 = Test027 & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[2][@Name='Lynn Gale']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[1][@Name='Type to search and use the up and down arrow keys to navigate']/Edit[1][@Name='Microsoft search']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[1][@Name='Type to search and use the up and down arrow keys to navigate']" & vbCrLf & _
@@ -538,14 +551,17 @@ Public Function Test027() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']" & vbCrLf & _
     "/Pane[3][@Name='']"
-    
+  
+'REMOVED
+'  Test027 = Test027 & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
+
   Test027 = Test027 & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[3][@Name='Page Layout']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[2][@Name='Normal']" & vbCrLf & _
@@ -574,13 +590,17 @@ Public Function Test028() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']" & vbCrLf & _
-    "/Pane[3][@Name='']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
+    "/Pane[3][@Name='']"
+
+'REMOVED
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
+
+  Test028 = Test028 & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[3][@Name='Page Layout']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[2][@Name='Normal']" & vbCrLf & _
@@ -617,13 +637,17 @@ Public Function Test030() As String
 
   Test030 = Test030 & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[3][@Name='Page Layout']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']" & vbCrLf & _
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']"
+    
+'REMOVED
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']" & vbCrLf & _
+
+  Test030 = Test030 & vbCrLf & _
     "/Pane[3][@Name='']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']"
     
@@ -648,14 +672,15 @@ Public Function Test030() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/TitleBar[1][@Name='Excel']/MenuItem[1][@Name='Excel']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[1][@Name='Type to search and use the up and down arrow keys to navigate']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[1][@Name='Type to search and use the up and down arrow keys to navigate']/Edit[1][@Name='Microsoft search']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[2][@Name='Lynn Gale']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='My Benefits']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[2][@Name='Lynn Gale']"
+    
+'REMOVED    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='My Benefits']"
     
   Test030 = Test030 & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Minimize']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Restore Down']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='Close']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='File Tab']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='Minimize']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Restore Down']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Close']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='File Tab']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[1][@Name='Home']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[2][@Name='Insert']" & vbCrLf & _
@@ -672,11 +697,12 @@ Public Function Test030() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[11][@Name='Help']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[12][@Name='Acrobat']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[13][@Name='Power Pivot']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[14][@Name='Phosphorus']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[1][@Name='Comments']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[2][@Name='Catch up']"
     
   Test030 = Test030 & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[6][@Name='Feedback']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='Feedback']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[1][@Name='Clipboard']" & vbCrLf & _
@@ -778,13 +804,13 @@ Public Function Test030() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[7][@Name='Editing']/MenuItem[3][@Name='Sort & Filter']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[7][@Name='Editing']/MenuItem[4][@Name='Find & Select']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']/Button[1][@Name='Add" & Excel.Application.WorksheetFunction.Unichar(8209) & "ins']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']/Button[1][@Name='Analyze Data']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[10][@Name='Adobe Acrobat']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']/Button[1][@Name='Add" & Excel.Application.WorksheetFunction.Unichar(8209) & "ins']"
+
+  Test030 = Test030 & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Adobe Acrobat']"
   
   Test030 = Test030 & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[10][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']"
 
 'Not always visible?
 '  Test030 = Test030 & vbCrLf & _
@@ -825,14 +851,15 @@ Public Function Test031() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/TitleBar[1][@Name='Excel']/MenuItem[1][@Name='Excel']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[1][@Name='Type to search and use the up and down arrow keys to navigate']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[1][@Name='Type to search and use the up and down arrow keys to navigate']/Edit[1][@Name='Microsoft search']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[2][@Name='Lynn Gale']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='My Benefits']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/MenuItem[2][@Name='Lynn Gale']"
+    
+'REMOVED    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='My Benefits']"
     
   Test031 = Test031 & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Minimize']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Restore Down']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='Close']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='File Tab']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='Minimize']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Restore Down']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Close']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='File Tab']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[1][@Name='Home']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[2][@Name='Insert']" & vbCrLf & _
@@ -849,11 +876,12 @@ Public Function Test031() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[11][@Name='Help']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[12][@Name='Acrobat']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[13][@Name='Power Pivot']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[14][@Name='Phosphorus']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[1][@Name='Comments']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[2][@Name='Catch up']"
     
   Test031 = Test031 & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[6][@Name='Feedback']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='Feedback']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[1][@Name='Clipboard']" & vbCrLf & _
@@ -955,13 +983,13 @@ Public Function Test031() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[7][@Name='Editing']/MenuItem[3][@Name='Sort & Filter']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[7][@Name='Editing']/MenuItem[4][@Name='Find & Select']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']/Button[1][@Name='Add" & Excel.Application.WorksheetFunction.Unichar(8209) & "ins']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']/Button[1][@Name='Analyze Data']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[10][@Name='Adobe Acrobat']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']/Button[1][@Name='Add" & Excel.Application.WorksheetFunction.Unichar(8209) & "ins']"
+
+  Test031 = Test031 & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Adobe Acrobat']"
   
   Test031 = Test031 & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[10][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']"
 
 'Not always visible?
 '  Test031 = Test031 & vbCrLf & _
@@ -1007,26 +1035,32 @@ Public Function Test033() As String
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[1][@Name='Macro Recording Not Recording']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[2][@Name='Normal']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[3][@Name='Page Layout']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']"
+    
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
+'    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
+
+  Test033 = Test033 & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/Button[1][@Name='AutoSave']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/Button[2][@Name='Save']"
 
   '11
   Test033 = Test033 & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/SplitButton[1][@Name='Undo']/Button[1][@Name='Undo']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/SplitButton[2][@Name='Redo']/Button[1][@Name='Redo']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='My Benefits']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Minimize']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Restore Down']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='Close']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='File Tab']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/SplitButton[2][@Name='Redo']/Button[1][@Name='Redo']"
+
+'    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='My Benefits']" & vbCrLf & _
+
+  Test033 = Test033 & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[1][@Name='Minimize']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Restore Down']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Close']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='File Tab']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[1][@Name='Comments']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[2][@Name='Catch up']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[6][@Name='Feedback']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='Feedback']"
 
   '21
   Test033 = Test033 & vbCrLf & _
@@ -1076,12 +1110,11 @@ Public Function Test033() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[6][@Name='Cells']/SplitButton[1][@Name='Insert']/Button[1][@Name='Insert Cells']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[6][@Name='Cells']/SplitButton[2][@Name='Delete']/Button[1][@Name='Delete Cells...']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[7][@Name='Editing']/SplitButton[1][@Name='AutoSum']/Button[1][@Name='Sum']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']/Button[1][@Name='Add" & Excel.Application.WorksheetFunction.Unichar(8209) & "ins']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']/Button[1][@Name='Analyze Data']"
-
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']/Button[1][@Name='Add" & Excel.Application.WorksheetFunction.Unichar(8209) & "ins']"
+      
   '61
   Test033 = Test033 & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[10][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']" & vbCrLf & _
     "/Pane[4][@Name='']/ComboBox[1][@Name='Name Box']/Button[1][@Name='Open']" & vbCrLf & _
     "/TitleBar[1][@Name='']/Button[1][@Name='Minimise']" & vbCrLf & _
     "/TitleBar[1][@Name='']/Button[2][@Name='Restore']" & vbCrLf & _
@@ -1131,17 +1164,21 @@ End Function
 
 Public Function Test042() As String
   Test042 = _
-  "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/SplitButton[1][@Name='Undo']/../Button[2][@Name='Save']" & vbCrLf & _
-  "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/SplitButton[1][@Name='Undo']/../Button[1][@Name='AutoSave']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/SplitButton[1][@Name='Undo']/../Button[2][@Name='Save']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/SplitButton[1][@Name='Undo']/../Button[1][@Name='AutoSave']"
 End Function
 
 Public Function Test043() As String
-  Test043 = "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[1][@Name='Macro Recording Not Recording']/../Slider[1][@Name='Zoom']"
+  Test043 = _
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[1][@Name='Macro Recording Not Recording']/../Button[2][@Name='Normal']" & vbCrLf & _
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[1][@Name='Macro Recording Not Recording']/../Button[3][@Name='Page Layout']" & vbCrLf & _
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[1][@Name='Macro Recording Not Recording']/../Button[4][@Name='Page Break Preview']"
 End Function
 
 Public Function Test044() As String
   Test044 = _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/Button[2][@Name='Save']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/Button[1][@Name='AutoSave']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[3][@Name='Page Layout']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[2][@Name='Normal']" & vbCrLf & _
@@ -1202,87 +1239,96 @@ End Function
 Public Function Test048() As String
   
   Test048 = _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@BoundingRectangle='#'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@ClassName='NetUIRepeatButton'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@Culture=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@FillType=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@FrameworkId='Win32'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@FullDescription='Moves the horizontal position left a couple of columns'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@HasKeyboardFocus=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@HeadingLevel=80050" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@IsContentElement=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@IsControlElement=True" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@IsDataValidForForm=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@IsDialog=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@IsEnabled=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@IsKeyboardFocusable=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@IsOffscreen=True" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@IsPassword=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@IsPeripheral=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@IsRequiredForForm=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@LandmarkType=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@Level=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@LiveSetting=2" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@LocalizedControlType='Button'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@Name='Zoom Out'" & vbCrLf
-    
-  Test048 = Test048 & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@NativeWindowHandle='#'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@OptimizeForVisualContent=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@Orientation=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@PositionInSet=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@ProcessId='#'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@ProviderDescription='#'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@SizeOfSet=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/@VisualEffects=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@BoundingRectangle='#'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@ClassName='NetUIRepeatButton'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@Culture=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@FillType=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@FrameworkId='Win32'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@FullDescription='Moves the horizontal position right a couple of columns'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@HasKeyboardFocus=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@HeadingLevel=80050" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@IsContentElement=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@IsControlElement=True" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@IsDataValidForForm=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@IsDialog=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@IsEnabled=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@IsKeyboardFocusable=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@IsOffscreen=False" & vbCrLf
-    
-  Test048 = Test048 & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@IsPassword=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@IsPeripheral=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@IsRequiredForForm=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@LandmarkType=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@Level=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@LiveSetting=2" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@LocalizedControlType='Button'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@Name='Zoom In'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@NativeWindowHandle='#'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@OptimizeForVisualContent=False" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@Orientation=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@PositionInSet=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@ProcessId='#'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@ProviderDescription='#'" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@SizeOfSet=0" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/@VisualEffects=0"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@AccessKey='Alt, H, F F'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@BoundingRectangle='#'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@ClassName='NetUITextbox'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@Culture=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@FillType=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@FrameworkId='Win32'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@FullDescription='Pick a new font for your text.'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@HasKeyboardFocus=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@HeadingLevel=80050"
+
+  Test048 = Test048 & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@IsContentElement=True" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@IsControlElement=True" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@IsDataValidForForm=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@IsDialog=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@IsEnabled=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@IsKeyboardFocusable=True" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@IsOffscreen=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@IsPassword=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@IsPeripheral=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@IsRequiredForForm=False"
+
+  Test048 = Test048 & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@LandmarkType=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@Level=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@LiveSetting=2" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@LocalizedControlType='Edit Box'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@Name='Font'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@NativeWindowHandle='#'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@OptimizeForVisualContent=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@Orientation=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@PositionInSet=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@ProcessId='#'"
+
+  Test048 = Test048 & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@ProviderDescription='#'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@SizeOfSet=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/@VisualEffects=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@BoundingRectangle='#'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@ClassName='NetUIStickyButton'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@Culture=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@FillType=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@FrameworkId='Win32'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@FullDescription='Pick a new font for your text.'"
+
+  Test048 = Test048 & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@HasKeyboardFocus=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@HeadingLevel=80050" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@IsContentElement=True" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@IsControlElement=True" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@IsDataValidForForm=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@IsDialog=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@IsEnabled=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@IsKeyboardFocusable=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@IsOffscreen=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@IsPassword=False"
+
+  Test048 = Test048 & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@IsPeripheral=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@IsRequiredForForm=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@LandmarkType=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@Level=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@LiveSetting=2" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@LocalizedControlType='Button'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@Name='Open'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@NativeWindowHandle='#'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@OptimizeForVisualContent=False" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@Orientation=0"
+
+  Test048 = Test048 & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@PositionInSet=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@ProcessId='#'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@ProviderDescription='#'" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@SizeOfSet=0" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/@VisualEffects=0"
 
 End Function
 
 Public Function Test049() As String
   Test049 = _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']"
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']"
 End Function
 
 Public Function Test050() As String
   Test050 = _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[1][@Name='Zoom Out']/text()" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']//Button[2][@Name='Zoom In']/text()"
+   "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Edit[1][@Name='Font']/text()" & vbCrLf & _
+   "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/ComboBox[1][@Name='Font']//Button[1][@Name='Open']/text()"
 End Function
 
 Public Function Test051() As String
@@ -1290,10 +1336,7 @@ Public Function Test051() As String
 End Function
 
 Public Function Test052() As String
-  Test052 = _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']/@value" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/@value" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']/@value"
+  Test052 = ""
 End Function
 
 Public Function Test053() As String
@@ -1464,6 +1507,7 @@ Public Function Test059() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//TabItem[11][@Name='Help']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//TabItem[12][@Name='Acrobat']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//TabItem[13][@Name='Power Pivot']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//TabItem[14][@Name='Phosphorus']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//Button[1][@Name='Comments']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//Button[2][@Name='Catch up']"
 End Function
@@ -1524,6 +1568,9 @@ Public Function Test062() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//TabItem[11][@Name='Help']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//TabItem[12][@Name='Acrobat']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//TabItem[13][@Name='Power Pivot']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//TabItem[14][@Name='Phosphorus']" & vbCrLf
+
+  Test062 = Test062 & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//Button[1][@Name='Comments']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']//Button[2][@Name='Catch up']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']//Pane[1][@Name='Status Bar']" & vbCrLf & _
@@ -1537,12 +1584,6 @@ Public Function Test062() As String
     "/Pane[2][@Name='']/ToolBar[1][@Name='']//Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']" & vbCrLf
    
   Test062 = Test062 & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']//Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']//Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']//Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']//Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']//Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']//Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/SplitButton[1][@Name='Undo']//Button[1][@Name='Undo']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/SplitButton[1][@Name='Undo']//MenuItem[1][@Name='More Options']"
 
@@ -1559,9 +1600,8 @@ End Function
 Public Function Test065() As String
   Test065 = _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[2][@Name='Normal']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/Button[2][@Name='Save']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Minimize']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Restore Down']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[2][@Name='Catch up']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[1][@Name='Clipboard']/Button[3][@Name='Office Clipboard...']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/Button[2][@Name='Decrease Font Size']" & vbCrLf & _
@@ -1571,23 +1611,28 @@ Public Function Test065() As String
 End Function
 
 Public Function Test066() As String
-  Test066 = "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Minimize']"
+  Test066 = _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[2][@Name='Catch up']"
 End Function
 
 Public Function Test067() As String
-  Test067 = "/Pane[2][@Name='']"
+  Test067 = _
+    "/Pane[2][@Name='']"
 End Function
 
 Public Function Test068() As String
-  Test068 = "/Pane[1][@Name='DropShadowTop']"
+  Test068 = _
+    "/Pane[1][@Name='DropShadowTop']"
 End Function
 
 Public Function Test069() As String
-  Test069 = "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[2][@Name='Normal']"
+  Test069 = _
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[2][@Name='Normal']"
 End Function
 
 Public Function Test070() As String
-  Test070 = "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']"
+  Test070 = _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/Button[2][@Name='Save']"
 End Function
 
 Public Function Test071() As String
@@ -1596,15 +1641,13 @@ End Function
 
 Public Function Test072() As String
   Test072 = _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[2][@Name='Zoom In']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']" & vbCrLf & _
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/Button[2][@Name='Save']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/SplitButton[1][@Name='Undo']/Button[1][@Name='Undo']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/SplitButton[2][@Name='Redo']/Button[1][@Name='Redo']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='File Tab']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='File Tab']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[2][@Name='Catch up']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[6][@Name='Feedback']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[5][@Name='Feedback']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[1][@Name='Clipboard']/SplitButton[1][@Name='Paste']/Button[1][@Name='Paste']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[1][@Name='Clipboard']/Button[1][@Name='Cut']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[1][@Name='Clipboard']/SplitButton[2][@Name='Copy']/Button[1][@Name='Copy']" & vbCrLf & _
@@ -1629,8 +1672,7 @@ Public Function Test072() As String
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[6][@Name='Cells']/SplitButton[2][@Name='Delete']/Button[1][@Name='Delete Cells...']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[7][@Name='Editing']/SplitButton[1][@Name='AutoSum']/Button[1][@Name='Sum']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[8][@Name='Add-ins']/Button[1][@Name='Add" & Excel.Application.WorksheetFunction.Unichar(8209) & "ins']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Assistance']/Button[1][@Name='Analyze Data']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[10][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[9][@Name='Adobe Acrobat']/Button[1][@Name='Create a PDF']" & vbCrLf & _
     "/Pane[4][@Name='']/ComboBox[1][@Name='Name Box']/Button[1][@Name='Open']" & vbCrLf & _
     "/TitleBar[1][@Name='']/Button[3][@Name='Close']"
     
@@ -1638,10 +1680,9 @@ End Function
 
 Public Function Test073() As String
   Test073 = _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[3][@Name='Page Layout']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/ToolBar[1][@Name='Quick Access Toolbar']/Button[1][@Name='AutoSave']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='Close']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Close']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/Button[1][@Name='Comments']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[1][@Name='Clipboard']/Button[2][@Name='Format Painter']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/Button[3][@Name='Bold']" & vbCrLf & _
@@ -1654,10 +1695,8 @@ Public Function Test074() As String
   Test074 = _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[2][@Name='Normal']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[3][@Name='Page Layout']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Minimize']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Restore Down']" & vbCrLf & _
-    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[4][@Name='Close']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[2][@Name='Restore Down']" & vbCrLf & _
+    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Button[3][@Name='Close']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/Button[2][@Name='Decrease Font Size']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[2][@Name='Font']/Button[3][@Name='Bold']" & vbCrLf & _
     "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='Lower Ribbon']/Group[1][@Name='Home']/Group[3][@Name='Alignment']/Button[2][@Name='Middle Align']" & vbCrLf & _
@@ -1682,13 +1721,12 @@ Public Function Test076() As String
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[1][@Name='Macro Recording Not Recording']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[2][@Name='Normal']" & vbCrLf & _
     "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[3][@Name='Page Layout']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[5][@Name='Zoom Out']" & vbCrLf & _
-    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[6][@Name='Zoom In']"
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[4][@Name='Page Break Preview']"
 End Function
 
 Public Function Test077() As String
-  Test077 = "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']"
+  Test077 = _
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']"
 End Function
 
 Public Function Test078() As String
@@ -1777,8 +1815,7 @@ End Function
 
 Public Function Test090() As String
   Test090 = _
-   "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[1][@Name='Cell Mode Ready']" & vbCrLf & _
-   "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']"
+   "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[1][@Name='Cell Mode Ready']"
 End Function
 
 Public Function Test091() As String
@@ -1807,7 +1844,8 @@ Public Function Test093() As String
    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[10][@Name='Add-ins']" & vbCrLf & _
    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[11][@Name='Help']" & vbCrLf & _
    "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[12][@Name='Acrobat']" & vbCrLf & _
-   "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[13][@Name='Power Pivot']"
+   "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[13][@Name='Power Pivot']" & vbCrLf & _
+   "/Pane[3][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Ribbon']/Pane[1][@Name='']/Pane[1][@Name='']/Pane[1][@Name='Ribbon']/Tab[1][@Name='Ribbon Tabs']/TabItem[14][@Name='Phosphorus']"
 End Function
 
 Public Function Test094() As String
@@ -1914,7 +1952,6 @@ End Function
 
 Public Function Test111() As String
   Test111 = _
-   "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Slider[1][@Name='Zoom']/Button[1][@Name='Zoom Out']" & vbCrLf & _
    "/TitleBar[1][@Name='']/Button[1][@Name='Minimise']" & vbCrLf & _
    "/TitleBar[1][@Name='']/Button[2][@Name='Restore']" & vbCrLf & _
    "/TitleBar[1][@Name='']/Button[3][@Name='Close']"
@@ -1922,8 +1959,7 @@ End Function
 
 Public Function Test112() As String
   Test112 = _
-   "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[1][@Name='Cell Mode Ready']" & vbCrLf & _
-   "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']"
+   "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[1][@Name='Cell Mode Ready']"
 End Function
 
 Public Function Test113() As String
@@ -1932,8 +1968,7 @@ End Function
 
 Public Function Test114() As String
   Test114 = _
-   "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[1][@Name='Cell Mode Ready']" & vbCrLf & _
-   "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']"
+   "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[1][@Name='Cell Mode Ready']"
 End Function
 
 Public Function Test115() As String
@@ -1975,7 +2010,8 @@ Public Function Test121() As String
 End Function
 
 Public Function Test122() As String
-  Test122 = "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Text[2][@Name='Zoom 10%']"
+  Test122 = _
+    "/Pane[2][@Name='']/ToolBar[1][@Name='']/Pane[1][@Name='Status Bar']/Pane[1][@Name='']/Pane[1][@Name='']/StatusBar[1][@Name='Status Bar']/Button[1][@Name='Macro Recording Not Recording']"
 End Function
 
 Public Function Test123() As String
@@ -2217,5 +2253,4 @@ Public Function TestExcel117() As String
    "/Pane[5][@Name='']/Pane[4][@Name='" & TestWorkbookName & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[51][@Name='A2']/@value" & vbCrLf & _
    "/Pane[5][@Name='']/Pane[4][@Name='" & TestWorkbookName & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[52][@Name='B2']/@value"
 End Function
-
 

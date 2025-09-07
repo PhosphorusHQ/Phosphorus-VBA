@@ -3,12 +3,12 @@ Attribute VB_Name = "PPathTestsCommon"
 '@TestModule
 Option Explicit
 
-Public Assert As Object
-Public Fakes As Object
+'Public Assert As Object
+'Public Fakes As Object
 
 Public Sub OutputActualXPaths(strActualXPaths() As String)
   Dim strPath As String
-  strPath = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "") & "Phosphorus Ouput " & VBA.Strings.Replace(VBA.Strings.Replace(Now(), "/", "-"), ":", "") & ".txt"
+  strPath = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "") & "\Logs\Phosphorus Ouput " & VBA.Strings.Replace(VBA.Strings.Replace(Now(), "/", "-"), ":", "") & ".txt"
   Dim FSO As Object
   Set FSO = CreateObject("Scripting.FileSystemObject")
   Dim oFile As Object
@@ -52,9 +52,9 @@ Public Sub TestExpectedAndActualAllElementsPPath(strExpectedPPaths As String, Ev
   For intXPathLoopCounter = 1 To intLeastNumberOfXPaths
 '    If intXPathLoopCounter = 999 Then
       If strExpectedXPathsArray(intXPathLoopCounter - 1) <> strActualXPathsArray(intXPathLoopCounter) Then
-        Logger.ExternalInfo "Number: " & intXPathLoopCounter
-        Logger.ExternalInfo "Expected: " & strExpectedXPathsArray(intXPathLoopCounter - 1), VBA.Strings.Len(strExpectedXPathsArray(intXPathLoopCounter - 1))
-        Logger.ExternalInfo "Actual  : " & strActualXPathsArray(intXPathLoopCounter), VBA.Strings.Len(strActualXPathsArray(intXPathLoopCounter))
+        Phosphorus.Log4PStatic.Logger.ExternalInfo "Number: " & intXPathLoopCounter
+        Phosphorus.Log4PStatic.Logger.ExternalInfo "Expected: " & strExpectedXPathsArray(intXPathLoopCounter - 1), VBA.Strings.Len(strExpectedXPathsArray(intXPathLoopCounter - 1))
+        Phosphorus.Log4PStatic.Logger.ExternalInfo "Actual  : " & strActualXPathsArray(intXPathLoopCounter), VBA.Strings.Len(strActualXPathsArray(intXPathLoopCounter))
         Dim i As Integer
         For i = 1 To VBA.Strings.Len(strExpectedXPathsArray(intXPathLoopCounter - 1))
           If VBA.Strings.Mid(strExpectedXPathsArray(intXPathLoopCounter - 1), i, 1) <> VBA.Strings.Mid(strActualXPathsArray(intXPathLoopCounter), i, 1) Then
@@ -72,13 +72,14 @@ Public Sub TestExpectedAndActualAllElementsPPath(strExpectedPPaths As String, Ev
             End If
             'lngActualUnicode = Application.WorksheetFunction.Unicode(strActualCharacter)
             'lngActualUnicode = VBA.Strings.AscW(strActualCharacter)
-            Logger.ExternalInfo "Error Character #" & i & " (" & strExpectedCharacter & ")" & "(" & strActualCharacter & ")" & " Expected Unicode: " & lngExpectedUnicode & " Actual Unicode: " & lngActualUnicode
+            Phosphorus.Log4PStatic.Logger.ExternalInfo "Error Character #" & i & " (" & strExpectedCharacter & ")" & "(" & strActualCharacter & ")" & " Expected Unicode: " & lngExpectedUnicode & " Actual Unicode: " & lngActualUnicode
           End If
         Next i
       End If
 '    End If
-    Assert.AreEqual strExpectedXPathsArray(intXPathLoopCounter - 1), strActualXPathsArray(intXPathLoopCounter), "GetAllElementsXPaths (" & intXPathLoopCounter & ")"
+    Phosphorus.AssertionsStatic.pAssert.Equal strExpectedXPathsArray(intXPathLoopCounter - 1), strActualXPathsArray(intXPathLoopCounter), "GetAllElementsXPaths (" & intXPathLoopCounter & ")", isCritical:=True
   Next intXPathLoopCounter
-  Assert.AreEqual intExpectedNumberOfXPaths, intActualNumberOfXPaths, "GetAllElementsXpath_NumberOfXPaths"
+  Phosphorus.AssertionsStatic.pAssert.Equal intExpectedNumberOfXPaths, intActualNumberOfXPaths, "GetAllElementsXpath_NumberOfXPaths", isCritical:=True
 End Sub
+
 

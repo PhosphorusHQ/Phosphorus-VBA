@@ -30,6 +30,12 @@ Private Sub Workbook_Open()
   strTestWorkbookFilepath = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pUnit Tests.xlam")
   pUnitTestRuns.References.AddReferenceToWorkbook strTestWorkbookFilepath, "pUnit"
 
+  'This creates a dynamic reference to the Phosphorus Tests project
+  'This is only given so we can run/edit all tests & code in one session
+  Dim strPhosphorusTestsWBFullName As String
+  strPhosphorusTestsWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus Tests.xlam")
+  pUnitTestRuns.References.AddReferenceToWorkbook strPhosphorusTestsWBFullName
+
 End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)

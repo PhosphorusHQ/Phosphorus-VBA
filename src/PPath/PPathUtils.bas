@@ -8,14 +8,14 @@ Public Function OutputElementDetails( _
   ByRef DebugMode As Boolean, _
   AutomationDictionaries As UIAutomationDictionaries)
   
-  If DebugMode Then
-    Debug.Print strAbsoluteXPath
-    Debug.Print _
-      "ControlTypeID: " & eleUIElement.CurrentControlType, _
-      "ControlTypeName: " & AutomationDictionaries.ControlTypeIDs(eleUIElement.CurrentControlType), _
-      "Name: " & eleUIElement.CurrentName
-'    Debug.Print ""
-  End If
+'  If DebugMode Then
+'    Debug.Print strAbsoluteXPath
+'    Debug.Print _
+'      "ControlTypeID: " & eleUIElement.CurrentControlType, _
+'      "ControlTypeName: " & AutomationDictionaries.ControlTypeIDs(eleUIElement.CurrentControlType), _
+'      "Name: " & eleUIElement.CurrentName
+''    Debug.Print ""
+'  End If
 End Function
 
 Public Function GetValue(UIElement As UIAutomationClient.IUIAutomationElement) As Variant

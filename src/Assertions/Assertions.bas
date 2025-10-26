@@ -17,13 +17,13 @@ Private Type FileIOType
   HasCriticalFailure As Boolean
 End Type
 
-Private this As FileIOType
+Private This As FileIOType
 
 ' Initialize the counters when the class is created
 Private Sub Class_Initialize()
   testCount = 0
   failedCount = 0
-  this.HasCriticalFailure = False
+  This.HasCriticalFailure = False
 End Sub
 
 ' Get total number of tests run
@@ -38,7 +38,7 @@ End Property
 
 ' Get whether a critical assertion has failed
 Public Property Get HasCriticalFailure() As Boolean
-  HasCriticalFailure = this.HasCriticalFailure
+  HasCriticalFailure = This.HasCriticalFailure
 End Property
 
 ' Assert that two values are equal
@@ -46,7 +46,7 @@ Public Sub Equal(expected As Variant, actual As Variant, Optional message As Str
   testCount = testCount + 1
   If Not AreEqual(expected, actual) Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
     Logger.ExternalInfo "ASSERTION FAILURE: Expected '" & expected & "' but got '" & actual & "'" & _
              IIf(Len(message) > 0, " - " & message, "") & _
              IIf(isCritical, " [CRITICAL]", "")
@@ -61,7 +61,7 @@ Public Sub NotEqual(expected As Variant, actual As Variant, Optional message As 
   testCount = testCount + 1
   If AreEqual(expected, actual) Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
     Logger.ExternalInfo "ASSERTION FAILURE: Expected '" & expected & "' to be different from '" & actual & "'" & _
               IIf(Len(message) > 0, " - " & message, "") & _
               IIf(isCritical, " [CRITICAL]", "")
@@ -86,7 +86,7 @@ Public Sub IsTrue(condition As Boolean, Optional message As String = "", Optiona
   testCount = testCount + 1
   If Not condition Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
     Logger.ExternalInfo "ASSERTION FAILURE: Expected True but got False" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
@@ -101,7 +101,7 @@ Public Sub IsFalse(condition As Boolean, Optional message As String = "", Option
   testCount = testCount + 1
   If condition Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
     Logger.ExternalInfo "ASSERTION FAILURE: Expected False but got True" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
@@ -112,12 +112,12 @@ Public Sub IsFalse(condition As Boolean, Optional message As String = "", Option
 End Sub
 
 ' Assert that a value is null
-Public Sub ThisIsNull(this As Variant, Optional message As String = "", Optional isCritical As Boolean = False)
+Public Sub ThisIsNull(This As Variant, Optional message As String = "", Optional isCritical As Boolean = False)
   testCount = testCount + 1
-  If Not IsNull(this) Then
+  If Not IsNull(This) Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
-    Logger.ExternalInfo "ASSERTION FAILURE: Expected Null but got '" & this & "'" & _
+    If isCritical Then This.HasCriticalFailure = True
+    Logger.ExternalInfo "ASSERTION FAILURE: Expected Null but got '" & This & "'" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
   Else
@@ -127,11 +127,11 @@ Public Sub ThisIsNull(this As Variant, Optional message As String = "", Optional
 End Sub
 
 ' Assert that a value is not null
-Public Sub ThisIsNotNull(this As Variant, Optional message As String = "", Optional isCritical As Boolean = False)
+Public Sub ThisIsNotNull(This As Variant, Optional message As String = "", Optional isCritical As Boolean = False)
   testCount = testCount + 1
-  If IsNull(this) Then
+  If IsNull(This) Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
       Logger.ExternalInfo "ASSERTION FAILURE: Expected non-Null value but got Null" & _
                    IIf(Len(message) > 0, " - " & message, "") & _
                    IIf(isCritical, " [CRITICAL]", "")
@@ -142,18 +142,18 @@ Public Sub ThisIsNotNull(this As Variant, Optional message As String = "", Optio
 End Sub
 
 ' Assert that a value is within a specified range
-Public Sub InRange(value As Variant, minValue As Variant, maxValue As Variant, Optional message As String = "", Optional isCritical As Boolean = False)
+Public Sub InRange(Value As Variant, minValue As Variant, maxValue As Variant, Optional message As String = "", Optional isCritical As Boolean = False)
   testCount = testCount + 1
   On Error Resume Next
   Dim isInRange As Boolean
-  isInRange = (value >= minValue And value <= maxValue)
+  isInRange = (Value >= minValue And Value <= maxValue)
   If Err.Number <> 0 Then isInRange = False
   On Error GoTo 0
     
   If Not isInRange Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
-    Logger.ExternalInfo "ASSERTION FAILURE: Value '" & value & "' not in range [" & minValue & ", " & maxValue & "]" & _
+    If isCritical Then This.HasCriticalFailure = True
+    Logger.ExternalInfo "ASSERTION FAILURE: Value '" & Value & "' not in range [" & minValue & ", " & maxValue & "]" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
   Else
@@ -166,30 +166,30 @@ End Sub
 Public Sub Contains(collection As Variant, item As Variant, Optional message As String = "", Optional isCritical As Boolean = False)
   
   testCount = testCount + 1
-  Dim found As Boolean
-  found = False
+  Dim Found As Boolean
+  Found = False
     
   If IsArray(collection) Then
     Dim i As Long
     For i = LBound(collection) To UBound(collection)
       If AreEqual(collection(i), item) Then
-        found = True
+        Found = True
         Exit For
       End If
     Next i
-  ElseIf typeName(collection) = "Collection" Then
+  ElseIf TypeName(collection) = "Collection" Then
     Dim element As Variant
     For Each element In collection
       If AreEqual(element, item) Then
-        found = True
+        Found = True
         Exit For
       End If
     Next element
   End If
     
-  If Not found Then
+  If Not Found Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
     Logger.ExternalInfo "ASSERTION FAILURE: Item '" & item & "' not found in collection" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
@@ -211,7 +211,7 @@ Public Sub StringMatchesSimplePattern(actual As String, pattern As String, Optio
     
   If Not matches Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
     Logger.ExternalInfo "ASSERTION FAILURE: String '" & actual & "' doesn't match pattern '" & pattern & "'" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
@@ -231,7 +231,7 @@ Public Sub ApproximatelyEqual(expected As Double, actual As Double, tolerance As
     
   If difference > tolerance Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
     Logger.ExternalInfo "ASSERTION FAILURE: Expected '" & expected & "' ±" & tolerance & " but got '" & actual & "'" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
@@ -251,7 +251,7 @@ Public Sub ObjectExists(obj As Object, Optional message As String = "", Optional
     
   If Not exists Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
     Logger.ExternalInfo "ASSERTION FAILURE: Object is Nothing" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
@@ -282,7 +282,7 @@ Public Sub Throws(methodToRun As String, expectedError As Long, Optional message
     
   If Not errorOccurred Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
     Logger.ExternalInfo "ASSERTION FAILURE: Expected error " & expectedError & " but didn't occur or different error occurred" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
@@ -307,15 +307,15 @@ Public Sub IsEmpty(collection As Variant, Optional message As String = "", Optio
     u = UBound(collection)
     On Error GoTo 0
     IsEmpty = (u = 0 And l = 0)
-  ElseIf typeName(collection) = "Collection" Then
-    IsEmpty = (collection.count = 0)
+  ElseIf TypeName(collection) = "Collection" Then
+    IsEmpty = (collection.Count = 0)
   Else
     IsEmpty = False ' Non-collection types considered not empty
   End If
     
   If Not IsEmpty Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
     Logger.ExternalInfo "ASSERTION FAILURE: Collection/Array is not empty" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
@@ -327,15 +327,15 @@ Public Sub IsEmpty(collection As Variant, Optional message As String = "", Optio
 End Sub
 
 ' Assert that a variable is of an expected type
-Public Sub IsType(value As Variant, expectedTypeName As String, Optional message As String = "", Optional isCritical As Boolean = False)
+Public Sub IsType(Value As Variant, expectedTypeName As String, Optional message As String = "", Optional isCritical As Boolean = False)
     
   testCount = testCount + 1
   Dim actualType As String
-  actualType = typeName(value)
+  actualType = TypeName(Value)
     
   If VBA.Strings.LCase(actualType) <> VBA.Strings.LCase(expectedTypeName) Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
+    If isCritical Then This.HasCriticalFailure = True
     Logger.ExternalInfo "ASSERTION FAILURE: Expected type '" & expectedTypeName & "' but got '" & actualType & "'" & _
              IIf(Len(message) > 0, " - " & message, "") & _
              IIf(isCritical, " [CRITICAL]", "")
@@ -347,19 +347,19 @@ Public Sub IsType(value As Variant, expectedTypeName As String, Optional message
 End Sub
 
 ' Assert that a value is greater than another
-Public Sub GreaterThan(value As Variant, threshold As Variant, Optional message As String = "", Optional isCritical As Boolean = False)
+Public Sub GreaterThan(Value As Variant, threshold As Variant, Optional message As String = "", Optional isCritical As Boolean = False)
     
   testCount = testCount + 1
   Dim isGreater As Boolean
   On Error Resume Next
-  isGreater = (value > threshold)
+  isGreater = (Value > threshold)
   If Err.Number <> 0 Then isGreater = False
   On Error GoTo 0
     
   If Not isGreater Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
-    Logger.ExternalInfo "ASSERTION FAILURE: Value '" & value & "' not greater than '" & threshold & "'" & _
+    If isCritical Then This.HasCriticalFailure = True
+    Logger.ExternalInfo "ASSERTION FAILURE: Value '" & Value & "' not greater than '" & threshold & "'" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
   Else
@@ -370,19 +370,19 @@ Public Sub GreaterThan(value As Variant, threshold As Variant, Optional message 
 End Sub
 
 ' Assert that a value is less than another
-Public Sub LessThan(value As Variant, threshold As Variant, Optional message As String = "", Optional isCritical As Boolean = False)
+Public Sub LessThan(Value As Variant, threshold As Variant, Optional message As String = "", Optional isCritical As Boolean = False)
     
   testCount = testCount + 1
   Dim isLess As Boolean
   On Error Resume Next
-  isLess = (value < threshold)
+  isLess = (Value < threshold)
   If Err.Number <> 0 Then isLess = False
   On Error GoTo 0
     
   If Not isLess Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
-    Logger.ExternalInfo "ASSERTION FAILURE: Value '" & value & "' not less than '" & threshold & "'" & _
+    If isCritical Then This.HasCriticalFailure = True
+    Logger.ExternalInfo "ASSERTION FAILURE: Value '" & Value & "' not less than '" & threshold & "'" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
   Else
@@ -393,16 +393,16 @@ Public Sub LessThan(value As Variant, threshold As Variant, Optional message As 
 End Sub
 
 ' Assert that a file exists
-Public Sub FileExists(filePath As String, Optional message As String = "", Optional isCritical As Boolean = False)
+Public Sub FileExists(FilePath As String, Optional message As String = "", Optional isCritical As Boolean = False)
     
   testCount = testCount + 1
   Dim exists As Boolean
-  exists = (Dir(filePath) <> "")
+  exists = (Dir(FilePath) <> "")
     
   If Not exists Then
     failedCount = failedCount + 1
-    If isCritical Then this.HasCriticalFailure = True
-    Logger.ExternalInfo "ASSERTION FAILURE: File '" & filePath & "' does not exist" & _
+    If isCritical Then This.HasCriticalFailure = True
+    Logger.ExternalInfo "ASSERTION FAILURE: File '" & FilePath & "' does not exist" & _
                IIf(Len(message) > 0, " - " & message, "") & _
                IIf(isCritical, " [CRITICAL]", "")
   Else
@@ -446,4 +446,6 @@ Public Sub PrintSummary()
     message:="Success Rate: " & VBA.Strings.Format((testCount - failedCount) / testCount, "0%")
   
 End Sub
+
+
 

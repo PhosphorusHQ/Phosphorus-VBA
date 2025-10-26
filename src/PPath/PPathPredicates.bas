@@ -10,12 +10,12 @@ Attribute VB_Exposed = False
 '@Folder PPath
 Option Explicit
 
-Private this As PPathCommon
+Private This As PPathCommon
 Private lstrNestedPPath As String
 Private lstrCurrentPredicateTest As String
 
 Public Sub Initialise(ByRef sharedthis As PPathCommon)
-  Set this = sharedthis
+  Set This = sharedthis
 End Sub
 
 Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
@@ -58,16 +58,16 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
           Dim intContextElementLastCounter As Integer
         End If
         
-        intNumberOfSetElements = this.PPathReturnClass.GetNumberOfWorkingCopyOfCandidateElements(this.CurrentLocationPathExpressionCounter)
+        intNumberOfSetElements = This.PPathReturnClass.GetNumberOfWorkingCopyOfCandidateElements(This.CurrentLocationPathExpressionCounter)
         For intSetElementCounter = 1 To intNumberOfSetElements
     
-          Set eleCurrentUIElement = this.PPathReturnClass.GetWorkingCopyElement(this.CurrentLocationPathExpressionCounter, intSetElementCounter)
-          strCurrentNavigationalPPath = this.PPathReturnClass.GetWorkingCopyNavigationalPPath(this.CurrentLocationPathExpressionCounter, intSetElementCounter)
-          strCurrentAttributeName = this.PPathReturnClass.GetWorkingCopyAttributeName(this.CurrentLocationPathExpressionCounter, intSetElementCounter)
-          strCurrentNodeControlType = this.AutomationDictionaries.ControlTypeIDs(eleCurrentUIElement.CurrentControlType)
+          Set eleCurrentUIElement = This.PPathReturnClass.GetWorkingCopyElement(This.CurrentLocationPathExpressionCounter, intSetElementCounter)
+          strCurrentNavigationalPPath = This.PPathReturnClass.GetWorkingCopyNavigationalPPath(This.CurrentLocationPathExpressionCounter, intSetElementCounter)
+          strCurrentAttributeName = This.PPathReturnClass.GetWorkingCopyAttributeName(This.CurrentLocationPathExpressionCounter, intSetElementCounter)
+          strCurrentNodeControlType = This.AutomationDictionaries.ControlTypeIDs(eleCurrentUIElement.CurrentControlType)
   
           If boolIsFirstSetPositionalPredicate Then
-            Set eleCurrentParentUIElement = this.TreeWalker.GetParentElement(eleCurrentUIElement)
+            Set eleCurrentParentUIElement = This.TreeWalker.GetParentElement(eleCurrentUIElement)
             strCurrentParentElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(eleCurrentParentUIElement)
             'Count the number of preceeding elements that have the same parent to get the current element's position
             intContextElementPositionCounter = 0
@@ -76,8 +76,8 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
               Dim elePreviousUIElement As UIAutomationClient.IUIAutomationElement
               Dim elePreviousParentUIElement As UIAutomationClient.IUIAutomationElement
               Dim strPreviousParentElementRuntimeID As String
-              Set elePreviousUIElement = this.PPathReturnClass.GetWorkingCopyElement(this.CurrentLocationPathExpressionCounter, intPreviousElementCounter)
-              Set elePreviousParentUIElement = this.TreeWalker.GetParentElement(elePreviousUIElement)
+              Set elePreviousUIElement = This.PPathReturnClass.GetWorkingCopyElement(This.CurrentLocationPathExpressionCounter, intPreviousElementCounter)
+              Set elePreviousParentUIElement = This.TreeWalker.GetParentElement(elePreviousUIElement)
               strPreviousParentElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(elePreviousParentUIElement)
               If strPreviousParentElementRuntimeID = strCurrentParentElementRuntimeID Then
                 intContextElementPositionCounter = intContextElementPositionCounter + 1
@@ -94,8 +94,8 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
                 Dim eleNextUIElement As UIAutomationClient.IUIAutomationElement
                 Dim eleNextParentUIElement As UIAutomationClient.IUIAutomationElement
                 Dim strNextParentElementRuntimeID As String
-                Set eleNextUIElement = this.PPathReturnClass.GetWorkingCopyElement(this.CurrentLocationPathExpressionCounter, intNextElementCounter)
-                Set eleNextParentUIElement = this.TreeWalker.GetParentElement(eleNextUIElement)
+                Set eleNextUIElement = This.PPathReturnClass.GetWorkingCopyElement(This.CurrentLocationPathExpressionCounter, intNextElementCounter)
+                Set eleNextParentUIElement = This.TreeWalker.GetParentElement(eleNextUIElement)
                 strNextParentElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(eleNextParentUIElement)
                 If strCurrentParentElementRuntimeID = strNextParentElementRuntimeID Then
                   intContextElementLastCounter = intContextElementLastCounter + 1
@@ -106,7 +106,7 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
               Next intNextElementCounter
             End If
           End If
-          
+
           'Replace all the positional functions in the current predicate group
           lstrCurrentPredicateTest = strCurrentGroupAttributesPPath
           lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, "first()", 1)
@@ -117,7 +117,7 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
             lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, "position()", intSetElementCounter)
             lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, "last()", intNumberOfSetElements)
           End If
-          
+
           ProcessPPathFunctions eleCurrentUIElement, strCurrentNavigationalPPath & "/"
           ProcessNestedPPaths eleCurrentUIElement, strCurrentNavigationalPPath & "/"
           ProcessAttributeChecks eleCurrentUIElement, strCurrentNavigationalPPath & "/"
@@ -129,20 +129,20 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
           boolCurrentPredicateTestPasses = True
           boolCurrentPredicateTestPasses = Application.Evaluate(lstrCurrentPredicateTest)
           If Err.Number = 13 Then
-            this.PPathReturnClass.SetErrorMessage = Phosphorus.PPathConstants.INVALID_PREDICATE & " [" & strCurrentGroupAttributesPPath & "] => " & lstrCurrentPredicateTest
+            This.PPathReturnClass.SetErrorMessage = Phosphorus.PPathConstants.INVALID_PREDICATE & " [" & strCurrentGroupAttributesPPath & "] => " & lstrCurrentPredicateTest
             Exit Sub
           End If
           On Error GoTo 0
           If boolCurrentPredicateTestPasses Then
-            PPathUtils.OutputElementDetails eleCurrentUIElement, strCurrentNavigationalPPath, this.DebugMode, this.AutomationDictionaries
-            this.PPathReturnClass.AddMatchingElement this.PPathReturnClass.GetCandidateElements(this.CurrentLocationPathExpressionCounter), eleCurrentUIElement, strCurrentAttributeName, strCurrentNavigationalPPath
+            PPathUtils.OutputElementDetails eleCurrentUIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
+            This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleCurrentUIElement, strCurrentAttributeName, strCurrentNavigationalPPath
           End If
 
         Next intSetElementCounter
 
         'Reset Working Copy after each interim predicate group
         If (intPredicateGroupCounter < intNumberOfPredicateGroups) And (strCurrentGroupAttributesPPath <> "") Then
-          this.PPathReturnClass.MoveCandidateElementsToWorkingCopy this.CurrentLocationPathExpressionCounter
+          This.PPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
         End If
 
       End If
@@ -151,7 +151,7 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
     
     'Reset Working Copy after each interim predicate set
     If (intPredicateSetCounter < intNumberOfPredicateSets) And (strCurrentSetAttributesPPath <> "") Then
-      this.PPathReturnClass.MoveCandidateElementsToWorkingCopy this.CurrentLocationPathExpressionCounter
+      This.PPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
     End If
     
   Next intPredicateSetCounter
@@ -206,7 +206,7 @@ Private Function SourcePPathContainedATopLevelFunction( _
     NestedPPath.Initialise
     Set EvaluatedNestedPPath = NestedPPath.Evaluate(lstrNestedPPath, eleCurrentContextUIElement, strInitialPPath)
     'Raise any error?
-    this.PPathReturnClass.SetErrorMessage = EvaluatedNestedPPath.GetErrorMessage
+    This.PPathReturnClass.SetErrorMessage = EvaluatedNestedPPath.GetErrorMessage
     varReturnValue = EvaluatedNestedPPath.ReturnedValue
     lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, lstrNestedPPath, varReturnValue)
     Set NestedPPath = Nothing
@@ -263,7 +263,7 @@ Private Function SourcePPathContainedANestedPPath( _
     NestedPPath.Initialise
     Set EvaluatedNestedPPath = NestedPPath.Evaluate(lstrNestedPPath, eleCurrentContextUIElement, strInitialPPath)
     'Raise any error?
-    this.PPathReturnClass.SetErrorMessage = EvaluatedNestedPPath.GetErrorMessage
+    This.PPathReturnClass.SetErrorMessage = EvaluatedNestedPPath.GetErrorMessage
     varReturnValue = EvaluatedNestedPPath.ReturnedValue
     lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, lstrNestedPPath, varReturnValue)
     Set NestedPPath = Nothing
@@ -303,23 +303,23 @@ Private Function SourcePPathContainedAnAttributeCheck( _
           boolInsideAPredicate = False
         End If
       End If
-      If Not boolInsideAPredicate And VBA.Strings.InStr(1, "=><", strCurrentCharacter) > 0 Then
+      If Not boolInsideAPredicate And VBA.Strings.InStr(1, ",=><", strCurrentCharacter) > 0 Then
         strAttributeName = VBA.Strings.Mid(lstrCurrentPredicateTest, intStartOfAttributeName + 1, intEndOfAttributeName - intStartOfAttributeName - 1)
         Exit For
       End If
     Next intEndOfAttributeName
   End If
   If SourcePPathContainedAnAttributeCheck Then
-    Dim key As Variant
+    Dim Key As Variant
     Dim strLookupAttributeName As String
-    For Each key In this.AutomationDictionaries.NavigablePropertyIDs.Keys
-      strLookupAttributeName = this.AutomationDictionaries.NavigablePropertyIDs(key)
+    For Each Key In This.AutomationDictionaries.NavigablePropertyIDs.Keys
+      strLookupAttributeName = This.AutomationDictionaries.NavigablePropertyIDs(Key)
       If strLookupAttributeName = strAttributeName Then
         Dim varPropertyValue As Variant
-        If this.UnitTestingMode And ((strAttributeName = "ProcessId") Or (strAttributeName = "ProviderDescription") Or (strAttributeName = "BoundingRectangle") Or (strAttributeName = "NativeWindowHandle")) Then
+        If This.UnitTestingMode And ((strAttributeName = "ProcessId") Or (strAttributeName = "ProviderDescription") Or (strAttributeName = "BoundingRectangle") Or (strAttributeName = "NativeWindowHandle")) Then
           varPropertyValue = "#"
         Else
-          varPropertyValue = eleCurrentContextUIElement.GetCurrentPropertyValue(key)
+          varPropertyValue = eleCurrentContextUIElement.GetCurrentPropertyValue(Key)
           If Not IsEmpty(varPropertyValue) Then
             If varPropertyValue <> "" Then
               If VBA.Strings.InStr(1, varPropertyValue, "@") > 0 Then
@@ -441,7 +441,7 @@ End If
         End If
         Exit For
       End If
-    Next key
+    Next Key
   
   End If
   
@@ -450,7 +450,7 @@ End Function
 Private Sub ProcessTextAndValueChecks(eleCurrentContextUIElement As UIAutomationClient.IUIAutomationElement)
   If VBA.Strings.InStr(1, lstrCurrentPredicateTest, "text()") > 0 Then
     Dim strCurrentText As String
-    strCurrentText = this.NodeTests.GetTextValue(eleCurrentContextUIElement)
+    strCurrentText = This.NodeTests.GetTextValue(eleCurrentContextUIElement)
     lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, "text()", VBA.Strings.Chr(34) & strCurrentText & VBA.Strings.Chr(34))
   End If
   If VBA.Strings.InStr(1, lstrCurrentPredicateTest, "value()") > 0 Then
@@ -459,6 +459,3 @@ Private Sub ProcessTextAndValueChecks(eleCurrentContextUIElement As UIAutomation
     lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, "value()", varCurrentValue)
   End If
 End Sub
-
-
-

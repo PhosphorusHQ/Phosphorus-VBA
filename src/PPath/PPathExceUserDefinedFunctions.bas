@@ -37,10 +37,10 @@ Public Function RenameExcelFunctions(strCurrentPredicateTest) As String
   InitialiseFunctionNameMappings
   Dim strReturn As String
   strReturn = strCurrentPredicateTest
-  Dim key As Variant
-  For Each key In FunctionNameMappings.Keys
-     strReturn = VBA.Strings.Replace(strReturn, key & "(", FunctionNameMappings(key) & "(")
-  Next key
+  Dim Key As Variant
+  For Each Key In FunctionNameMappings.Keys
+     strReturn = VBA.Strings.Replace(strReturn, Key & "(", FunctionNameMappings(Key) & "(")
+  Next Key
   'Handle all user defined function's in 1 - no need to map them individually
   strReturn = VBA.Strings.Replace(strReturn, "udf:", "udf_")
   RenameExcelFunctions = strReturn
@@ -208,4 +208,3 @@ End Function
 Public Function udf_test_ends_with(str1 As String, str2 As String) As Boolean
   udf_test_ends_with = (VBA.Strings.InStr(1, str1, str2) = (VBA.Strings.Len(str1) - VBA.Strings.Len(str2) + 1))
 End Function
-

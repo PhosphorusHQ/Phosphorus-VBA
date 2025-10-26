@@ -8,7 +8,7 @@ Option Explicit
 '@Regression
 
 Public Sub BeforeModule()
-  Logger.ExternalInfo "Running BeforeModule in pUnitSampleTestModule5"
+  Phosphorus.Logger.ExternalInfo "Running BeforeModule in pUnitSampleTestModule5"
   On Error GoTo ErrorHandler
   'Do nothing
   Exit Sub

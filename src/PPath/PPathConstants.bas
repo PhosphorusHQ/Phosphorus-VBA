@@ -9,7 +9,7 @@ Public Const UNUSED_RELATIVE_PPATH_CONTEXT_NODE = "A context node is provided bu
 Public Const MISSING_CONTEXT_NODE_INITIAL_PPATH = "A context node is provided but no initial PPath!"
 Public Const NUMBER_OF_RELATIVE_PPATHS_TO_CONTEXT_NODES_MISMATCH = "The number of nodes and relative PPaths do not match!"
 '@Folder PPAth
-Public Const MISMATCHING_PARENTHESES_ERROR_MESSAGE = "Unequal number of left & right parantheses '(' & ')' in PPath!"
+Public Const MISMATCHING_PARENTHESES_ERROR_MESSAGE = "Unequal number of left & right parentheses '(' & ')' in PPath!"
 Public Const MISMATCHING_SQUARE_BARCKETS_ERROR_MESSAGE = "Unequal number of left & right square brackets '[' & ']' in PPath!"
 Public Const INVALID_PROPERTY_ERROR_MESSAGE = "Unrecognised property in PPath!"
 
@@ -67,4 +67,3 @@ Public Sub InitialiseAxesTypes()
   Axes.Following = "following::"
   Axes.Attribute = "attribute::"
 End Sub
-

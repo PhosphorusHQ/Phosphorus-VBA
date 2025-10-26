@@ -27,7 +27,7 @@ Private Type Returns
   ReturnedValue As Variant
 End Type
 
-Private this As Returns
+Private This As Returns
 
 Public Sub Initialise(intNumberOfXPathExpressions As Integer)
   lintNumberOfXPathExpressions = intNumberOfXPathExpressions
@@ -205,27 +205,26 @@ Public Function GetWorkingCopyAttributeName(LocationPathExpressionCounter As Int
 End Function
 
 Property Let TopLevelFunctionPrefix(FunctionPrefix As String)
-  this.TopLevelFunctionPrefix = FunctionPrefix
+  This.TopLevelFunctionPrefix = FunctionPrefix
 End Property
 
 Property Get TopLevelFunctionPrefix() As String
-  TopLevelFunctionPrefix = this.TopLevelFunctionPrefix
+  TopLevelFunctionPrefix = This.TopLevelFunctionPrefix
 End Property
 
 Property Let TopLevelFunctionSuffix(FunctionSuffix As String)
-  this.TopLevelFunctionSuffix = FunctionSuffix
+  This.TopLevelFunctionSuffix = FunctionSuffix
 End Property
 
 Property Get TopLevelFunctionSuffix() As String
-  TopLevelFunctionSuffix = this.TopLevelFunctionSuffix
+  TopLevelFunctionSuffix = This.TopLevelFunctionSuffix
 End Property
 
 
-Property Let ReturnedValue(value As Variant)
-  this.ReturnedValue = value
+Property Let ReturnedValue(Value As Variant)
+  This.ReturnedValue = Value
 End Property
 
 Property Get ReturnedValue() As Variant
-  ReturnedValue = this.ReturnedValue
+  ReturnedValue = This.ReturnedValue
 End Property
-

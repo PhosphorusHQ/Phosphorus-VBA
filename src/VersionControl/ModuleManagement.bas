@@ -5,7 +5,7 @@ Option Explicit
 'This code requires the "Microsoft Visual Basic for Applications Extensibility" reference to be enabled in VBA (Tools > References).
 'The workbook must be saved in a macro-enabled format (e.g. .xlsm).
 'Trust access to the VBA project object model must be enabled (File > Options > Trust Center > Trust Center Settings > Macro Settings).
-
+ 
 Private ModulesToKeep() As String
 
 Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional projectName As String = "")
@@ -13,9 +13,9 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional proje
   Dim vbProj As VBProject
   Dim vbComp As VBComponent
   Dim folderName As String
-  Dim filePath As String
+  Dim FilePath As String
   Dim basePath As String
-  Dim FSO As Object
+  Dim fso As Object
   Dim file As Object
   Dim firstLine As String
     
@@ -23,14 +23,14 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional proje
   With Application.VBE
     If projectName = "" Then
       Set vbProj = ThisWorkbook.VBProject
-      basePath = ThisWorkbook.path & SubFolderForExport
+      basePath = ThisWorkbook.Path & SubFolderForExport
     Else
       Dim projFound As Boolean
       projFound = False
       For Each vbProj In .VBProjects
         If vbProj.Name = projectName Then
           projFound = True
-          basePath = VBA.Strings.Left(vbProj.Filename, VBA.Strings.InStrRev(vbProj.Filename, "\", -1) - 1) & SubFolderForExport
+          basePath = VBA.Strings.Left(vbProj.FileName, VBA.Strings.InStrRev(vbProj.FileName, "\", -1) - 1) & SubFolderForExport
           Exit For
         End If
       Next vbProj
@@ -42,11 +42,11 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional proje
   End With
     
   ' Create FileSystemObject
-  Set FSO = CreateObject("Scripting.FileSystemObject")
+  Set fso = CreateObject("Scripting.FileSystemObject")
     
   ' Create base folder if it doesn't exist
-  If Not FSO.FolderExists(basePath) Then
-    FSO.CreateFolder basePath
+  If Not fso.FolderExists(basePath) Then
+    fso.CreateFolder basePath
   End If
     
   ' Loop through all components
@@ -61,18 +61,18 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional proje
     
     If folderName <> "None" Then
     
-      If Not FSO.FolderExists(basePath & "\" & folderName) Then
-        FSO.CreateFolder basePath & "\" & folderName
+      If Not fso.FolderExists(basePath & "\" & folderName) Then
+        fso.CreateFolder basePath & "\" & folderName
       End If
         
-      filePath = basePath & "\" & folderName & "\" & vbComp.Name & ".bas"
-      vbComp.Export filePath
+      FilePath = basePath & "\" & folderName & "\" & vbComp.Name & ".bas"
+      vbComp.Export FilePath
         
       If vbComp.Type <> 3 Then
         Dim fileText As String
         With CreateObject("Scripting.FileSystemObject")
-          fileText = .OpenTextFile(filePath, 1).ReadAll
-          Set file = .CreateTextFile(filePath, True)
+          fileText = .OpenTextFile(FilePath, 1).ReadAll
+          Set file = .CreateTextFile(FilePath, True)
           If VBA.Strings.Left(firstLine, 7) = "@Folder " Then
             file.WriteLine firstLine
           End If
@@ -121,7 +121,7 @@ End Sub
 Public Sub ImportModulesFromFolder(SubFolderForExport As String, projectName As String)
    
   Dim vbProj As Object
-  Dim FSO As Object
+  Dim fso As Object
   Dim folder As Object
   Dim subFolder As Object
   Dim file As Object
@@ -132,13 +132,13 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, projectName As 
   With Application.VBE
     If projectName = "" Then
       Set vbProj = ThisWorkbook.VBProject
-      importPath = ThisWorkbook.path & "\" & SubFolderForExport
+      importPath = ThisWorkbook.Path & "\" & SubFolderForExport
     Else
       projFound = False
       For Each vbProj In .VBProjects
         If vbProj.Name = projectName Then
           projFound = True
-          importPath = vbProj.Filename
+          importPath = vbProj.FileName
           importPath = VBA.Strings.Left(importPath, VBA.Strings.InStrRev(importPath, "\")) & "\" & SubFolderForExport
           Exit For
         End If
@@ -152,10 +152,10 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, projectName As 
   End With
     
   ' Create FileSystemObject
-  Set FSO = CreateObject("Scripting.FileSystemObject")
+  Set fso = CreateObject("Scripting.FileSystemObject")
     
   ' Check if folder exists
-  If Not FSO.FolderExists(importPath) Then
+  If Not fso.FolderExists(importPath) Then
     MsgBox "Import folder not found: " & importPath, vbCritical
     Exit Sub
   End If
@@ -164,7 +164,7 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, projectName As 
     RemoveAllComponentsExcept vbProj
     
   ' Import all .bas files from folder and subfolders
-  Set folder = FSO.GetFolder(importPath)
+  Set folder = fso.GetFolder(importPath)
   Dim i As Long
   Dim keep As Boolean
   
@@ -179,7 +179,7 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, projectName As 
           End If
         Next i
         If Not keep Then
-          vbProj.VBComponents.Import file.path
+          vbProj.VBComponents.Import file.Path
         End If
       End If
     End If
@@ -197,7 +197,7 @@ Public Sub ImportModulesFromFolder(SubFolderForExport As String, projectName As 
             End If
           Next i
           If Not keep Then
-            vbProj.VBComponents.Import file.path
+            vbProj.VBComponents.Import file.Path
           End If
         End If
       End If

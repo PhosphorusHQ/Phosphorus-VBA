@@ -11,10 +11,10 @@ Attribute VB_Exposed = False
 Option Explicit
 Option Base 1
 
-Private this As PPathCommon
+Private This As PPathCommon
 
 Public Sub Initialise(ByRef sharedthis As PPathCommon)
-  Set this = sharedthis
+  Set This = sharedthis
 End Sub
 
 Public Function GetAllXPathExpressions(ByVal strFullLocationPathExpression As String) As String()
@@ -164,8 +164,8 @@ Public Function GetNextStep(strRemainingPPath As String) As Phosphorus.PPathStep
     NextStep.NodeTest = "text()"
     strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, 7, VBA.Strings.Len(strRemainingPPath))
   ElseIf strRemainingPPath = "" Then
-    this.PPathReturnClass.SetErrorMessage = Phosphorus.PPathConstants.NO_NODETEST_PPATH_ERROR_MESSAGE
-    this.PPathReturnClass.RemoveAllMatchingElements
+    This.PPathReturnClass.SetErrorMessage = Phosphorus.PPathConstants.NO_NODETEST_PPATH_ERROR_MESSAGE
+    This.PPathReturnClass.RemoveAllMatchingElements
   Else
     For intCharacter = 1 To VBA.Strings.Len(strRemainingPPath)
       Dim intEndOfNodeTest As Integer
@@ -186,15 +186,15 @@ Public Function GetNextStep(strRemainingPPath As String) As Phosphorus.PPathStep
       strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, intEndOfNodeTest, VBA.Strings.Len(strRemainingPPath))
     End If
     'Check for valid node names
-    Dim key As Variant
+    Dim Key As Variant
     Dim IsAValidNodeTestType As Boolean
     If NextStep.Axis = Axes.Attribute Then
-      IsAValidNodeTestType = this.AutomationDictionaries.ValueExists(NextStep.NodeTest, this.AutomationDictionaries.NavigablePropertyIDs)
+      IsAValidNodeTestType = This.AutomationDictionaries.ValueExists(NextStep.NodeTest, This.AutomationDictionaries.NavigablePropertyIDs)
     Else
-      IsAValidNodeTestType = this.AutomationDictionaries.ValueExists(NextStep.NodeTest, this.AutomationDictionaries.ControlTypeIDs)
+      IsAValidNodeTestType = This.AutomationDictionaries.ValueExists(NextStep.NodeTest, This.AutomationDictionaries.ControlTypeIDs)
     End If
     If Not IsAValidNodeTestType Then
-      this.PPathReturnClass.SetErrorMessage = Phosphorus.PPathConstants.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " '" & NextStep.NodeTest & "'!"
+      This.PPathReturnClass.SetErrorMessage = Phosphorus.PPathConstants.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " '" & NextStep.NodeTest & "'!"
       Exit Function
     End If
   End If
@@ -244,10 +244,10 @@ Public Function GetNextStep(strRemainingPPath As String) As Phosphorus.PPathStep
     NextStep.AddPredicates strNextPredicates
       
   Else
-    this.PPathReturnClass.SetErrorMessage = _
+    This.PPathReturnClass.SetErrorMessage = _
       Phosphorus.PPathConstants.ILLEGAL_START_OF_PREDICATE_ERROR_MESSAGE & _
       " '" & VBA.Strings.Left(strRemainingPPath, 1) & "'"
-    this.PPathReturnClass.RemoveAllMatchingElements
+    This.PPathReturnClass.RemoveAllMatchingElements
   End If
 
   NextStep.RemainingPPath = strRemainingPPath

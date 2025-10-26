@@ -18,13 +18,13 @@ Private Type PredicateGroup
 '  PredicateItems() As PPathPredicateItem
 End Type
 
-Private this As PredicateGroup
+Private This As PredicateGroup
 
 Public Sub Initialise(SourcePPath As String)
   If SourcePPath = "" Then
-    this.SourcePPath = SourcePPath
+    This.SourcePPath = SourcePPath
   Else
-    this.SourcePPath = VBA.Strings.Mid(SourcePPath, 2, VBA.Strings.Len(SourcePPath) - 2)
+    This.SourcePPath = VBA.Strings.Mid(SourcePPath, 2, VBA.Strings.Len(SourcePPath) - 2)
   End If
   
 'PJG 14/05/25 Items are not used!?
@@ -40,32 +40,32 @@ Private Sub InitialiseFinalPPath()
   boolCurrentPredicateIsProcessed = False
 
   'Is the predicate just a position?
-  If VBA.Information.IsNumeric(this.SourcePPath) Then
+  If VBA.Information.IsNumeric(This.SourcePPath) Then
     Dim dblCurrentPredicate  As Double
-    dblCurrentPredicate = VBA.Conversion.CDbl(this.SourcePPath)
+    dblCurrentPredicate = VBA.Conversion.CDbl(This.SourcePPath)
     'Is it just an integer?
     If dblCurrentPredicate Mod 1 = 0 Then
-      this.FinalPPath = "position()=" & this.SourcePPath
+      This.FinalPPath = "position()=" & This.SourcePPath
       boolCurrentPredicateIsProcessed = True
     End If
   Else
-    If (VBA.Strings.InStr(1, this.SourcePPath, "first()") = 1) Or (VBA.Strings.InStr(1, this.SourcePPath, "last()") = 1) Then
-      this.FinalPPath = "position()=" & this.SourcePPath
+    If (VBA.Strings.InStr(1, This.SourcePPath, "first()") = 1) Or (VBA.Strings.InStr(1, This.SourcePPath, "last()") = 1) Then
+      This.FinalPPath = "position()=" & This.SourcePPath
       boolCurrentPredicateIsProcessed = True
     End If
   End If
   
   If Not boolCurrentPredicateIsProcessed Then
-    this.FinalPPath = this.SourcePPath
+    This.FinalPPath = This.SourcePPath
   End If
   
   'Is this a Positional Predicate?
-  this.IsPositionalPredicate = (VBA.Strings.InStr(1, this.FinalPPath, "position()") > 0)
+  This.IsPositionalPredicate = (VBA.Strings.InStr(1, This.FinalPPath, "position()") > 0)
   
 End Sub
 
 Public Function SourcePPath() As String
-  SourcePPath = this.SourcePPath
+  SourcePPath = This.SourcePPath
 End Function
 
 'Public Function NumberOfPredicateItems() As Integer
@@ -73,13 +73,14 @@ End Function
 'End Function
 
 Public Function FinalPPath() As String
-  FinalPPath = this.FinalPPath
+  FinalPPath = This.FinalPPath
 End Function
 
 Public Function IsPositionalPredicate() As Boolean
-  IsPositionalPredicate = this.IsPositionalPredicate
+  IsPositionalPredicate = This.IsPositionalPredicate
 End Function
 
 'Property Get PredicateItem(Number As Integer) As PPathPredicateItem
 '  Set PredicateItem = this.PredicateItems(Number)
 'End Property
+

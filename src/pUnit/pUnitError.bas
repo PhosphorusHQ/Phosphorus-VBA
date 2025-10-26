@@ -12,4 +12,3 @@ Option Explicit
 
 Public Number As Long
 Public Description As String
-

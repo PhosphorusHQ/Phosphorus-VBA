@@ -33,7 +33,7 @@ Private Sub AddATopLevelFunction(strFunctionName As String, Optional intNumberOf
   TopLevelFunctions.Add TopLevelFunction
 End Sub
 
-Private Sub Test()
+Private Sub test()
   PPathExceTopLevelFunctions.ClearDownTopLevelFunctions
   PPathExceTopLevelFunctions.InitialiseTopLevelFunctions
   Dim TopLevelFunction As collection

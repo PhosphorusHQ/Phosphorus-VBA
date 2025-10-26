@@ -16,17 +16,15 @@ Private Type PredicateItem
   IsAPPath As Boolean
 End Type
 
-Private this As PredicateItem
+Private This As PredicateItem
 
 Public Sub Initialise(SourcePPath As String)
-  this.SourcePPath = SourcePPath
+  This.SourcePPath = SourcePPath
 'TODO Determine if is a PPAth
-  this.IsAPPath = False
+  This.IsAPPath = False
 End Sub
 
 Public Function SourcePPath() As String
 'TODO: Split by AND and OR for multiple items & ignore ('s )'s unless they are "()" (empty)
-  SourcePPath = this.SourcePPath
+  SourcePPath = This.SourcePPath
 End Function
-
-

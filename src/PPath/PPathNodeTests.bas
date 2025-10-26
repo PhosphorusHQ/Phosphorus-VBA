@@ -10,10 +10,10 @@ Attribute VB_Exposed = False
 '@Folder PPath
 Option Explicit
 
-Private this As PPathCommon
+Private This As PPathCommon
 
 Public Sub Initialise(ByRef sharedthis As PPathCommon)
-  Set this = sharedthis
+  Set This = sharedthis
 End Sub
 
 Public Sub ProcessNextNodeTest(myNextStep As Phosphorus.PPathStep)
@@ -25,12 +25,12 @@ Public Sub ProcessNextNodeTest(myNextStep As Phosphorus.PPathStep)
   Dim strCurrentAttributeName As String
   Dim strCurrentNodeControlType As String
   
-  intNumberOfElements = this.PPathReturnClass.GetNumberOfWorkingCopyOfCandidateElements(this.CurrentLocationPathExpressionCounter)
+  intNumberOfElements = This.PPathReturnClass.GetNumberOfWorkingCopyOfCandidateElements(This.CurrentLocationPathExpressionCounter)
   For intElementCounter = 1 To intNumberOfElements
-    Set eleCurrentUIElement = this.PPathReturnClass.GetWorkingCopyElement(this.CurrentLocationPathExpressionCounter, intElementCounter)
-    strCurrentNavigationalPPath = this.PPathReturnClass.GetWorkingCopyNavigationalPPath(this.CurrentLocationPathExpressionCounter, intElementCounter)
-    strCurrentAttributeName = this.PPathReturnClass.GetWorkingCopyAttributeName(this.CurrentLocationPathExpressionCounter, intElementCounter)
-    strCurrentNodeControlType = this.AutomationDictionaries.ControlTypeIDs(eleCurrentUIElement.CurrentControlType)
+    Set eleCurrentUIElement = This.PPathReturnClass.GetWorkingCopyElement(This.CurrentLocationPathExpressionCounter, intElementCounter)
+    strCurrentNavigationalPPath = This.PPathReturnClass.GetWorkingCopyNavigationalPPath(This.CurrentLocationPathExpressionCounter, intElementCounter)
+    strCurrentAttributeName = This.PPathReturnClass.GetWorkingCopyAttributeName(This.CurrentLocationPathExpressionCounter, intElementCounter)
+    strCurrentNodeControlType = This.AutomationDictionaries.ControlTypeIDs(eleCurrentUIElement.CurrentControlType)
 
     If (myNextStep.NodeTest = "*") Or _
        ((myNextStep.PrincipalNodeKind = PrincipalNodeKindType.Elements) And (strCurrentNodeControlType = myNextStep.NodeTest)) Or _
@@ -39,8 +39,8 @@ Public Sub ProcessNextNodeTest(myNextStep As Phosphorus.PPathStep)
        (myNextStep.NodeTest = "element()") _
     Then
       If myNextStep.NodeTestKind = "" Then
-        PPathUtils.OutputElementDetails eleCurrentUIElement, strCurrentNavigationalPPath, this.DebugMode, this.AutomationDictionaries
-        this.PPathReturnClass.AddMatchingElement this.PPathReturnClass.GetCandidateElements(this.CurrentLocationPathExpressionCounter), eleCurrentUIElement, strCurrentAttributeName, strCurrentNavigationalPPath
+        PPathUtils.OutputElementDetails eleCurrentUIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
+        This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleCurrentUIElement, strCurrentAttributeName, strCurrentNavigationalPPath
       Else
         GetValuesOfDataType eleCurrentUIElement, myNextStep.NodeTestKind, strCurrentNavigationalPPath
       End If
@@ -48,7 +48,7 @@ Public Sub ProcessNextNodeTest(myNextStep As Phosphorus.PPathStep)
 
     'Get attributes?
     If (myNextStep.NodeTest = "node()") Then
-      this.Axes.GetAttributes eleCurrentUIElement, strCurrentNavigationalPPath & "/"
+      This.Axes.GetAttributes eleCurrentUIElement, strCurrentNavigationalPPath & "/"
     End If
   
     'Get text?
@@ -66,8 +66,8 @@ Public Sub GetTextNode(UIElement As UIAutomationClient.IUIAutomationElement, Ini
   If GetTextValue(UIElement) <> "" Then
     Dim strCurrentNavigationalPPath As String
     strCurrentNavigationalPPath = InitialPPath & "/text()"
-    PPathUtils.OutputElementDetails UIElement, strCurrentNavigationalPPath, this.DebugMode, this.AutomationDictionaries
-    this.PPathReturnClass.AddMatchingElement this.PPathReturnClass.GetCandidateElements(this.CurrentLocationPathExpressionCounter), UIElement, "text()", strCurrentNavigationalPPath
+    PPathUtils.OutputElementDetails UIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
+    This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), UIElement, "text()", strCurrentNavigationalPPath
   End If
 
 End Sub
@@ -81,7 +81,7 @@ Public Function GetTextValue(UIElement As UIAutomationClient.IUIAutomationElemen
   Set TextPattern = UIElement.GetCurrentPattern(UIA_TextPatternId)
   On Error GoTo 0
 
-  If this.UnitTestingMode Then
+  If This.UnitTestingMode Then
     TextContent = "Text Text"
   Else
     If Not TextPattern Is Nothing Then
@@ -128,10 +128,9 @@ Public Sub GetValuesOfDataType(UIElement As UIAutomationClient.IUIAutomationElem
        (strElementDataType = "integer" And DataType = "decimal") Then
       Dim strCurrentNavigationalPPath As String
       strCurrentNavigationalPPath = InitialPPath & "/@value"
-      PPathUtils.OutputElementDetails UIElement, strCurrentNavigationalPPath, this.DebugMode, this.AutomationDictionaries
-      this.PPathReturnClass.AddMatchingElement this.PPathReturnClass.GetCandidateElements(this.CurrentLocationPathExpressionCounter), UIElement, "text()", strCurrentNavigationalPPath
+      PPathUtils.OutputElementDetails UIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
+      This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), UIElement, "text()", strCurrentNavigationalPPath
     End If
   End If
   
 End Sub
-

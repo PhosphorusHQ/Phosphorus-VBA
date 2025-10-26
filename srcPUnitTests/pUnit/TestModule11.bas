@@ -156,7 +156,7 @@ End Sub
 'Valid Test Data
 '@TestData({{1, 2, "3", 1.5, FALSE, "TRUE"}})
 '@TestMethod
-Public Sub TestAdditionParameterised21(a As Variant, b As String, c As Integer, d As Long, e As Double, f As Boolean)
+Public Sub TestAdditionParameterised21(a As Variant, b As String, C As Integer, d As Long, e As Double, f As Boolean)
   Phosphorus.AssertionsStatic.pAssert.IsTrue True, True, "True Is True"
 End Sub
 

@@ -20,52 +20,52 @@ Private Type Step
   RemainingPPath As String
 End Type
 
-Private this As Step
+Private This As Step
 
 Property Get Axis() As String
-  Axis = this.Axis
+  Axis = This.Axis
 End Property
 
 Property Let Axis(strAxis As String)
-  this.Axis = strAxis
+  This.Axis = strAxis
   If strAxis = Axes.Attribute Then
-    this.PrincipalNodeKind = PrincipalNodeKindType.Attributes
+    This.PrincipalNodeKind = PrincipalNodeKindType.Attributes
   Else
-    this.PrincipalNodeKind = PrincipalNodeKindType.Elements
+    This.PrincipalNodeKind = PrincipalNodeKindType.Elements
   End If
 End Property
 
 Property Get NodeTest() As String
-  NodeTest = this.NodeTest
+  NodeTest = This.NodeTest
 End Property
 
 Property Let NodeTest(strNodeTest As String)
-  this.NodeTest = strNodeTest
+  This.NodeTest = strNodeTest
 End Property
 
 Property Get NodeTestKind() As String
-  NodeTestKind = this.NodeTestKind
+  NodeTestKind = This.NodeTestKind
 End Property
 
 Property Let NodeTestKind(strNodeTestKind As String)
-  this.NodeTestKind = strNodeTestKind
+  This.NodeTestKind = strNodeTestKind
 End Property
 
 Property Get PrincipalNodeKind() As PrincipalNodeKindType
-  PrincipalNodeKind = this.PrincipalNodeKind
+  PrincipalNodeKind = This.PrincipalNodeKind
 End Property
 
 Property Let PrincipalNodeKind(PrincipalNodeKind As PrincipalNodeKindType)
-  this.PrincipalNodeKind = PrincipalNodeKind
+  This.PrincipalNodeKind = PrincipalNodeKind
 End Property
 
 Public Sub AddPredicates(PredicatePPath As String)
   If VBA.Strings.InStr(1, PredicatePPath, ")") = 0 Then
 'DO we need this ????
     'There is only 1 set of predicates
-    ReDim this.PredicateSets(1)
-    Set this.PredicateSets(1) = New PPathPredicateSet
-    this.PredicateSets(1).Initialise PredicatePPath
+    ReDim This.PredicateSets(1)
+    Set This.PredicateSets(1) = New PPathPredicateSet
+    This.PredicateSets(1).Initialise PredicatePPath
   Else
     Dim intNumberOfPredicateSets As Integer
     intNumberOfPredicateSets = 0
@@ -119,12 +119,12 @@ Public Sub AddPredicates(PredicatePPath As String)
         End If
         If boolAddNewSet Then
           If intPredicateSetCounter = 1 Then
-            ReDim this.PredicateSets(intPredicateSetCounter)
+            ReDim This.PredicateSets(intPredicateSetCounter)
           Else
-            ReDim Preserve this.PredicateSets(intPredicateSetCounter)
+            ReDim Preserve This.PredicateSets(intPredicateSetCounter)
           End If
-          Set this.PredicateSets(intPredicateSetCounter) = New PPathPredicateSet
-          this.PredicateSets(intPredicateSetCounter).Initialise strCurrentPredicateSetPPath
+          Set This.PredicateSets(intPredicateSetCounter) = New PPathPredicateSet
+          This.PredicateSets(intPredicateSetCounter).Initialise strCurrentPredicateSetPPath
           intStartOfCurrentPredicateSet = intCharacterCounter + 1
         End If
       End If
@@ -147,18 +147,17 @@ Public Sub AddPredicates(PredicatePPath As String)
 End Sub
 
 Property Get PredicateSet(Number As Integer) As PPathPredicateSet
-  Set PredicateSet = this.PredicateSets(Number)
+  Set PredicateSet = This.PredicateSets(Number)
 End Property
 
 Public Function NumberOfPredicateSets() As Integer
-  NumberOfPredicateSets = Utils.GetSizeOfArray(this.PredicateSets)
+  NumberOfPredicateSets = Utils.GetSizeOfArray(This.PredicateSets)
 End Function
 
 Property Get RemainingPPath() As String
-  RemainingPPath = this.RemainingPPath
+  RemainingPPath = This.RemainingPPath
 End Property
 
 Property Let RemainingPPath(strRemainingPPath As String)
-  this.RemainingPPath = strRemainingPPath
+  This.RemainingPPath = strRemainingPPath
 End Property
-

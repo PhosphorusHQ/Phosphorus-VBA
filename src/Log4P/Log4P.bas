@@ -122,7 +122,7 @@ Private Sub Class_Initialize()
   If VBA.Strings.Len(Log4PStatic.LogRootFolder) > 0 Then
     rootFolder = Log4PStatic.LogRootFolder
   Else
-    rootFolder = ThisWorkbook.path & "\Logs\"
+    rootFolder = ThisWorkbook.Path & "\Logs\"
   End If
 
   CreateFolder rootFolder
@@ -178,8 +178,8 @@ Private Sub Class_Initialize()
   bom(0) = &HEF
   bom(1) = &HBB
   bom(2) = &HBF
-  Dim bytesWritten As Long
-  If WriteFile(hFile, bom(0), 3, bytesWritten, 0) = 0 Then
+  Dim BytesWritten As Long
+  If WriteFile(hFile, bom(0), 3, BytesWritten, 0) = 0 Then
     CloseHandle hFile
     LogMessage "Failed to write UTF-8 BOM", INTERNAL_ERROR
     Err.Raise vbObjectError + 1, "Logger", "Failed to initialize log file"
@@ -236,8 +236,8 @@ Private Sub Class_Terminate()
   End If
 End Sub
 
-Public Property Let level(value As Long)
-  currentLogLevel = value
+Public Property Let level(Value As Long)
+  currentLogLevel = Value
 End Property
 
 Public Property Get level() As Long
@@ -271,8 +271,8 @@ Private Sub WriteBuffer()
   If hFile <> 0 And VBA.Strings.Len(logBuffer) > 0 Then
     Dim bytes() As Byte
     bytes = StringToUtf8Bytes(logBuffer)
-    Dim bytesWritten As Long
-    If WriteFile(hFile, bytes(0), UBound(bytes) + 1, bytesWritten, 0) = 0 Then
+    Dim BytesWritten As Long
+    If WriteFile(hFile, bytes(0), UBound(bytes) + 1, BytesWritten, 0) = 0 Then
       LogMessage "Failed to write buffer to log file", INTERNAL_ERROR
       Err.Raise vbObjectError + 1, "Logger", "Failed to write buffer to log file"
     End If
@@ -415,9 +415,9 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
     
     Dim bytes() As Byte
     bytes = StringToUtf8Bytes(logEntry)
-    Dim bytesWritten As Long
+    Dim BytesWritten As Long
     If hFile <> 0 Then
-      If WriteFile(hFile, bytes(0), UBound(bytes) + 1, bytesWritten, 0) = 0 Then
+      If WriteFile(hFile, bytes(0), UBound(bytes) + 1, BytesWritten, 0) = 0 Then
         Err.Raise vbObjectError + 1, "Logger", "Failed to write to log file"
       End If
     End If

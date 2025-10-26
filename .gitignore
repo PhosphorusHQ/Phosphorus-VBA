@@ -1,5 +1,6 @@
 *Phosphorus*.xlam
 *pUnit*.xlam
 *.ini
+/Backups
 /Logs
 /LogReader.xlsx

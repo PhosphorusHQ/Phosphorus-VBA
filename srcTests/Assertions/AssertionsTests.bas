@@ -9,10 +9,7 @@ Sub RunAllAssertionTests()
 
   Phosphorus.Log4PStatic.GetLogger
   Logger.level = LogLevel.EXTERNAL_TRACE 'Log everything
-  
-  'TODO: Remove this after lsoign Rubberduck
-  'AssertionsStatic.GetAssert
-    
+      
   RunAssertionTests1
   RunAssertionTests2
   RunAssertionTests3

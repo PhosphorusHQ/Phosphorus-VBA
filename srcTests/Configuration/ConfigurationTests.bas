@@ -5,7 +5,7 @@ Option Explicit
 
 Public Sub TestConfigReader()
 
-  GetConfigurationReader
+  Phosphorus.Configuration.GetGlobalConfigurationReader
   
   Dim server As String
   Dim port As Long
@@ -14,15 +14,15 @@ Public Sub TestConfigReader()
   Dim maxRetries As Long
     
   ' Initialize with the path to the INI file
-  Configuration.Initialize ThisWorkbook.path & "\config.ini"
+  Phosphorus.ConfigReader.Initialize ThisWorkbook.path & "\config.ini"
     
-  If Configuration.IsInitialized Then
+  If Phosphorus.ConfigReader.IsInitialized Then
         
-    server = Configuration.GetValue("Database", "Server", "default_server")
-    port = Configuration.GetInteger("Database", "Port", 0)
-    enabled = Configuration.GetBoolean("Database", "Enabled", False)
-    LogLevel = Configuration.GetValue("Application", "LogLevel", "INFO")
-    maxRetries = Configuration.GetInteger("Application", "MaxRetries", 1)
+    server = Phosphorus.ConfigReader.GetValue("Database", "Server", "default_server")
+    port = Phosphorus.ConfigReader.GetInteger("Database", "Port", 0)
+    enabled = Phosphorus.ConfigReader.GetBoolean("Database", "Enabled", False)
+    LogLevel = Phosphorus.ConfigReader.GetValue("Application", "LogLevel", "INFO")
+    maxRetries = Phosphorus.ConfigReader.GetInteger("Application", "MaxRetries", 1)
         
     Debug.Print "Database.Server: " & server
     Debug.Print "Database.Port: " & port
@@ -30,7 +30,7 @@ Public Sub TestConfigReader()
     Debug.Print "Application.LogLevel: " & LogLevel
     Debug.Print "Application.MaxRetries: " & maxRetries
   
-    LogLevel = Configuration.GetValue("Logging", "LogLevel", "INFO")
+    LogLevel = Phosphorus.ConfigReader.GetValue("Logging", "LogLevel", "INFO")
     Debug.Print "Logging.LogLevel: " & LogLevel
   
   Else

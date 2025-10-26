@@ -22,8 +22,10 @@ Sub AddReferenceToWorkbook(TargetWorkbookFilepath As String, Optional vbTargetPr
   Dim refDetails As collection ' To store FullPath and Workbook
     
   ' Initialize the collection if not already done
-  If AddedReferences Is Nothing Then InitialiseAddedReferences
-    
+  If AddedReferences Is Nothing Then
+    InitialiseAddedReferences
+  End If
+  
   On Error Resume Next
   
 '  ' Validate the target workbook
@@ -53,8 +55,7 @@ Sub AddReferenceToWorkbook(TargetWorkbookFilepath As String, Optional vbTargetPr
   ' Check if reference already exists
   For Each ref In vbProj.References
     If ref.FullPath = TargetWorkbookFilepath Then
-'    If ref.FullPath = TargetWb.FullName Then
-'      MsgBox "Reference to " & targetWb.FullName & " already exists."
+      Logger.ExternalInfo "A Reference to the file '" & TargetWorkbookFilepath & "' already exists in project '" & vbProj.Name & "'"
       Exit Sub
     End If
   Next ref

@@ -550,6 +550,29 @@ ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
+'@Name with xp:starts-with
+'@Tag(PPathEvaluationExcel)
+'@TestMethod
+Private Sub Test05Excel020()
+  On Error GoTo ErrorHandler
+ 
+Arrange:
+'  PPath.SetDebugMode = True
+  strTestPPath = "//Pane[xp:starts-with(@Name,""Sheet Sheet1"")]"
+  llongExpectedNumberOfMatchingElements = 1
+Act:
+  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+Assert:
+  Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
+  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestExcel001, EvaluatedPPath
+  Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
+
+  Exit Sub
+ErrorHandler:
+  Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
+End Sub
+
 'Use text() function
 '@Tag(PPathEvaluationExcel)
 '@TestMethod

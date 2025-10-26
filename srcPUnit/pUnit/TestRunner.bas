@@ -12,8 +12,8 @@ Option Explicit
 Private Declare PtrSafe Function QueryPerformanceCounter Lib "kernel32" (lpPerformanceCount As Currency) As Long
 Private Declare PtrSafe Function QueryPerformanceFrequency Lib "kernel32" (lpFrequency As Currency) As Long
 
-' Reference to Assertions and Logging classes
-Private Assertions As Phosphorus.Assertions
+'' Reference to Assertions and Logging classes
+'Private Assertions As Phosphorus.Assertions
 
 ' Collection to store test results
 Private TestResults As collection
@@ -354,7 +354,11 @@ ExitSub:
     VBA.Interaction.MsgBox "No tests to process!"
   Else
     If intCountOfFailedTests = 0 Then
-      VBA.Interaction.MsgBox "All tests passed!"
+      If skipCount > 0 Then
+        VBA.Interaction.MsgBox "Some tests skipped!"
+      Else
+        VBA.Interaction.MsgBox "All tests passed!"
+      End If
     Else
       VBA.Interaction.MsgBox "Some tests failed!"
     End If
@@ -1253,7 +1257,6 @@ Private Function ExecuteTest(vbProj As VBProject, vbComp As VBComponent, TestNam
   TestResult.TestName = vbProj.Name & "." & vbComp.Name & "." & TestName
 
   'Print to VB Editor Immediate screen for when running tests manually
-  Debug.Print "Processing " & TestResult.TestName
 'Removed - this interferes the the Excel base unit tests
 '  Application.StatusBar = "Processing " & TestResult.TestName
   VBA.Interaction.DoEvents

@@ -1,0 +1,75 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "pWindowsDriverMSEdge"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+'@Folder WindowsDriver
+Option Explicit
+
+Implements Phosphorus.IWindowsDriverWebBrowser
+Dim TempDirectory As String
+
+Private ParentWindowsDriver As pWindowsDriver
+
+Public Function IWindowsDriverWebBrowser_GetParentWindowsDriver() As pWindowsDriver
+  Set IWindowsDriverWebBrowser_GetParentWindowsDriver = ParentWindowsDriver
+End Function
+  
+Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWindowsDriver, WebAppName As String, WebAppTitle As String, Optional URL As String)
+  
+  Set ParentWindowsDriver = ParentWindowsDriver
+  Dim InstanceType As Phosphorus.pInstanceType
+  InstanceType = ParentWindowsDriver.GetWindowsDriverWebBrowserType.InstanceType
+  If InstanceType = 0 Then
+'TODO: Make new window the default?
+    InstanceType = Phosphorus.pInstanceType.ReuseACurrentOpenInstance
+  End If
+  
+  'Set the default PPath
+  Dim CurrentPPathOfPageLoadedPPath As String
+  Dim PageLoadedElementExpectedWindowInteractionState As UIAutomationClient.WindowInteractionState
+  CurrentPPathOfPageLoadedPPath = "/Window[xp:starts-with(@Name,""" & WebAppTitle & """)]"
+  PageLoadedElementExpectedWindowInteractionState = UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
+  
+  Select Case InstanceType
+    
+    Case Phosphorus.pInstanceType.ReuseACurrentOpenInstance
+      'Launch Edge via protocol
+      Phosphorus.WindowsProcesses.LaunchCommandByProtocol WebAppName, "microsoft-edge:", URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+    
+    Case Phosphorus.pInstanceType.Executable
+      'Launch Edge via executable with no parameters other than the url, if any
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+    
+    Case Phosphorus.pInstanceType.NewWindow
+      'Launch Edge via executable with new window command line argument & the url, if any
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--new-window " & URL, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
+    
+    Case Phosphorus.pInstanceType.AppMode
+      'Launch Edge via executable in App Mode (new window + simplified interface)
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--app " & URL, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
+    
+    Case Phosphorus.pInstanceType.NewProfile
+      TempDirectory = ParentWindowsDriver.CreateTempDirectory
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--user-data-dir=""" & TempDirectory & """ --new-window " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+      CurrentPPathOfPageLoadedPPath = "/Window[And(xp:starts-with(@Name,""Sign Up – Create a Free Account""),@ClassName=""Chrome_WidgetWin_1"")]"
+      PageLoadedElementExpectedWindowInteractionState = UIAutomationClient.WindowInteractionState.WindowInteractionState_BlockedByModalWindow
+    
+    Case Phosphorus.pInstanceType.ApplicationUserModelID
+      Phosphorus.WindowsProcesses.LaunchAppByAUMID Phosphorus.WindowsWindowsApps.MicrosoftEdge, URL, Phosphorus.WindowShowStates.SW_SHOWNORMAL
+    
+    Case Else
+      Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledAppConfiguration, "Microsoft Edge, Instance Type: #" & InstanceType
+  
+  End Select
+  
+  ParentWindowsDriver.SetPageLoadedElement CurrentPPathOfPageLoadedPPath, PageLoadedElementExpectedWindowInteractionState
+
+End Sub
+
+'        'TODO: How to open new window for edge?
+

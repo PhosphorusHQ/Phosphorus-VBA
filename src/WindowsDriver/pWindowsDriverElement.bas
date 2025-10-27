@@ -1,0 +1,98 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "pWindowsDriverElement"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+'@Folder WindowsDriver
+Option Explicit
+
+Private This As WindowsDriverElement
+
+Private Type WindowsDriverElement
+ UIAElement As UIAutomationClient.IUIAutomationElement
+ FoundByPPATH As String
+ FoundFromUIAElement As UIAutomationClient.IUIAutomationElement
+ ParentWindowsDriver As pWindowsDriver
+End Type
+
+Public Sub SetUIAElement( _
+  ByRef ParentWindowsDriver As pWindowsDriver, _
+  ByRef UIAElement As UIAutomationClient.IUIAutomationElement, _
+  ByVal FoundByPPATH As String, _
+  Optional ByRef FoundFromUIAElement As UIAutomationClient.IUIAutomationElement)
+  
+  Set This.ParentWindowsDriver = ParentWindowsDriver
+  Set This.UIAElement = UIAElement
+  This.FoundByPPATH = FoundByPPATH
+  If Not FoundFromUIAElement Is Nothing Then
+    Set This.FoundFromUIAElement = FoundFromUIAElement
+  End If
+
+End Sub
+
+Public Sub WaitForWindowInteractionState( _
+  State As UIAutomationClient.WindowInteractionState)
+'Wait for given Window Interaction State of this windows element
+  
+  WaitForElementConditionOrState _
+    UIAutomationClient.UIA_PatternIds.UIA_WindowPatternId, _
+    State, _
+    "Window Interaction State", _
+    Phosphorus.pWindowsDriverStatic.GetWindowInteractionStateDescription(State)
+
+End Sub
+
+Private Sub WaitForElementConditionOrState( _
+  PatternOrPropertyID As Long, _
+  DesiredConditionOrStateID As Long, _
+  DescriptionOfPatternOrProperty As String, _
+  DescriptionOfDesiredState As String)
+'TODO: Do we need to wait for this state after every action on any element, eg click? Or After every element found?
+  
+  Dim CurrentConditionOrStateID As Long
+  Dim ElementIsInCurrentConditionOrStateID As Boolean
+  ElementIsInCurrentConditionOrStateID = False
+  
+  'Pass 1 - test for a matching PatterOrPropertyID
+  'TODO: Make this a select case statement
+  If PatternOrPropertyID = UIAutomationClient.UIA_PatternIds.UIA_WindowPatternId Then
+    Dim WindowPattern As IUIAutomationWindowPattern
+    Set WindowPattern = This.UIAElement.GetCurrentPattern(PatternOrPropertyID)
+    If WindowPattern Is Nothing Then
+      'TODO: Raise Error!
+      MsgBox "PJG: Raise No Window Pattern Error Here!"
+      Exit Sub
+    End If
+    CurrentConditionOrStateID = WindowPattern.CurrentWindowInteractionState
+  End If
+
+  'Pass 2 - now get the Conditon or State of the Pattern or Property
+  'TODO: Make this a select case statement
+  If CurrentConditionOrStateID = DesiredConditionOrStateID Then
+    ElementIsInCurrentConditionOrStateID = True
+  End If
+  
+  'TODO: Add a wait loop
+  
+  'Raise an error if the condition hasn't been met in time
+  If Not ElementIsInCurrentConditionOrStateID Then
+    'Raise Exception
+    Phosphorus.pExceptions.Raise _
+      Phosphorus.Exceptions.WindowsDriverUIElementCondtionOrStateNotMetBeforeTimeout, _
+      DescriptionOfDesiredState, _
+      VBA.Conversion.str(DesiredConditionOrStateID), _
+      VBA.Conversion.str(CurrentConditionOrStateID), _
+      VBA.Conversion.str(This.ParentWindowsDriver.GetDefaultImplicitTimeoutInSeconds)
+  End If
+  
+End Sub
+
+Public Function GetProcessID() As Long
+  GetProcessID = This.UIAElement.CurrentProcessId
+End Function
+
+

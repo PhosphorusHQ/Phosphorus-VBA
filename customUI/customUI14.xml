@@ -1,0 +1,14 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="Ribbon_OnLoad">
+  <ribbon>
+    <tabs>
+      <tab id="CustomTab" label="Phosphorus">
+        <group id="CustomGroup" label="My Tools">
+          <menu id="CustomMenu" label="Custom Menu">
+            <button id="Button1" label="Run Macro 1" onAction="RunMacro1" imageMso="HappyFace"/>
+            <button id="Button2" label="Run Macro 2" onAction="RunMacro2" imageMso="FileSave"/>
+          </menu>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>

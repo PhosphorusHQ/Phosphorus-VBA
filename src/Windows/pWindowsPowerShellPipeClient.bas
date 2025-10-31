@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
-'@Folder WindowsDriver
+'@Folder Windows
 Option Explicit
 
 'https://learn.microsoft.com/en-us/windows/win32/ipc/named-pipes
@@ -157,7 +157,7 @@ Private Sub Class_Initialize()
   'Give time for PowerShell to load
   ' - Get the DesktopWindowsDriver?
   Phosphorus.pWindowsDriverStatic.GetDesktopWindowsDriver
-  Phosphorus.pWindowsDriverStatic.DesktopWindowsDriver.FindElement "/Window[@Name=""Windows PowerShell""]//Text[And(@Name=""Windows PowerShell"",@ClassName=""TermControl"")]/ancestor::Window[@Name=""Windows PowerShell""]"
+  Phosphorus.pWindowsDriverStatic.DesktopWindowsDriver.FindElement "PowerShell Window", "/Window[@Name=""Windows PowerShell""]//Text[And(@Name=""Windows PowerShell"",@ClassName=""TermControl"")]/ancestor::Window[@Name=""Windows PowerShell""]"
 
   ' Wait for the named pipe to be available (5 seconds wait + 30-second timeout)
   Phosphorus.WindowsProcesses.Snooze 5000
@@ -362,5 +362,4 @@ scriptContent = scriptContent & vbCrLf & _
 ErrorHandler:
     Err.Raise vbObjectError + 1007, , "Failed to write PowerShell script: " & Err.Description
 End Sub
-
 

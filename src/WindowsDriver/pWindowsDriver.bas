@@ -14,7 +14,7 @@ Private This As DriverProperties
 
 Private Const DEFAULT_IMPLICIT_TIMEOUT_IN_SECONDS = 30
 Private Const DEFAULT_IMPLICIT_DELAY_BETWEEN_POLLS_IN_MILLISECOND = 10
-
+ 
 Private Type DriverProperties
   DriverType As Phosphorus.pWindowsDriverType
   WebBrowserType As Phosphorus.pWindowsDriverWebBrowserType
@@ -24,6 +24,8 @@ Private Type DriverProperties
   PageLoadedElementPPath As String 'PPath of an element that indicates the driver has at least partially loaded
   PageLoadedElementExpectedWindowInteractionState As UIAutomationClient.WindowInteractionState
   PageUnloadedElementPPath As String 'PPath of an element that indicates the driver has now been closed (by it's non-existence)
+'  MasterWindowUIAElement As UIAutomationClient.IUIAutomationElement
+  MasterWindowsDriverElement As Phosphorus.pWindowsDriverElement
   ProcessId As Long
   ImplicitTimeoutInSeconds As Integer
   CurrentEvaluatedPPath As Phosphorus.PPathReturnClass
@@ -36,12 +38,14 @@ Private Sub Class_Initialize()
 End Sub
 
 Public Sub Terminate()
-MsgBox "Need to close the Driver cleanly by the window close button if possible!"
+  'Close the Driver cleanly
+  This.MasterWindowsDriverElement.CloseWindow
+  'Try to kill the process in case the clean close didn't work
   If This.ProcessId <> 0 Then
     Phosphorus.WindowsProcesses.KillProcessByID This.ProcessId
   End If
   If This.PageUnloadedElementPPath <> "" Then
-    Me.WaitUntilElementNotExists This.PageUnloadedElementPPath
+    Me.WaitUntilElementNotExists "PageUnloadedElement", This.PageUnloadedElementPPath
   End If
   DeleteAnyTempDirectory
 End Sub
@@ -169,8 +173,13 @@ Public Sub Launch( _
     
       'Wait for the Page Load Element
       Dim FoundElement As Phosphorus.pWindowsDriverElement
-      Set FoundElement = FindElement(This.PageLoadedElementPPath, TimeoutInSeconds)
-         
+      Set FoundElement = FindElement("PageLoadedElement", This.PageLoadedElementPPath, TimeoutInSeconds)
+      
+      'Store this as the Master Window element so that we can easily close the current driver window when it is finished with
+      'Set This.MasterWindowUIAElement = FoundElement.GetUIAElement
+      Set This.MasterWindowsDriverElement = FoundElement
+      This.MasterWindowsDriverElement.SetName "MasterWindowsDriverElement"
+      
       'Set the default element PPath which indicate the driver has been unloaded/closed
       Me.SetPageUnloadedElementPPath GetPageLoadedElementPPath
    
@@ -220,6 +229,7 @@ Private Sub CheckHTTPStatusCode(ByVal lstrUrl As String)
 End Sub
 
 Public Function FindElement( _
+  ByVal Name As String, _
   ByVal PPathString As String, _
   Optional ByVal TimeoutInSeconds As Integer, _
   Optional ByVal GetPID As Boolean, _
@@ -283,7 +293,7 @@ Public Function FindElement( _
     Set FoundUIAElement = This.CurrentEvaluatedPPath.GetMatchingElement(1)
     Dim NewWindowsDriverElement As pWindowsDriverElement
     Set NewWindowsDriverElement = New pWindowsDriverElement
-    NewWindowsDriverElement.SetUIAElement Me, FoundUIAElement, PPathString
+    NewWindowsDriverElement.SetUIAElement Name, Me, FoundUIAElement, PPathString
     Set CurrentPPath = Nothing
 
     'Prepare to Kill PID at end of session! - Needed for test cases and error handling
@@ -298,17 +308,17 @@ Public Function FindElement( _
 
 End Function
 
-Public Function ElementExists(ByVal PPathString As String) As Boolean
-  Me.FindElement PPathString:=PPathString, TimeoutInSeconds:=0, CheckExistenceOnly:=True
+Public Function ElementExists(ByVal Name, ByVal PPathString As String) As Boolean
+  Me.FindElement Name:=Name, PPathString:=PPathString, TimeoutInSeconds:=0, CheckExistenceOnly:=True
 End Function
 
 Public Sub WaitUntilElementNotExists( _
+  ByVal Name, _
   ByVal PPathString As String, _
   Optional ByVal TimeoutInSeconds As Integer)
   If IsMissing(TimeoutInSeconds) Then
     TimeoutInSeconds = This.ImplicitTimeoutInSeconds
   End If
-  MsgBox ElementExists(PPathString)
+  MsgBox ElementExists(Name, PPathString)
 End Sub
-
 

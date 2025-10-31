@@ -13,18 +13,29 @@ Option Explicit
 Private This As WindowsDriverElement
 
 Private Type WindowsDriverElement
- UIAElement As UIAutomationClient.IUIAutomationElement
- FoundByPPATH As String
- FoundFromUIAElement As UIAutomationClient.IUIAutomationElement
- ParentWindowsDriver As pWindowsDriver
+  Name As String
+  UIAElement As UIAutomationClient.IUIAutomationElement
+  FoundByPPATH As String
+  FoundFromUIAElement As UIAutomationClient.IUIAutomationElement
+  ParentWindowsDriver As pWindowsDriver
 End Type
 
+Public Sub SetName(ByRef Name As String)
+  This.Name = Name
+End Sub
+
+Public Function GetName() As String
+  GetName = This.Name
+End Function
+
 Public Sub SetUIAElement( _
+  ByRef Name As String, _
   ByRef ParentWindowsDriver As pWindowsDriver, _
   ByRef UIAElement As UIAutomationClient.IUIAutomationElement, _
   ByVal FoundByPPATH As String, _
   Optional ByRef FoundFromUIAElement As UIAutomationClient.IUIAutomationElement)
   
+  This.Name = Name
   Set This.ParentWindowsDriver = ParentWindowsDriver
   Set This.UIAElement = UIAElement
   This.FoundByPPATH = FoundByPPATH
@@ -33,6 +44,10 @@ Public Sub SetUIAElement( _
   End If
 
 End Sub
+
+Public Function GetUIAElement() As UIAutomationClient.IUIAutomationElement
+  Set GetUIAElement = This.UIAElement
+End Function
 
 Public Sub WaitForWindowInteractionState( _
   State As UIAutomationClient.WindowInteractionState)
@@ -95,4 +110,23 @@ Public Function GetProcessID() As Long
   GetProcessID = This.UIAElement.CurrentProcessId
 End Function
 
+Public Function CloseWindow()
+Stop
+  Dim WindowPattern As UIAutomationClient.IUIAutomationWindowPattern
+  Set WindowPattern = GetPattern(UIAutomationClient.UIA_WindowPatternId)
+  WindowPattern.Close
+End Function
+
+'Use IUnknown to force a casting to correct type correctly - typesafe
+Function GetPattern(patternId As Long, Optional CheckOnly As Boolean = False) As IUnknown
+  'https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controlpattern-ids
+  Select Case patternId
+    Case UIAutomationClient.UIA_WindowPatternId
+      Set GetPattern = This.UIAElement.GetCurrentPattern(patternId)
+    Case Else
+  End Select
+  If GetPattern Is Nothing And Not CheckOnly Then
+    Phosphorus.pExceptions.Raise WindowsDriverPatternNotHandled, patternId
+  End If
+End Function
 

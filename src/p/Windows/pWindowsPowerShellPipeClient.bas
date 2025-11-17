@@ -8,12 +8,20 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@Folder Windows
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
-
+ 
 'https://learn.microsoft.com/en-us/windows/win32/ipc/named-pipes
 
 #If VBA7 Then
-  
+   
   Private Declare PtrSafe Function CreateFile Lib "kernel32" Alias "CreateFileA" ( _
     ByVal lpFileName As String, _
     ByVal dwDesiredAccess As Long, _
@@ -22,7 +30,7 @@ Option Explicit
     ByVal dwCreationDisposition As Long, _
     ByVal dwFlagsAndAttributes As Long, _
     ByVal hTemplateFile As LongPtr) As LongPtr
-
+ 
   Private Declare PtrSafe Function WriteFile Lib "kernel32" ( _
     ByVal hFile As LongPtr, _
     ByVal lpBuffer As String, _
@@ -156,8 +164,9 @@ Private Sub Class_Initialize()
   
   'Give time for PowerShell to load
   ' - Get the DesktopWindowsDriver?
-  Phosphorus.pWindowsDriverStatic.GetDesktopWindowsDriver
-  Phosphorus.pWindowsDriverStatic.DesktopWindowsDriver.FindElement "PowerShell Window", "/Window[@Name=""Windows PowerShell""]//Text[And(@Name=""Windows PowerShell"",@ClassName=""TermControl"")]/ancestor::Window[@Name=""Windows PowerShell""]"
+MsgBox "PJG Need to wait some other way here - pWindriver will not be accessible!"
+'  pWindriver.pWindowsDriverStatic.GetDesktopWindowsDriver
+'  pWindriver.pWindowsDriverStatic.DesktopWindowsDriver.FindElement "PowerShell Window", "/Window[@Name=""Windows PowerShell""]//Text[And(@Name=""Windows PowerShell"",@ClassName=""TermControl"")]/ancestor::Window[@Name=""Windows PowerShell""]"
 
   ' Wait for the named pipe to be available (5 seconds wait + 30-second timeout)
   Phosphorus.WindowsProcesses.Snooze 5000

@@ -1,5 +1,13 @@
 Attribute VB_Name = "WindowsWindowsShellFolders"
 '@Folder Windows
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 'Windows Shell Folders — The Whys, The Whats, The Hows (And A Complete List Of Them)

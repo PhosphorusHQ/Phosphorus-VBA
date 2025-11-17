@@ -8,6 +8,14 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@Folder WindowsDriver
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 Private This As WindowsDriverElement
@@ -57,7 +65,7 @@ Public Sub WaitForWindowInteractionState( _
     UIAutomationClient.UIA_PatternIds.UIA_WindowPatternId, _
     State, _
     "Window Interaction State", _
-    Phosphorus.pWindowsDriverStatic.GetWindowInteractionStateDescription(State)
+    pWinDriver.pWindowsDriverStatic.GetWindowInteractionStateDescription(State)
 
 End Sub
 
@@ -99,9 +107,9 @@ Private Sub WaitForElementConditionOrState( _
     Phosphorus.pExceptions.Raise _
       Phosphorus.Exceptions.WindowsDriverUIElementCondtionOrStateNotMetBeforeTimeout, _
       DescriptionOfDesiredState, _
-      VBA.Conversion.str(DesiredConditionOrStateID), _
-      VBA.Conversion.str(CurrentConditionOrStateID), _
-      VBA.Conversion.str(This.ParentWindowsDriver.GetDefaultImplicitTimeoutInSeconds)
+      VBA.Conversion.Str(DesiredConditionOrStateID), _
+      VBA.Conversion.Str(CurrentConditionOrStateID), _
+      VBA.Conversion.Str(This.ParentWindowsDriver.GetDefaultImplicitTimeoutInSeconds)
   End If
   
 End Sub
@@ -111,7 +119,6 @@ Public Function GetProcessID() As Long
 End Function
 
 Public Function CloseWindow()
-Stop
   Dim WindowPattern As UIAutomationClient.IUIAutomationWindowPattern
   Set WindowPattern = GetPattern(UIAutomationClient.UIA_WindowPatternId)
   WindowPattern.Close
@@ -129,4 +136,6 @@ Function GetPattern(patternId As Long, Optional CheckOnly As Boolean = False) As
     Phosphorus.pExceptions.Raise WindowsDriverPatternNotHandled, patternId
   End If
 End Function
+
+
 

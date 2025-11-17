@@ -8,6 +8,14 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@Folder WindowsDriver
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 Private This As DriverProperties
@@ -16,8 +24,8 @@ Private Const DEFAULT_IMPLICIT_TIMEOUT_IN_SECONDS = 30
 Private Const DEFAULT_IMPLICIT_DELAY_BETWEEN_POLLS_IN_MILLISECOND = 10
  
 Private Type DriverProperties
-  DriverType As Phosphorus.pWindowsDriverType
-  WebBrowserType As Phosphorus.pWindowsDriverWebBrowserType
+  DriverType As pWinDriver.pWindowsDriverType
+  WebBrowserType As pWinDriver.pWindowsDriverWebBrowserType
   TempDirectoryForCurrentAppInstance As String
   WindowsApp As Phosphorus.WindowsApp
   SubDriver As Object
@@ -25,10 +33,10 @@ Private Type DriverProperties
   PageLoadedElementExpectedWindowInteractionState As UIAutomationClient.WindowInteractionState
   PageUnloadedElementPPath As String 'PPath of an element that indicates the driver has now been closed (by it's non-existence)
 '  MasterWindowUIAElement As UIAutomationClient.IUIAutomationElement
-  MasterWindowsDriverElement As Phosphorus.pWindowsDriverElement
+  MasterWindowsDriverElement As pWinDriver.pWindowsDriverElement
   ProcessId As Long
   ImplicitTimeoutInSeconds As Integer
-  CurrentEvaluatedPPath As Phosphorus.PPathReturnClass
+  CurrentEvaluatedPPath As pPath.ReturnClass
 '  CurrentUIAElement As UIAutomationClient.IUIAutomationElement
 'NOT USED YET  ImplicitDelayBetweenPollsInMilliseconds As Integer
 End Type
@@ -50,25 +58,25 @@ Public Sub Terminate()
   DeleteAnyTempDirectory
 End Sub
 
-Public Sub SetDriverType(ByVal DriverType As Phosphorus.pWindowsDriverType)
+Public Sub SetDriverType(ByVal DriverType As pWinDriver.pWindowsDriverType)
   This.DriverType = DriverType
-  If This.DriverType = Phosphorus.pWindowsDriverType.WebBrowser Then
-    Set This.WebBrowserType = New Phosphorus.pWindowsDriverWebBrowserType
+  If This.DriverType = pWinDriver.pWindowsDriverType.WebBrowser Then
+    Set This.WebBrowserType = New pWinDriver.pWindowsDriverWebBrowserType
   End If
 End Sub
 
-Public Function GetDriverType() As Phosphorus.pWindowsDriverType
+Public Function GetDriverType() As pWinDriver.pWindowsDriverType
   GetDriverType = This.DriverType
 End Function
 
-Public Sub SetWindowsDriverWebBrowserType(ByVal WebBrowserType As Phosphorus.pWebBrowserType, Optional ByVal InstanceType As Phosphorus.pInstanceType)
+Public Sub SetWindowsDriverWebBrowserType(ByVal WebBrowserType As pWinDriver.pWebBrowserType, Optional ByVal InstanceType As pWinDriver.pInstanceType)
   This.WebBrowserType.WebBrowserType = WebBrowserType
   If InstanceType > 0 Then
     This.WebBrowserType.InstanceType = InstanceType
   End If
 End Sub
 
-Public Function GetWindowsDriverWebBrowserType() As Phosphorus.pWindowsDriverWebBrowserType
+Public Function GetWindowsDriverWebBrowserType() As pWinDriver.pWindowsDriverWebBrowserType
   Set GetWindowsDriverWebBrowserType = This.WebBrowserType
 End Function
 
@@ -135,23 +143,23 @@ Public Sub Launch( _
     'Initialise any subdriver
     Select Case This.DriverType
       
-      Case Phosphorus.pWindowsDriverType.PreLaunched
+      Case pWinDriver.pWindowsDriverType.PreLaunched
         'The App is already lauched, so we can ignore this type - it should really be called anyway
       
-      Case Phosphorus.pWindowsDriverType.WebBrowser
+      Case pWinDriver.pWindowsDriverType.WebBrowser
         Select Case This.WebBrowserType.WebBrowserType
-          Case Phosphorus.pWebBrowserType.MicrosoftEdge
-            Set This.SubDriver = New Phosphorus.pWindowsDriverMSEdge
-          Case Phosphorus.pWebBrowserType.DuckDuckGo
-            Set This.SubDriver = New Phosphorus.pWindowsDriverDuckDuckGo
-          Case Phosphorus.pWebBrowserType.Chrome
-            Set This.SubDriver = New Phosphorus.pWindowsDriverChrome
-          Case Phosphorus.pWebBrowserType.Firefox
-            Set This.SubDriver = New Phosphorus.pWindowsDriverFirefox
-          Case Phosphorus.pWebBrowserType.Opera
-            Set This.SubDriver = New Phosphorus.pWindowsDriverOpera
-          Case Phosphorus.pWebBrowserType.Brave
-            Set This.SubDriver = New Phosphorus.pWindowsDriverBrave
+          Case pWinDriver.pWebBrowserType.MicrosoftEdge
+            Set This.SubDriver = New pWinDriver.pWindowsDriverMSEdge
+          Case pWinDriver.pWebBrowserType.DuckDuckGo
+            Set This.SubDriver = New pWinDriver.pWindowsDriverDuckDuckGo
+          Case pWinDriver.pWebBrowserType.Chrome
+            Set This.SubDriver = New pWinDriver.pWindowsDriverChrome
+          Case pWinDriver.pWebBrowserType.Firefox
+            Set This.SubDriver = New pWinDriver.pWindowsDriverFirefox
+          Case pWinDriver.pWebBrowserType.Opera
+            Set This.SubDriver = New pWinDriver.pWindowsDriverOpera
+          Case pWinDriver.pWebBrowserType.Brave
+            Set This.SubDriver = New pWinDriver.pWindowsDriverBrave
           Case Else
             Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledWebBrowserType, "Web Brower Type: #" & This.WebBrowserType.WebBrowserType
          End Select
@@ -159,7 +167,7 @@ Public Sub Launch( _
            This.SubDriver.IWindowsDriverWebBrowser_LaunchApp Me, AppName, AppTitle, Document
          End If
          
-      Case Phosphorus.pWindowsDriverType.WindowsApp
+      Case pWinDriver.pWindowsDriverType.WindowsApp
         Phosphorus.WindowsProcesses.LaunchAppByAUMID This.WindowsApp
         This.PageLoadedElementPPath = This.WindowsApp.PageLoadedElementPPath
         This.PageLoadedElementExpectedWindowInteractionState = UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
@@ -172,7 +180,7 @@ Public Sub Launch( _
     If This.PageLoadedElementPPath <> "" Then
     
       'Wait for the Page Load Element
-      Dim FoundElement As Phosphorus.pWindowsDriverElement
+      Dim FoundElement As pWinDriver.pWindowsDriverElement
       Set FoundElement = FindElement("PageLoadedElement", This.PageLoadedElementPPath, TimeoutInSeconds)
       
       'Store this as the Master Window element so that we can easily close the current driver window when it is finished with
@@ -203,7 +211,7 @@ End Sub
 
 Private Sub CheckHTTPStatusCode(ByVal lstrUrl As String)
   ' Send Request
-  Dim lRequest As WinHttpRequest
+  Dim lRequest As WinHttpRequest 'Requires a reference to Microsoft WinHttpServices
   Set lRequest = New WinHttpRequest
   lRequest.Open "GET", lstrUrl
   On Error Resume Next
@@ -235,14 +243,14 @@ Public Function FindElement( _
   Optional ByVal GetPID As Boolean, _
   Optional ByVal CheckExistenceOnly As Boolean = False) As pWindowsDriverElement
    
-  Dim CurrentPPath As Phosphorus.PPath
+  Dim CurrentPPath As pPath.Core
   Set CurrentPPath = Nothing
   Set This.CurrentEvaluatedPPath = Nothing
   
-  Set CurrentPPath = Phosphorus.Factory.GetNewPhosphorusPPath
+  Set CurrentPPath = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
 
   CurrentPPath.Initialise
-  CurrentPPath.SetApplicationRootElement Phosphorus.pWindowsDriverStatic.gUIADesktopUIElement
+  CurrentPPath.SetApplicationRootElement pWinDriver.pWindowsDriverStatic.gUIADesktopUIElement
   
   'Get default timeout if none set (it might be 0!)
   If IsMissing(TimeoutInSeconds) Then
@@ -321,4 +329,6 @@ Public Sub WaitUntilElementNotExists( _
   End If
   MsgBox ElementExists(Name, PPathString)
 End Sub
+
+
 

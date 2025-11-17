@@ -8,9 +8,17 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder WindowsDriver
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-Implements Phosphorus.IWindowsDriverWebBrowser
+Implements pWinDriver.IWindowsDriverWebBrowser
 Dim TempDirectory As String
 
 Private ParentWindowsDriver As pWindowsDriver
@@ -21,16 +29,16 @@ End Function
 
 Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWindowsDriver, WebAppName As String, WebAppTitle As String, Optional URL As String)
   Set ParentWindowsDriver = ParentWindowsDriver
-  Dim InstanceType As Phosphorus.pInstanceType
+  Dim InstanceType As pWinDriver.pInstanceType
   InstanceType = ParentWindowsDriver.GetWindowsDriverWebBrowserType.InstanceType
   If InstanceType = 0 Then
-    InstanceType = Phosphorus.pInstanceType.Executable
+    InstanceType = pWinDriver.pInstanceType.Executable
   End If
   Dim CurrentPPath As String
   'Set default path
   CurrentPPath = "/Pane[@Name=""" & WebAppTitle & " - Opera""]"
   Select Case InstanceType
-    Case Phosphorus.pInstanceType.Executable
+    Case pWinDriver.pInstanceType.Executable
       'Launch Opera via executable with no parameters other than the url, if any
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Opera, URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
     Case Else
@@ -38,4 +46,5 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   End Select
   ParentWindowsDriver.SetPageLoadedElement CurrentPPath, UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
 End Sub
+
 

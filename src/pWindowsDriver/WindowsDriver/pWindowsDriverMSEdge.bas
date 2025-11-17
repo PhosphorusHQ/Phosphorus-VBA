@@ -8,12 +8,20 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder WindowsDriver
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-Implements Phosphorus.IWindowsDriverWebBrowser
+Implements pWinDriver.IWindowsDriverWebBrowser
 Dim TempDirectory As String
 
-Private ParentWindowsDriver As pWindowsDriver
+Private ParentWindowsDriver As pWinDriver.pWindowsDriver
 
 Public Function IWindowsDriverWebBrowser_GetParentWindowsDriver() As pWindowsDriver
   Set IWindowsDriverWebBrowser_GetParentWindowsDriver = ParentWindowsDriver
@@ -22,11 +30,11 @@ End Function
 Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWindowsDriver, WebAppName As String, WebAppTitle As String, Optional URL As String)
   
   Set ParentWindowsDriver = ParentWindowsDriver
-  Dim InstanceType As Phosphorus.pInstanceType
+  Dim InstanceType As pWinDriver.pInstanceType
   InstanceType = ParentWindowsDriver.GetWindowsDriverWebBrowserType.InstanceType
   If InstanceType = 0 Then
 'TODO: Make new window the default?
-    InstanceType = Phosphorus.pInstanceType.ReuseACurrentOpenInstance
+    InstanceType = pWinDriver.pInstanceType.ReuseACurrentOpenInstance
   End If
   
   'Set the default PPath
@@ -37,29 +45,29 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   
   Select Case InstanceType
     
-    Case Phosphorus.pInstanceType.ReuseACurrentOpenInstance
+    Case pWinDriver.pInstanceType.ReuseACurrentOpenInstance
       'Launch Edge via protocol
       Phosphorus.WindowsProcesses.LaunchCommandByProtocol WebAppName, "microsoft-edge:", URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
     
-    Case Phosphorus.pInstanceType.Executable
+    Case pWinDriver.pInstanceType.Executable
       'Launch Edge via executable with no parameters other than the url, if any
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
     
-    Case Phosphorus.pInstanceType.NewWindow
+    Case pWinDriver.pInstanceType.NewWindow
       'Launch Edge via executable with new window command line argument & the url, if any
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--new-window " & URL, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
     
-    Case Phosphorus.pInstanceType.AppMode
+    Case pWinDriver.pInstanceType.AppMode
       'Launch Edge via executable in App Mode (new window + simplified interface)
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--app " & URL, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
     
-    Case Phosphorus.pInstanceType.NewProfile
+    Case pWinDriver.pInstanceType.NewProfile
       TempDirectory = ParentWindowsDriver.CreateTempDirectory
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--user-data-dir=""" & TempDirectory & """ --new-window " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
       CurrentPPathOfPageLoadedPPath = "/Window[And(xp:starts-with(@Name,""Sign Up – Create a Free Account""),@ClassName=""Chrome_WidgetWin_1"")]"
       PageLoadedElementExpectedWindowInteractionState = UIAutomationClient.WindowInteractionState.WindowInteractionState_BlockedByModalWindow
     
-    Case Phosphorus.pInstanceType.ApplicationUserModelID
+    Case pWinDriver.pInstanceType.ApplicationUserModelID
       Phosphorus.WindowsProcesses.LaunchAppByAUMID Phosphorus.WindowsWindowsApps.MicrosoftEdge, URL, Phosphorus.WindowShowStates.SW_SHOWNORMAL
     
     Case Else
@@ -72,4 +80,5 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
 End Sub
 
 '        'TODO: How to open new window for edge?
+
 

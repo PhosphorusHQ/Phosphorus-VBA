@@ -1,10 +1,18 @@
 Attribute VB_Name = "pWindowsDriverStatic"
 '@Folder WindowsDriver
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-Public gCUIAutomation As CUIAutomation
+Public gCUIAutomation As CUIAutomation 'Requires a reference to UIAutomationClient
 Public gUIADesktopUIElement As UIAutomationClient.IUIAutomationElement
-Public DesktopWindowsDriver As Phosphorus.pWindowsDriver
+Public DesktopWindowsDriver As pWinDriver.pWindowsDriver
   
 Public Enum pWindowsDriverType
   PreLaunched = 0
@@ -32,9 +40,20 @@ Public Enum pInstanceType
   ApplicationUserModelID = 7
 End Enum
 
+Public Function GetNewPDriver(dType As pWinDriver.pWindowsDriverType) As pWinDriver.pWindowsDriver
+  Set GetNewPDriver = New pWinDriver.pWindowsDriver
+  GetNewPDriver.SetDriverType dType
+  If pWinDriver.pWindowsDriverStatic.gCUIAutomation Is Nothing Then
+    Set pWinDriver.pWindowsDriverStatic.gCUIAutomation = New CUIAutomation
+    If gUIADesktopUIElement Is Nothing Then
+      Set gUIADesktopUIElement = pWinDriver.pWindowsDriverStatic.gCUIAutomation.GetRootElement
+    End If
+  End If
+End Function
+
 Public Sub GetDesktopWindowsDriver()
   If DesktopWindowsDriver Is Nothing Then
-    Set DesktopWindowsDriver = Phosphorus.Factory.GetNewPDriver(Phosphorus.pWindowsDriverType.PreLaunched)
+    Set DesktopWindowsDriver = pWinDriver.pWindowsDriverStatic.GetNewPDriver(pWinDriver.pWindowsDriverType.PreLaunched)
   End If
 End Sub
 
@@ -59,4 +78,5 @@ Public Function GetWindowInteractionStateDescription(State As UIAutomationClient
   GetWindowInteractionStateDescription = DescriptionOfDesiredState
   
 End Function
+
 

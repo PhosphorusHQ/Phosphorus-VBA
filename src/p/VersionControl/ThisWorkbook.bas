@@ -8,6 +8,14 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@Folder VersionControl
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 'Always Save Code Changes on Closing Workbootk
@@ -20,21 +28,21 @@ End Sub
 Private Sub SetModulesToKeep()
   Dim strArray(0) As String
   strArray(0) = "ModuleManagement"
-  ModuleManagement.SetModulesToKeep strArray()
+  Phosphorus.ModuleManagement.SetModulesToKeep strArray()
 End Sub
 
 Private Sub ExportPhosphorusSourceCode()
-  ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src"
+  Phosphorus.ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\p"
 End Sub
 
 Private Sub RemoveAllPhosphorusSourceCode()
   SetModulesToKeep
-  ModuleManagement.RemoveAllComponentsExcept ThisWorkbook.VBProject
+  Phosphorus.ModuleManagement.RemoveAllComponentsExcept ThisWorkbook.VBProject
 End Sub
 
 Private Sub ImportAllPhosphorusSourceCode()
   SetModulesToKeep
-  ModuleManagement.ImportModulesFromFolder "src", ""
+  Phosphorus.ModuleManagement.ImportModulesFromFolder "src\p", ""
 End Sub
 
 Private Sub Test2()

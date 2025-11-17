@@ -8,12 +8,26 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@Folder VersionControl
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 Private Sub Workbook_Open()
+  
   Dim strPhosphorusWBFullName As String
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
-  pUnitTests.References.AddReferenceToWorkbook strPhosphorusWBFullName
+  pUnitTests_pPath.References.AddReferenceToWorkbook strPhosphorusWBFullName
+
+  Dim strPPathWBFullName As String
+  strPPathWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pPath.xlam")
+  pUnitTests_pPath.References.AddReferenceToWorkbook strPPathWBFullName
+  
 End Sub
 
 'Private Sub Workbook_BeforeClose(Cancel As Boolean)
@@ -21,7 +35,7 @@ End Sub
 'End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
-  pUnitTests.References.RemoveAllAddedReferences
+  pUnitTests_pPath.References.RemoveAllAddedReferences
   'Always Save Code Changes on Closing Workbootk
   If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ThisWorkbook.Save
@@ -35,7 +49,7 @@ End Sub
 'End Sub
 
 Private Sub ExportPhosphorusSourceCode()
-  Phosphorus.ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\srcPUnitTests", projectName:="pUnitTests"
+  Phosphorus.ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pUnitTests\pPath", projectName:="pUnitTests_pPath"
 End Sub
 
 Private Sub RemoveAllPhosphorusSourceCode()
@@ -45,6 +59,6 @@ End Sub
 
 Private Sub ImportAllPhosphorusSourceCode()
 '  SetModulesToKeep
-  Phosphorus.ModuleManagement.ImportModulesFromFolder "srcPUnitTests", ""
+  Phosphorus.ModuleManagement.ImportModulesFromFolder "src\pUnitTests\pPath", ""
 End Sub
 

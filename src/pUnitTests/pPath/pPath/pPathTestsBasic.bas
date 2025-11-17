@@ -1,6 +1,14 @@
-Attribute VB_Name = "PPathTestsBasic"
-'@Folder PPath
+Attribute VB_Name = "pPathTestsBasic"
+'@Folder pPath
 '@TestModule
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 
 'https://www.bernardvukas.com/testing/tutorial-excel-vba-unit-testing/
 
@@ -9,13 +17,13 @@ Option Private Module
 Option Base 1
 
 Private strTestPPath As String
-Private PPath As Phosphorus.PPath
-Private EvaluatedPPath As Phosphorus.PPathReturnClass
-Private InterimPPath As Phosphorus.PPath
+Private testpPath As pPath.Core
+Private EvaluatedPPath As pPath.ReturnClass
+Private InterimPPath As pPath.Core
 Private llongExpectedNumberOfMatchingElements As Long
-Private InterimEvaluatedPPath1 As Phosphorus.PPathReturnClass
-Private InterimEvaluatedPPath2 As Phosphorus.PPathReturnClass
-Private InterimEvaluatedPPath3 As Phosphorus.PPathReturnClass
+Private InterimEvaluatedPPath1 As pPath.ReturnClass
+Private InterimEvaluatedPPath2 As pPath.ReturnClass
+Private InterimEvaluatedPPath3 As pPath.ReturnClass
 
 'Run all PPath test on the current Excel instance
 Private eleExcelRootElement As UIAutomationClient.IUIAutomationElement
@@ -46,14 +54,14 @@ End Sub
 Private Sub BeforeTest()
   On Error GoTo ErrorHandler
   'This method runs before every test in the module..
-  Set PPath = Nothing
-  Set PPath = Phosphorus.Factory.GetNewPhosphorusPPath
+  Set testpPath = Nothing
+  Set testpPath = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
   Set InterimPPath = Nothing
-  Set InterimPPath = Phosphorus.Factory.GetNewPhosphorusPPath
-  PPath.Initialise
+  Set InterimPPath = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
+  testpPath.Initialise
 'PJG
 'PPath.SetDebugMode = True
-  PPath.SetApplicationRootElement eleExcelRootElement
+  testpPath.SetApplicationRootElement eleExcelRootElement
   InterimPPath.Initialise
   InterimPPath.SetApplicationRootElement eleExcelRootElement
   
@@ -65,14 +73,14 @@ End Sub
 Private Sub AfterTest()
   On Error GoTo ErrorHandler
   'this method runs after every test in the module.
-  If PPath.GetDebugMode Then
-    PPathTestsCommon.OutputActualXPaths EvaluatedPPath.GetMatchingNavigationalPPaths
+  If testpPath.GetDebugMode Then
+    pPathTestsCommon.OutputActualXPaths EvaluatedPPath.GetMatchingNavigationalPPaths
   End If
   Set InterimEvaluatedPPath1 = Nothing
   Set InterimEvaluatedPPath2 = Nothing
   Set InterimEvaluatedPPath3 = Nothing
   Set EvaluatedPPath = Nothing
-  Set PPath = Nothing
+  Set testpPath = Nothing
   
   Exit Sub
 ErrorHandler:
@@ -102,11 +110,11 @@ Private Sub Test01Pre001()
 Arrange:
   strTestPPath = "((((()))"
 Act:
- Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+ Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.MISMATCHING_PARENTHESES_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.MISMATCHING_PARENTHESES_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -122,11 +130,11 @@ Private Sub Test01Pre002()
 Arrange:
   strTestPPath = "[[[]]]]]"
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.MISMATCHING_SQUARE_BARCKETS_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.MISMATCHING_SQUARE_BARCKETS_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements, isCritical:=True"
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -142,11 +150,11 @@ Private Sub Test01Pre003()
 Arrange:
   strTestPPath = "@NotAUIProperty"
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.INVALID_PROPERTY_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.INVALID_PROPERTY_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -163,11 +171,11 @@ Arrange:
   strTestPPath = "./..*"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.MISSING_RELATIVE_PPATH_CONTEXT_NODE, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.MISSING_RELATIVE_PPATH_CONTEXT_NODE, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -188,11 +196,11 @@ Arrange:
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, InterimEvaluatedPPath1.GetFinalNumberOfMatchingElements, "GetMatchingElements"
   strTestPPath = "/Edit"
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.UNUSED_RELATIVE_PPATH_CONTEXT_NODE, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.UNUSED_RELATIVE_PPATH_CONTEXT_NODE, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -228,15 +236,15 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 20
 Act:
 '  PPath.SetDebugMode = True
-  PPath.AddContextNode InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/", True
-  PPath.AddContextNode InterimEvaluatedPPath2.GetMatchingElement(1), InterimEvaluatedPPath2.GetMatchingNavigationalPPath(1) & "/"
+  testpPath.AddContextNode InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/", True
+  testpPath.AddContextNode InterimEvaluatedPPath2.GetMatchingElement(1), InterimEvaluatedPPath2.GetMatchingNavigationalPPath(1) & "/"
   'NB Context Node 3 not set!
   'PPath.AddContextNode EvaluatedPPath3.GetMatchingElement(1), EvaluatedPPath2.GetMatchingNavigationalPPath(1) & "/", True
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.NUMBER_OF_RELATIVE_PPATHS_TO_CONTEXT_NODES_MISMATCH, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.NUMBER_OF_RELATIVE_PPATHS_TO_CONTEXT_NODES_MISMATCH, EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -252,11 +260,11 @@ Private Sub Test01Pre007()
 Arrange:
   strTestPPath = "([)]"
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "Unexpected ')' Bracket at position 3", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -272,11 +280,11 @@ Private Sub Test01Pre008()
 Arrange:
   strTestPPath = "(()])["
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "Unexpected ']' Bracket at position 4", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -292,11 +300,11 @@ Private Sub Test01Pre009()
 Arrange:
   strTestPPath = "]["
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "Unexpected ']' Bracket at position 1", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -312,11 +320,11 @@ Private Sub Test01Pre010()
 Arrange:
   strTestPPath = "[)]("
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "Unexpected ')' Bracket at position 2", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -332,11 +340,11 @@ Private Sub Test01Pre011()
 Arrange:
   strTestPPath = "//*[And(count(./Button)>=1,count(./SplitButton)>1,count(./ComboBox)>1)]/Button[position)(=6]"
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "Unexpected ')' Bracket at position 88", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -352,11 +360,11 @@ Private Sub Test01Pre012()
 Arrange:
   strTestPPath = "/button"
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " 'button'!", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " 'button'!", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -372,11 +380,11 @@ Private Sub Test01Pre013()
 Arrange:
   strTestPPath = "/abc"
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " 'abc'!", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " 'abc'!", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -392,11 +400,11 @@ Private Sub Test01Pre014()
 Arrange:
   strTestPPath = "//Button/attribute::isenabled"
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " 'isenabled'!", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " 'isenabled'!", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -412,11 +420,11 @@ Private Sub Test01Pre015()
 Arrange:
   strTestPPath = "//Button/attribute::NotANavigableAttribute"
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " 'NotANavigableAttribute'!", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " 'NotANavigableAttribute'!", EvaluatedPPath.GetErrorMessage, "PreValidationErrorMessages", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal VBA.Conversion.CLng(0), EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.TestPre, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.TestPre, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -434,11 +442,11 @@ Arrange:
   strTestPPath = ""
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.NULL_PPATH_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.NULL_PPATH_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test001, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test001, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -456,11 +464,11 @@ Arrange:
   strTestPPath = "( | )"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal "PPath #1: " & Phosphorus.PPathConstants.NULL_PPATH_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal "PPath #1: " & pPath.ConstantsAndStatic.NULL_PPATH_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test002, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test002, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -478,11 +486,11 @@ Arrange:
   strTestPPath = "/"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.NO_NODETEST_PPATH_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.NO_NODETEST_PPATH_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test003, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test003, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -500,11 +508,11 @@ Arrange:
   strTestPPath = "    /    "
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.NO_NODETEST_PPATH_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.NO_NODETEST_PPATH_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test004, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test004, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -522,11 +530,11 @@ Arrange:
   strTestPPath = "/*"
   llongExpectedNumberOfMatchingElements = 7
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test005, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test005, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -543,11 +551,11 @@ Arrange:
   strTestPPath = "/*a"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.ILLEGAL_START_OF_PREDICATE_ERROR_MESSAGE & " 'a'", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.ILLEGAL_START_OF_PREDICATE_ERROR_MESSAGE & " 'a'", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test006, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test006, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -564,11 +572,11 @@ Arrange:
   strTestPPath = "( /* | / )"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.NO_NODETEST_PPATH_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.NO_NODETEST_PPATH_ERROR_MESSAGE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test007, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test007, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -586,11 +594,11 @@ Arrange:
   strTestPPath = "(/* | /*)"
   llongExpectedNumberOfMatchingElements = 7
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test008, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test008, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -608,11 +616,11 @@ Arrange:
   strTestPPath = "//*"
   llongExpectedNumberOfMatchingElements = 155
 Act:
-   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+   Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test009, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test009, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
   
   Exit Sub
@@ -630,11 +638,11 @@ Arrange:
   strTestPPath = "//* | //*"
   llongExpectedNumberOfMatchingElements = 155
 Act:
-   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+   Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test010, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test010, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -652,11 +660,11 @@ Arrange:
   strTestPPath = "/Pane"
   llongExpectedNumberOfMatchingElements = 5
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test011, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test011, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -674,11 +682,11 @@ Arrange:
   strTestPPath = "( /Pane | /Pane )"
   llongExpectedNumberOfMatchingElements = 5
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test012, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test012, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -696,11 +704,11 @@ Arrange:
   strTestPPath = "//MenuItem"
   llongExpectedNumberOfMatchingElements = 28
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test013, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test013, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -718,11 +726,11 @@ Arrange:
   strTestPPath = "/child::*"
   llongExpectedNumberOfMatchingElements = 7
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test014, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test014, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -740,11 +748,11 @@ Arrange:
   strTestPPath = "/descendant::*"
   llongExpectedNumberOfMatchingElements = 155
 Act:
-   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+   Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test015, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test015, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -763,11 +771,11 @@ Arrange:
   strTestPPath = "/.*"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test016, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test016, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -786,11 +794,11 @@ Arrange:
   strTestPPath = "/self::*"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test017, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test017, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -809,11 +817,11 @@ Arrange:
   strTestPPath = "/..*"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test018, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test018, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal False, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -837,11 +845,11 @@ Arrange:
   strTestPPath = "./..*"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test019, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test019, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -865,11 +873,11 @@ Arrange:
   strTestPPath = "./parent::*"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test020, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test020, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -893,11 +901,11 @@ Arrange:
   strTestPPath = "./ancestor::*"
   llongExpectedNumberOfMatchingElements = 6
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test021, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test021, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -922,11 +930,11 @@ Arrange:
   strTestPPath = "./ancestor-or-self::*"
   llongExpectedNumberOfMatchingElements = 2
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test022, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test022, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -944,11 +952,11 @@ Arrange:
   strTestPPath = "/descendant-or-self::*"
   llongExpectedNumberOfMatchingElements = 156
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test023, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test023, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -972,11 +980,11 @@ Arrange:
   strTestPPath = "./preceding-sibling::*"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test024, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test024, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1000,11 +1008,11 @@ Arrange:
   strTestPPath = "./following-sibling::*"
   llongExpectedNumberOfMatchingElements = 2
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test025, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test025, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1028,11 +1036,11 @@ Arrange:
   strTestPPath = "./preceding::*"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test026, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test026, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal False, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1056,11 +1064,11 @@ Arrange:
   strTestPPath = "./preceding::*"
   llongExpectedNumberOfMatchingElements = 149
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test027, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test027, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1084,11 +1092,11 @@ Arrange:
   strTestPPath = "./preceding::*"
   llongExpectedNumberOfMatchingElements = 23
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test028, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test028, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1112,11 +1120,11 @@ Arrange:
   strTestPPath = "./following::*"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test029, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test029, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal False, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1140,11 +1148,11 @@ Arrange:
   strTestPPath = "./following::*"
   llongExpectedNumberOfMatchingElements = 154
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test030, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test030, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1168,11 +1176,11 @@ Arrange:
   strTestPPath = "./following::*"
   llongExpectedNumberOfMatchingElements = 131
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test031, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test031, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1190,11 +1198,11 @@ Arrange:
   strTestPPath = "/child::Pane"
   llongExpectedNumberOfMatchingElements = 5
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test032, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test032, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1212,11 +1220,11 @@ Arrange:
   strTestPPath = "/descendant::Button"
   llongExpectedNumberOfMatchingElements = 58
 Act:
-   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+   Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test033, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test033, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1235,11 +1243,11 @@ Arrange:
   strTestPPath = "/.Window"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test034, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test034, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1258,11 +1266,11 @@ Arrange:
   strTestPPath = "/self::Window"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
  Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
  Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test035, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test035, EvaluatedPPath
  Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1281,11 +1289,11 @@ Arrange:
   strTestPPath = "/..Window"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
  Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
  Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test036, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test036, EvaluatedPPath
  Phosphorus.AssertionsStatic.pAssert.Equal False, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1309,11 +1317,11 @@ Arrange:
   strTestPPath = "./..Window"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test037, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test037, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1337,11 +1345,11 @@ Arrange:
   strTestPPath = "./parent::*"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test038, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test038, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1365,11 +1373,11 @@ Arrange:
   strTestPPath = "./ancestor::ToolBar"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test039, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test039, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1393,11 +1401,11 @@ Arrange:
   strTestPPath = "./ancestor-or-self::Window"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test040, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test040, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1421,11 +1429,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 6
 Act:
   'NOTE: The third pane is the first one with children
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(3), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(3) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(3), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(3) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test041, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test041, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1449,11 +1457,11 @@ Arrange:
   strTestPPath = "./preceding-sibling::Button"
   llongExpectedNumberOfMatchingElements = 2
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test042, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test042, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1477,11 +1485,11 @@ Arrange:
   strTestPPath = "./following-sibling::Button"
   llongExpectedNumberOfMatchingElements = 3
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test043, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test043, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1503,11 +1511,11 @@ Arrange:
   strTestPPath = "./preceding::Button"
   llongExpectedNumberOfMatchingElements = 6
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test044, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test044, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1531,11 +1539,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 4
 '  PPath.SetDebugMode = True
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test045, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test045, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1561,11 +1569,11 @@ Arrange:
 '  PPath.SetDebugMode = True
 Act:
   'Need to run this test is TestMode as some parts of elements, e.g. PID are dynamic!
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/", True)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/", True)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test046, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test046, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1589,11 +1597,11 @@ Arrange:
   strTestPPath = "./attribute::IsEnabled"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test047, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test047, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1618,11 +1626,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 65
 Act:
   'Need to run this test is TestMode as some parts of elements, e.g. PID are dynamic!
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/", True)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/", True)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test048, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test048, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1646,11 +1654,11 @@ Arrange:
   strTestPPath = "./element()"
   llongExpectedNumberOfMatchingElements = 2
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test049, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test049, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1675,11 +1683,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 2
 Act:
   'Need to run this test is TestMode as some parts of elements, e.g. PID are dynamic!
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/", True)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/", True)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test050, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test050, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1704,11 +1712,11 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 0
 Act:
   'No Excel UIElements have any text
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test051, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test051, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal False, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1727,11 +1735,11 @@ Arrange:
   strTestPPath = "//element(*, integer)"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test052, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test052, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal False, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1750,11 +1758,11 @@ Arrange:
   strTestPPath = "//element(*, string)"
   llongExpectedNumberOfMatchingElements = 2
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test053, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test053, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1773,11 +1781,11 @@ Arrange:
   strTestPPath = "/TitleBar/*"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test054, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test054, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1796,11 +1804,11 @@ Arrange:
   strTestPPath = "//SplitButton/Button"
   llongExpectedNumberOfMatchingElements = 13
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test055, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test055, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1819,11 +1827,11 @@ Arrange:
   strTestPPath = "//ToolBar/attribute::*"
   llongExpectedNumberOfMatchingElements = 90
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, , , True)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, , , True)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test056, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test056, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1842,11 +1850,11 @@ Arrange:
   strTestPPath = "/TitleBar/node()/attribute::AutomationId"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, , , True)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, , , True)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test057, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test057, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1865,11 +1873,11 @@ Arrange:
   strTestPPath = "/Pane | /Edit"
   llongExpectedNumberOfMatchingElements = 6
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, , , True)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, , , True)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test058, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test058, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1893,11 +1901,11 @@ Arrange:
   strTestPPath = "/Pane | .//*"
   llongExpectedNumberOfMatchingElements = 21
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test059, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test059, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1921,11 +1929,11 @@ Arrange:
   strTestPPath = ".//ToolBar | .//MenuItem"
   llongExpectedNumberOfMatchingElements = 28
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(2), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(2) & "/")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(2), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(2) & "/")
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test060, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test060, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -1950,9 +1958,9 @@ Arrange:
   strTestPPath = "./ancestor::*"
 Act:
   'PPath not set!
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), "")
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, InterimEvaluatedPPath1.GetMatchingElement(1), "")
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.MISSING_CONTEXT_NODE_INITIAL_PPATH, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.MISSING_CONTEXT_NODE_INITIAL_PPATH, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
 
   Exit Sub
 ErrorHandler:
@@ -1988,14 +1996,14 @@ Arrange:
   llongExpectedNumberOfMatchingElements = 27
 Act:
 '  PPath.SetDebugMode = True
-  PPath.AddContextNode InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/", True
-  PPath.AddContextNode InterimEvaluatedPPath2.GetMatchingElement(1), InterimEvaluatedPPath2.GetMatchingNavigationalPPath(1) & "/"
-  PPath.AddContextNode InterimEvaluatedPPath3.GetMatchingElement(1), InterimEvaluatedPPath3.GetMatchingNavigationalPPath(1) & "/"
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  testpPath.AddContextNode InterimEvaluatedPPath1.GetMatchingElement(1), InterimEvaluatedPPath1.GetMatchingNavigationalPPath(1) & "/", True
+  testpPath.AddContextNode InterimEvaluatedPPath2.GetMatchingElement(1), InterimEvaluatedPPath2.GetMatchingNavigationalPPath(1) & "/"
+  testpPath.AddContextNode InterimEvaluatedPPath3.GetMatchingElement(1), InterimEvaluatedPPath3.GetMatchingNavigationalPPath(1) & "/"
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test062, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test062, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2013,11 +2021,11 @@ Arrange:
   strTestPPath = "/Pane[2]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test063, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test063, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2035,11 +2043,11 @@ Arrange:
   strTestPPath = "(//Button)[1]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test064, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test064, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2057,11 +2065,11 @@ Arrange:
   strTestPPath = "//Button[2]"
   llongExpectedNumberOfMatchingElements = 9
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test065, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test065, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2079,11 +2087,11 @@ Arrange:
   strTestPPath = "(//Button[2])[4]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test066, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test066, EvaluatedPPath
  Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2101,11 +2109,11 @@ Arrange:
   strTestPPath = "/Pane[position()=2]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test067, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test067, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2123,11 +2131,11 @@ Arrange:
   strTestPPath = "/Pane[first()]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test068, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test068, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2145,11 +2153,11 @@ Arrange:
   strTestPPath = "(//Button[2])[first()]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test069, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test069, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2167,11 +2175,11 @@ Arrange:
   strTestPPath = "(//Button[2])[first()+1]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test070, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test070, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2189,11 +2197,11 @@ Arrange:
   strTestPPath = "(/Pane)[last()]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test071, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test071, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2211,11 +2219,11 @@ Arrange:
   strTestPPath = "//Button[last()]"
   llongExpectedNumberOfMatchingElements = 32
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test072, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test072, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2233,11 +2241,11 @@ Arrange:
   strTestPPath = "//Button[last()-1]"
   llongExpectedNumberOfMatchingElements = 9
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test073, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test073, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2255,11 +2263,11 @@ Arrange:
   strTestPPath = "//Button[And(position()>1,position()<last())]"
   llongExpectedNumberOfMatchingElements = 17
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test074, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test074, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2277,11 +2285,11 @@ Arrange:
   strTestPPath = "(//Button[Or(position()=1,position()=last())])[And(position()>1,Or(position()=1,position()=last()-1))]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test075, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test075, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2299,11 +2307,11 @@ Arrange:
   strTestPPath = "count(//StatusBar/Button)"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-   Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+   Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test076, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test076, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, VBA.Conversion.CLng(EvaluatedPPath.ReturnedValue), "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2321,11 +2329,11 @@ Arrange:
   strTestPPath = "//StatusBar[count(./Button)=4]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test077, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test077, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2344,9 +2352,9 @@ Arrange:
   strTestPPath = "//StatusBar[count(/Button)=6]"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.UNUSED_RELATIVE_PPATH_CONTEXT_NODE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.UNUSED_RELATIVE_PPATH_CONTEXT_NODE, EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
 
   Exit Sub
 ErrorHandler:
@@ -2364,9 +2372,9 @@ Arrange:
   strTestPPath = "//StatusBar[notafunction(/Button)=6]"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
-  Phosphorus.AssertionsStatic.pAssert.Equal Phosphorus.PPathConstants.INVALID_PREDICATE & " [notafunction(/Button)=6] => notafunction(/Button)=6", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.Equal pPath.ConstantsAndStatic.INVALID_PREDICATE & " [notafunction(/Button)=6] => notafunction(/Button)=6", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
 
   Exit Sub
 ErrorHandler:
@@ -2383,11 +2391,11 @@ Arrange:
   strTestPPath = "//*[And(count(./Button)>=1,count(./SplitButton)>1,count(./ComboBox)>1)]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test080, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test080, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2405,11 +2413,11 @@ Arrange:
   strTestPPath = "//Tab[not(./Button)]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test081, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test081, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2428,11 +2436,11 @@ Arrange:
   strTestPPath = "/Pane/ComboBox/Edit"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test082, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test082, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2450,11 +2458,11 @@ Arrange:
   strTestPPath = "/Pane[count(./ComboBox)=1]/ComboBox/Edit[1]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test083, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test083, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2472,11 +2480,11 @@ Arrange:
   strTestPPath = "//MenuItem[./preceding-sibling::Button]"
   llongExpectedNumberOfMatchingElements = 16
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test084, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test084, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2494,11 +2502,11 @@ Arrange:
   strTestPPath = "//MenuItem[./following-sibling::Button]"
   llongExpectedNumberOfMatchingElements = 3
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test085, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test085, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2516,11 +2524,11 @@ Arrange:
   strTestPPath = "//MenuItem[Or(./preceding-sibling::Button, ./following-sibling::Button)]"
   llongExpectedNumberOfMatchingElements = 18
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test086, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test086, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2538,11 +2546,11 @@ Arrange:
   strTestPPath = "//ToolBar[@Name=" & VBA.Strings.Chr(34) & "Quick Access Toolbar" & VBA.Strings.Chr(34) & "]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test087, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test087, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2560,11 +2568,11 @@ Arrange:
   strTestPPath = "//Button[@AcceleratorKey=" & VBA.Strings.Chr(34) & "Ctrl+S" & VBA.Strings.Chr(34) & "]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test088, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test088, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2582,11 +2590,11 @@ Arrange:
   strTestPPath = "//Button[@AccessKey=" & VBA.Strings.Chr(34) & "Alt+Down Arrow" & VBA.Strings.Chr(34) & "]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test089, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test089, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2604,11 +2612,11 @@ Arrange:
   strTestPPath = "//Text[@AriaProperties=" & VBA.Strings.Chr(34) & VBA.Strings.Chr(34) & "]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test090, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test090, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2626,11 +2634,11 @@ Arrange:
   strTestPPath = "//ComboBox[@AriaRole=" & VBA.Strings.Chr(34) & "" & VBA.Strings.Chr(34) & "]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test091, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test091, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2648,11 +2656,11 @@ Arrange:
   strTestPPath = "//*[@AutomationId=" & VBA.Strings.Chr(34) & "AutoSaveSwitch" & VBA.Strings.Chr(34) & "]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test092, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test092, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2670,11 +2678,11 @@ Arrange:
   strTestPPath = "//TabItem[@BoundingRectangle=" & VBA.Strings.Chr(34) & "#" & VBA.Strings.Chr(34) & "]"
   llongExpectedNumberOfMatchingElements = 14
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, , , True)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, , , True)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test093, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test093, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2692,11 +2700,11 @@ Arrange:
   strTestPPath = "//ComboBox[@CenterPoint=""""]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test094, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test094, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2714,11 +2722,11 @@ Arrange:
   strTestPPath = "//*[@ClassName=" & VBA.Strings.Chr(34) & "DropShadow" & VBA.Strings.Chr(34) & "]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test095, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test095, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2736,11 +2744,11 @@ Arrange:
   strTestPPath = "//ComboBox[@Culture=0]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test096, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test096, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2758,11 +2766,11 @@ Arrange:
   strTestPPath = "//ComboBox[@FillColor=""""]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test097, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test097, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2780,11 +2788,11 @@ Arrange:
   strTestPPath = "//ComboBox[@FillType=0]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test098, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test098, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2802,11 +2810,11 @@ Arrange:
   strTestPPath = "//ComboBox[@FrameworkId=""Win32""]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test099, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test099, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2825,11 +2833,11 @@ Arrange:
   strTestPPath = "//*[@FullDescription=""Pick a new font for your text.""]"
   llongExpectedNumberOfMatchingElements = 3
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test100, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test100, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2847,11 +2855,11 @@ Arrange:
   strTestPPath = "//Button[@FullDescription=""Like the look of a particular selection? You can apply that look to other content in the document.\n\nTo get started: \n1. Select content with the formatting you like\n2. Click Format Painter\n3. Select something else to automatically apply the formatting\n\nFYI: To apply the formatting in multiple places, double-click Format Painter.""]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test101, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test101, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2869,11 +2877,11 @@ Arrange:
   strTestPPath = "/Pane[@HasKeyboardFocus=False]"
   llongExpectedNumberOfMatchingElements = 5
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test102, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test102, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2891,11 +2899,11 @@ Arrange:
   strTestPPath = "//ToolBar[@HeadingLevel=80050]"
   llongExpectedNumberOfMatchingElements = 3
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test103, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test103, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2913,11 +2921,11 @@ Arrange:
   strTestPPath = "/Pane/ToolBar[@HelpText=""Ribbon toolbar""]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test104, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test104, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2935,11 +2943,11 @@ Arrange:
   strTestPPath = "//Tab[@IsContentElement=True]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test105, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test105, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2957,11 +2965,11 @@ Arrange:
   strTestPPath = "/TitleBar//MenuItem[@IsControlElement=True]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test106, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test106, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -2979,11 +2987,11 @@ Arrange:
   strTestPPath = "/TitleBar//MenuItem[@IsDataValidForForm=False]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test107, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test107, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3001,11 +3009,11 @@ Arrange:
   strTestPPath = "/TitleBar//MenuItem[@IsDialog=False]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test108, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test108, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3023,11 +3031,11 @@ Arrange:
   strTestPPath = "//ComboBox[@IsEnabled=False]"
   llongExpectedNumberOfMatchingElements = 3
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test109, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test109, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3045,11 +3053,11 @@ Arrange:
   strTestPPath = "//Text[@IsKeyboardFocusable=True]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test110, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test110, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3067,11 +3075,11 @@ Arrange:
   strTestPPath = "//*[@IsOffscreen=True]"
   llongExpectedNumberOfMatchingElements = 3
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test111, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test111, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3089,11 +3097,11 @@ Arrange:
   strTestPPath = "//Text[@IsPassword=False]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test112, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test112, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3111,11 +3119,11 @@ Arrange:
   strTestPPath = "/Edit[@IsPeripheral=False]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test113, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test113, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3133,11 +3141,11 @@ Arrange:
   strTestPPath = "//Text[@IsRequiredForForm=False]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test114, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test114, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3155,11 +3163,11 @@ Arrange:
   strTestPPath = "//*[@ItemStatus<>""""]"
   llongExpectedNumberOfMatchingElements = 0
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test115, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test115, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal False, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3177,11 +3185,11 @@ Arrange:
   strTestPPath = "//Edit[@ItemType=""Edit Formula""]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test116, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test116, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3199,11 +3207,11 @@ Arrange:
   strTestPPath = "/Edit[@LandmarkType=0]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test117, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test117, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3221,11 +3229,11 @@ Arrange:
   strTestPPath = "/Edit[@Level=0]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test118, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test118, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3243,11 +3251,11 @@ Arrange:
   strTestPPath = "//ComboBox[@LiveSetting=2]"
   llongExpectedNumberOfMatchingElements = 3
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test119, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test119, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3265,11 +3273,11 @@ Arrange:
   strTestPPath = "//ComboBox[@LocalizedControlType=""ComboBox""]"
   llongExpectedNumberOfMatchingElements = 3
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test120, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test120, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3287,11 +3295,11 @@ Arrange:
   strTestPPath = "//ComboBox[@LocalizedLandmarkType=""""]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test121, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test121, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3309,11 +3317,11 @@ Arrange:
   strTestPPath = "//*[@Name=""Macro Recording Not Recording""]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test122, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test122, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3331,11 +3339,11 @@ Arrange:
   strTestPPath = "//ComboBox[@NativeWindowHandle=""#""]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, , , True)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, , , True)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test123, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test123, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3353,11 +3361,11 @@ Arrange:
   strTestPPath = "//ComboBox[@OptimizeForVisualContent=False]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test124, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test124, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3375,11 +3383,11 @@ Arrange:
   strTestPPath = "//ComboBox[@Orientation=1]"
   llongExpectedNumberOfMatchingElements = 3
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test125, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test125, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3397,11 +3405,11 @@ Arrange:
   strTestPPath = "//*[@PositionInSet=13]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test126, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test126, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3419,11 +3427,11 @@ Arrange:
   strTestPPath = "//ComboBox[@ProcessId=""#""]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, , , True)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, , , True)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test127, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test127, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3441,11 +3449,11 @@ Arrange:
   strTestPPath = "//ComboBox[@ProviderDescription=""#""]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath, , , True)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath, , , True)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test128, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test128, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3463,11 +3471,11 @@ Arrange:
   strTestPPath = "//ComboBox[@Rotation=""""]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test129, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test129, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3485,11 +3493,11 @@ Arrange:
   strTestPPath = "//*[@SizeOfSet=2]"
   llongExpectedNumberOfMatchingElements = 2
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test130, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test130, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3507,11 +3515,11 @@ Arrange:
   strTestPPath = "//ComboBox[@VisualEffects=0]"
   llongExpectedNumberOfMatchingElements = 4
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test131, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test131, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3529,11 +3537,11 @@ Arrange:
   strTestPPath = "//MenuItem[position()<=2][1]"
   llongExpectedNumberOfMatchingElements = 22
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test132, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test132, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3551,11 +3559,11 @@ Arrange:
   strTestPPath = "//MenuItem[And(./preceding-sibling::Button,./following-sibling::SplitButton)]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test133, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test133, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub
@@ -3574,11 +3582,11 @@ Arrange:
   strTestPPath = "//MenuItem[./preceding-sibling::Button][./following-sibling::SplitButton]"
   llongExpectedNumberOfMatchingElements = 1
 Act:
-  Set EvaluatedPPath = PPath.Evaluate(strTestPPath)
+  Set EvaluatedPPath = testpPath.Evaluate(strTestPPath)
 Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal "", EvaluatedPPath.GetErrorMessage, "GetErrorMessage", isCritical:=True
   Phosphorus.AssertionsStatic.pAssert.Equal llongExpectedNumberOfMatchingElements, EvaluatedPPath.GetFinalNumberOfMatchingElements, "GetMatchingElements", isCritical:=True
-  PPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests.PPathTestsExpectedResults.Test134, EvaluatedPPath
+  pPathTestsCommon.TestExpectedAndActualAllElementsPPath pUnitTests_pPath.pPathTestsExpectedResults.Test134, EvaluatedPPath
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
 
   Exit Sub

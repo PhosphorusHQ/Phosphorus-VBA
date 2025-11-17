@@ -8,6 +8,14 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@Folder VersionControl
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 Private Sub Workbook_Open()
@@ -35,7 +43,7 @@ End Sub
 'End Sub
 
 Private Sub ExportPhosphorusSourceCode()
-  Phosphorus.ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\srcPUnit", projectName:="pUnit"
+  Phosphorus.ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pUnit", projectName:="pUnit"
 End Sub
 
 Private Sub RemoveAllPhosphorusSourceCode()
@@ -45,6 +53,6 @@ End Sub
 
 Private Sub ImportAllPhosphorusSourceCode()
 '  SetModulesToKeep
-  Phosphorus.ModuleManagement.ImportModulesFromFolder "srcPUnit", ""
+  Phosphorus.ModuleManagement.ImportModulesFromFolder "src\pUnit", ""
 End Sub
 

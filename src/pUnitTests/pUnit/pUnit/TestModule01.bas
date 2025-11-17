@@ -1,37 +1,18 @@
-Attribute VB_Name = "TestModule05"
+Attribute VB_Name = "TestModule01"
 '@Folder pUnit
 '@TestModule
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-'@TestModule
 '@SmokeTest
-'@Regression
-
-Public Sub BeforeModule()
-  Phosphorus.Logger.ExternalInfo "Running BeforeModule in pUnitSampleTestModule5"
-  On Error GoTo ErrorHandler
-  'Do nothing
-  Exit Sub
-ErrorHandler:
-  Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
-End Sub
-
-Public Sub AfterModule()
-  On Error GoTo ErrorHandler
-  Err.Raise vbObjectError + 1001, "AfterModule", "Intentional failure in AfterModule"
-  Exit Sub
-ErrorHandler:
-  Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
-End Sub
-
-Public Sub BeforeTest()
-End Sub
-
-Public Sub AfterTest()
-End Sub
-
 '@TestMethod
-'@SmokeTest
 Public Sub TestAddition()
   On Error GoTo ErrorHandler
   Dim result As Integer
@@ -42,8 +23,8 @@ ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
-'@TestMethod
 '@Slow
+'@TestMethod
 Public Sub TestDivision()
   On Error GoTo ErrorHandler
   Dim result As Double
@@ -54,8 +35,8 @@ ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
+'@Tag(Regression,Slow)
 '@TestMethod
-'@Regression
 Public Sub TestFailure()
   On Error GoTo ErrorHandler
   Phosphorus.AssertionsStatic.pAssert.IsTrue False, "This test is designed to fail"
@@ -63,4 +44,3 @@ Public Sub TestFailure()
 ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
-

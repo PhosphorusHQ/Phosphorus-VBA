@@ -1,10 +1,35 @@
-Attribute VB_Name = "TestModule01"
+Attribute VB_Name = "TestModule04"
 '@Folder pUnit
 '@TestModule
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-'@SmokeTest
+Public Sub BeforeModule()
+  On Error GoTo ErrorHandler
+  Err.Raise vbObjectError + 1000, "BeforeModule", "Intentional failure in BeforeModule"
+  Exit Sub
+ErrorHandler:
+  Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
+End Sub
+
+Public Sub AfterModule()
+End Sub
+
+Public Sub BeforeTest()
+End Sub
+
+Public Sub AfterTest()
+End Sub
+
 '@TestMethod
+'@SmokeTest
 Public Sub TestAddition()
   On Error GoTo ErrorHandler
   Dim result As Integer
@@ -15,8 +40,8 @@ ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
-'@Slow
 '@TestMethod
+'@Slow
 Public Sub TestDivision()
   On Error GoTo ErrorHandler
   Dim result As Double
@@ -27,8 +52,8 @@ ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
-'@Tag(Regression,Slow)
 '@TestMethod
+'@Regression
 Public Sub TestFailure()
   On Error GoTo ErrorHandler
   Phosphorus.AssertionsStatic.pAssert.IsTrue False, "This test is designed to fail"

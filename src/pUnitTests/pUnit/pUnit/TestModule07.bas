@@ -1,6 +1,14 @@
-Attribute VB_Name = "TestModule06"
+Attribute VB_Name = "TestModule07"
 '@Folder pUnit
 '@TestModule
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 Public Sub BeforeModule()
@@ -13,22 +21,20 @@ End Sub
 
 Public Sub AfterModule()
   On Error GoTo ErrorHandler
-  'Do nothing
   Exit Sub
 ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
 Public Sub BeforeTest()
-  On Error GoTo ErrorHandler
-  Err.Raise vbObjectError + 1003, "BeforeTest", "Intentional failure in BeforeTest"
-  Exit Sub
-
-ErrorHandler:
-  Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
 Public Sub AfterTest()
+  On Error GoTo ErrorHandler
+  Err.Raise vbObjectError + 1004, "AfterTest", "Intentional failure in AfterTest"
+  Exit Sub
+ErrorHandler:
+  Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
 '@TestMethod
@@ -64,4 +70,3 @@ Public Sub TestFailure()
 ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
-

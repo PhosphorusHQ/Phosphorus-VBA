@@ -2,6 +2,14 @@ Attribute VB_Name = "TestModule11"
 '@Folder pUnit
 '@TestModule
 '@Tag(TestingTestData)
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 '@TestMethod

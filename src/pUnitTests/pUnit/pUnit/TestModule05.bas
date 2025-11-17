@@ -1,26 +1,45 @@
-Attribute VB_Name = "TestModule02"
+Attribute VB_Name = "TestModule05"
 '@Folder pUnit
 '@TestModule
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
+'@TestModule
+'@SmokeTest
+'@Regression
+
 Public Sub BeforeModule()
-  ' Setup code for the module (e.g., initialize resources)
+  Phosphorus.Logger.ExternalInfo "Running BeforeModule in pUnitSampleTestModule5"
+  On Error GoTo ErrorHandler
+  'Do nothing
+  Exit Sub
+ErrorHandler:
+  Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
 Public Sub AfterModule()
-  ' Teardown code for the module (e.g., clean up resources)
+  On Error GoTo ErrorHandler
+  Err.Raise vbObjectError + 1001, "AfterModule", "Intentional failure in AfterModule"
+  Exit Sub
+ErrorHandler:
+  Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
 Public Sub BeforeTest()
-  ' Setup code for each test (e.g., reset state)
 End Sub
 
 Public Sub AfterTest()
-  ' Teardown code for each test (e.g., clean up test state)
 End Sub
 
-'@Regression
 '@TestMethod
+'@SmokeTest
 Public Sub TestAddition()
   On Error GoTo ErrorHandler
   Dim result As Integer
@@ -31,8 +50,8 @@ ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
-'@SmokeTest
 '@TestMethod
+'@Slow
 Public Sub TestDivision()
   On Error GoTo ErrorHandler
   Dim result As Double
@@ -43,8 +62,8 @@ ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
 
-'@Slow
 '@TestMethod
+'@Regression
 Public Sub TestFailure()
   On Error GoTo ErrorHandler
   Phosphorus.AssertionsStatic.pAssert.IsTrue False, "This test is designed to fail"
@@ -52,3 +71,4 @@ Public Sub TestFailure()
 ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
 End Sub
+

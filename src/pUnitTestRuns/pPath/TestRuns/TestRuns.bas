@@ -11,7 +11,7 @@ Attribute VB_Name = "TestRuns"
 Option Explicit
 
 Sub RunAPPathTestBasic()
-  pUnit.TestRunner.RunAllTests "ppPathTestsBasic", "Test02Eval114", "pUnitTests_pPath"
+  pUnit.TestRunner.RunAllTests "pPathTestsBasic", "Test02Eval114", "pUnitTests_pPath"
 End Sub
 
 Sub RunAllPPathTestsBasic()
@@ -30,7 +30,7 @@ End Sub
 '134 - 0 failed
 
 Sub RunAPPathTestExcel()
-  pUnit.TestRunner.RunAllTests "pPathTestsExcel", "Test06Excel104", "pUnitTests_pPath"
+  pUnit.TestRunner.RunAllTests "pPathTestsExcel", "Test06Excel103", "pUnitTests_pPath"
 End Sub
 
 Sub RunAllPPathTestExcel()

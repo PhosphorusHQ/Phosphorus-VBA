@@ -1,5 +1,13 @@
 Attribute VB_Name = "Log4PStatic"
 '@Folder Log4P
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 'Global Logger object available for use

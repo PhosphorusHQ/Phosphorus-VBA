@@ -1,9 +1,17 @@
 Attribute VB_Name = "WindowsDriver04"
 '@Folder WindowsDriver
 '@TestModule
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-Private pWindowsDriver As Phosphorus.pWindowsDriver
+Private pWindowsDriver As pWinDriver.pWindowsDriver
 
 Const WEB_APP_NAME = "Selectors Hub Xpath Practice Page"
 Const TARGET_PAGE_URL = "https://selectorshub.com/xpath-practice-page/"
@@ -27,7 +35,7 @@ Private Sub BeforeModule()
   lstrCurrentPPath = "/Window[xp:starts-with(@Name,""" & TARGET_PAGE_TITLE & """)]"
 'TODO ... make the TIMEOUT for this page 30s as 10s is not always long enough for this page to load
 
-  pWindowsDriver.FindElement lstrCurrentPPath
+  pWindowsDriver.FindElement "PageLoadElement", lstrCurrentPPath
 
 'Test 1 - check we can kill the page without doing anything ... and then reopen the page
 'Test 2 - check for an incorrect title element not found and that this kills the window

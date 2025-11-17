@@ -1,9 +1,17 @@
 Attribute VB_Name = "WindowsDriver03LaunchWDs"
 '@Folder WindowsDriver
 '@TestModule
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-Private pWindowsDriver As Phosphorus.pWindowsDriver
+Private pWindowsDriver As pWinDriver.pWindowsDriver
 Const WEB_APP_NAME = "Example.com"
 Const TARGET_PAGE_URL = "https://www.example.com"
 Const TARGET_PAGE_TITLE = "Example Domain"
@@ -44,8 +52,8 @@ Public Sub ValidURL()
 'Check for no error raised if we give a valid url - use msedge with default options
 Arrange:
   On Error GoTo ErrorHandler
-  Set pWindowsDriver = Phosphorus.Factory.GetNewPDriver(Phosphorus.pWindowsDriverType.WebBrowser)
-  pWindowsDriver.SetWindowsDriverWebBrowserType WebBrowserType:=Phosphorus.pWebBrowserType.MicrosoftEdge
+  Set pWindowsDriver = pWinDriver.pWindowsDriverStatic.GetNewPDriver(pWinDriver.pWindowsDriverType.WebBrowser)
+  pWindowsDriver.SetWindowsDriverWebBrowserType WebBrowserType:=pWinDriver.pWebBrowserType.MicrosoftEdge
   Dim ExpectedErrorNumber As Long
   ExpectedErrorNumber = 0
 Act:
@@ -67,8 +75,8 @@ Public Sub InvalidURL1()
 'Check for the error raised if we get an invalid url - use msedge with default options
 Arrange:
   On Error GoTo ErrorHandler
-  Set pWindowsDriver = Phosphorus.Factory.GetNewPDriver(Phosphorus.pWindowsDriverType.WebBrowser)
-  pWindowsDriver.SetWindowsDriverWebBrowserType WebBrowserType:=Phosphorus.pWebBrowserType.MicrosoftEdge
+  Set pWindowsDriver = pWinDriver.pWindowsDriverStatic.GetNewPDriver(pWinDriver.pWindowsDriverType.WebBrowser)
+  pWindowsDriver.SetWindowsDriverWebBrowserType WebBrowserType:=pWinDriver.pWebBrowserType.MicrosoftEdge
   Dim ExpectedErrorNumber As Long
   ExpectedErrorNumber = VBA.Constants.vbObjectError + Exceptions.WindowsDriverInvalidHTTPStatus
 Act:
@@ -90,8 +98,8 @@ Public Sub InvalidURL2()
 'Check for the error raised if we get an invalid url - use msedge with default options
 Arrange:
   On Error GoTo ErrorHandler
-  Set pWindowsDriver = Phosphorus.Factory.GetNewPDriver(Phosphorus.pWindowsDriverType.WebBrowser)
-  pWindowsDriver.SetWindowsDriverWebBrowserType WebBrowserType:=Phosphorus.pWebBrowserType.MicrosoftEdge
+  Set pWindowsDriver = pWinDriver.pWindowsDriverStatic.GetNewPDriver(pWinDriver.pWindowsDriverType.WebBrowser)
+  pWindowsDriver.SetWindowsDriverWebBrowserType WebBrowserType:=pWinDriver.pWebBrowserType.MicrosoftEdge
   Dim ExpectedErrorNumber As Long
   ExpectedErrorNumber = VBA.Constants.vbObjectError + Exceptions.WindowsDriverInvalidURL
 Act:
@@ -113,17 +121,20 @@ Public Sub ValidPageLoadElement()
 'Check for no error if we open the URL in the current browser with a valid page load element - ReuseACurrentOpenInstance App Instance Type
 Arrange:
   On Error GoTo ErrorHandler
-  Set pWindowsDriver = Phosphorus.Factory.GetNewPDriver(Phosphorus.pWindowsDriverType.WebBrowser)
-  pWindowsDriver.SetWindowsDriverWebBrowserType WebBrowserType:=Phosphorus.pWebBrowserType.MicrosoftEdge, _
-    InstanceType:=Phosphorus.pInstanceType.ReuseACurrentOpenInstance
+  Set pWindowsDriver = pWinDriver.pWindowsDriverStatic.GetNewPDriver(pWinDriver.pWindowsDriverType.WebBrowser)
+  pWindowsDriver.SetWindowsDriverWebBrowserType WebBrowserType:=pWinDriver.pWebBrowserType.MicrosoftEdge, _
+    InstanceType:=pWinDriver.pInstanceType.ReuseACurrentOpenInstance
   Dim ExpectedErrorNumber As Long
   ExpectedErrorNumber = 0
 Act:
   'Open the browser with the valid page
   pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=30
+Assert:
+  '//Text[@AriaRole=""heading"",@Name="""Example Domain""]
+  '"//Document[@AutomationId=""RootWebArea""]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"
+  Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Document"), isCritical:=True
   Exit Sub
 ErrorHandler:
-Assert:
   Dim ErrorNumber As Long
   ErrorNumber = Err.Number
   Phosphorus.AssertionsStatic.pAssert.Equal ExpectedErrorNumber, ErrorNumber, isCritical:=True
@@ -137,8 +148,8 @@ Public Sub InvalidPageLoadElement()
 'Check for element not found error if we open the URL in the current browser with an invalid page load element
 Arrange:
   On Error GoTo ErrorHandler
-  Set pWindowsDriver = Phosphorus.Factory.GetNewPDriver(Phosphorus.pWindowsDriverType.WebBrowser)
-  pWindowsDriver.SetWindowsDriverWebBrowserType WebBrowserType:=Phosphorus.pWebBrowserType.MicrosoftEdge
+  Set pWindowsDriver = pWinDriver.pWindowsDriverStatic.GetNewPDriver(pWinDriver.pWindowsDriverType.WebBrowser)
+  pWindowsDriver.SetWindowsDriverWebBrowserType WebBrowserType:=pWinDriver.pWebBrowserType.MicrosoftEdge
   Dim ExpectedErrorNumber As Long
   ExpectedErrorNumber = VBA.Constants.vbObjectError + Phosphorus.Exceptions.WindowsDriverUIElementNotFoundBeforeTimeout
 Act:
@@ -148,7 +159,7 @@ Act:
   On Error GoTo ErrorHandler1
   ExpectedErrorNumber = 0
   'Use the valid page load element PPath to get the PID from the found element so that the browser will get killed on termination of the driver
-  pWindowsDriver.FindElement "/Window[xp:starts-with(@Name,""" & TARGET_PAGE_TITLE & """)]", TimeoutInSeconds:=30, GetPID:=True
+  pWindowsDriver.FindElement "InvalidPageLoadElement", "/Window[xp:starts-with(@Name,""" & TARGET_PAGE_TITLE & """)]", TimeoutInSeconds:=30, GetPID:=True
   Exit Sub
 ErrorHandler:
 Assert:
@@ -168,10 +179,10 @@ ErrorHandler1:
 End Sub
 
 'Reusable commom method
-Private Sub ValidPageLoadElementByBrowserTypeAndInstanceType(WebBrowserType As Phosphorus.pWebBrowserType, InstanceType As Phosphorus.pInstanceType)
+Private Sub ValidPageLoadElementByBrowserTypeAndInstanceType(WebBrowserType As pWinDriver.pWebBrowserType, InstanceType As pWinDriver.pInstanceType)
 'Check for no error if we open the URL in the current browser with a valid page load element - parameterised WebBrowserType and InstanceType
 Arrange:
-  Set pWindowsDriver = Phosphorus.Factory.GetNewPDriver(Phosphorus.pWindowsDriverType.WebBrowser)
+  Set pWindowsDriver = pWinDriver.pWindowsDriverStatic.GetNewPDriver(pWinDriver.pWindowsDriverType.WebBrowser)
   pWindowsDriver.SetWindowsDriverWebBrowserType _
     WebBrowserType:=WebBrowserType, _
     InstanceType:=InstanceType
@@ -196,80 +207,80 @@ End Sub
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_ReuseACurrentOpenInstance()
 'Check for no error if we open the URL in the current browser with a valid page load element - ReuseACurrentOpenInstance Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.MicrosoftEdge, Phosphorus.pInstanceType.ReuseACurrentOpenInstance
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.ReuseACurrentOpenInstance
 End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_Executable()
 'Check for no error if we open the URL in the current browser with a valid page load element - Executable Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.MicrosoftEdge, Phosphorus.pInstanceType.Executable
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.Executable
 End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_NewWindow()
 'Check for no error if we open the URL in the current browser with a valid page load element - NewWindow Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.MicrosoftEdge, Phosphorus.pInstanceType.NewWindow
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.NewWindow
 End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_AppMode()
 'Check for no error if we open the URL in the current browser with a valid page load element - AppMode Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.MicrosoftEdge, Phosphorus.pInstanceType.AppMode
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.AppMode
 End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_NewProfile()
 'Check for no error if we open the URL in the current browser with a valid page load element - NewProfile Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.MicrosoftEdge, Phosphorus.pInstanceType.NewProfile
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.NewProfile
 End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_ApplicationUserModelID()
 'Check for no error if we open the URL in the current browser with a valid page load element - ApplicationUserModelID Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.MicrosoftEdge, Phosphorus.pInstanceType.ApplicationUserModelID
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.ApplicationUserModelID
 End Sub
 
 'Test other browsers
 '@TestMethod
 Public Sub ValidPageLoadElement_DuckDuckGo_ApplicationUserModelID() 'DuckDuckGo is only an app?
 'Check for no error if we open the URL in the current browser with a valid page load element - ApplicationUserModelID Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.DuckDuckGo, Phosphorus.pInstanceType.ApplicationUserModelID
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.DuckDuckGo, pWinDriver.pInstanceType.ApplicationUserModelID
 End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_Chrome_Executable()
 'Check for no error if we open the URL in the current browser with a valid page load element - Executable Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.Chrome, Phosphorus.pInstanceType.Executable
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Chrome, pWinDriver.pInstanceType.Executable
 End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_Chrome_NewProfile()
 'Check for no error if we open the URL in the current browser with a valid page load element - NewProfile Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.Chrome, Phosphorus.pInstanceType.NewProfile
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Chrome, pWinDriver.pInstanceType.NewProfile
 End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_Chrome_GuestModeNoSignIn()
 'Check for no error if we open the URL in the current browser with a valid page load element - GuestModeNoSignIn Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.Chrome, Phosphorus.pInstanceType.GuestModeNoSignIn
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Chrome, pWinDriver.pInstanceType.GuestModeNoSignIn
 End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_Firefox_Executable()
 'Check for no error if we open the URL in the current browser with a valid page load element - Executable Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.Firefox, Phosphorus.pInstanceType.Executable
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Firefox, pWinDriver.pInstanceType.Executable
 End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_Opera_Executable()
 'Check for no error if we open the URL in the current browser with a valid page load element - Executable Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.Opera, Phosphorus.pInstanceType.Executable
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Opera, pWinDriver.pInstanceType.Executable
 End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_Brave_Executable()
 'Check for no error if we open the URL in the current browser with a valid page load element - Executable Instance Type
-  ValidPageLoadElementByBrowserTypeAndInstanceType Phosphorus.pWebBrowserType.Brave, Phosphorus.pInstanceType.Executable
+  ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Brave, pWinDriver.pInstanceType.Executable
 End Sub
 
 'brave
@@ -282,7 +293,7 @@ End Sub
 Private Sub ValidPageLoadElementForApps(App As Phosphorus.WindowsApp)
 'Check for no error if we open an app
 Arrange:
-  Set pWindowsDriver = Phosphorus.Factory.GetNewPDriver(Phosphorus.pWindowsDriverType.WindowsApp)
+  Set pWindowsDriver = pWinDriver.pWindowsDriverStatic.GetNewPDriver(pWinDriver.pWindowsDriverType.WindowsApp)
   pWindowsDriver.SetWindowsApp App
   Dim ExpectedErrorNumber As Long
   ExpectedErrorNumber = 0

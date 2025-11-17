@@ -1,9 +1,17 @@
 Attribute VB_Name = "WindowsDriver05"
 '@Folder WindowsDriver
 '@TestModule
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-Private pWindowsDriver As Phosphorus.pWindowsDriver
+Private pWindowsDriver As pWinDriver.pWindowsDriver
 Const WEB_APP_NAME = "Selectors Hub Xpath Practice Page"
 Const TARGET_PAGE_URL = "https://selectorshub.com/xpath-practice-page/"
 Const TARGET_PAGE_TITLE = "Xpath Practice Page"
@@ -25,10 +33,10 @@ End Sub
  
 Public Sub BeforeTest()
   On Error GoTo ErrorHandler
-  Set pWindowsDriver = Phosphorus.Factory.GetNewPDriver(Phosphorus.pWindowsDriverType.WebBrowser)
+  Set pWindowsDriver = pWinDriver.pWindowsDriverStatic.GetNewPDriver(pWinDriver.pWindowsDriverType.WebBrowser)
   pWindowsDriver.SetWindowsDriverWebBrowserType _
-    WebBrowserType:=Phosphorus.pWebBrowserType.MicrosoftEdge, _
-    InstanceType:=Phosphorus.pInstanceType.ReuseACurrentOpenInstance
+    WebBrowserType:=pWinDriver.pWebBrowserType.MicrosoftEdge, _
+    InstanceType:=pWinDriver.pInstanceType.ReuseACurrentOpenInstance
   Exit Sub
 ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description

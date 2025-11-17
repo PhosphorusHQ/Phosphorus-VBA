@@ -1,6 +1,14 @@
 Attribute VB_Name = "WindowsDriver01"
 '@Folder WindowsDriver
 '@TestModule
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 '@TestMethod
@@ -11,7 +19,7 @@ Arrange:
   Dim ExpectedErrorNumber As Long
   ExpectedErrorNumber = VBA.Constants.vbObjectError + Exceptions.WindowsDriverUndefinedWindowInteractionState
 Act:
-  Phosphorus.pWindowsDriverStatic.GetWindowInteractionStateDescription -1
+  pWinDriver.pWindowsDriverStatic.GetWindowInteractionStateDescription -1
   Exit Sub
 ErrorHandler:
 Assert:

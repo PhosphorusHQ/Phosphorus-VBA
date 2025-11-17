@@ -2,12 +2,20 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "PPathMatchingElements"
+Attribute VB_Name = "MatchingElements"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
-'@Folder PPath
+'@Folder pPath
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 Option Base 1
 
@@ -59,7 +67,7 @@ Public Function GetNavigationalPPath(intElementNumber) As String
 End Function
 
 Public Function GetNumberOfMatchingElements() As Long
-  GetNumberOfMatchingElements = Utils.GetSizeOfArray(MatchingElements)
+  GetNumberOfMatchingElements = Phosphorus.Utils.GetSizeOfArray(MatchingElements)
 End Function
 
 Public Function GetMatchingElementsArray() As UIAutomationClient.IUIAutomationElement()
@@ -87,5 +95,7 @@ End Sub
 Public Sub SetNavigationalPPaths(NewNavigationalPPaths() As String)
   NavigationalPPaths = NewNavigationalPPaths
 End Sub
+
+
 
 

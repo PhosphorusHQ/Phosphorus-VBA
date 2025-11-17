@@ -1,8 +1,16 @@
-Attribute VB_Name = "PPathExceTopLevelFunctions"
-'@Folder PPath
+Attribute VB_Name = "ExcelTopLevelFunctions"
+'@Folder pPath
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-Public TopLevelFunctions As collection
+Public TopLevelFunctions As Collection
 
 Public Sub ClearDownTopLevelFunctions()
   Set TopLevelFunctions = Nothing
@@ -10,7 +18,7 @@ End Sub
 
 Public Sub InitialiseTopLevelFunctions()
   If TopLevelFunctions Is Nothing Then
-    Set TopLevelFunctions = New collection
+    Set TopLevelFunctions = New Collection
     AddATopLevelFunction "sum"
     AddATopLevelFunction "count"
     AddATopLevelFunction "not"
@@ -26,18 +34,18 @@ Public Sub InitialiseTopLevelFunctions()
 End Sub
 
 Private Sub AddATopLevelFunction(strFunctionName As String, Optional intNumberOfAddtionalParameters As Integer)
-  Dim TopLevelFunction As collection
-  Set TopLevelFunction = New collection
+  Dim TopLevelFunction As Collection
+  Set TopLevelFunction = New Collection
   TopLevelFunction.Add strFunctionName, "FunctionName"
   TopLevelFunction.Add intNumberOfAddtionalParameters, "NumberOfAddtionalParameters"
   TopLevelFunctions.Add TopLevelFunction
 End Sub
 
 Private Sub test()
-  PPathExceTopLevelFunctions.ClearDownTopLevelFunctions
-  PPathExceTopLevelFunctions.InitialiseTopLevelFunctions
-  Dim TopLevelFunction As collection
-  For Each TopLevelFunction In PPathExceTopLevelFunctions.TopLevelFunctions
+  pPath.ExcelTopLevelFunctions.ClearDownTopLevelFunctions
+  pPath.ExcelTopLevelFunctions.InitialiseTopLevelFunctions
+  Dim TopLevelFunction As Collection
+  For Each TopLevelFunction In pPath.ExcelTopLevelFunctions.TopLevelFunctions
     Dim strFunctionName As String
     Dim intNumberOfAddtionalParameters As Integer
     strFunctionName = TopLevelFunction("FunctionName")
@@ -45,3 +53,4 @@ Private Sub test()
     Debug.Print strFunctionName, intNumberOfAddtionalParameters
   Next TopLevelFunction
 End Sub
+

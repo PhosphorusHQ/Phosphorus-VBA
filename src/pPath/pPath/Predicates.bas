@@ -2,23 +2,31 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "PPathPredicates"
+Attribute VB_Name = "Predicates"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder PPath
+'@Folder pPath
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-Private This As PPathCommon
+Private This As pPath.Common
 Private lstrNestedPPath As String
 Private lstrCurrentPredicateTest As String
 
-Public Sub Initialise(ByRef sharedthis As PPathCommon)
+Public Sub Initialise(ByRef sharedthis As pPath.Common)
   Set This = sharedthis
 End Sub
 
-Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
+Public Sub ProcessPredicates(myNextStep As pPath.Step)
 
   Dim intNumberOfPredicateSets As Integer
   Dim intPredicateSetCounter As Integer
@@ -68,7 +76,7 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
   
           If boolIsFirstSetPositionalPredicate Then
             Set eleCurrentParentUIElement = This.TreeWalker.GetParentElement(eleCurrentUIElement)
-            strCurrentParentElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(eleCurrentParentUIElement)
+            strCurrentParentElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(eleCurrentParentUIElement)
             'Count the number of preceeding elements that have the same parent to get the current element's position
             intContextElementPositionCounter = 0
             Dim intPreviousElementCounter As Integer
@@ -78,7 +86,7 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
               Dim strPreviousParentElementRuntimeID As String
               Set elePreviousUIElement = This.PPathReturnClass.GetWorkingCopyElement(This.CurrentLocationPathExpressionCounter, intPreviousElementCounter)
               Set elePreviousParentUIElement = This.TreeWalker.GetParentElement(elePreviousUIElement)
-              strPreviousParentElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(elePreviousParentUIElement)
+              strPreviousParentElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(elePreviousParentUIElement)
               If strPreviousParentElementRuntimeID = strCurrentParentElementRuntimeID Then
                 intContextElementPositionCounter = intContextElementPositionCounter + 1
               Else
@@ -96,7 +104,7 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
                 Dim strNextParentElementRuntimeID As String
                 Set eleNextUIElement = This.PPathReturnClass.GetWorkingCopyElement(This.CurrentLocationPathExpressionCounter, intNextElementCounter)
                 Set eleNextParentUIElement = This.TreeWalker.GetParentElement(eleNextUIElement)
-                strNextParentElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(eleNextParentUIElement)
+                strNextParentElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(eleNextParentUIElement)
                 If strCurrentParentElementRuntimeID = strNextParentElementRuntimeID Then
                   intContextElementLastCounter = intContextElementLastCounter + 1
                 Else
@@ -122,19 +130,19 @@ Public Sub ProcessPredicates(myNextStep As Phosphorus.PPathStep)
           ProcessNestedPPaths eleCurrentUIElement, strCurrentNavigationalPPath & "/"
           ProcessAttributeChecks eleCurrentUIElement, strCurrentNavigationalPPath & "/"
           ProcessTextAndValueChecks eleCurrentUIElement
-          lstrCurrentPredicateTest = PPathExceUserDefinedFunctions.RenameExcelFunctions(lstrCurrentPredicateTest)
+          lstrCurrentPredicateTest = pPath.ExcelUserDefinedFunctions.RenameExcelFunctions(lstrCurrentPredicateTest)
           
           Dim boolCurrentPredicateTestPasses As Boolean
           On Error Resume Next
           boolCurrentPredicateTestPasses = True
           boolCurrentPredicateTestPasses = Application.Evaluate(lstrCurrentPredicateTest)
           If Err.Number = 13 Then
-            This.PPathReturnClass.SetErrorMessage = Phosphorus.PPathConstants.INVALID_PREDICATE & " [" & strCurrentGroupAttributesPPath & "] => " & lstrCurrentPredicateTest
+            This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.INVALID_PREDICATE & " [" & strCurrentGroupAttributesPPath & "] => " & lstrCurrentPredicateTest
             Exit Sub
           End If
           On Error GoTo 0
           If boolCurrentPredicateTestPasses Then
-            PPathUtils.OutputElementDetails eleCurrentUIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
+            pPath.Utils.OutputElementDetails eleCurrentUIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
             This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleCurrentUIElement, strCurrentAttributeName, strCurrentNavigationalPPath
           End If
 
@@ -199,10 +207,10 @@ Private Function SourcePPathContainedATopLevelFunction( _
     Next intEndOfFunction
   End If
   If SourcePPathContainedATopLevelFunction Then
-    Dim NestedPPath As Phosphorus.PPath
-    Dim EvaluatedNestedPPath As Phosphorus.PPathReturnClass
+    Dim NestedPPath As pPath.Core
+    Dim EvaluatedNestedPPath As pPath.ReturnClass
     Dim varReturnValue As Variant
-    Set NestedPPath = Phosphorus.Factory.GetNewPhosphorusPPath
+    Set NestedPPath = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
     NestedPPath.Initialise
     Set EvaluatedNestedPPath = NestedPPath.Evaluate(lstrNestedPPath, eleCurrentContextUIElement, strInitialPPath)
     'Raise any error?
@@ -256,10 +264,10 @@ Private Function SourcePPathContainedANestedPPath( _
     lstrNestedPPath = lstrCurrentPredicateTest
   End If
   If SourcePPathContainedANestedPPath Then
-    Dim NestedPPath As Phosphorus.PPath
-    Dim EvaluatedNestedPPath As Phosphorus.PPathReturnClass
+    Dim NestedPPath As pPath.Core
+    Dim EvaluatedNestedPPath As pPath.ReturnClass
     Dim varReturnValue As Variant
-    Set NestedPPath = Phosphorus.Factory.GetNewPhosphorusPPath
+    Set NestedPPath = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
     NestedPPath.Initialise
     Set EvaluatedNestedPPath = NestedPPath.Evaluate(lstrNestedPPath, eleCurrentContextUIElement, strInitialPPath)
     'Raise any error?
@@ -455,7 +463,9 @@ Private Sub ProcessTextAndValueChecks(eleCurrentContextUIElement As UIAutomation
   End If
   If VBA.Strings.InStr(1, lstrCurrentPredicateTest, "value()") > 0 Then
     Dim varCurrentValue As Variant
-    varCurrentValue = PPathUtils.GetValue(eleCurrentContextUIElement)
+    varCurrentValue = pPath.Utils.GetValue(eleCurrentContextUIElement)
     lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, "value()", varCurrentValue)
   End If
 End Sub
+
+

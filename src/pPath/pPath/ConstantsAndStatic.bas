@@ -1,5 +1,13 @@
-Attribute VB_Name = "PPathConstants"
-'@Folder PPath
+Attribute VB_Name = "ConstantsAndStatic"
+'@Folder pPath
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 Public Const NULL_PPATH_ERROR_MESSAGE = "Some PPath expression must be specified!"
@@ -8,7 +16,7 @@ Public Const MISSING_RELATIVE_PPATH_CONTEXT_NODE = "PPaths is relative but no co
 Public Const UNUSED_RELATIVE_PPATH_CONTEXT_NODE = "A context node is provided but isn't used!"
 Public Const MISSING_CONTEXT_NODE_INITIAL_PPATH = "A context node is provided but no initial PPath!"
 Public Const NUMBER_OF_RELATIVE_PPATHS_TO_CONTEXT_NODES_MISMATCH = "The number of nodes and relative PPaths do not match!"
-'@Folder PPAth
+
 Public Const MISMATCHING_PARENTHESES_ERROR_MESSAGE = "Unequal number of left & right parentheses '(' & ')' in PPath!"
 Public Const MISMATCHING_SQUARE_BARCKETS_ERROR_MESSAGE = "Unequal number of left & right square brackets '[' & ']' in PPath!"
 Public Const INVALID_PROPERTY_ERROR_MESSAGE = "Unrecognised property in PPath!"
@@ -67,3 +75,13 @@ Public Sub InitialiseAxesTypes()
   Axes.Following = "following::"
   Axes.Attribute = "attribute::"
 End Sub
+
+Public Function GetNewPhosphorusPPath() As pPath.Core
+  Set GetNewPhosphorusPPath = New pPath.Core
+End Function
+
+Public Function GetNewPhosphorusPPathReturnClass(intNumberOfPPathExpressions As Integer) As pPath.ReturnClass
+  Set GetNewPhosphorusPPathReturnClass = New pPath.ReturnClass
+  GetNewPhosphorusPPathReturnClass.Initialise intNumberOfPPathExpressions
+End Function
+

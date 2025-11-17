@@ -2,21 +2,29 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "PPathNodeTests"
+Attribute VB_Name = "NodeTests"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder PPath
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-Private This As PPathCommon
+Private This As pPath.Common
 
-Public Sub Initialise(ByRef sharedthis As PPathCommon)
+Public Sub Initialise(ByRef sharedthis As pPath.Common)
   Set This = sharedthis
 End Sub
 
-Public Sub ProcessNextNodeTest(myNextStep As Phosphorus.PPathStep)
+Public Sub ProcessNextNodeTest(myNextStep As pPath.Step)
 
   Dim intElementCounter As Integer
   Dim intNumberOfElements As Integer
@@ -39,7 +47,7 @@ Public Sub ProcessNextNodeTest(myNextStep As Phosphorus.PPathStep)
        (myNextStep.NodeTest = "element()") _
     Then
       If myNextStep.NodeTestKind = "" Then
-        PPathUtils.OutputElementDetails eleCurrentUIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
+        pPath.Utils.OutputElementDetails eleCurrentUIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
         This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleCurrentUIElement, strCurrentAttributeName, strCurrentNavigationalPPath
       Else
         GetValuesOfDataType eleCurrentUIElement, myNextStep.NodeTestKind, strCurrentNavigationalPPath
@@ -66,7 +74,7 @@ Public Sub GetTextNode(UIElement As UIAutomationClient.IUIAutomationElement, Ini
   If GetTextValue(UIElement) <> "" Then
     Dim strCurrentNavigationalPPath As String
     strCurrentNavigationalPPath = InitialPPath & "/text()"
-    PPathUtils.OutputElementDetails UIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
+    pPath.Utils.OutputElementDetails UIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
     This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), UIElement, "text()", strCurrentNavigationalPPath
   End If
 
@@ -98,7 +106,7 @@ Public Sub GetValuesOfDataType(UIElement As UIAutomationClient.IUIAutomationElem
   Dim varValue As Variant
   Dim strElementDataType As String
   
-  varValue = PPathUtils.GetValue(UIElement)
+  varValue = pPath.Utils.GetValue(UIElement)
   If varValue = "" Then
     strElementDataType = "null"
   Else
@@ -128,9 +136,11 @@ Public Sub GetValuesOfDataType(UIElement As UIAutomationClient.IUIAutomationElem
        (strElementDataType = "integer" And DataType = "decimal") Then
       Dim strCurrentNavigationalPPath As String
       strCurrentNavigationalPPath = InitialPPath & "/@value"
-      PPathUtils.OutputElementDetails UIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
+      pPath.Utils.OutputElementDetails UIElement, strCurrentNavigationalPPath, This.DebugMode, This.AutomationDictionaries
       This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), UIElement, "text()", strCurrentNavigationalPPath
     End If
   End If
   
 End Sub
+
+

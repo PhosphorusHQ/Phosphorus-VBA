@@ -1,5 +1,13 @@
-Attribute VB_Name = "PPathExceUserDefinedFunctions"
-'@Folder PPath
+Attribute VB_Name = "ExcelUserDefinedFunctions"
+'@Folder pPath
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 'https://excelmacromastery.com/vba-dictionary/
@@ -208,3 +216,4 @@ End Function
 Public Function udf_test_ends_with(str1 As String, str2 As String) As Boolean
   udf_test_ends_with = (VBA.Strings.InStr(1, str1, str2) = (VBA.Strings.Len(str1) - VBA.Strings.Len(str2) + 1))
 End Function
+

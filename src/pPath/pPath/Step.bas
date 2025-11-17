@@ -2,12 +2,20 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "PPathStep"
+Attribute VB_Name = "Step"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder PPath
+'@Folder pPath
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 Option Base 1
 
@@ -16,7 +24,7 @@ Private Type Step
   PrincipalNodeKind As PrincipalNodeKindType
   NodeTest As String
   NodeTestKind As String
-  PredicateSets() As PPathPredicateSet
+  PredicateSets() As pPath.PredicateSet
   RemainingPPath As String
 End Type
 
@@ -64,7 +72,7 @@ Public Sub AddPredicates(PredicatePPath As String)
 'DO we need this ????
     'There is only 1 set of predicates
     ReDim This.PredicateSets(1)
-    Set This.PredicateSets(1) = New PPathPredicateSet
+    Set This.PredicateSets(1) = New pPath.PredicateSet
     This.PredicateSets(1).Initialise PredicatePPath
   Else
     Dim intNumberOfPredicateSets As Integer
@@ -123,7 +131,7 @@ Public Sub AddPredicates(PredicatePPath As String)
           Else
             ReDim Preserve This.PredicateSets(intPredicateSetCounter)
           End If
-          Set This.PredicateSets(intPredicateSetCounter) = New PPathPredicateSet
+          Set This.PredicateSets(intPredicateSetCounter) = New pPath.PredicateSet
           This.PredicateSets(intPredicateSetCounter).Initialise strCurrentPredicateSetPPath
           intStartOfCurrentPredicateSet = intCharacterCounter + 1
         End If
@@ -146,12 +154,12 @@ Public Sub AddPredicates(PredicatePPath As String)
 '  Dim intCharacterCounter
 End Sub
 
-Property Get PredicateSet(Number As Integer) As PPathPredicateSet
+Property Get PredicateSet(Number As Integer) As pPath.PredicateSet
   Set PredicateSet = This.PredicateSets(Number)
 End Property
 
 Public Function NumberOfPredicateSets() As Integer
-  NumberOfPredicateSets = Utils.GetSizeOfArray(This.PredicateSets)
+  NumberOfPredicateSets = Phosphorus.Utils.GetSizeOfArray(This.PredicateSets)
 End Function
 
 Property Get RemainingPPath() As String
@@ -161,3 +169,4 @@ End Property
 Property Let RemainingPPath(strRemainingPPath As String)
   This.RemainingPPath = strRemainingPPath
 End Property
+

@@ -7,13 +7,21 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder PPath
+'@Folder pPath
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
 'https://excelmacromastery.com/vba-dictionary/
 
 'Dictionaries of TypeIDs
-Public ControlTypeIDs As Scripting.dictionary
+Public ControlTypeIDs As Scripting.dictionary 'Requires a reference Windows Scripting Runtime
 Public AllPropertyIDs As Scripting.dictionary
 Public NavigablePropertyIDs As Scripting.dictionary
 
@@ -216,3 +224,4 @@ Public Function ValueExists(Value As String, dictionary As Scripting.dictionary)
   Next Key
   ValueExists = False
 End Function
+

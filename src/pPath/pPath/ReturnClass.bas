@@ -2,22 +2,30 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "PPathReturnClass"
+Attribute VB_Name = "ReturnClass"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
-'@Folder PPath
+'@Folder pPath
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 Option Base 1
 
 'For final elements returned
-Private MatchingElements As PPathMatchingElements
+Private MatchingElements As pPath.MatchingElements
 Private lintNumberOfXPathExpressions As Integer
 ' Array of matching elements class 1 to {NumberOfXPatExpressions} for processing each reducing set of candidate elements for each PPath Expression
-Private WorkingCopyOfCandidateElements() As PPathMatchingElements
-Private CandidateElements() As PPathMatchingElements
-Private TempCandidateElements() As PPathMatchingElements
+Private WorkingCopyOfCandidateElements() As pPath.MatchingElements
+Private CandidateElements() As pPath.MatchingElements
+Private TempCandidateElements() As pPath.MatchingElements
 
 Private ErrorMessage As String
 
@@ -31,29 +39,29 @@ Private This As Returns
 
 Public Sub Initialise(intNumberOfXPathExpressions As Integer)
   lintNumberOfXPathExpressions = intNumberOfXPathExpressions
-  Set MatchingElements = New PPathMatchingElements
+  Set MatchingElements = New pPath.MatchingElements
   ReDim WorkingCopyOfCandidateElements(lintNumberOfXPathExpressions)
   ReDim CandidateElements(lintNumberOfXPathExpressions)
   ReDim TempCandidateElements(lintNumberOfXPathExpressions)
   Dim i As Integer
   For i = 1 To lintNumberOfXPathExpressions
-    Set WorkingCopyOfCandidateElements(i) = New PPathMatchingElements
-    Set CandidateElements(i) = New PPathMatchingElements
-    Set TempCandidateElements(i) = New PPathMatchingElements
+    Set WorkingCopyOfCandidateElements(i) = New pPath.MatchingElements
+    Set CandidateElements(i) = New pPath.MatchingElements
+    Set TempCandidateElements(i) = New pPath.MatchingElements
   Next i
 End Sub
 
 Public Sub AddMatchingElement( _
-  ByRef TargetMatchingElements As PPathMatchingElements, _
+  ByRef TargetMatchingElements As pPath.MatchingElements, _
   ByRef MatchingElement As UIAutomationClient.IUIAutomationElement, _
   AttributeName As String, _
-  PPath As String)
+  pPathToAdd As String)
   
   Dim boolElementAddedAlready As Boolean
   boolElementAddedAlready = False
       
   Dim strNewUIElementRuntimeID As String
-  strNewUIElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(MatchingElement)
+  strNewUIElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(MatchingElement)
  
 'If strNewUIElementRuntimeID = "" Then
 '  Debug.Print MatchingElement.GetCachedPropertyValue(UIAutomationClient.UIA_PropertyIds.UIA_NativeWindowHandlePropertyId)
@@ -67,7 +75,7 @@ Public Sub AddMatchingElement( _
       For i = 1 To TargetMatchingElements.GetNumberOfMatchingElements
         Dim strExistingUIElementRuntimeID As String
         Dim strExistingUIElementAttributeName As String
-        strExistingUIElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(TargetMatchingElements.GetMatchingElement(i))
+        strExistingUIElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(TargetMatchingElements.GetMatchingElement(i))
         strExistingUIElementAttributeName = TargetMatchingElements.GetAttributeName(i)
         If strExistingUIElementRuntimeID = "" Then
           MsgBox "No Unique Property ID for existing element"
@@ -81,7 +89,7 @@ Public Sub AddMatchingElement( _
 
   'Do not add elements that have been added already or transient elements that have no runtime ID
   If (Not boolElementAddedAlready) And (strNewUIElementRuntimeID <> "") Then
-    TargetMatchingElements.AddMatchingElement TargetMatchingElements.GetNumberOfMatchingElements + 1, MatchingElement, AttributeName, PPath
+    TargetMatchingElements.AddMatchingElement TargetMatchingElements.GetNumberOfMatchingElements + 1, MatchingElement, AttributeName, pPathToAdd
   End If
   
 End Sub
@@ -104,7 +112,7 @@ Public Sub RemoveAllMatchingElements()
   Next i
 End Sub
 
-Public Function GetNumberOfMatchingElements(ByRef TargetMatchingElements As PPathMatchingElements) As Long
+Public Function GetNumberOfMatchingElements(ByRef TargetMatchingElements As pPath.MatchingElements) As Long
   GetNumberOfMatchingElements = TargetMatchingElements.GetNumberOfMatchingElements
 End Function
 
@@ -127,7 +135,7 @@ End Property
 
 'CandidateElements
 
-Property Get GetCandidateElements(LocationPathExpressionCounter As Integer) As PPathMatchingElements
+Property Get GetCandidateElements(LocationPathExpressionCounter As Integer) As pPath.MatchingElements
   Set GetCandidateElements = CandidateElements(LocationPathExpressionCounter)
 End Property
 
@@ -164,7 +172,7 @@ Public Function GetNumberOfTempCandidateElements(LocationPathExpressionCounter A
   GetNumberOfTempCandidateElements = TempCandidateElements(LocationPathExpressionCounter).GetNumberOfMatchingElements
 End Function
 
-Property Get GetTempCandidateElements(LocationPathExpressionCounter As Integer) As PPathMatchingElements
+Property Get GetTempCandidateElements(LocationPathExpressionCounter As Integer) As pPath.MatchingElements
   Set GetTempCandidateElements = TempCandidateElements(LocationPathExpressionCounter)
 End Property
 
@@ -188,7 +196,7 @@ Public Function GetNumberOfWorkingCopyOfCandidateElements(LocationPathExpression
   GetNumberOfWorkingCopyOfCandidateElements = WorkingCopyOfCandidateElements(LocationPathExpressionCounter).GetNumberOfMatchingElements
 End Function
 
-Property Get GetWorkingCopyOfCandidateElements(LocationPathExpressionCounter As Integer) As PPathMatchingElements
+Property Get GetWorkingCopyOfCandidateElements(LocationPathExpressionCounter As Integer) As pPath.MatchingElements
   Set GetWorkingCopyOfCandidateElements = WorkingCopyOfCandidateElements(LocationPathExpressionCounter)
 End Property
 
@@ -228,3 +236,5 @@ End Property
 Property Get ReturnedValue() As Variant
   ReturnedValue = This.ReturnedValue
 End Property
+
+

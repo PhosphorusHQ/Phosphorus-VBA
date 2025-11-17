@@ -2,22 +2,30 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "PPathAxes"
+Attribute VB_Name = "Axes"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder PPath
+'@Folder pPath
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
 Option Explicit
 
-Private This As PPathCommon
+Private This As pPath.Common
 
-Public Sub Initialise(ByRef sharedthis As PPathCommon)
+Public Sub Initialise(ByRef sharedthis As pPath.Common)
   Set This = sharedthis
 End Sub
 
 Public Sub ProcessNextAxis( _
-  myNextStep As Phosphorus.PPathStep)
+  myNextStep As pPath.Step)
       
   'The method loops through each element in the current Working Copy and call the axis method(s) relevant to each axis
   Dim intElementCounter As Integer
@@ -83,7 +91,7 @@ Private Sub GetSelfNodes( _
   
   Dim strCurrentElementAbsoluteXPath As String
   strCurrentElementAbsoluteXPath = strInitialXPath
-  PPathUtils.OutputElementDetails eleCurrentUIElement, strCurrentElementAbsoluteXPath, This.DebugMode, This.AutomationDictionaries
+  pPath.Utils.OutputElementDetails eleCurrentUIElement, strCurrentElementAbsoluteXPath, This.DebugMode, This.AutomationDictionaries
   This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleCurrentUIElement, "", strCurrentElementAbsoluteXPath
 End Sub
 
@@ -92,7 +100,7 @@ Private Sub GetParents( _
   strCurrentStepAxis As String, _
   strInitialPPath As String, _
   boolGetAllAncestors As Boolean, _
-  Optional ByRef AllAncestorsOrSelfRuntimeIDs As collection)
+  Optional ByRef AllAncestorsOrSelfRuntimeIDs As Collection)
   
   'The parent:: axis is a reverse axis, but as we only get one node it doesn't make any difference which order it's in!?
   'Also, this method already returns ancestor nodes in reverse document order, so there is no need to reverse.
@@ -102,8 +110,8 @@ Private Sub GetParents( _
   boolCurrentIsApplicationRootUIElement = False
   Dim strCurrentUIElementRunTimeID As String
   Dim strApplicationRootUIElementRunTimeID As String
-  strCurrentUIElementRunTimeID = PPathRuntimeIDs.GetElementRuntimeID(eleCurrentUIElement)
-  strApplicationRootUIElementRunTimeID = PPathRuntimeIDs.GetElementRuntimeID(This.ApplicationRootUIElement)
+  strCurrentUIElementRunTimeID = pPath.RuntimeIDs.GetElementRuntimeID(eleCurrentUIElement)
+  strApplicationRootUIElementRunTimeID = pPath.RuntimeIDs.GetElementRuntimeID(This.ApplicationRootUIElement)
   If strCurrentUIElementRunTimeID = strApplicationRootUIElementRunTimeID Then
     boolCurrentIsApplicationRootUIElement = True
   End If
@@ -115,7 +123,7 @@ Private Sub GetParents( _
     Set eleParentUIElement = This.TreeWalker.GetParentElement(eleCurrentUIElement)
     
     Dim strParentUIElementCurrentUIElementRuntimeID As String
-    strParentUIElementCurrentUIElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(eleParentUIElement)
+    strParentUIElementCurrentUIElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(eleParentUIElement)
           
     Dim strCurrentControlType As String
     Dim strCurrentElementAbsoluteXPath As String
@@ -152,7 +160,7 @@ Private Sub GetSiblings( _
   strInitialPPath As String)
   
   Dim strCurrentElementRuntimeID As String
-  strCurrentElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(eleCurrentUIElement)
+  strCurrentElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(eleCurrentUIElement)
   
   Dim eleParentUIElement As UIAutomationClient.IUIAutomationElement
   Set eleParentUIElement = This.TreeWalker.GetParentElement(eleCurrentUIElement)
@@ -177,9 +185,9 @@ Private Sub GetSiblings( _
     
     Set eleChildUIElement = eleChildrenUIElementArray.GetElement(intListItemCounter)
     Dim strCurrentChildElementRuntimeID As String
-    strCurrentChildElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(eleChildUIElement)
+    strCurrentChildElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(eleChildUIElement)
     strCurrentControlType = This.AutomationDictionaries.ControlTypeIDs(eleChildUIElement.CurrentControlType)
-    If controls.exists(strCurrentControlType) Then
+    If controls.Exists(strCurrentControlType) Then
       intInstanceNumber = controls(strCurrentControlType) + 1
       controls(strCurrentControlType) = intInstanceNumber
     Else
@@ -223,7 +231,7 @@ Private Sub GetChildren( _
   Axis As String, _
   strInitialPPath As String, _
   boolGetGrandChildren As Boolean, _
-  Optional ByRef AllAncestorsOrSelfRuntimeIDs As collection, _
+  Optional ByRef AllAncestorsOrSelfRuntimeIDs As Collection, _
   Optional ByRef boolPrecedingOrFollowingRootElementFound As Boolean)
   
   Dim eleChildrenUIElementArray As UIAutomationClient.IUIAutomationElementArray
@@ -254,7 +262,7 @@ Private Sub GetChildren( _
       Set eleChildUIElement = eleChildrenUIElementArray.GetElement(intListItemCounter)
       'If intListItemCounter = 0 Then
       Dim intCurrentSizeOfArray As Integer
-      intCurrentSizeOfArray = Utils.GetSizeOfArray(eleArrayOfChildrenUIElements)
+      intCurrentSizeOfArray = Phosphorus.Utils.GetSizeOfArray(eleArrayOfChildrenUIElements)
       intCurrentSizeOfArray = intCurrentSizeOfArray + 1
       If intCurrentSizeOfArray = 1 Then
         ReDim eleArrayOfChildrenUIElements(intCurrentSizeOfArray)
@@ -263,7 +271,7 @@ Private Sub GetChildren( _
       End If
       Set eleArrayOfChildrenUIElements(intCurrentSizeOfArray) = eleChildUIElement
       strCurrentControlType = This.AutomationDictionaries.ControlTypeIDs(eleChildUIElement.CurrentControlType)
-      If controls.exists(strCurrentControlType) Then
+      If controls.Exists(strCurrentControlType) Then
         intInstanceNumber = controls(strCurrentControlType) + 1
         controls(strCurrentControlType) = intInstanceNumber
       Else
@@ -281,7 +289,7 @@ Private Sub GetChildren( _
       Dim strCurrentElementRuntimeID As String
       If (Axis = Axes.Preceding) Or (Axis = Axes.Following) Then
       
-        strCurrentElementRuntimeID = PPathRuntimeIDs.GetElementRuntimeID(eleChildUIElement)
+        strCurrentElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(eleChildUIElement)
         If strCurrentElementRuntimeID = AllAncestorsOrSelfRuntimeIDs(1) Then
           boolPrecedingOrFollowingRootElementFound = True
           'Now promote preceding elements to Candidate Elements as in reverse order
@@ -339,11 +347,11 @@ Private Sub GetPrecedingOrFollowing( _
   Axis As String)
   
   'Create a collection of self or parent runtime ID's
-  Dim colAllAncestorsOrSelfRuntimeIDs As collection
-  Set colAllAncestorsOrSelfRuntimeIDs = New collection
+  Dim colAllAncestorsOrSelfRuntimeIDs As Collection
+  Set colAllAncestorsOrSelfRuntimeIDs = New Collection
   
   'Add the current element to the list
-  colAllAncestorsOrSelfRuntimeIDs.Add PPathRuntimeIDs.GetElementRuntimeID(eleCurrentUIElement)
+  colAllAncestorsOrSelfRuntimeIDs.Add pPath.RuntimeIDs.GetElementRuntimeID(eleCurrentUIElement)
 
   'Get a list of all ancestors to be excluded from the list of elements
   GetParents eleCurrentUIElement, Axis, Axis & "*/..", True, colAllAncestorsOrSelfRuntimeIDs ', False
@@ -413,5 +421,7 @@ Public Sub GetAttributes( _
   Next Key
 
 End Sub
+
+
 
 

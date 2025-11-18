@@ -152,7 +152,7 @@ Public Sub Raise(exception As Phosphorus.Exceptions, Optional parameter1 As Vari
    
    Case Exceptions.WindowsDriverPatternNotHandled
      ExceptionName = "WindowsDriverPatternNotHandled"
-     ErrorDescription = "Windows Driver UIAutomation Pattern #" & parameter1 & "  not handled!"
+     ErrorDescription = "Windows Driver UIAutomation Pattern #" & parameter1 & " & (" & parameter2 & ") not handled!"
    
    Case Else
      ExceptionName = "UnhandledException"

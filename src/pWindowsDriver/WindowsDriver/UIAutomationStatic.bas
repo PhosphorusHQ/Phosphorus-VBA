@@ -4,6 +4,7 @@ Option Explicit
 
 Public Function GetPatternName(patternId As Long) As String
   Select Case patternId
+    'Members of UIAutomationClient.UIA_PatternIds
     Case UIA_AnnotationPatternId: GetPatternName = "Annotation"
     Case UIA_CustomNavigationPatternId: GetPatternName = "Custom Navigation"
     Case UIA_DockPatternId: GetPatternName = "Dock"

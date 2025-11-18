@@ -35,7 +35,7 @@ Private Sub Workbook_Open()
   'This creates a dynamic reference in pUnit to the target test project
   'End user's will need to replicate this dynamic reference in their test run modules
   Dim strTestWorkbookFilepath As String
-  strTestWorkbookFilepath = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pUnit Tests.xlam")
+  strTestWorkbookFilepath = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pUnit Tests - pWindowsDriver.xlam")
   pUnitTestRuns_pWindowsDriver.References.AddReferenceToWorkbook strTestWorkbookFilepath, "pUnit"
 
 End Sub

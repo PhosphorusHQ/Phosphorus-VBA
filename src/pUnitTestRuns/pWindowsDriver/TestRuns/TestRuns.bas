@@ -11,18 +11,18 @@ Attribute VB_Name = "TestRuns"
 Option Explicit
 
 Sub RunSingleTest()
-  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement", "pUnitTests"
+  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement", "pUnitTests_pWindowsDriver"
 End Sub
 
 Sub RunAllTests()
-  pUnit.TestRunner.RunAllTests "WindowsDriver02PSPipe", "", "pUnitTests"
+  pUnit.TestRunner.RunAllTests "WindowsDriver02PSPipe", "", "pUnitTests_pWindowsDriver"
 End Sub
 
 Sub TestPowerShellPipeClient()
-  pUnit.TestRunner.RunAllTests "WindowsDriver01PSPipe", "TestWindowsPowerShellPipeClient_InvalidCommand", "pUnitTests"
+  pUnit.TestRunner.RunAllTests "WindowsDriver01PSPipe", "TestWindowsPowerShellPipeClient_InvalidCommand", "pUnitTests_pWindowsDriver"
 End Sub
 
 Sub RunSingleTest2()
-  pUnit.TestRunner.RunAllTests "WindowsDriver01", "TestInvalidGetWindowInteractionStateDescription", "pUnitTests"
+  pUnit.TestRunner.RunAllTests "WindowsDriver01", "TestInvalidGetWindowInteractionStateDescription", "pUnitTests_pWindowsDriver"
 End Sub
 

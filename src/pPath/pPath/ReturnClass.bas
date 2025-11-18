@@ -78,7 +78,7 @@ Public Sub AddMatchingElement( _
         strExistingUIElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(TargetMatchingElements.GetMatchingElement(i))
         strExistingUIElementAttributeName = TargetMatchingElements.GetAttributeName(i)
         If strExistingUIElementRuntimeID = "" Then
-          MsgBox "No Unique Property ID for existing element"
+          Debug.Print "No Unique Property ID for existing element"
         ElseIf (strNewUIElementRuntimeID = strExistingUIElementRuntimeID) And (AttributeName = strExistingUIElementAttributeName) Then
           boolElementAddedAlready = True
           Exit For

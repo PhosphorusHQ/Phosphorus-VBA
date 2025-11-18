@@ -118,6 +118,10 @@ Public Function GetProcessID() As Long
   GetProcessID = This.UIAElement.CurrentProcessId
 End Function
 
+'************
+'* PATTERNS *
+'************
+
 Public Function CloseWindow()
   Dim WindowPattern As UIAutomationClient.IUIAutomationWindowPattern
   Set WindowPattern = GetPattern(UIAutomationClient.UIA_WindowPatternId)
@@ -126,14 +130,17 @@ End Function
 
 'Use IUnknown to force a casting to correct type correctly - typesafe
 Function GetPattern(patternId As Long, Optional CheckOnly As Boolean = False) As IUnknown
-  'https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controlpattern-ids
+  'https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controlpattern-idsStop
   Select Case patternId
     Case UIAutomationClient.UIA_WindowPatternId
       Set GetPattern = This.UIAElement.GetCurrentPattern(patternId)
     Case Else
   End Select
   If GetPattern Is Nothing And Not CheckOnly Then
-    Phosphorus.pExceptions.Raise WindowsDriverPatternNotHandled, patternId
+    Phosphorus.pExceptions.Raise _
+      WindowsDriverPatternNotHandled, _
+      patternId, _
+      pWinDriver.UIAutomationStatic.GetPatternName(patternId)
   End If
 End Function
 

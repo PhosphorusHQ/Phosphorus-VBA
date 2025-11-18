@@ -48,6 +48,8 @@ End Sub
 Public Sub Terminate()
   'Close the Driver cleanly
   This.MasterWindowsDriverElement.CloseWindow
+  'Release the MasterWindowsDriverElement
+  Set This.MasterWindowsDriverElement = Nothing
   'Try to kill the process in case the clean close didn't work
   If This.ProcessId <> 0 Then
     Phosphorus.WindowsProcesses.KillProcessByID This.ProcessId
@@ -248,10 +250,15 @@ Public Function FindElement( _
   Set This.CurrentEvaluatedPPath = Nothing
   
   Set CurrentPPath = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
-
   CurrentPPath.Initialise
-  CurrentPPath.SetApplicationRootElement pWinDriver.pWindowsDriverStatic.gUIADesktopUIElement
-  
+
+  'We should have released the MasterWindowsDriverElement when it gets closed!
+  If (This.MasterWindowsDriverElement Is Nothing) Then
+    CurrentPPath.SetApplicationRootElement pWinDriver.pWindowsDriverStatic.gUIADesktopUIElement
+  Else
+    CurrentPPath.SetApplicationRootElement This.MasterWindowsDriverElement.GetUIAElement
+  End If
+
   'Get default timeout if none set (it might be 0!)
   If IsMissing(TimeoutInSeconds) Then
     TimeoutInSeconds = This.ImplicitTimeoutInSeconds
@@ -316,18 +323,29 @@ Public Function FindElement( _
 
 End Function
 
-Public Function ElementExists(ByVal Name, ByVal PPathString As String) As Boolean
-  Me.FindElement Name:=Name, PPathString:=PPathString, TimeoutInSeconds:=0, CheckExistenceOnly:=True
+'Public Function ElementExists(ByVal Name, ByVal PPathString As String) As Boolean
+'  Me.FindElement Name:=Name, PPathString:=PPathString, TimeoutInSeconds:=0, CheckExistenceOnly:=True
+'End Function
+Public Function ElementExists(ByVal ElementName As String, ByVal PPathString As String) As Boolean
+  Dim FoundElement As pWindowsDriverElement
+  Set FoundElement = Me.FindElement(Name:=ElementName, PPathString:=PPathString, TimeoutInSeconds:=0, CheckExistenceOnly:=True)
+  ElementExists = Not (FoundElement Is Nothing)
 End Function
 
 Public Sub WaitUntilElementNotExists( _
-  ByVal Name, _
+  ByVal ElementName, _
   ByVal PPathString As String, _
   Optional ByVal TimeoutInSeconds As Integer)
   If IsMissing(TimeoutInSeconds) Then
     TimeoutInSeconds = This.ImplicitTimeoutInSeconds
   End If
-  MsgBox ElementExists(Name, PPathString)
+  If Not ElementExists(ElementName, PPathString) Then
+    Exit Sub
+  Else
+    Stop
+    'TODO: Need to loop and wait until the element doesn't exist here, or we reach a timeout
+  End If
+ 
 End Sub
 
 

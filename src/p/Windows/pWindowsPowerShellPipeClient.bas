@@ -123,9 +123,10 @@ Private ProcessHandle As LongPtr
 Private myWshShell As wshShell 'Object
 'https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb776890(v=vs.85)
 'Microsoft Shell Controls and Automation (Shell32)
-
 Private ScriptPath As String
 Private Const PIPE_NAME As String = "\\.\pipe\VBAPowerShellPipe"
+Private Const TempDirectory As String = "C:\Temp\"
+Private Const ReadyFlagFile As String = "C:\Temp\PSReady.txt"
 
 Private Sub Class_Initialize()
     
@@ -144,7 +145,16 @@ Private Sub Class_Initialize()
     
   ' Write PowerShell script if it doesn't exist
   WritePowerShellScript
-    
+  
+  'Create the temp directory where the ready flag will be created
+  If VBA.FileSystem.Dir(TempDirectory, VBA.VbFileAttribute.vbDirectory) = "" Then
+    VBA.FileSystem.MkDir TempDirectory
+  End If
+  'Delete the flag in case it already exists
+  If VBA.FileSystem.Dir(ReadyFlagFile) <> "" Then
+    VBA.FileSystem.Kill ReadyFlagFile
+  End If
+  
   ' Start the PowerShell server
   Set myWshShell = New wshShell 'CreateObject("WScript.Shell")
   
@@ -162,14 +172,13 @@ Private Sub Class_Initialize()
     Phosphorus.pExceptions.Raise Phosphorus.Exceptions.PowerShellPipeClientFailedToRetrievePowerShellProcessID
   End If
   
-  'Give time for PowerShell to load
-  ' - Get the DesktopWindowsDriver?
-MsgBox "PJG Need to wait some other way here - pWindriver will not be accessible!"
-'  pWindriver.pWindowsDriverStatic.GetDesktopWindowsDriver
-'  pWindriver.pWindowsDriverStatic.DesktopWindowsDriver.FindElement "PowerShell Window", "/Window[@Name=""Windows PowerShell""]//Text[And(@Name=""Windows PowerShell"",@ClassName=""TermControl"")]/ancestor::Window[@Name=""Windows PowerShell""]"
-
-  ' Wait for the named pipe to be available (5 seconds wait + 30-second timeout)
-  Phosphorus.WindowsProcesses.Snooze 5000
+  'Wait for the named pipe to be available - check for ReadFlagFile exists
+  While VBA.FileSystem.Dir(ReadyFlagFile) = ""
+    Phosphorus.WindowsProcesses.Snooze 100
+  Wend
+  'Delete the flag ready for next launch
+  VBA.FileSystem.Kill ReadyFlagFile
+  
   Dim TimoutSeconds As Integer
   Dim TimeOutMilliseconds As Long
   TimoutSeconds = 30
@@ -304,71 +313,75 @@ Private Function ReadPipeResponse(ByVal PipeHandle As LongPtr) As String
 End Function
 
 Private Sub WritePowerShellScript()
-    Dim fso As Object
-    Dim file As Object
-    Dim scriptContent As String
-    
-    On Error GoTo ErrorHandler
-    
-    ' Check if the script file already exists
-    Set fso = CreateObject("Scripting.FileSystemObject")
-    If fso.FileExists(ScriptPath) Then
-        Exit Sub
-    End If
-    
-    ' PowerShell script content
-scriptContent = "# Define the named pipe name" & vbCrLf & _
-                    "$pipeName = ""VbaPowerShellPipe""" & vbCrLf & _
-                    "$pipe = New-Object System.IO.Pipes.NamedPipeServerStream($pipeName, [System.IO.Pipes.PipeDirection]::InOut)" & vbCrLf & _
-                    "" & vbCrLf & _
-                    "try {" & vbCrLf & _
-                    "    Write-Host ""Waiting for client connection...""" & vbCrLf & _
-                    "    $pipe.WaitForConnection()" & vbCrLf & _
-                    "    Write-Host ""Client connected.""" & vbCrLf & _
-                    "" & vbCrLf & _
-                    "    $reader = New-Object System.IO.StreamReader($pipe)" & vbCrLf & _
-                    "    $writer = New-Object System.IO.StreamWriter($pipe)" & vbCrLf & _
-                    "    $writer.AutoFlush = $true" & vbCrLf & _
-                    "" & vbCrLf & _
-                    "    # Keep the server running to process commands" & vbCrLf & _
-                    "    while ($true) {" & vbCrLf & _
-                    "        # Read command from VBA" & vbCrLf & _
-                    "        $command = $reader.ReadLine()" & vbCrLf & _
-                    "        if ($command -eq ""exit"") { break } # Exit condition" & vbCrLf & _
-                    "" & vbCrLf & _
-                    "        # Echo the received command to the console" & vbCrLf & _
-                    "        Write-Host ""Received command: $command""" & vbCrLf
 
-scriptContent = scriptContent & vbCrLf & _
-  "        try {" & vbCrLf & _
-                    "            # Execute the command and capture output" & vbCrLf & _
-                    "            $result = Invoke-Expression $command -ErrorAction Stop | Out-String" & vbCrLf & _
-                    "            $writer.WriteLine($result)" & vbCrLf & _
-                    "" & vbCrLf & _
-                    "        # Echo the result to the console" & vbCrLf & _
-                    "        Write-Host ""Result: $result""" & vbCrLf & _
-                    "        }" & vbCrLf & _
-                    "        catch {" & vbCrLf & _
-                    "            # Send error back to client" & vbCrLf & _
-                    "            $writer.WriteLine(""Error: $_"")" & vbCrLf & _
-                    "        }" & vbCrLf & _
-                    "    }" & vbCrLf & _
-                    "}" & vbCrLf & _
-                    "finally {" & vbCrLf & _
-                    "    # Clean up" & vbCrLf & _
-                    "    $reader.Dispose()" & vbCrLf & _
-                    "    $writer.Dispose()" & vbCrLf & _
-                    "    $pipe.Dispose()" & vbCrLf & _
-                    "}"
+  Dim fso As Object
+  Dim file As Object
+  Dim scriptContent As String
+    
+  On Error GoTo ErrorHandler
+    
+  ' Check if the script file already exists
+  Set fso = CreateObject("Scripting.FileSystemObject")
+  If fso.FileExists(ScriptPath) Then
+    Exit Sub
+  End If
+        
+  ' PowerShell script content
+  scriptContent = _
+    "# Define the named pipe name" & vbCrLf & _
+    "$pipeName = ""VbaPowerShellPipe""" & vbCrLf & _
+    "$pipe = New-Object System.IO.Pipes.NamedPipeServerStream($pipeName, [System.IO.Pipes.PipeDirection]::InOut)" & vbCrLf & _
+    "" & vbCrLf & _
+    "try {" & vbCrLf & _
+    "    Write-Host ""Waiting for client connection...""" & vbCrLf & _
+    "    # ----------  CREATE READY FLAG  ----------" & vbCrLf & _
+    "    New-Item -Path """ & ReadyFlagFile & """ -ItemType File -Force | Out-Null" & vbCrLf & _
+    "    $pipe.WaitForConnection()" & vbCrLf & _
+    "    Write-Host ""Client connected.""" & vbCrLf & _
+    "" & vbCrLf & _
+    "    $reader = New-Object System.IO.StreamReader($pipe)" & vbCrLf & _
+    "    $writer = New-Object System.IO.StreamWriter($pipe)" & vbCrLf & _
+    "    $writer.AutoFlush = $true" & vbCrLf & _
+    "" & vbCrLf & _
+    "    # Keep the server running to process commands" & vbCrLf & _
+    "    while ($true) {" & vbCrLf & _
+    "        # Read command from VBA" & vbCrLf & _
+    "        $command = $reader.ReadLine()" & vbCrLf & _
+    "        if ($command -eq ""exit"") { break } # Exit condition" & vbCrLf & _
+    "" & vbCrLf & _
+    "        # Echo the received command to the console" & vbCrLf & _
+    "        Write-Host ""Received command: $command""" & vbCrLf
+
+  scriptContent = scriptContent & vbCrLf & _
+    "        try {" & vbCrLf & _
+    "            # Execute the command and capture output" & vbCrLf & _
+    "            $result = Invoke-Expression $command -ErrorAction Stop | Out-String" & vbCrLf & _
+    "            $writer.WriteLine($result)" & vbCrLf & _
+    "" & vbCrLf & _
+    "        # Echo the result to the console" & vbCrLf & _
+    "        Write-Host ""Result: $result""" & vbCrLf & _
+    "        }" & vbCrLf & _
+    "        catch {" & vbCrLf & _
+    "            # Send error back to client" & vbCrLf & _
+    "            $writer.WriteLine(""Error: $_"")" & vbCrLf & _
+    "        }" & vbCrLf & _
+    "    }" & vbCrLf & _
+    "}" & vbCrLf & _
+    "finally {" & vbCrLf & _
+    "    # Clean up" & vbCrLf & _
+    "    $reader.Dispose()" & vbCrLf & _
+    "    $writer.Dispose()" & vbCrLf & _
+    "    $pipe.Dispose()" & vbCrLf & _
+    "}"
 
   ' Write the script to the file
-    Set file = fso.CreateTextFile(ScriptPath, True)
-    file.Write scriptContent
-    file.Close
-    
-    Exit Sub
+  Set file = fso.CreateTextFile(ScriptPath, True)
+  file.Write scriptContent
+  file.Close
+  Exit Sub
 
 ErrorHandler:
-    Err.Raise vbObjectError + 1007, , "Failed to write PowerShell script: " & Err.Description
+  'Raise an exception
+  Phosphorus.pExceptions.Raise Phosphorus.Exceptions.PowerShellPipeClientFailedFailedToWritePowerShellScript, Err.Number, Err.Description
 End Sub
 

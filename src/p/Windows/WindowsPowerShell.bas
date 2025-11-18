@@ -19,7 +19,7 @@ Private Sub GetWindowsPowerShellPipeClient()
   If WindowsPowerShellPipeClient Is Nothing Then
     ' Set PowerShell server visibility
     PSSERVER_VISIBLE = Phosphorus.Configuration.GetValue("PowerShellPipeClient", "Visible", False) ' Set to False to hide the PowerShell window
-     Set WindowsPowerShellPipeClient = New Phosphorus.pWindowsPowerShellPipeClient
+    Set WindowsPowerShellPipeClient = New Phosphorus.pWindowsPowerShellPipeClient
   End If
 End Sub
 

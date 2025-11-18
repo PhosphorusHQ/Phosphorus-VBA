@@ -16,12 +16,13 @@ Public Enum Exceptions
   UnexpectedError = 2
 'PowerShellPipeClientErrors '10,000+
   PowerShellPipeClientWorkbookMustBeSaved = 10001
-  PowerShellPipeClientFailedToRetrievePowerShellProcessID = 10002
-  PowerShellPipeClientPipeNotAvailableWithinTimeout = 10003
-  PowerShellPipeClientFailedToConnectToNamedPipe = 10004
-  PowerShellPipeClientPipeHandleIsInvalid = 10005
-  PowerShellPipeClientFailedToWriteToPipe = 10006
-  PowerShellPipeClientFailedToReadResponse = 10007
+  PowerShellPipeClientFailedFailedToWritePowerShellScript = 10002
+  PowerShellPipeClientFailedToRetrievePowerShellProcessID = 10003
+  PowerShellPipeClientPipeNotAvailableWithinTimeout = 10004
+  PowerShellPipeClientFailedToConnectToNamedPipe = 10005
+  PowerShellPipeClientPipeHandleIsInvalid = 10006
+  PowerShellPipeClientFailedToWriteToPipe = 10007
+  PowerShellPipeClientFailedToReadResponse = 10008
   PowerShellPipeClientPowerShellError = 100099
   
 'Windows Driver Launch Errors 20,000+
@@ -71,7 +72,11 @@ Public Sub Raise(exception As Phosphorus.Exceptions, Optional parameter1 As Vari
     Case Exceptions.PowerShellPipeClientWorkbookMustBeSaved
       ExceptionName = "PowerShellPipeClientWorkbookMustBeSaved"
       ErrorDescription = "Power Shell Pipe Client: workbook must be saved to determine script path"
-      
+  
+    Case Exceptions.PowerShellPipeClientFailedFailedToWritePowerShellScript
+      ExceptionName = "PowerShellPipeClientFailedFailedToWritePowerShellScript"
+      ErrorDescription = "Power Shell Pipe Client: Failed to write PowerShell script - Error #" & parameter1 & ": " & parameter2
+  
     Case Exceptions.PowerShellPipeClientFailedToRetrievePowerShellProcessID
       ExceptionName = "PowerShellPipeClientFailedToRetrievePowerShellProcessID"
       ErrorDescription = "Power Shell Pipe Client: failed to retrieve PowerShell process ID"
@@ -159,7 +164,6 @@ Public Sub Raise(exception As Phosphorus.Exceptions, Optional parameter1 As Vari
      ErrorDescription = "Unhandled Exception for exception code #" & exception
      ErrorNumber = Phosphorus.Exceptions.UnhandledException
   
-   
   End Select
   
   ErrorNumber = VBA.Constants.vbObjectError + ErrorNumber

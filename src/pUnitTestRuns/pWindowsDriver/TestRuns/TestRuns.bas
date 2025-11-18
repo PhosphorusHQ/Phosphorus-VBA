@@ -19,7 +19,9 @@ Sub RunAllTests()
 End Sub
 
 Sub TestPowerShellPipeClient()
-  pUnit.TestRunner.RunAllTests "WindowsDriver01PSPipe", "TestWindowsPowerShellPipeClient_InvalidCommand", "pUnitTests_pWindowsDriver"
+'  pUnit.TestRunner.RunAllTests "WindowsDriver02PSPipe", "TestWindowsPowerShellPipeClient_ValidCommands", "pUnitTests_pWindowsDriver"
+'  pUnit.TestRunner.RunAllTests "WindowsDriver02PSPipe", "TestWindowsPowerShellPipeClient_InvalidCommand", "pUnitTests_pWindowsDriver"
+  pUnit.TestRunner.RunAllTests "WindowsDriver02PSPipe", "", "pUnitTests_pWindowsDriver"
 End Sub
 
 Sub RunSingleTest2()

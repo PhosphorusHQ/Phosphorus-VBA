@@ -130,9 +130,7 @@ Act:
   'Open the browser with the valid page
   pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=30
 Assert:
-  '//Text[@AriaRole=""heading"",@Name="""Example Domain""]
-  '"//Document[@AutomationId=""RootWebArea""]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"
-  Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Document"), isCritical:=True
+  Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Document[@AutomationId=""RootWebArea""]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
   Exit Sub
 ErrorHandler:
   Dim ErrorNumber As Long
@@ -190,7 +188,35 @@ Arrange:
   ExpectedErrorNumber = 0
   On Error GoTo ErrorHandler
 Act:
+  'Open the browser with the valid page
   pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=30
+  'Check the header exists
+  Select Case WebBrowserType
+    Case pWinDriver.pWebBrowserType.MicrosoftEdge
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""description"",@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations."")]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Hyperlink[And(@AriaRole=""link"",@Name=""Learn more"")]"), isCritical:=True
+    Case pWinDriver.pWebBrowserType.Chrome
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""description"",@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations."")]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Hyperlink[And(@AriaRole=""link"",@Name=""Learn more"")]"), isCritical:=True
+    Case pWinDriver.pWebBrowserType.Firefox 'No 1st element!
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Document[@Name=""Example Domain""]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//Document[@Name=""Example Domain""]//Text[@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations.""]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Document[@Name=""Example Domain""]//Hyperlink[And(@AriaRole=""link"",@Name=""Learn more"")]"), isCritical:=True
+    Case pWinDriver.pWebBrowserType.DuckDuckGo
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""description"",@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations."")]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Hyperlink[And(@AriaRole=""link"",@Name=""Learn more"")]"), isCritical:=True
+    Case pWinDriver.pWebBrowserType.Opera ' No 1st or 2nd element!
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//*[@Name=""Example Domain""]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//*[@Name=""Example Domain""]//Text[@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations.""]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Hyperlink[@Name=""Learn more""]"), isCritical:=True
+    Case pWinDriver.pWebBrowserType.Brave
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Pane[@ClassName=""BraveBrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//Pane[@ClassName=""BraveBrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""description"",@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations."")]"), isCritical:=True
+      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Pane[@ClassName=""BraveBrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Hyperlink[And(@AriaRole=""link"",@Name=""Learn more"")]"), isCritical:=True
+  End Select
   Exit Sub
 ErrorHandler:
 Assert:

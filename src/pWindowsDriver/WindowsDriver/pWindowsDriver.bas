@@ -205,6 +205,9 @@ Public Sub Launch( _
       'Check for the Browser Root elements if this is a Web Browser
       If This.DriverType = WebBrowser Then
         CheckForBrowserRootElements
+        If This.WebBrowserType.WebBrowserType = Opera Then
+          CloseAllOtherTabs
+        End If
       End If
       
     End If
@@ -456,4 +459,6 @@ Public Sub WaitUntilElementNotExists( _
   End If
 End Sub
 
-
+Public Sub CloseAllOtherTabs()
+   This.SubDriver.IWindowsDriverWebBrowser_CloseAllOtherTabs
+End Sub

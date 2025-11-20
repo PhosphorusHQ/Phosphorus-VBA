@@ -47,9 +47,9 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   
   This.PPathConfiguration.WebAppTitle = WebAppTitle
   
-  Set ParentWindowsDriver = ParentWindowsDriver
+  Set This.ParentWindowsDriver = ParentWindowsDriver
   Dim InstanceType As pWinDriver.pInstanceType
-  InstanceType = ParentWindowsDriver.GetWindowsDriverWebBrowserType.InstanceType
+  InstanceType = This.ParentWindowsDriver.GetWindowsDriverWebBrowserType.InstanceType
   If InstanceType = 0 Then
     InstanceType = pWinDriver.pInstanceType.Executable
   End If
@@ -62,18 +62,18 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
       'Launch Chrome via executable with no parameters other than the url, if any
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Chrome, "--force-renderer-accessibility " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
     Case pWinDriver.pInstanceType.NewProfile
-      This.TempDirectory = ParentWindowsDriver.CreateTempDirectory
+      This.TempDirectory = This.ParentWindowsDriver.CreateTempDirectory
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Chrome, "--force-renderer-accessibility" & " --user-data-dir=""" & This.TempDirectory & """ " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
       'Override the current path for the new profile sign-in screen
       CurrentPPath = "/Window[@Name=""Google Chrome""]"
     Case pWinDriver.pInstanceType.GuestModeNoSignIn
-      This.TempDirectory = ParentWindowsDriver.CreateTempDirectory
+      This.TempDirectory = This.ParentWindowsDriver.CreateTempDirectory
       ' --bwsi Indicates that the browser is in "browse without sign-in" (Guest session) mode. Should completely disable extensions, sync and bookmarks.
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Chrome, "--force-renderer-accessibility" & " --bwsi" & " --user-data-dir=""" & This.TempDirectory & """ " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
     Case Else
       Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledAppConfiguration, "Chrome, Instance Type: #" & InstanceType
   End Select
-  ParentWindowsDriver.SetPageLoadedElement CurrentPPath, UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
+  This.ParentWindowsDriver.SetPageLoadedElement CurrentPPath, UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
 End Sub
 
 Public Function IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems) As Variant
@@ -97,4 +97,7 @@ Public Function IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType As p
   End Select
 End Function
 
+Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
+  Phosphorus.pExceptions.Raise Phosphorus.Exceptions.MethodNotImplementedYet, "pWindowsDriverChrome.CloseAllOtherTabs"
+End Sub
 

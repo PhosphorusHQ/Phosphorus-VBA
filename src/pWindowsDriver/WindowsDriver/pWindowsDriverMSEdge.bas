@@ -45,9 +45,9 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   
   This.PPathConfiguration.WebAppTitle = WebAppTitle
   
-  Set ParentWindowsDriver = ParentWindowsDriver
+  Set This.ParentWindowsDriver = ParentWindowsDriver
   Dim InstanceType As pWinDriver.pInstanceType
-  InstanceType = ParentWindowsDriver.GetWindowsDriverWebBrowserType.InstanceType
+  InstanceType = This.ParentWindowsDriver.GetWindowsDriverWebBrowserType.InstanceType
   If InstanceType = 0 Then
 'TODO: Make new window the default?
     InstanceType = pWinDriver.pInstanceType.ReuseACurrentOpenInstance
@@ -78,7 +78,7 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--app " & URL, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
     
     Case pWinDriver.pInstanceType.NewProfile
-      This.TempDirectory = ParentWindowsDriver.CreateTempDirectory
+      This.TempDirectory = This.ParentWindowsDriver.CreateTempDirectory
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--user-data-dir=""" & This.TempDirectory & """ --new-window " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
       CurrentPPathOfPageLoadedPPath = "/Window[And(xp:starts-with(@Name,""Sign Up – Create a Free Account""),@ClassName=""Chrome_WidgetWin_1"")]"
       PageLoadedElementExpectedWindowInteractionState = UIAutomationClient.WindowInteractionState.WindowInteractionState_BlockedByModalWindow
@@ -91,7 +91,7 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   
   End Select
   
-  ParentWindowsDriver.SetPageLoadedElement CurrentPPathOfPageLoadedPPath, PageLoadedElementExpectedWindowInteractionState
+  This.ParentWindowsDriver.SetPageLoadedElement CurrentPPathOfPageLoadedPPath, PageLoadedElementExpectedWindowInteractionState
 
 End Sub
 
@@ -115,6 +115,10 @@ Public Function IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType As p
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.PPathConfiguration.HyperlinkNodeAriaRole
   End Select
 End Function
+
+Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
+  Phosphorus.pExceptions.Raise Phosphorus.Exceptions.MethodNotImplementedYet, "pWindowsDriverMSEdge.CloseAllOtherTabs"
+End Sub
 
 '        'TODO: How to open new window for edge?
 

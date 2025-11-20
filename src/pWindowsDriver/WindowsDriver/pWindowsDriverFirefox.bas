@@ -46,9 +46,9 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   
   This.PPathConfiguration.WebAppTitle = WebAppTitle
   
-  Set ParentWindowsDriver = ParentWindowsDriver
+  Set This.ParentWindowsDriver = ParentWindowsDriver
   Dim InstanceType As pWinDriver.pInstanceType
-  InstanceType = ParentWindowsDriver.GetWindowsDriverWebBrowserType.InstanceType
+  InstanceType = This.ParentWindowsDriver.GetWindowsDriverWebBrowserType.InstanceType
   If InstanceType = 0 Then
     InstanceType = pWinDriver.pInstanceType.Executable
   End If
@@ -70,7 +70,7 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
     Case Else
       Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledAppConfiguration, "Firefox, Instance Type: #" & InstanceType
   End Select
-  ParentWindowsDriver.SetPageLoadedElement CurrentPPath, UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
+  This.ParentWindowsDriver.SetPageLoadedElement CurrentPPath, UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
 End Sub
 
 Public Function IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems) As Variant
@@ -94,5 +94,8 @@ Public Function IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType As p
   End Select
 End Function
 
+Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
+  Phosphorus.pExceptions.Raise Phosphorus.Exceptions.MethodNotImplementedYet, "pWindowsDriverFirefox.CloseAllOtherTabs"
+End Sub
 
 

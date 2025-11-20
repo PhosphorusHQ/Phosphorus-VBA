@@ -30,3 +30,5 @@ End Sub
 Public Function GetPPathConfigurationItem(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems) As Variant
 End Function
 
+Public Sub CloseAllOtherTabs()
+End Sub

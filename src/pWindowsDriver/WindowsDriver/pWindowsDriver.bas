@@ -18,11 +18,10 @@ Attribute VB_Exposed = True
 ' =======================================================================
 Option Explicit
 
-Private This As DriverProperties
-
 Private Const DEFAULT_IMPLICIT_TIMEOUT_IN_SECONDS = 30
 Private Const DEFAULT_IMPLICIT_DELAY_BETWEEN_POLLS_IN_MILLISECOND = 10
  
+Private This As DriverProperties
 Private Type DriverProperties
   DriverType As pWinDriver.pWindowsDriverType
   WebBrowserType As pWinDriver.pWindowsDriverWebBrowserType
@@ -32,7 +31,6 @@ Private Type DriverProperties
   PageLoadedElementPPath As String 'PPath of an element that indicates the driver has at least partially loaded
   PageLoadedElementExpectedWindowInteractionState As UIAutomationClient.WindowInteractionState
   PageUnloadedElementPPath As String 'PPath of an element that indicates the driver has now been closed (by it's non-existence)
-'  MasterWindowUIAElement As UIAutomationClient.IUIAutomationElement
   MasterWindowsDriverElement As pWinDriver.pWindowsDriverElement
   ProcessId As Long
   ImplicitTimeoutInSeconds As Integer
@@ -179,7 +177,11 @@ Public Sub Launch( _
         
     End Select
 
-    If This.PageLoadedElementPPath <> "" Then
+    If This.PageLoadedElementPPath = "" Then
+    
+      Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverNoPageLoadElementDefined, AppName, AppTitle
+    
+    Else
     
       'Wait for the Page Load Element
       Dim FoundElement As pWinDriver.pWindowsDriverElement
@@ -189,16 +191,21 @@ Public Sub Launch( _
       'Set This.MasterWindowUIAElement = FoundElement.GetUIAElement
       Set This.MasterWindowsDriverElement = FoundElement
       This.MasterWindowsDriverElement.SetName "MasterWindowsDriverElement"
-      
+
       'Set the default element PPath which indicate the driver has been unloaded/closed
       Me.SetPageUnloadedElementPPath GetPageLoadedElementPPath
    
       'Wait until it is in the right WindowInteractionState
 'TODO: This only applies to (top level?) Window controls?
       FoundElement.WaitForWindowInteractionState This.PageLoadedElementExpectedWindowInteractionState
-            
+
       'Get the App's PID from the PageLoadedElement
       This.ProcessId = FoundElement.GetProcessID
+      
+      'Check for the Browser Root elements if this is a Web Browser
+      If This.DriverType = WebBrowser Then
+        CheckForBrowserRootElements
+      End If
       
     End If
 
@@ -237,6 +244,108 @@ Private Sub CheckHTTPStatusCode(ByVal lstrUrl As String)
     End If
   End If
 End Sub
+
+Private Sub CheckForBrowserRootElements()
+  
+  Dim CurrentPPath As String
+  Dim BrowserRootViewPPath As String
+  BrowserRootViewPPath = GetWebBrowserRootViewPPath
+  CurrentPPath = BrowserRootViewPPath
+  If BrowserRootViewPPath <> "" Then
+    If Not ElementExists("BrowserRootView", CurrentPPath) Then
+      Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverWebBrowserRootViewElementNotFound, CurrentPPath
+    End If
+  End If
+  
+  Dim BrowserRootWebAreaPPath As String
+  BrowserRootWebAreaPPath = GetWebBrowserRootWebAreaPPath
+  CurrentPPath = BrowserRootViewPPath & BrowserRootWebAreaPPath
+  If BrowserRootWebAreaPPath <> "" Then
+    If Not ElementExists("BrowserRootWebAreaPPath", CurrentPPath) Then
+      Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverWebBrowserRootWebAreaElementNotFound, CurrentPPath
+    End If
+  End If
+
+End Sub
+
+Public Function GetWebBrowserFullBrowserRootWebAreaPPath() As String
+  GetWebBrowserFullBrowserRootWebAreaPPath = GetWebBrowserRootViewPPath & GetWebBrowserRootWebAreaPPath
+End Function
+
+Private Function GetWebBrowserRootViewPPath()
+  Dim BrowserRootViewControlType As String
+  Dim BrowserRootViewClassName As String
+  BrowserRootViewControlType = GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.BrowserRootViewControlType)
+  BrowserRootViewClassName = GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.BrowserRootViewClassName)
+  If BrowserRootViewControlType <> "" Then
+    GetWebBrowserRootViewPPath = "//" & BrowserRootViewControlType
+    If BrowserRootViewClassName <> "" Then
+      GetWebBrowserRootViewPPath = GetWebBrowserRootViewPPath & "[@ClassName=""" & BrowserRootViewClassName & """]"
+    End If
+  End If
+End Function
+
+Private Function GetWebBrowserRootWebAreaPPath()
+  Dim BrowserRootWebAreaControlType As String
+  Dim BrowserRootWebAreaAutomationId As String
+  Dim WebAppTitle As String
+  BrowserRootWebAreaControlType = GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.RootWebAreaControlType)
+  BrowserRootWebAreaAutomationId = GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.RootWebAreaAutomationID)
+  WebAppTitle = GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.WebAppTitle)
+  If BrowserRootWebAreaControlType <> "" Then
+    GetWebBrowserRootWebAreaPPath = "//" & BrowserRootWebAreaControlType
+    If BrowserRootWebAreaAutomationId <> "" And WebAppTitle <> "" Then
+      GetWebBrowserRootWebAreaPPath = GetWebBrowserRootWebAreaPPath & _
+        "[And(@AutomationId=""" & BrowserRootWebAreaAutomationId & """,@Name=""" & WebAppTitle & """)]"
+    ElseIf WebAppTitle <> "" Then
+      GetWebBrowserRootWebAreaPPath = GetWebBrowserRootWebAreaPPath & "[@Name=""" & WebAppTitle & """]"
+    End If
+  End If
+End Function
+
+Public Function GetWebBrowserPPathConfigurationItem(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems, Optional Parameter1 As Variant) As Variant
+  Select Case ItemType
+    Case pWinDriver.pWebBrowserPPathConfigurationItems.HeaderNodePPath
+      GetWebBrowserPPathConfigurationItem = GetWebBrowserPPathConfigurationTextItemPPath(pWinDriver.pWebBrowserPPathConfigurationItems.HeaderNodeAriaRole, VBA.Conversion.CStr(Parameter1))
+    Case pWinDriver.pWebBrowserPPathConfigurationItems.TextNodePPath
+      GetWebBrowserPPathConfigurationItem = GetWebBrowserPPathConfigurationTextItemPPath(pWinDriver.pWebBrowserPPathConfigurationItems.TextNodeAriaRole, VBA.Conversion.CStr(Parameter1))
+    Case pWinDriver.pWebBrowserPPathConfigurationItems.HyperlinkNodePPath
+      GetWebBrowserPPathConfigurationItem = GetWebBrowserPPathConfigurationTextItemPPath(pWinDriver.pWebBrowserPPathConfigurationItems.HyperlinkNodeAriaRole, VBA.Conversion.CStr(Parameter1))
+    Case Else
+      GetWebBrowserPPathConfigurationItem = This.SubDriver.IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType)
+  End Select
+End Function
+
+Private Function GetWebBrowserPPathConfigurationTextItemPPath(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems, TextNodeText As String) As String
+  
+  Dim TextNodeControlType As String
+  If ItemType = HyperlinkNodeAriaRole Then
+    TextNodeControlType = "Hyperlink"
+  Else
+    If This.WebBrowserType.WebBrowserType = pWinDriver.pWebBrowserType.Opera Then
+      TextNodeControlType = "*"
+    Else
+      TextNodeControlType = "Text"
+    End If
+  End If
+  
+  Dim TextNodeAriaRole As String
+  TextNodeAriaRole = GetWebBrowserPPathConfigurationItem(ItemType)
+  
+  Dim TextNodePPath As String
+  TextNodePPath = "//" & TextNodeControlType
+  If TextNodeText = "" Then
+    'We have to specify either text and maybe a role or both
+    TextNodePPath = ""
+  ElseIf TextNodeAriaRole = "" Then
+    TextNodePPath = TextNodePPath & "[@Name=""" & TextNodeText & """]"
+  Else
+    TextNodePPath = TextNodePPath & "[And(@AriaRole=""" & TextNodeAriaRole & """,@Name=""" & TextNodeText & """)]"
+  End If
+  
+  GetWebBrowserPPathConfigurationTextItemPPath = TextNodePPath
+
+End Function
 
 Public Function FindElement( _
   ByVal Name As String, _
@@ -345,8 +454,6 @@ Public Sub WaitUntilElementNotExists( _
     Stop
     'TODO: Need to loop and wait until the element doesn't exist here, or we reach a timeout
   End If
- 
 End Sub
-
 
 

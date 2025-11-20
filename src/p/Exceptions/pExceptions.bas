@@ -34,11 +34,14 @@ Public Enum Exceptions
   WindowsDriverMisconfiguredWindowShellFolder = 20006
   WindowsDriverInvalidHTTPStatus = 20007
   WindowsDriverInvalidURL = 20008
-  WindowsDriverUIElementNotFoundBeforeTimeout = 20009
-  WindowsDriverUIElementCondtionOrStateNotMetBeforeTimeout = 20010
-  WindowsDriverCappedSleepTimeoutInSecondsExceeded = 20011
-  WindowsDriverUndefinedWindowInteractionState = 200012
-  WindowsDriverPatternNotHandled = 200013
+  WindowsDriverNoPageLoadElementDefined = 20009
+  WindowsDriverWebBrowserRootViewElementNotFound = 20010
+  WindowsDriverWebBrowserRootWebAreaElementNotFound = 2011
+  WindowsDriverUIElementNotFoundBeforeTimeout = 20012
+  WindowsDriverUIElementCondtionOrStateNotMetBeforeTimeout = 20013
+  WindowsDriverCappedSleepTimeoutInSecondsExceeded = 20014
+  WindowsDriverUndefinedWindowInteractionState = 200015
+  WindowsDriverPatternNotHandled = 200016
   
 End Enum
 
@@ -108,51 +111,63 @@ Public Sub Raise(exception As Phosphorus.Exceptions, Optional parameter1 As Vari
     'Windows Driver Launch Errors
    
     Case Exceptions.WindowsDriverUnhandledDriverType
-      ExceptionName = "UnhandledDriverType"
+      ExceptionName = "WindowsDriverUnhandledDriverType"
       ErrorDescription = "Unhandled Driver Type: " & parameter1
    
     Case Exceptions.WindowsDriverUnhandledWebBrowserType
-      ExceptionName = "UnhandledWebBrowserType"
+      ExceptionName = "WindowsDriverUnhandledWebBrowserType"
       ErrorDescription = "Unhandled Web Browser Type: " & parameter1
    
     Case Exceptions.WindowsDriverFailedToStartProgram
-      ExceptionName = "FailedToStartProgram"
+      ExceptionName = "WindowsDriverFailedToStartProgram"
       ErrorDescription = "Failed to start program: " & parameter1 & " with command: " & parameter2
       
     Case Exceptions.WindowsDriverWindowsAppNotFound
-      ExceptionName = "WindowsAppNotFound"
+      ExceptionName = "WindowsDriverWindowsAppNotFound"
       ErrorDescription = "Windows App: '" & parameter1 & "' not found!"
   
     Case Exceptions.WindowsDriverUnhandledAppConfiguration
-      ExceptionName = "UnhandledAppConfiguration"
+      ExceptionName = "WindowsDriverUnhandledAppConfiguration"
       ErrorDescription = "Unhandled App Configuration: " & parameter1
   
     Case Exceptions.WindowsDriverMisconfiguredWindowShellFolder
-      ExceptionName = "MisconfiguredWindowShellFolder"
+      ExceptionName = "WindowsDriverMisconfiguredWindowShellFolder"
       ErrorDescription = "Windows shell folder " & parameter1 & "' must have a Path or a CLSID specified"
    
     Case Exceptions.WindowsDriverInvalidHTTPStatus
-      ExceptionName = "InvalidHTTPStatus"
+      ExceptionName = "WindowsDriverInvalidHTTPStatus"
       ErrorDescription = "HTTP Status Code #" & parameter2 & " returned for URL: " & parameter1
 
     Case Exceptions.WindowsDriverInvalidURL
-      ExceptionName = "InvalidURL"
+      ExceptionName = "WindowsDriverInvalidURL"
       ErrorDescription = "Invalid URL: " & parameter1 & ", message '" & parameter2 & "'"
 
+    Case Exceptions.WindowsDriverNoPageLoadElementDefined
+      ExceptionName = "WindowsDriverNoPageLoadElementDefined"
+      ErrorDescription = "No Page Load Element Defined for App: " & parameter1 & " (" & parameter2 & ")"
+
+    Case Exceptions.WindowsDriverWebBrowserRootViewElementNotFound
+      ExceptionName = "WindowsDriverWebBrowserRootViewElementNotFound"
+      ErrorDescription = "Web Browser Root View Element Not Found with pPath: " & parameter1
+    
+    Case Exceptions.WindowsDriverWebBrowserRootWebAreaElementNotFound
+      ExceptionName = "WindowsDriverWebBrowserRootWebAreaElementNotFound"
+      ErrorDescription = "Web Browser Root Web Area Element Not Found with pPath: " & parameter1
+    
     Case Exceptions.WindowsDriverUIElementNotFoundBeforeTimeout
-      ExceptionName = "UIElementNotFoundBeforeTimeout"
+      ExceptionName = "WindowsDriverUIElementNotFoundBeforeTimeout"
       ErrorDescription = "Element not found before " & parameter1 & " seconds timeout for PPath: " & parameter2
    
     Case Exceptions.WindowsDriverUIElementCondtionOrStateNotMetBeforeTimeout
-      ExceptionName = "UIElementCondtionOrStateNotMetBeforeTimeout"
+      ExceptionName = "WindowsDriverUIElementCondtionOrStateNotMetBeforeTimeout"
       ErrorDescription = "UI Element '" & parameter1 & "' condition or state '" & parameter2 & "' not met - got '" & parameter3 & "', timout: " & parameter4 & " seconds"
     
     Case Exceptions.WindowsDriverCappedSleepTimeoutInSecondsExceeded
-      ExceptionName = "CappedSleepTimeoutInSecondsExceeded"
+      ExceptionName = "WindowsDriverCappedSleepTimeoutInSecondsExceeded"
       ErrorDescription = "A requested sleep time of " & parameter1 & " seconds is greater than the capped timeout of " & parameter2 & " seconds"
   
    Case Exceptions.WindowsDriverUndefinedWindowInteractionState
-     ExceptionName = "UIElementNotFoundBeforeTimeout"
+     ExceptionName = "WindowsDriverUndefinedWindowInteractionState"
      ErrorDescription = "UndefinedWindowInteractionState #" & parameter1
    
    Case Exceptions.WindowsDriverPatternNotHandled

@@ -42,3 +42,4 @@ Public Function GetPatternName(patternId As Long) As String
     Case Else: GetPatternName = "Unknown (ID: " & patternId & ")"
   End Select
 End Function
+

@@ -160,5 +160,3 @@ Sub TestAddReference()
     MsgBox "Failed to open the workbook."
   End If
 End Sub
-
-

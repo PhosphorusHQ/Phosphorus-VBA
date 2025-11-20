@@ -190,33 +190,50 @@ Arrange:
 Act:
   'Open the browser with the valid page
   pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=30
-  'Check the header exists
-  Select Case WebBrowserType
-    Case pWinDriver.pWebBrowserType.MicrosoftEdge
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""description"",@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations."")]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Hyperlink[And(@AriaRole=""link"",@Name=""Learn more"")]"), isCritical:=True
-    Case pWinDriver.pWebBrowserType.Chrome
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""description"",@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations."")]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Hyperlink[And(@AriaRole=""link"",@Name=""Learn more"")]"), isCritical:=True
-    Case pWinDriver.pWebBrowserType.Firefox 'No 1st element!
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Document[@Name=""Example Domain""]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//Document[@Name=""Example Domain""]//Text[@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations.""]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Document[@Name=""Example Domain""]//Hyperlink[And(@AriaRole=""link"",@Name=""Learn more"")]"), isCritical:=True
-    Case pWinDriver.pWebBrowserType.DuckDuckGo
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""description"",@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations."")]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Pane[@ClassName=""BrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Hyperlink[And(@AriaRole=""link"",@Name=""Learn more"")]"), isCritical:=True
-    Case pWinDriver.pWebBrowserType.Opera ' No 1st or 2nd element!
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//*[@Name=""Example Domain""]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//*[@Name=""Example Domain""]//Text[@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations.""]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Hyperlink[@Name=""Learn more""]"), isCritical:=True
-    Case pWinDriver.pWebBrowserType.Brave
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Pane[@ClassName=""BraveBrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", "//Pane[@ClassName=""BraveBrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Text[And(@AriaRole=""description"",@Name=""This domain is for use in documentation examples without needing permission. Avoid use in operations."")]"), isCritical:=True
-      Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", "//Pane[@ClassName=""BraveBrowserRootView""]//Document[And(@AutomationId=""RootWebArea"",@Name=""Example Domain"")]//Hyperlink[And(@AriaRole=""link"",@Name=""Learn more"")]"), isCritical:=True
-  End Select
+  
+  Dim FullBrowserRootWebAreaPPath As String
+  FullBrowserRootWebAreaPPath = pWindowsDriver.GetWebBrowserFullBrowserRootWebAreaPPath()
+Debug.Print FullBrowserRootWebAreaPPath
+    
+  Dim CurrentPPath As String
+    
+  Dim HeaderNodeText As String
+  Dim HeaderNodePPath As String
+  If WebBrowserType = pWebBrowserType.Opera Then
+    HeaderNodeText = ""
+  Else
+    HeaderNodeText = "Example Domain"
+  End If
+  HeaderNodePPath = pWindowsDriver.GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HeaderNodePPath, HeaderNodeText)
+  CurrentPPath = FullBrowserRootWebAreaPPath & HeaderNodePPath
+  If HeaderNodePPath <> "" Then
+Debug.Print "HeaderNodePPath: " & CurrentPPath
+MsgBox pWindowsDriver.ElementExists("Header", CurrentPPath)
+    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", CurrentPPath), isCritical:=True
+  End If
+  
+  Dim TextNodeText As String
+  Dim TextNodePPath As String
+  TextNodeText = "This domain is for use in documentation examples without needing permission. Avoid use in operations."
+  TextNodePPath = pWindowsDriver.GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.TextNodePPath, TextNodeText)
+  CurrentPPath = FullBrowserRootWebAreaPPath & TextNodePPath
+  If TextNodePPath <> "" Then
+Debug.Print "TextNodePPath: " & CurrentPPath
+MsgBox pWindowsDriver.ElementExists("Text", CurrentPPath)
+    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", CurrentPPath), isCritical:=True
+  End If
+
+  Dim HyperlinkNodeText As String
+  Dim HyperlinkNodePPath As String
+  HyperlinkNodeText = "Learn more"
+  HyperlinkNodePPath = pWindowsDriver.GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HyperlinkNodePPath, HyperlinkNodeText)
+  CurrentPPath = FullBrowserRootWebAreaPPath & HyperlinkNodePPath
+  If HyperlinkNodePPath <> "" Then
+Debug.Print "HyperlinkNodePPath: " & CurrentPPath
+MsgBox pWindowsDriver.ElementExists("Hyperlink", CurrentPPath)
+    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", CurrentPPath), isCritical:=True
+  End If
+
   Exit Sub
 ErrorHandler:
 Assert:
@@ -228,81 +245,99 @@ Assert:
   End If
 End Sub
 
+'**************************************
 'Test all options for launching MSEDGE
+'**************************************
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_ReuseACurrentOpenInstance()
 'Check for no error if we open the URL in the current browser with a valid page load element - ReuseACurrentOpenInstance Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.ReuseACurrentOpenInstance
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_Executable()
 'Check for no error if we open the URL in the current browser with a valid page load element - Executable Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.Executable
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_NewWindow()
 'Check for no error if we open the URL in the current browser with a valid page load element - NewWindow Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.NewWindow
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_AppMode()
 'Check for no error if we open the URL in the current browser with a valid page load element - AppMode Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.AppMode
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_NewProfile()
 'Check for no error if we open the URL in the current browser with a valid page load element - NewProfile Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.NewProfile
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_ApplicationUserModelID()
 'Check for no error if we open the URL in the current browser with a valid page load element - ApplicationUserModelID Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.ApplicationUserModelID
 End Sub
 
+'**************************************
 'Test other browsers
+'**************************************
+
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_DuckDuckGo_ApplicationUserModelID() 'DuckDuckGo is only an app?
 'Check for no error if we open the URL in the current browser with a valid page load element - ApplicationUserModelID Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.DuckDuckGo, pWinDriver.pInstanceType.ApplicationUserModelID
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Chrome_Executable()
 'Check for no error if we open the URL in the current browser with a valid page load element - Executable Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Chrome, pWinDriver.pInstanceType.Executable
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Chrome_NewProfile()
 'Check for no error if we open the URL in the current browser with a valid page load element - NewProfile Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Chrome, pWinDriver.pInstanceType.NewProfile
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Chrome_GuestModeNoSignIn()
 'Check for no error if we open the URL in the current browser with a valid page load element - GuestModeNoSignIn Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Chrome, pWinDriver.pInstanceType.GuestModeNoSignIn
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Firefox_Executable()
 'Check for no error if we open the URL in the current browser with a valid page load element - Executable Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Firefox, pWinDriver.pInstanceType.Executable
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Opera_Executable()
 'Check for no error if we open the URL in the current browser with a valid page load element - Executable Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Opera, pWinDriver.pInstanceType.Executable
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Brave_Executable()
 'Check for no error if we open the URL in the current browser with a valid page load element - Executable Instance Type
@@ -314,7 +349,6 @@ End Sub
 'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe
 'TOR
 'https://www.torproject.org/download/
-
 
 Private Sub ValidPageLoadElementForApps(App As Phosphorus.WindowsApp)
 'Check for no error if we open an app

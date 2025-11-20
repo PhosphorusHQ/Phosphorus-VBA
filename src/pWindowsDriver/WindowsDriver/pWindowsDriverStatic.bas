@@ -40,6 +40,34 @@ Public Enum pInstanceType
   ApplicationUserModelID = 7
 End Enum
 
+Public Enum pWebBrowserPPathConfigurationItems
+  WebAppTitle
+  BrowserRootViewControlType
+  BrowserRootViewClassName
+  RootWebAreaControlType
+  RootWebAreaAutomationID
+  HeaderNodeAriaRole
+  HeaderNodePPath
+  TextNodeAriaRole
+  TextNodePPath
+  HyperlinkNodeAriaRole
+  HyperlinkNodePPath
+End Enum
+
+Public Type pWebBrowserPPathConfiguration
+  WebAppTitle As String
+  BrowserRootViewControlType As String
+  BrowserRootViewClassName As String
+  RootWebAreaControlType As String
+  RootWebAreaAutomationID As String
+  HeaderNodeAriaRole As String
+  HeaderNodePPath As String
+  TextNodeAriaRole As String
+  TextNodePPath As String
+  HyperlinkNodeAriaRole As String
+  HyperlinkNodePPath As String
+End Type
+
 Public Function GetNewPDriver(dType As pWinDriver.pWindowsDriverType) As pWinDriver.pWindowsDriver
   Set GetNewPDriver = New pWinDriver.pWindowsDriver
   GetNewPDriver.SetDriverType dType

@@ -193,7 +193,6 @@ Act:
   
   Dim FullBrowserRootWebAreaPPath As String
   FullBrowserRootWebAreaPPath = pWindowsDriver.GetWebBrowserFullBrowserRootWebAreaPPath()
-Debug.Print FullBrowserRootWebAreaPPath
     
   Dim CurrentPPath As String
     
@@ -207,9 +206,7 @@ Debug.Print FullBrowserRootWebAreaPPath
   HeaderNodePPath = pWindowsDriver.GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HeaderNodePPath, HeaderNodeText)
   CurrentPPath = FullBrowserRootWebAreaPPath & HeaderNodePPath
   If HeaderNodePPath <> "" Then
-Debug.Print "HeaderNodePPath: " & CurrentPPath
-MsgBox pWindowsDriver.ElementExists("Header", CurrentPPath)
-    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", CurrentPPath), isCritical:=True
+    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", CurrentPPath), "Check for 'Example Domain' Header Element", isCritical:=True
   End If
   
   Dim TextNodeText As String
@@ -218,9 +215,7 @@ MsgBox pWindowsDriver.ElementExists("Header", CurrentPPath)
   TextNodePPath = pWindowsDriver.GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.TextNodePPath, TextNodeText)
   CurrentPPath = FullBrowserRootWebAreaPPath & TextNodePPath
   If TextNodePPath <> "" Then
-Debug.Print "TextNodePPath: " & CurrentPPath
-MsgBox pWindowsDriver.ElementExists("Text", CurrentPPath)
-    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", CurrentPPath), isCritical:=True
+    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", CurrentPPath), "Check for 'Example Domain' Text Element", isCritical:=True
   End If
 
   Dim HyperlinkNodeText As String
@@ -229,9 +224,7 @@ MsgBox pWindowsDriver.ElementExists("Text", CurrentPPath)
   HyperlinkNodePPath = pWindowsDriver.GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HyperlinkNodePPath, HyperlinkNodeText)
   CurrentPPath = FullBrowserRootWebAreaPPath & HyperlinkNodePPath
   If HyperlinkNodePPath <> "" Then
-Debug.Print "HyperlinkNodePPath: " & CurrentPPath
-MsgBox pWindowsDriver.ElementExists("Hyperlink", CurrentPPath)
-    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", CurrentPPath), isCritical:=True
+    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", CurrentPPath), "Check for 'Example Domain' Hypelink Element", isCritical:=True
   End If
 
   Exit Sub

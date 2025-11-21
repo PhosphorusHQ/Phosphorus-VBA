@@ -172,8 +172,8 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
     NextStep.NodeTest = "text()"
     strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, 7, VBA.Strings.Len(strRemainingPPath))
   ElseIf strRemainingPPath = "" Then
-    This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NO_NODETEST_PPATH_ERROR_MESSAGE
-    This.PPathReturnClass.RemoveAllMatchingElements
+    This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NO_NODETEST_PPATH_ERROR_MESSAGE
+    This.pPathReturnClass.RemoveAllMatchingElements
   Else
     For intCharacter = 1 To VBA.Strings.Len(strRemainingPPath)
       Dim intEndOfNodeTest As Integer
@@ -202,7 +202,7 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
       IsAValidNodeTestType = This.AutomationDictionaries.ValueExists(NextStep.NodeTest, This.AutomationDictionaries.ControlTypeIDs)
     End If
     If Not IsAValidNodeTestType Then
-      This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " '" & NextStep.NodeTest & "'!"
+      This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.INVALID_NODETEST_PPATH_ERROR_MESSAGE & " '" & NextStep.NodeTest & "'!"
       Exit Function
     End If
   End If
@@ -252,10 +252,10 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
     NextStep.AddPredicates strNextPredicates
       
   Else
-    This.PPathReturnClass.SetErrorMessage = _
+    This.pPathReturnClass.SetErrorMessage = _
       pPath.ConstantsAndStatic.ILLEGAL_START_OF_PREDICATE_ERROR_MESSAGE & _
       " '" & VBA.Strings.Left(strRemainingPPath, 1) & "'"
-    This.PPathReturnClass.RemoveAllMatchingElements
+    This.pPathReturnClass.RemoveAllMatchingElements
   End If
 
   NextStep.RemainingPPath = strRemainingPPath

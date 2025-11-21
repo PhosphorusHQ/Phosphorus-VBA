@@ -18,8 +18,6 @@ Attribute VB_Exposed = False
 ' =======================================================================
 Option Explicit
 
-Public DebugMode As Boolean
-
 Public AutomationDictionaries As UIAutomationDictionaries
 
 Public UIAutomation As CUIAutomation
@@ -33,5 +31,5 @@ Public Axes As pPath.Axes
 Public NodeTests As pPath.NodeTests
 Public Predicates As pPath.Predicates
 
-Public PPathReturnClass As pPath.ReturnClass
+Public pPathReturnClass As pPath.ReturnClass
 

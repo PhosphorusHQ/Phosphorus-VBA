@@ -252,12 +252,14 @@ Public Property Get level() As Long
   level = currentLogLevel
 End Property
 
-Public Sub SetTempLevel(newLevel As Long)
+Public Sub SetTempLevel(newLevel As LogLevel)
+  Logger.ExternalInfo "Log level set to " & Log4PStatic.GetLevelName(newLevel)
   previousLogLevel = currentLogLevel
   currentLogLevel = newLevel
 End Sub
 
 Public Sub RestoreLevel()
+  Logger.ExternalInfo "Log level reset to " & Log4PStatic.GetLevelName(previousLogLevel)
   currentLogLevel = previousLogLevel
 End Sub
 
@@ -320,22 +322,9 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
   Dim timeDiff As Double
   Dim microSeconds As Long
   
-  Select Case level
-    Case INTERNAL_TRACE: levelStr = "INTERNAL_TRACE"
-    Case INTERNAL_DEBUG: levelStr = "INTERNAL_DEBUG"
-    Case INTERNAL_INFO: levelStr = "INTERNAL_INFO"
-    Case INTERNAL_WARNING: levelStr = "INTERNAL_WARNING"
-    Case INTERNAL_ERROR: levelStr = "INTERNAL_ERROR"
-    Case INTERNAL_FATAL: levelStr = "INTERNAL_FATAL"
-    Case EXTERNAL_TRACE: levelStr = "EXTERNAL_TRACE"
-    Case EXTERNAL_DEBUG: levelStr = "EXTERNAL_DEBUG"
-    Case EXTERNAL_INFO: levelStr = "EXTERNAL_INFO"
-    Case EXTERNAL_WARNING: levelStr = "EXTERNAL_WARNING"
-    Case EXTERNAL_ERROR: levelStr = "EXTERNAL_ERROR"
-    Case EXTERNAL_FATAL: levelStr = "EXTERNAL_FATAL"
-  End Select
+  levelStr = Log4PStatic.GetLevelName(level)
   
-  'Do not change the log entry if we are writign the header row to the log file
+  'Do not change the log entry if we are writing the header row to the log file
   If VBA.Strings.InStr(1, message, "Timestamp") = 1 Then
     logEntry = message & vbCrLf
   Else

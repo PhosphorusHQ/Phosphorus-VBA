@@ -89,6 +89,7 @@ Public Sub AddMatchingElement( _
 
   'Do not add elements that have been added already or transient elements that have no runtime ID
   If (Not boolElementAddedAlready) And (strNewUIElementRuntimeID <> "") Then
+    Logger.InternalDebug "Adding Matching Element pPath: " & pPathToAdd
     TargetMatchingElements.AddMatchingElement TargetMatchingElements.GetNumberOfMatchingElements + 1, MatchingElement, AttributeName, pPathToAdd
   End If
   

@@ -43,7 +43,7 @@ Public LastCreatedPUnitLogFile As String
 Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, Optional targetProjectName As String = "")
 
   Phosphorus.Log4PStatic.GetLogger
-        
+  
   Set MethodSignatures = CreateObject("Scripting.Dictionary") ' Initialize signature cache
   TotalTestMethodDuration = 0
   TotalSetupDuration = 0

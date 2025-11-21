@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
-'@Folder pPath
+  '@Folder pPath
 ' =======================================================================
 '  Phosphorus Test & Automation Suite
 '  Copyright (c) 2025 Peter Jeffrey Gale
@@ -33,7 +33,6 @@ Public Sub Initialise()
   Set This = New pPath.Common
   Erase leleContextNodes
   Erase lstrInitialPPaths
-  This.DebugMode = False
   If This.UIAutomation Is Nothing Then
     Set This.UIAutomation = New CUIAutomation
     'Set initial root element as the whole Desktop
@@ -77,18 +76,10 @@ Public Sub AddContextNode(ContextNode As UIAutomationClient.IUIAutomationElement
   lstrInitialPPaths(i) = InitialPPath
 End Sub
 
-Public Property Let SetDebugMode(boolDebugMode As Boolean)
-  This.DebugMode = boolDebugMode
-End Property
-
-Public Property Get GetDebugMode() As Boolean
-  GetDebugMode = This.DebugMode
-End Property
-
 Public Sub InitialiseEvaluation(intNumberOfXPathExpressions As Integer)
   pPath.ConstantsAndStatic.InitialiseAxesTypes
-  Set This.PPathReturnClass = Nothing
-  Set This.PPathReturnClass = pPath.ConstantsAndStatic.GetNewPhosphorusPPathReturnClass(intNumberOfXPathExpressions)
+  Set This.pPathReturnClass = Nothing
+  Set This.pPathReturnClass = pPath.ConstantsAndStatic.GetNewPhosphorusPPathReturnClass(intNumberOfXPathExpressions)
 End Sub
  
 'See: https://www.w3schools.com/xml/xpath_syntax.asp
@@ -100,14 +91,17 @@ Public Function Evaluate( _
   ByVal FullLocationPathExpression As String, _
   Optional ContextNode As UIAutomationClient.IUIAutomationElement, _
   Optional InitialPPath As String, _
-  Optional UnitTestingMode As Boolean _
-  ) As pPath.ReturnClass
+  Optional UnitTestingMode As Boolean) As pPath.ReturnClass
 
+  Logger.InternalTrace "Entering 'pPath.Core.Evaluate' function"
   Logger.InternalInfo "Evaluating PPath: " & FullLocationPathExpression
 
+  Logger.InternalTrace "Checking for Context Node"
   If Not ContextNode Is Nothing Then 'An InitialPPath should also be provided
-    'Add first context node
+    Logger.InternalDebug "Adding first context node: " & InitialPPath
     AddContextNode ContextNode, InitialPPath, True
+  Else
+    Logger.InternalDebug "Initial pPath: " & VBA.Interaction.IIf(InitialPPath = "", "{null}", InitialPPath)
   End If
 
   This.UnitTestingMode = UnitTestingMode
@@ -153,8 +147,8 @@ Public Function Evaluate( _
   lintNumberOfXPathExpressions = UBound(strAllXPathExpressions)
   
   InitialiseEvaluation lintNumberOfXPathExpressions
-  This.PPathReturnClass.TopLevelFunctionPrefix = strTopLevelFunctionPrefix
-  This.PPathReturnClass.TopLevelFunctionSuffix = strTopLevelFunctionSuffix
+  This.pPathReturnClass.TopLevelFunctionPrefix = strTopLevelFunctionPrefix
+  This.pPathReturnClass.TopLevelFunctionSuffix = strTopLevelFunctionSuffix
 
   If Not PreValidateFullPPathExpression(FullLocationPathExpression) Then
     GoTo ExitFunction:
@@ -203,7 +197,7 @@ Public Function Evaluate( _
       Set CurrentContextNode = leleContextNodes(intNumberOfTargetContextNode)
       strInitialPPathForCurrentExpression = lstrInitialPPaths(intNumberOfTargetContextNode)
       If strInitialPPathForCurrentExpression = "" Then
-        This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.MISSING_CONTEXT_NODE_INITIAL_PPATH
+        This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.MISSING_CONTEXT_NODE_INITIAL_PPATH
         GoTo ExitFunction:
       End If
       strCurrentLocationPathExpression = VBA.Strings.Mid(strCurrentLocationPathExpression, 2, VBA.Strings.Len(strCurrentLocationPathExpression))
@@ -213,8 +207,8 @@ Public Function Evaluate( _
     End If
     
     'Start each Location Path Expression at the Current Context Node
-    This.PPathReturnClass.AddMatchingElement _
-      This.PPathReturnClass.GetWorkingCopyOfCandidateElements(This.CurrentLocationPathExpressionCounter), _
+    This.pPathReturnClass.AddMatchingElement _
+      This.pPathReturnClass.GetWorkingCopyOfCandidateElements(This.CurrentLocationPathExpressionCounter), _
       CurrentContextNode, _
       "", _
       strInitialPPathForCurrentExpression
@@ -232,7 +226,7 @@ Public Function Evaluate( _
         ReDim Preserve mySteps(intStepCounter) As pPath.Step
       End If
       Set mySteps(intStepCounter) = This.Steps.GetNextStep(strRemainingPPath)
-      If This.PPathReturnClass.GetErrorMessage <> "" Then
+      If This.pPathReturnClass.GetErrorMessage <> "" Then
         GoTo ExitFunction:
       End If
       strRemainingPPath = mySteps(intStepCounter).RemainingPPath
@@ -247,31 +241,31 @@ Public Function Evaluate( _
     
       'Check for error messages with the next step
       If myNextStep.Axis = Axes.None Then
-        This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NULL_PPATH_ERROR_MESSAGE
+        This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NULL_PPATH_ERROR_MESSAGE
       ElseIf myNextStep.NodeTest = "" And myNextStep.Axis <> Axes.SelfShorthand And myNextStep.Axis <> Axes.ParentShorthand Then
         'Don't raise this error for the self:: and parent:: axes!
-        This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NO_NODETEST_PPATH_ERROR_MESSAGE
-      ElseIf This.PPathReturnClass.GetErrorMessage <> "" Then
+        This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NO_NODETEST_PPATH_ERROR_MESSAGE
+      ElseIf This.pPathReturnClass.GetErrorMessage <> "" Then
         'Some other Next Step error message return, so skip to end here!
       Else
 
         This.Axes.ProcessNextAxis myNextStep
-        This.PPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
+        This.pPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
         
         This.NodeTests.ProcessNextNodeTest myNextStep
    
         If myNextStep.NumberOfPredicateSets > 0 Then
-          This.PPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
+          This.pPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
           This.Predicates.ProcessPredicates myNextStep
         End If
         
         'Don't MoveCandidateElementsToWorkingCopy at the last action if we have no more PPath, ie. another step to process
         If myNextStep.RemainingPPath <> "" Then
-          This.PPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
+          This.pPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
         End If
       
       End If
-      If This.PPathReturnClass.GetErrorMessage <> "" Then
+      If This.pPathReturnClass.GetErrorMessage <> "" Then
         Exit For
       End If
      
@@ -279,19 +273,19 @@ Public Function Evaluate( _
 
   Next intLocationPathExpressionCounter
   
-  This.PPathReturnClass.PromoteCandidateElementsToMatchingElements
+  This.pPathReturnClass.PromoteCandidateElementsToMatchingElements
     
   'Set a return value - apply top level functions
-  If This.PPathReturnClass.TopLevelFunctionPrefix = "count(" And This.PPathReturnClass.TopLevelFunctionSuffix = ")" Then
-    This.PPathReturnClass.ReturnedValue = This.PPathReturnClass.GetFinalNumberOfMatchingElements
-  ElseIf This.PPathReturnClass.TopLevelFunctionPrefix = "not(" And This.PPathReturnClass.TopLevelFunctionSuffix = ")" Then
-    This.PPathReturnClass.ReturnedValue = (This.PPathReturnClass.GetFinalNumberOfMatchingElements > 0)
-  ElseIf This.PPathReturnClass.TopLevelFunctionPrefix <> "" Then
+  If This.pPathReturnClass.TopLevelFunctionPrefix = "count(" And This.pPathReturnClass.TopLevelFunctionSuffix = ")" Then
+    This.pPathReturnClass.ReturnedValue = This.pPathReturnClass.GetFinalNumberOfMatchingElements
+  ElseIf This.pPathReturnClass.TopLevelFunctionPrefix = "not(" And This.pPathReturnClass.TopLevelFunctionSuffix = ")" Then
+    This.pPathReturnClass.ReturnedValue = (This.pPathReturnClass.GetFinalNumberOfMatchingElements > 0)
+  ElseIf This.pPathReturnClass.TopLevelFunctionPrefix <> "" Then
     Dim i As Integer
     Dim c As Integer
-    c = This.PPathReturnClass.GetFinalNumberOfMatchingElements
+    c = This.pPathReturnClass.GetFinalNumberOfMatchingElements
     If c = 0 Then
-      This.PPathReturnClass.ReturnedValue = 0
+      This.pPathReturnClass.ReturnedValue = 0
     Else
 '      Excel.Application.ScreenUpdating = False
       pPath.Workbook.OpenWB
@@ -306,44 +300,44 @@ Public Function Evaluate( _
       Erase larrTopLevelFunctionArray
       ReDim larrTopLevelFunctionArray(c - 1)
       For i = 1 To c
-        varValue = pPath.Utils.GetValue(This.PPathReturnClass.GetMatchingElement(i))
+        varValue = pPath.Utils.GetValue(This.pPathReturnClass.GetMatchingElement(i))
         larrTopLevelFunctionArray(i - 1) = varValue
       Next i
 '      PPathWS.Activate
       PPathWS.Range("A1:A" & c).Value = Application.Transpose(larrTopLevelFunctionArray)
 '      varValue = PPathWS.Evaluate(this.PPathReturnClass.TopLevelFunctionPrefix & "A1:A" & c & this.PPathReturnClass.TopLevelFunctionSuffix)
-      PPathWS.Range("B1").Formula = "=" & This.PPathReturnClass.TopLevelFunctionPrefix & "A1:A" & c & This.PPathReturnClass.TopLevelFunctionSuffix
+      PPathWS.Range("B1").Formula = "=" & This.pPathReturnClass.TopLevelFunctionPrefix & "A1:A" & c & This.pPathReturnClass.TopLevelFunctionSuffix
       PPathWS.Range("B1").Calculate
       varValue = PPathWS.Range("B1").Value
       PPathWS.Cells.ClearContents
       VBA.Interaction.DoEvents
 '      Excel.Application.ScreenUpdating = True
-      This.PPathReturnClass.ReturnedValue = varValue
+      This.pPathReturnClass.ReturnedValue = varValue
     End If
   Else
     ' Default is the 'effective boolean value'
-    This.PPathReturnClass.ReturnedValue = (This.PPathReturnClass.GetFinalNumberOfMatchingElements > 0)
+    This.pPathReturnClass.ReturnedValue = (This.pPathReturnClass.GetFinalNumberOfMatchingElements > 0)
   End If
 
 ExitFunction:
-    Set Evaluate = This.PPathReturnClass
+    Set Evaluate = This.pPathReturnClass
   
 End Function
 
 Private Function PreValidateFullPPathExpression(pPathToValidate As String) As Boolean
 
   If pPathToValidate = "" Then
-    This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NULL_PPATH_ERROR_MESSAGE
+    This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NULL_PPATH_ERROR_MESSAGE
     PreValidateFullPPathExpression = False
     Exit Function
   End If
   If GetCountOfInstancesOfACharacterInAString("(", pPathToValidate) <> GetCountOfInstancesOfACharacterInAString(")", pPathToValidate) Then
-    This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.MISMATCHING_PARENTHESES_ERROR_MESSAGE
+    This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.MISMATCHING_PARENTHESES_ERROR_MESSAGE
     PreValidateFullPPathExpression = False
     Exit Function
   End If
   If GetCountOfInstancesOfACharacterInAString("[", pPathToValidate) <> GetCountOfInstancesOfACharacterInAString("]", pPathToValidate) Then
-    This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.MISMATCHING_SQUARE_BARCKETS_ERROR_MESSAGE
+    This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.MISMATCHING_SQUARE_BARCKETS_ERROR_MESSAGE
     PreValidateFullPPathExpression = False
     Exit Function
   End If
@@ -352,7 +346,7 @@ Private Function PreValidateFullPPathExpression(pPathToValidate As String) As Bo
   If intUnexpectedBracket > 0 Then
     Dim strUnexpectedBracketType As String
     strUnexpectedBracketType = VBA.Strings.Mid(pPathToValidate, intUnexpectedBracket, 1)
-    This.PPathReturnClass.SetErrorMessage = "Unexpected '" & strUnexpectedBracketType & "' Bracket at position " & intUnexpectedBracket
+    This.pPathReturnClass.SetErrorMessage = "Unexpected '" & strUnexpectedBracketType & "' Bracket at position " & intUnexpectedBracket
     PreValidateFullPPathExpression = False
     Exit Function
   End If
@@ -403,7 +397,7 @@ Pass:
   Exit Function
 
 Fail:
-  This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.INVALID_PROPERTY_ERROR_MESSAGE
+  This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.INVALID_PROPERTY_ERROR_MESSAGE
   PreValidateFullPPathExpression = False
 
 End Function
@@ -473,14 +467,14 @@ Private Function PreValidateSplitPPathExpression(pPathArray() As String, Context
   iCount = UBound(pPathArray)
   For iCounter = 1 To iCount
     If pPathArray(iCounter) = "" Then
-      This.PPathReturnClass.SetErrorMessage = "PPath #" & iCounter & ": " & pPath.ConstantsAndStatic.NULL_PPATH_ERROR_MESSAGE
+      This.pPathReturnClass.SetErrorMessage = "PPath #" & iCounter & ": " & pPath.ConstantsAndStatic.NULL_PPATH_ERROR_MESSAGE
       PreValidateSplitPPathExpression = False
       Exit Function
     End If
     If (VBA.Strings.Left(pPathArray(iCounter), 2) <> "//") And (VBA.Strings.Left(pPathArray(iCounter), 1) <> "/") Then
       ' We have a relative PPath
       If intNumberOfContextNodes = 0 Then
-        This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.MISSING_RELATIVE_PPATH_CONTEXT_NODE
+        This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.MISSING_RELATIVE_PPATH_CONTEXT_NODE
         PreValidateSplitPPathExpression = False
         Exit Function
       Else
@@ -492,13 +486,13 @@ Private Function PreValidateSplitPPathExpression(pPathArray() As String, Context
   Next iCounter
   
   If intNumberOfContextNodes >= 1 And Not boolContextModeUsed Then
-    This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.UNUSED_RELATIVE_PPATH_CONTEXT_NODE
+    This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.UNUSED_RELATIVE_PPATH_CONTEXT_NODE
     PreValidateSplitPPathExpression = False
     Exit Function
   End If
   
   If intNumberOfContextNodes > 1 And (intNumberOfContextNodes <> intNumberOfRelativeExpressions) Then
-    This.PPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NUMBER_OF_RELATIVE_PPATHS_TO_CONTEXT_NODES_MISMATCH
+    This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NUMBER_OF_RELATIVE_PPATHS_TO_CONTEXT_NODES_MISMATCH
     PreValidateSplitPPathExpression = False
     Exit Function
   End If

@@ -23,9 +23,10 @@ Private This As WindowsDriverElement
 Private Type WindowsDriverElement
   Name As String
   UIAElement As UIAutomationClient.IUIAutomationElement
-  FoundByPPATH As String
+  FoundBypPath As String
   FoundFromUIAElement As UIAutomationClient.IUIAutomationElement
   ParentWindowsDriver As pWindowsDriver
+  Actions As pWindowsDriverElement_Actions
 End Type
 
 Public Sub SetName(ByRef Name As String)
@@ -40,13 +41,13 @@ Public Sub SetUIAElement( _
   ByRef Name As String, _
   ByRef ParentWindowsDriver As pWindowsDriver, _
   ByRef UIAElement As UIAutomationClient.IUIAutomationElement, _
-  ByVal FoundByPPATH As String, _
+  ByVal FoundBypPath As String, _
   Optional ByRef FoundFromUIAElement As UIAutomationClient.IUIAutomationElement)
   
   This.Name = Name
   Set This.ParentWindowsDriver = ParentWindowsDriver
   Set This.UIAElement = UIAElement
-  This.FoundByPPATH = FoundByPPATH
+  This.FoundBypPath = FoundBypPath
   If Not FoundFromUIAElement Is Nothing Then
     Set This.FoundFromUIAElement = FoundFromUIAElement
   End If
@@ -144,7 +145,12 @@ Function GetPattern(patternId As Long, Optional CheckOnly As Boolean = False) As
   End If
 End Function
 
-
-
-
+Public Function Actions() As pWindowsDriverElement_Actions
+  If This.Actions Is Nothing Then
+    Set Actions = New pWindowsDriverElement_Actions
+    Actions.Initialise This.UIAElement
+  Else
+    Set Actions = This.Actions
+  End If
+End Function
 

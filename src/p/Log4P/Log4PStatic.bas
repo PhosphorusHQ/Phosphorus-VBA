@@ -43,3 +43,20 @@ Public Sub CloseLogger()
   Set Logger = Nothing
 End Sub
 
+Public Function GetLevelName(level As Phosphorus.LogLevel) As String
+  Select Case level
+    Case INTERNAL_TRACE: GetLevelName = "INTERNAL_TRACE"
+    Case INTERNAL_DEBUG: GetLevelName = "INTERNAL_DEBUG"
+    Case INTERNAL_INFO: GetLevelName = "INTERNAL_INFO"
+    Case INTERNAL_WARNING: GetLevelName = "INTERNAL_WARNING"
+    Case INTERNAL_ERROR: GetLevelName = "INTERNAL_ERROR"
+    Case INTERNAL_FATAL: GetLevelName = "INTERNAL_FATAL"
+    Case EXTERNAL_TRACE: GetLevelName = "EXTERNAL_TRACE"
+    Case EXTERNAL_DEBUG: GetLevelName = "EXTERNAL_DEBUG"
+    Case EXTERNAL_INFO: GetLevelName = "EXTERNAL_INFO"
+    Case EXTERNAL_WARNING: GetLevelName = "EXTERNAL_WARNING"
+    Case EXTERNAL_ERROR: GetLevelName = "EXTERNAL_ERROR"
+    Case EXTERNAL_FATAL: GetLevelName = "EXTERNAL_FATAL"
+  End Select
+End Function
+

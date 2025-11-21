@@ -87,6 +87,11 @@ Public Function IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType As p
 End Function
 
 Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
-Debug.Print This.ParentWindowsDriver.ElementExists("Last Tab", "/Pane//Tab[@Name=""Tab bar""]//TabItem[last()]")
-  Phosphorus.pExceptions.Raise Phosphorus.Exceptions.MethodNotImplementedYet, "pWindowsDriverOpera.CloseAllOtherTabs"
+  Dim ele As pWinDriver.pWindowsDriverElement
+  Set ele = This.ParentWindowsDriver.FindElement("Last Tab", "/Pane//Tab[@Name=""Tab bar""]//TabItem[last()]")
+  ele.Actions.RightClick
+  Set ele = This.ParentWindowsDriver.FindElement("Close Tab Context Menu Item", "/Pane[1]//MenuBar//MenuItem[@Name=""Close other tabs""]", TimeoutInSeconds:=5)
+  ele.Actions.Click
 End Sub
+
+

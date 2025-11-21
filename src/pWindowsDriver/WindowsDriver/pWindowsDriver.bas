@@ -352,10 +352,11 @@ End Function
 
 Public Function FindElement( _
   ByVal Name As String, _
-  ByVal PPathString As String, _
+  ByVal pPathString As String, _
   Optional ByVal TimeoutInSeconds As Integer, _
   Optional ByVal GetPID As Boolean, _
-  Optional ByVal CheckExistenceOnly As Boolean = False) As pWindowsDriverElement
+  Optional ByVal CheckExistenceOnly As Boolean = False, _
+  Optional ByRef RootElement As UIAutomationClient.IUIAutomationElement) As pWindowsDriverElement
    
   Dim CurrentPPath As pPath.Core
   Set CurrentPPath = Nothing
@@ -365,7 +366,9 @@ Public Function FindElement( _
   CurrentPPath.Initialise
 
   'We should have released the MasterWindowsDriverElement when it gets closed!
-  If (This.MasterWindowsDriverElement Is Nothing) Then
+  If Not RootElement Is Nothing Then
+    CurrentPPath.SetApplicationRootElement RootElement
+  ElseIf (This.MasterWindowsDriverElement Is Nothing) Then
     CurrentPPath.SetApplicationRootElement pWinDriver.pWindowsDriverStatic.gUIADesktopUIElement
   Else
     CurrentPPath.SetApplicationRootElement This.MasterWindowsDriverElement.GetUIAElement
@@ -388,7 +391,9 @@ Public Function FindElement( _
   Dim i As Integer
   i = 0
   While Not (boolElementFound Or boolPassedEndTime)
-    Set This.CurrentEvaluatedPPath = CurrentPPath.Evaluate(PPathString)
+    
+    'Phosphorus.Configuration.GetValue("PowerShellPipeClient", "Visible", False)
+    Set This.CurrentEvaluatedPPath = CurrentPPath.Evaluate(pPathString)
     boolElementFound = This.CurrentEvaluatedPPath.ReturnedValue
     If Not boolElementFound Then
       boolPassedEndTime = (Now > dtEndTime)
@@ -404,7 +409,7 @@ Public Function FindElement( _
     Phosphorus.pExceptions.Raise _
       Phosphorus.Exceptions.WindowsDriverUIElementNotFoundBeforeTimeout, _
       VBA.Conversion.CStr(TimeoutInSeconds), _
-      PPathString
+      pPathString
   
   End If
   
@@ -420,7 +425,7 @@ Public Function FindElement( _
     Set FoundUIAElement = This.CurrentEvaluatedPPath.GetMatchingElement(1)
     Dim NewWindowsDriverElement As pWindowsDriverElement
     Set NewWindowsDriverElement = New pWindowsDriverElement
-    NewWindowsDriverElement.SetUIAElement Name, Me, FoundUIAElement, PPathString
+    NewWindowsDriverElement.SetUIAElement Name, Me, FoundUIAElement, pPathString
     Set CurrentPPath = Nothing
 
     'Prepare to Kill PID at end of session! - Needed for test cases and error handling
@@ -435,28 +440,33 @@ Public Function FindElement( _
 
 End Function
 
-'Public Function ElementExists(ByVal Name, ByVal PPathString As String) As Boolean
-'  Me.FindElement Name:=Name, PPathString:=PPathString, TimeoutInSeconds:=0, CheckExistenceOnly:=True
-'End Function
-Public Function ElementExists(ByVal ElementName As String, ByVal PPathString As String) As Boolean
+Public Function ElementExists( _
+  ByVal ElementName As String, _
+  ByVal pPathString As String, _
+  Optional ByRef RootElement As UIAutomationClient.IUIAutomationElement, _
+  Optional TimeoutInSeconds As Integer = 0) As Boolean
+  
   Dim FoundElement As pWindowsDriverElement
-  Set FoundElement = Me.FindElement(Name:=ElementName, PPathString:=PPathString, TimeoutInSeconds:=0, CheckExistenceOnly:=True)
+  Set FoundElement = Me.FindElement(Name:=ElementName, pPathString:=pPathString, TimeoutInSeconds:=TimeoutInSeconds, CheckExistenceOnly:=True, RootElement:=RootElement)
   ElementExists = Not (FoundElement Is Nothing)
+
 End Function
 
 Public Sub WaitUntilElementNotExists( _
   ByVal ElementName, _
-  ByVal PPathString As String, _
+  ByVal pPathString As String, _
   Optional ByVal TimeoutInSeconds As Integer)
+  
   If IsMissing(TimeoutInSeconds) Then
     TimeoutInSeconds = This.ImplicitTimeoutInSeconds
   End If
-  If Not ElementExists(ElementName, PPathString) Then
+  If Not ElementExists(ElementName, pPathString) Then
     Exit Sub
   Else
     Stop
     'TODO: Need to loop and wait until the element doesn't exist here, or we reach a timeout
   End If
+
 End Sub
 
 Public Sub CloseAllOtherTabs()

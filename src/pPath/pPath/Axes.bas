@@ -32,11 +32,11 @@ Public Sub ProcessNextAxis( _
   Dim eleCurrentUIElement As UIAutomationClient.IUIAutomationElement
   Dim strInitialPPath As String
   Dim intNumberOfWorkingCopyElements As Integer
-  intNumberOfWorkingCopyElements = This.PPathReturnClass.GetNumberOfWorkingCopyOfCandidateElements(This.CurrentLocationPathExpressionCounter)
+  intNumberOfWorkingCopyElements = This.pPathReturnClass.GetNumberOfWorkingCopyOfCandidateElements(This.CurrentLocationPathExpressionCounter)
   For intElementCounter = 1 To intNumberOfWorkingCopyElements
 
-    Set eleCurrentUIElement = This.PPathReturnClass.GetWorkingCopyElement(This.CurrentLocationPathExpressionCounter, intElementCounter)
-    strInitialPPath = This.PPathReturnClass.GetWorkingCopyNavigationalPPath(This.CurrentLocationPathExpressionCounter, intElementCounter)
+    Set eleCurrentUIElement = This.pPathReturnClass.GetWorkingCopyElement(This.CurrentLocationPathExpressionCounter, intElementCounter)
+    strInitialPPath = This.pPathReturnClass.GetWorkingCopyNavigationalPPath(This.CurrentLocationPathExpressionCounter, intElementCounter)
 
     'Process any axis requiring the self node
     If (myNextStep.Axis = Axes.SelfShorthand) Or _
@@ -91,8 +91,7 @@ Private Sub GetSelfNodes( _
   
   Dim strCurrentElementAbsoluteXPath As String
   strCurrentElementAbsoluteXPath = strInitialXPath
-  pPath.Utils.OutputElementDetails eleCurrentUIElement, strCurrentElementAbsoluteXPath, This.DebugMode, This.AutomationDictionaries
-  This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleCurrentUIElement, "", strCurrentElementAbsoluteXPath
+  This.pPathReturnClass.AddMatchingElement This.pPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleCurrentUIElement, "", strCurrentElementAbsoluteXPath
 End Sub
 
 Private Sub GetParents( _
@@ -116,7 +115,6 @@ Private Sub GetParents( _
     boolCurrentIsApplicationRootUIElement = True
   End If
 
-'PJG Check this fix:
   If Not boolCurrentIsApplicationRootUIElement Then
   
     Dim eleParentUIElement As UIAutomationClient.IUIAutomationElement
@@ -138,18 +136,14 @@ Private Sub GetParents( _
       boolAddElement = True
     End If
       
-'PJG Check this
-'    If boolAddElement And Not boolCurrentIsApplicationRootUIElement Then
     If boolAddElement Then
-      OutputElementDetails eleParentUIElement, strCurrentElementAbsoluteXPath, This.DebugMode, This.AutomationDictionaries
-      This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleParentUIElement, "", strCurrentElementAbsoluteXPath
+      This.pPathReturnClass.AddMatchingElement This.pPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleParentUIElement, "", strCurrentElementAbsoluteXPath
     End If
     
     If Not boolCurrentIsApplicationRootUIElement Then
       GetParents eleParentUIElement, strCurrentStepAxis, strCurrentElementAbsoluteXPath & "/..", boolGetAllAncestors, AllAncestorsOrSelfRuntimeIDs
     End If
   
-'PJG Check this
   End If
        
 End Sub
@@ -207,19 +201,17 @@ Private Sub GetSiblings( _
 
     'Add preceding siblings straight to Temp Candidate Elements as they are in reverse order
     If (boolBeforeCurrentElement And Axis = Axes.PrecedingSibling) Then
-      OutputElementDetails eleChildUIElement, strCurrentElementAbsoluteXPath, This.DebugMode, This.AutomationDictionaries
-      This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetTempCandidateElements(This.CurrentLocationPathExpressionCounter), eleChildUIElement, "", strCurrentElementAbsoluteXPath
+      This.pPathReturnClass.AddMatchingElement This.pPathReturnClass.GetTempCandidateElements(This.CurrentLocationPathExpressionCounter), eleChildUIElement, "", strCurrentElementAbsoluteXPath
     End If
       
     'Now promote preceding siblings to Candidate Elements as in reverse order
     If (boolIsCurrentElement And Axis = Axes.PrecedingSibling) Then
-      This.PPathReturnClass.PromoteTempCandidateElementsToCandidateElementsInReverseOrder This.CurrentLocationPathExpressionCounter
+      This.pPathReturnClass.PromoteTempCandidateElementsToCandidateElementsInReverseOrder This.CurrentLocationPathExpressionCounter
     End If
     
     'Add following siblings straight to Candidate Elements as they are in forward order
     If (boolAfterCurrentElement And Axis = Axes.FollowingSibling And Not boolIsCurrentElement) Then
-      OutputElementDetails eleChildUIElement, strCurrentElementAbsoluteXPath, This.DebugMode, This.AutomationDictionaries
-      This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleChildUIElement, "", strCurrentElementAbsoluteXPath
+      This.pPathReturnClass.AddMatchingElement This.pPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleChildUIElement, "", strCurrentElementAbsoluteXPath
     End If
   
   Next intListItemCounter
@@ -294,7 +286,7 @@ Private Sub GetChildren( _
           boolPrecedingOrFollowingRootElementFound = True
           'Now promote preceding elements to Candidate Elements as in reverse order
           If (Axis = Axes.Preceding) Then
-            This.PPathReturnClass.PromoteTempCandidateElementsToCandidateElementsInReverseOrder This.CurrentLocationPathExpressionCounter
+            This.pPathReturnClass.PromoteTempCandidateElementsToCandidateElementsInReverseOrder This.CurrentLocationPathExpressionCounter
           End If
         End If
              
@@ -312,8 +304,7 @@ Private Sub GetChildren( _
         
           If (Axis = Axes.Preceding) And Not boolPrecedingOrFollowingRootElementFound Then
             'Add preceding siblings straight to Temp Candidate Elements as they are in reverse order
-            OutputElementDetails eleChildUIElement, strCurrentElementAbsoluteXPath, This.DebugMode, This.AutomationDictionaries
-            This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetTempCandidateElements(This.CurrentLocationPathExpressionCounter), eleChildUIElement, "", strCurrentElementAbsoluteXPath
+            This.pPathReturnClass.AddMatchingElement This.pPathReturnClass.GetTempCandidateElements(This.CurrentLocationPathExpressionCounter), eleChildUIElement, "", strCurrentElementAbsoluteXPath
           End If
           
           If (Axis = Axes.Following) And boolPrecedingOrFollowingRootElementFound Then
@@ -325,8 +316,7 @@ Private Sub GetChildren( _
       End If
       
       If boolAddChild Then
-        OutputElementDetails eleChildUIElement, strCurrentElementAbsoluteXPath, This.DebugMode, This.AutomationDictionaries
-        This.PPathReturnClass.AddMatchingElement This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleChildUIElement, "", strCurrentElementAbsoluteXPath
+        This.pPathReturnClass.AddMatchingElement This.pPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleChildUIElement, "", strCurrentElementAbsoluteXPath
       End If
       
       If boolGetGrandChildren And Not boolCurrentElementIsAnAncestorOrSelfOfPrecedingOrFollowingRootElement Then
@@ -411,8 +401,8 @@ Public Sub GetAttributes( _
         strPropertyString = "'" & propValue & "'"
       End If
        
-      This.PPathReturnClass.AddMatchingElement _
-        This.PPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), _
+      This.pPathReturnClass.AddMatchingElement _
+        This.pPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), _
         eleCurrentUIElement, _
         propName, _
         InitialPPath & "@" & propName & "=" & strPropertyString

@@ -11,9 +11,11 @@ Attribute VB_Name = "pExceptions"
 Option Explicit
 
 Public Enum Exceptions
-'Catch All Errors 0+
-  UnhandledException = 1
-  UnexpectedError = 2
+'Catch All Errors 1000+
+  UnhandledException = 1001
+  UnexpectedError = 1002
+  MethodNotImplementedYet = 1003
+
 'PowerShellPipeClientErrors '10,000+
   PowerShellPipeClientWorkbookMustBeSaved = 10001
   PowerShellPipeClientFailedFailedToWritePowerShellScript = 10002
@@ -69,7 +71,11 @@ Public Sub Raise(exception As Phosphorus.Exceptions, Optional parameter1 As Vari
     Case Exceptions.UnexpectedError
       ExceptionName = "UnexpectedError"
       ErrorDescription = "Unexpected Error with error code #" & parameter1 & " - " & parameter2 & " (in method " & parameter3 & ")"
-   
+    
+    Case Exceptions.MethodNotImplementedYet
+      ExceptionName = "MethodNotImplementedYet"
+      ErrorDescription = "Method Not Implemented Yet: " & parameter1
+    
     'PowerShell Pipe Client Errors
    
     Case Exceptions.PowerShellPipeClientWorkbookMustBeSaved

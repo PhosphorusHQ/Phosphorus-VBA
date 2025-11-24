@@ -21,6 +21,7 @@ Option Explicit
 'Always Save Code Changes on Closing Workbootk
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
   If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
+    ExportPhosphorusSourceCode
     ThisWorkbook.Save
   End If
 End Sub

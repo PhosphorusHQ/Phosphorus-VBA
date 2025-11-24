@@ -38,6 +38,7 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
   pUnitTests_pWindowsDriver.References.RemoveAllAddedReferences
   'Always Save Code Changes on Closing Workbootk
   If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
+    ExportPhosphorusSourceCode
     ThisWorkbook.Save
   End If
 End Sub

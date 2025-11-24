@@ -1,6 +1,7 @@
 *.xlam
 *.ini
 *.ps1
+*.lnk
 /Backups
 /Logs
 /LogReader.xlsx

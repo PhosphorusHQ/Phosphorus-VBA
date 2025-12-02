@@ -18,12 +18,27 @@ Attribute VB_Exposed = True
 ' =======================================================================
 Option Explicit
 
+Private Const ThisVBProjectName = "pUnitTests_pUnit"
+
 Private Sub Workbook_Open()
+  
+  'Trust Settings: Ensure "Trust access to the VBA project object model" is enabled in Excel's Trust Center (File > Options > Trust Center > Trust Center Settings > Macro Settings).
+
+  'Microsoft Visual Basic for Applications Extensilbility 5.3 - needed for VBProject
+  'This is not built in but needs adding manually for the References module
   
   Dim strPhosphorusWBFullName As String
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
-  pUnitTests_pUnit.References.AddReferenceToWorkbook strPhosphorusWBFullName
+  pUnitTests_pUnit.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
   
+End Sub
+
+Private Sub Test_ListAllReferencesInProject()
+  pUnitTests_pUnit.References.ListAllReferencesInAProject ThisVBProjectName
+End Sub
+
+Private Sub Test_RemoveAllNonBuiltInReferencesInProject()
+  pUnitTests_pUnit.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
 End Sub
 
 'Private Sub Workbook_BeforeClose(Cancel As Boolean)
@@ -31,12 +46,18 @@ End Sub
 'End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
-  pUnitTests_pUnit.References.RemoveAllAddedReferences
-  'Always Save Code Changes on Closing Workbootk
+
   If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ExportPhosphorusSourceCode
+  End If
+  
+  pUnitTests_pUnit.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+  
+  'Always Save Code Changes on Closing Workbootk
+  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ThisWorkbook.Save
   End If
+
 End Sub
 
 'Private Sub SetModulesToKeep()

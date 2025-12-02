@@ -18,17 +18,33 @@ Attribute VB_Exposed = True
 ' =======================================================================
 Option Explicit
 
+Private Const ThisVBProjectName = "PhosphorusTests"
+
 Private Sub Workbook_Open()
+
+  'Microsoft Visual Basic for Applications Extensilbility 5.3 - needed for VBProject
+  'This is not built in but needs adding manually for the References module
+  
   Dim strPhosphorusWBFullName As String
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
-  PhosphorusTests.References.AddReferenceToWorkbook strPhosphorusWBFullName
+  PhosphorusTests.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
+
+End Sub
+
+Private Sub Test_ListAllReferencesInProject()
+  PhosphorusTests.References.ListAllReferencesInAProject ThisVBProjectName
+End Sub
+
+Private Sub Test_RemoveAllNonBuiltInReferencesInProject()
+  PhosphorusTests.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
 End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
-  PhosphorusTests.References.RemoveAllAddedReferences
-  'Always Save Code Changes on Closing Workbootk
   If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ExportPhosphorusSourceCode
+  End If
+  PhosphorusTests.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ThisWorkbook.Save
   End If
 End Sub

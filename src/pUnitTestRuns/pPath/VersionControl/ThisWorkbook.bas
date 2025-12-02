@@ -18,39 +18,56 @@ Attribute VB_Exposed = True
 ' =======================================================================
 Option Explicit
 
+Private Const ThisVBProjectName = "pUnitTestRuns_pPath"
+
 Private Sub Workbook_Open()
 
+  'Trust Settings: Ensure "Trust access to the VBA project object model" is enabled in Excel's Trust Center (File > Options > Trust Center > Trust Center Settings > Macro Settings).
+
+  'Microsoft Visual Basic for Applications Extensilbility 5.3 - needed for VBProject
+  'This is not built in but needs adding manually for the References module
+    
   'This creates a dynamic reference to the Phosphorus project
   'End user's will probably hardcode this reference
   Dim strPhosphorusWBFullName As String
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
-  pUnitTestRuns_pPathTests.References.AddReferenceToWorkbook strPhosphorusWBFullName
+  pUnitTestRuns_pPath.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
   
   'This creates a dynamic reference to the pUnit project
   'End user's will probably hardcode this reference
   Dim strPUnitWBFullName As String
   strPUnitWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pUnit.xlam")
-  pUnitTestRuns_pPathTests.References.AddReferenceToWorkbook strPUnitWBFullName
+  pUnitTestRuns_pPath.References.AddReferenceToWorkbookOrLibrary strPUnitWBFullName
   
   'This creates a dynamic reference in pUnit to the target test project
   'End user's will need to replicate this dynamic reference in their test run modules
   Dim strTestWorkbookFilepath As String
   strTestWorkbookFilepath = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pUnit Tests - pPath.xlam")
-  pUnitTestRuns_pPathTests.References.AddReferenceToWorkbook strTestWorkbookFilepath, "pUnit"
+  pUnitTestRuns_pPath.References.AddReferenceToWorkbookOrLibrary strTestWorkbookFilepath, "pUnit"
 
 End Sub
 
+Private Sub Test_ListAllReferencesInProject()
+  pUnitTestRuns_pPath.References.ListAllReferencesInAProject ThisVBProjectName
+End Sub
+
+Private Sub Test_RemoveAllNonBuiltInReferencesInProject()
+  pUnitTestRuns_pPath.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+End Sub
+
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
-  pUnitTestRuns_pPathTests.References.RemoveAllAddedReferences
-  'Always Save Code Changes on Closing Workbootk
   If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ExportPhosphorusSourceCode
+  End If
+  pUnitTestRuns_pPath.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+  'Always Save Code Changes on Closing Workbook
+  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ThisWorkbook.Save
   End If
 End Sub
 
 Private Sub ExportPhosphorusSourceCode()
-  Phosphorus.ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pUnitTestRuns\pPath", projectName:="pUnitTestRuns_pPathTests"
+  Phosphorus.ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pUnitTestRuns\pPath", projectName:="pUnitTestRuns_pPath"
 End Sub
 
 Private Sub RemoveAllPhosphorusSourceCode()

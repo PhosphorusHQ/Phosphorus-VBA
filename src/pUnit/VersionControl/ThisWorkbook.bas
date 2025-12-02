@@ -18,23 +18,48 @@ Attribute VB_Exposed = True
 ' =======================================================================
 Option Explicit
 
+Private Const ThisVBProjectName = "pUnit"
+
 Private Sub Workbook_Open()
+
+  'Trust Settings: Ensure "Trust access to the VBA project object model" is enabled in Excel's Trust Center (File > Options > Trust Center > Trust Center Settings > Macro Settings).
+
+  'Microsoft Visual Basic for Applications Extensilbility 5.3 - needed for VBProject
+  'This is not built in but needs adding manually for the References module
+  
+  'Microsoft Scripting Runtime - needed for Scripting.dictionary
+  pUnit.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\scrrun.dll"
+    
+  'Windows Script Host Object Model - needed for wshShell
+  pUnit.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\wshom.ocx"
+
   Dim strPhosphorusWBFullName As String
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
-  pUnit.References.AddReferenceToWorkbook strPhosphorusWBFullName
+  pUnit.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
+
 End Sub
 
-'Private Sub Workbook_BeforeClose(Cancel As Boolean)
-'  UnitTestingExternalProject.References.RemoveAllAddedReferences
-'End Sub
+Private Sub Test_ListAllReferencesInProject()
+  pUnit.References.ListAllReferencesInAProject ThisVBProjectName
+End Sub
+
+Private Sub Test_RemoveAllNonBuiltInReferencesInProject()
+  pUnit.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
-  pUnit.References.RemoveAllAddedReferences
-  'Always Save Code Changes on Closing Workbootk
+  
   If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ExportPhosphorusSourceCode
+  End If
+  
+  pUnit.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+  
+  'Always Save Code Changes on Closing Workbook
+  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ThisWorkbook.Save
   End If
+
 End Sub
 
 'Private Sub SetModulesToKeep()
@@ -44,7 +69,7 @@ End Sub
 'End Sub
 
 Private Sub ExportPhosphorusSourceCode()
-  Phosphorus.ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pUnit", projectName:="pUnit"
+  Phosphorus.ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pUnit", projectName:=ThisVBProjectName
 End Sub
 
 Private Sub RemoveAllPhosphorusSourceCode()

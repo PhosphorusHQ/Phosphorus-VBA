@@ -18,29 +18,49 @@ Attribute VB_Exposed = True
 ' =======================================================================
 Option Explicit
 
+Private Const ThisVBProjectName = "pUnitTests_pPath"
+
 Private Sub Workbook_Open()
+
+  'Trust Settings: Ensure "Trust access to the VBA project object model" is enabled in Excel's Trust Center (File > Options > Trust Center > Trust Center Settings > Macro Settings).
+
+  'Microsoft Visual Basic for Applications Extensilbility 5.3 - needed for VBProject
+  'This is not built in but needs adding manually for the References module
   
+  'UIAutomation Client
+  pUnitTests_pPath.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\UIAutomationCore.dll"
+
   Dim strPhosphorusWBFullName As String
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
-  pUnitTests_pPath.References.AddReferenceToWorkbook strPhosphorusWBFullName
+  pUnitTests_pPath.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
 
   Dim strPPathWBFullName As String
   strPPathWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pPath.xlam")
-  pUnitTests_pPath.References.AddReferenceToWorkbook strPPathWBFullName
+  pUnitTests_pPath.References.AddReferenceToWorkbookOrLibrary strPPathWBFullName
   
 End Sub
 
-'Private Sub Workbook_BeforeClose(Cancel As Boolean)
-'  UnitTestingExternalProject.References.RemoveAllAddedReferences
-'End Sub
+Private Sub Test_ListAllReferencesInProject()
+  pUnitTests_pPath.References.ListAllReferencesInAProject ThisVBProjectName
+End Sub
+
+Private Sub Test_RemoveAllNonBuiltInReferencesInProject()
+  pUnitTests_pPath.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
-  pUnitTests_pPath.References.RemoveAllAddedReferences
-  'Always Save Code Changes on Closing Workbootk
+
   If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ExportPhosphorusSourceCode
+  End If
+  
+  pUnitTests_pPath.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+  
+  'Always Save Code Changes on Closing Workbootk
+  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ThisWorkbook.Save
   End If
+
 End Sub
 
 'Private Sub SetModulesToKeep()

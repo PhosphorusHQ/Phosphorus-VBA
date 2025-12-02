@@ -18,29 +18,50 @@ Attribute VB_Exposed = True
 ' =======================================================================
 Option Explicit
 
+Private Const ThisVBProjectName = "pUnitTests_pWindowsDriver"
+
 Private Sub Workbook_Open()
+
+  'Trust Settings: Ensure "Trust access to the VBA project object model" is enabled in Excel's Trust Center (File > Options > Trust Center > Trust Center Settings > Macro Settings).
+
+  'Microsoft Visual Basic for Applications Extensilbility 5.3 - needed for VBProject
+  'This is not built in but needs adding manually for the References module
+  
+  'Microsoft Office 16 Object Library - needed for IRibbonUI
+  'This is not built in but needs adding manually
+  'Phosphorus.References.AddReferenceToWorkbookOrLibrary "C:\Program Files\Common Files\Microsoft Shared\OFFICE16\MSO.DLL"
   
   Dim strPhosphorusWBFullName As String
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
-  pUnitTests_pWindowsDriver.References.AddReferenceToWorkbook strPhosphorusWBFullName
+  pUnitTests_pWindowsDriver.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
 
   Dim strWindriverWBFullName As String
   strWindriverWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pWindowsDriver.xlam")
-  pUnitTests_pWindowsDriver.References.AddReferenceToWorkbook strWindriverWBFullName
+  pUnitTests_pWindowsDriver.References.AddReferenceToWorkbookOrLibrary strWindriverWBFullName
   
 End Sub
 
-'Private Sub Workbook_BeforeClose(Cancel As Boolean)
-'  UnitTestingExternalProject.References.RemoveAllAddedReferences
-'End Sub
+Private Sub Test_ListAllReferencesInProject()
+  Phosphorus.References.ListAllReferencesInAProject ThisVBProjectName
+End Sub
+
+Private Sub Test_RemoveAllNonBuiltInReferencesInProject()
+  Phosphorus.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
-  pUnitTests_pWindowsDriver.References.RemoveAllAddedReferences
-  'Always Save Code Changes on Closing Workbootk
+
   If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ExportPhosphorusSourceCode
+  End If
+  
+  pUnitTests_pWindowsDriver.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+  
+  'Always Save Code Changes on Closing Workbootk
+  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ThisWorkbook.Save
   End If
+
 End Sub
 
 'Private Sub SetModulesToKeep()

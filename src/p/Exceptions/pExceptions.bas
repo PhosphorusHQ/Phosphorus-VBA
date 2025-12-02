@@ -162,7 +162,7 @@ Public Sub Raise(exception As Phosphorus.Exceptions, Optional parameter1 As Vari
     
     Case Exceptions.WindowsDriverUIElementNotFoundBeforeTimeout
       ExceptionName = "WindowsDriverUIElementNotFoundBeforeTimeout"
-      ErrorDescription = "Element not found before " & parameter1 & " seconds timeout for PPath: " & parameter2
+      ErrorDescription = "Element '" & parameter1 & "' not found before " & parameter2 & " seconds timeout for pPath: " & parameter3
    
     Case Exceptions.WindowsDriverUIElementCondtionOrStateNotMetBeforeTimeout
       ExceptionName = "WindowsDriverUIElementCondtionOrStateNotMetBeforeTimeout"

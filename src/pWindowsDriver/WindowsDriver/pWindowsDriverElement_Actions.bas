@@ -137,15 +137,16 @@ Private Sub MouseClicks( _
     
   If hwnd <> 0 Then
   
+    Logger.InternalDebug "Right-click element action sent via PostMessage (background-safe)"
     Dim lParam As LongPtr
     lParam = (pt.y * &H10000) Or (pt.x And &HFFFF&)
     PostMessage hwnd, Action1, Action2, lParam
     Phosphorus.WindowsProcesses.Snooze 50
     PostMessage hwnd, Action3, Action4, lParam
-    Debug.Print "Right-click sent via PostMessage (background-safe)"
   
   Else
     
+    Logger.InternalDebug "Right-click element action sent via mouse_event"
     SetCursorPos pt.x, pt.y
     Phosphorus.WindowsProcesses.Snooze 50
     mouse_event Event1, 0, 0, 0, 0

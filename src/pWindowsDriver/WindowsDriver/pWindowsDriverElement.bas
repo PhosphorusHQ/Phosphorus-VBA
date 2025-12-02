@@ -29,15 +29,15 @@ Private Type WindowsDriverElement
   Actions As pWindowsDriverElement_Actions
 End Type
 
-Public Sub SetName(ByRef Name As String)
+Public Property Let Name(ByRef Name As String)
   This.Name = Name
-End Sub
+End Property
 
-Public Function GetName() As String
-  GetName = This.Name
-End Function
+Public Property Get Name() As String
+  Name = This.Name
+End Property
 
-Public Sub SetUIAElement( _
+Public Sub Initialise( _
   ByRef Name As String, _
   ByRef ParentWindowsDriver As pWindowsDriver, _
   ByRef UIAElement As UIAutomationClient.IUIAutomationElement, _
@@ -54,9 +54,13 @@ Public Sub SetUIAElement( _
 
 End Sub
 
-Public Function GetUIAElement() As UIAutomationClient.IUIAutomationElement
-  Set GetUIAElement = This.UIAElement
-End Function
+Public Property Get UIAElement() As UIAutomationClient.IUIAutomationElement
+  Set UIAElement = This.UIAElement
+End Property
+
+Public Property Get FoundBypPath() As String
+  FoundBypPath = This.FoundBypPath
+End Property
 
 Public Sub WaitForWindowInteractionState( _
   State As UIAutomationClient.WindowInteractionState)

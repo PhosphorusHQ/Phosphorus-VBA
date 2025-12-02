@@ -10,7 +10,7 @@ Attribute VB_Name = "pWindowsDriverStatic"
 ' =======================================================================
 Option Explicit
 
-Public gCUIAutomation As CUIAutomation 'Requires a reference to UIAutomationClient
+Public gCUIAutomation As CUIAutomation
 Public gUIADesktopUIElement As UIAutomationClient.IUIAutomationElement
 Public DesktopWindowsDriver As pWinDriver.pWindowsDriver
   
@@ -44,6 +44,7 @@ Public Enum pWebBrowserPPathConfigurationItems
   WebAppTitle
   BrowserRootViewControlType
   BrowserRootViewClassName
+  BrowserRootViewUseWebAppTitleAsName
   RootWebAreaControlType
   RootWebAreaAutomationID
   HeaderNodeAriaRole
@@ -58,6 +59,7 @@ Public Type pWebBrowserPPathConfiguration
   WebAppTitle As String
   BrowserRootViewControlType As String
   BrowserRootViewClassName As String
+  BrowserRootViewUseWebAppTitleAsName As Boolean
   RootWebAreaControlType As String
   RootWebAreaAutomationID As String
   HeaderNodeAriaRole As String

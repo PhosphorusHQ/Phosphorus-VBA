@@ -11,7 +11,7 @@ Attribute VB_Name = "TestRuns"
 Option Explicit
 
 Sub RunSingleTest()
-  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Edge_ReuseACurrentOpenInstance", "pUnitTests_pWindowsDriver"
+  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Opera_Executable", "pUnitTests_pWindowsDriver"
 End Sub
 
 Sub RunAllWorkingWebBrowserLaunchTests()

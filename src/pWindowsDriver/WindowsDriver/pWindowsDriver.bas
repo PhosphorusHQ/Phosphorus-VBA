@@ -28,10 +28,13 @@ Private Type DriverProperties
   TempDirectoryForCurrentAppInstance As String
   WindowsApp As Phosphorus.WindowsApp
   SubDriver As Object
+  WebAppTitle As String
   PageLoadedElementPPath As String 'PPath of an element that indicates the driver has at least partially loaded
   PageLoadedElementExpectedWindowInteractionState As UIAutomationClient.WindowInteractionState
   PageUnloadedElementPPath As String 'PPath of an element that indicates the driver has now been closed (by it's non-existence)
   MasterWindowsDriverElement As pWinDriver.pWindowsDriverElement
+  BrowserRootViewElement As pWinDriver.pWindowsDriverElement
+  BrowserRootWebAreaElement As pWinDriver.pWindowsDriverElement
   ProcessId As Long
   ImplicitTimeoutInSeconds As Integer
   CurrentEvaluatedPPath As pPath.ReturnClass
@@ -127,11 +130,13 @@ End Function
 
 Public Sub Launch( _
   ByVal AppName As String, _
-  ByVal AppTitle As String, _
+  ByVal WebAppTitle As String, _
   Optional ByVal Document As String, _
   Optional ByVal TimeoutInSeconds As Integer, _
   Optional ByVal CheckHTTPStatusCodeOnly As Boolean, _
   Optional ByVal WindowShowState As Phosphorus.WindowShowStates = Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED)
+  
+  This.WebAppTitle = WebAppTitle
   
   'Check the page status?
   If VBA.Strings.Left(Document, 4) = "http" Then
@@ -164,7 +169,7 @@ Public Sub Launch( _
             Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledWebBrowserType, "Web Brower Type: #" & This.WebBrowserType.WebBrowserType
          End Select
          If Not This.SubDriver Is Nothing Then
-           This.SubDriver.IWindowsDriverWebBrowser_LaunchApp Me, AppName, AppTitle, Document
+           This.SubDriver.IWindowsDriverWebBrowser_LaunchApp Me, AppName, WebAppTitle, Document
          End If
          
       Case pWinDriver.pWindowsDriverType.WindowsApp
@@ -179,28 +184,24 @@ Public Sub Launch( _
 
     If This.PageLoadedElementPPath = "" Then
     
-      Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverNoPageLoadElementDefined, AppName, AppTitle
+      Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverNoPageLoadElementDefined, AppName, This.WebAppTitle
     
     Else
     
       'Wait for the Page Load Element
-      Dim FoundElement As pWinDriver.pWindowsDriverElement
-      Set FoundElement = FindElement("PageLoadedElement", This.PageLoadedElementPPath, TimeoutInSeconds)
-      
+      Set This.MasterWindowsDriverElement = FindElement("PageLoadedElement", This.PageLoadedElementPPath, TimeoutInSeconds)
       'Store this as the Master Window element so that we can easily close the current driver window when it is finished with
-      'Set This.MasterWindowUIAElement = FoundElement.GetUIAElement
-      Set This.MasterWindowsDriverElement = FoundElement
-      This.MasterWindowsDriverElement.SetName "MasterWindowsDriverElement"
+      This.MasterWindowsDriverElement.Name = "MasterWindowsDriverElement"
 
       'Set the default element PPath which indicate the driver has been unloaded/closed
       Me.SetPageUnloadedElementPPath GetPageLoadedElementPPath
    
       'Wait until it is in the right WindowInteractionState
 'TODO: This only applies to (top level?) Window controls?
-      FoundElement.WaitForWindowInteractionState This.PageLoadedElementExpectedWindowInteractionState
+      This.MasterWindowsDriverElement.WaitForWindowInteractionState This.PageLoadedElementExpectedWindowInteractionState
 
-      'Get the App's PID from the PageLoadedElement
-      This.ProcessId = FoundElement.GetProcessID
+      'Get the App's PID from the MasterWindowsDriverElement
+      This.ProcessId = This.MasterWindowsDriverElement.GetProcessID
       
       'Check for the Browser Root elements if this is a Web Browser
       If This.DriverType = WebBrowser Then
@@ -217,13 +218,9 @@ Public Sub Launch( _
   End If
 End Sub
 
-'Wait for Ready For User Interaction State of the page load element here!
-'    UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
-'WindowInteractionState_BlockedByModalWindow
-
 Private Sub CheckHTTPStatusCode(ByVal lstrUrl As String)
   ' Send Request
-  Dim lRequest As WinHttpRequest 'Requires a reference to Microsoft WinHttpServices
+  Dim lRequest As WinHttpRequest
   Set lRequest = New WinHttpRequest
   lRequest.Open "GET", lstrUrl
   On Error Resume Next
@@ -250,60 +247,99 @@ End Sub
 
 Private Sub CheckForBrowserRootElements()
   
-  Dim CurrentPPath As String
-  Dim BrowserRootViewPPath As String
-  BrowserRootViewPPath = GetWebBrowserRootViewPPath
-  CurrentPPath = BrowserRootViewPPath
-  If BrowserRootViewPPath <> "" Then
-    If Not ElementExists("BrowserRootView", CurrentPPath) Then
-      Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverWebBrowserRootViewElementNotFound, CurrentPPath
+  Dim CurrentpPath As String
+  Dim BrowserRootViewpPath As String
+  Dim BrowserRootWebAreapPath As String
+  
+  BrowserRootViewpPath = GetWebBrowserRootViewpPath
+  CurrentpPath = BrowserRootViewpPath
+  If BrowserRootViewpPath <> "" Then
+    Set This.BrowserRootViewElement = RefreshPageUntilBrowserRootElementExists("BrowserRootWebAreaPPath", CurrentpPath)
+    If This.BrowserRootViewElement Is Nothing Then
+      Logger.ExternalFatal "Browser Root View Element not found!"
+      Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverWebBrowserRootViewElementNotFound, CurrentpPath
     End If
   End If
-  
-  Dim BrowserRootWebAreaPPath As String
-  BrowserRootWebAreaPPath = GetWebBrowserRootWebAreaPPath
-  CurrentPPath = BrowserRootViewPPath & BrowserRootWebAreaPPath
-  If BrowserRootWebAreaPPath <> "" Then
-    If Not ElementExists("BrowserRootWebAreaPPath", CurrentPPath) Then
-      Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverWebBrowserRootWebAreaElementNotFound, CurrentPPath
-    End If
+
+  BrowserRootWebAreapPath = GetWebBrowserRootWebAreapPath
+  CurrentpPath = BrowserRootViewpPath & BrowserRootWebAreapPath
+  If BrowserRootWebAreapPath <> "" Then
+    Set This.BrowserRootWebAreaElement = RefreshPageUntilBrowserRootElementExists("BrowserRootWebAreaPPath", CurrentpPath)
+      If This.BrowserRootWebAreaElement Is Nothing Then
+        Logger.ExternalFatal "Browser Root Web Area not found!"
+        Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverWebBrowserRootWebAreaElementNotFound, CurrentpPath
+      End If
+  Else
+    Logger.InternalTrace "Opera uses the same element for these two, so don't waste time searching for it again"
+    Set This.BrowserRootWebAreaElement = This.BrowserRootViewElement
   End If
 
 End Sub
 
-Public Function GetWebBrowserFullBrowserRootWebAreaPPath() As String
-  GetWebBrowserFullBrowserRootWebAreaPPath = GetWebBrowserRootViewPPath & GetWebBrowserRootWebAreaPPath
+Private Function RefreshPageUntilBrowserRootElementExists(Name As String, pPath As String) As pWinDriver.pWindowsDriverElement
+  Dim i As Integer
+  Dim Continue As Boolean
+  Dim ReturnElement As pWinDriver.pWindowsDriverElement
+  i = 1
+  Continue = True
+  While Continue
+    Set ReturnElement = FindElement("BrowserRootWebAreaElement", pPath, TimeoutInSeconds:=0, RootElement:=This.MasterWindowsDriverElement, CheckExistenceOnly:=True)
+    If ReturnElement Is Nothing And i <= 10 Then
+      This.SubDriver.RefreshPage
+      i = i + 1
+    Else
+      Continue = False
+    End If
+  Wend
+  Set RefreshPageUntilBrowserRootElementExists = ReturnElement
 End Function
 
-Private Function GetWebBrowserRootViewPPath()
+Public Function GetWebBrowserFullBrowserRootWebAreaPPath() As String
+  GetWebBrowserFullBrowserRootWebAreaPPath = GetWebBrowserRootViewpPath & GetWebBrowserRootWebAreapPath
+End Function
+
+Private Function GetWebBrowserRootViewpPath()
   Dim BrowserRootViewControlType As String
   Dim BrowserRootViewClassName As String
+  Dim BrowserRootViewUseWebAppTitleAsName As Boolean
   BrowserRootViewControlType = GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.BrowserRootViewControlType)
   BrowserRootViewClassName = GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.BrowserRootViewClassName)
+  BrowserRootViewUseWebAppTitleAsName = GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.BrowserRootViewUseWebAppTitleAsName)
   If BrowserRootViewControlType <> "" Then
-    GetWebBrowserRootViewPPath = "//" & BrowserRootViewControlType
+    GetWebBrowserRootViewpPath = "//" & BrowserRootViewControlType
     If BrowserRootViewClassName <> "" Then
-      GetWebBrowserRootViewPPath = GetWebBrowserRootViewPPath & "[@ClassName=""" & BrowserRootViewClassName & """]"
+      'NB: Opera needs the Name attribute here!
+      Logger.InternalTrace "Opera needs the Name attribute here!"
+      If BrowserRootViewUseWebAppTitleAsName Then
+        GetWebBrowserRootViewpPath = GetWebBrowserRootViewpPath & _
+          "[And(@ClassName=""" & BrowserRootViewClassName & """,@Name=""" & This.WebAppTitle & """)]"
+      Else
+        GetWebBrowserRootViewpPath = GetWebBrowserRootViewpPath & "[@ClassName=""" & BrowserRootViewClassName & """]"
+      End If
+    Else
+      If BrowserRootViewUseWebAppTitleAsName Then
+        GetWebBrowserRootViewpPath = GetWebBrowserRootViewpPath & "[@Name=""" & This.WebAppTitle & """]"
+      End If
     End If
   End If
+  Logger.InternalTrace "Got Web Browser Root View pPath as: " & GetWebBrowserRootViewpPath
 End Function
 
-Private Function GetWebBrowserRootWebAreaPPath()
+Private Function GetWebBrowserRootWebAreapPath()
   Dim BrowserRootWebAreaControlType As String
   Dim BrowserRootWebAreaAutomationId As String
-  Dim WebAppTitle As String
   BrowserRootWebAreaControlType = GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.RootWebAreaControlType)
   BrowserRootWebAreaAutomationId = GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.RootWebAreaAutomationID)
-  WebAppTitle = GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.WebAppTitle)
   If BrowserRootWebAreaControlType <> "" Then
-    GetWebBrowserRootWebAreaPPath = "//" & BrowserRootWebAreaControlType
-    If BrowserRootWebAreaAutomationId <> "" And WebAppTitle <> "" Then
-      GetWebBrowserRootWebAreaPPath = GetWebBrowserRootWebAreaPPath & _
-        "[And(@AutomationId=""" & BrowserRootWebAreaAutomationId & """,@Name=""" & WebAppTitle & """)]"
-    ElseIf WebAppTitle <> "" Then
-      GetWebBrowserRootWebAreaPPath = GetWebBrowserRootWebAreaPPath & "[@Name=""" & WebAppTitle & """]"
+    GetWebBrowserRootWebAreapPath = "//" & BrowserRootWebAreaControlType
+    If BrowserRootWebAreaAutomationId <> "" And This.WebAppTitle <> "" Then
+      GetWebBrowserRootWebAreapPath = GetWebBrowserRootWebAreapPath & _
+        "[And(@AutomationId=""" & BrowserRootWebAreaAutomationId & """,@Name=""" & This.WebAppTitle & """)]"
+    ElseIf This.WebAppTitle <> "" Then
+      GetWebBrowserRootWebAreapPath = GetWebBrowserRootWebAreapPath & "[@Name=""" & This.WebAppTitle & """]"
     End If
   End If
+  Logger.InternalTrace "Got Web Browser Root Area pPath as: " & GetWebBrowserRootWebAreapPath
 End Function
 
 Public Function GetWebBrowserPPathConfigurationItem(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems, Optional Parameter1 As Variant) As Variant
@@ -356,23 +392,29 @@ Public Function FindElement( _
   Optional ByVal TimeoutInSeconds As Integer, _
   Optional ByVal GetPID As Boolean, _
   Optional ByVal CheckExistenceOnly As Boolean = False, _
-  Optional ByRef RootElement As UIAutomationClient.IUIAutomationElement) As pWindowsDriverElement
+  Optional ByRef RootElement As pWinDriver.pWindowsDriverElement) As pWindowsDriverElement
+'  Optional ByRef RootElement As UIAutomationClient.IUIAutomationElement) As pWindowsDriverElement
    
-  Dim CurrentPPath As pPath.Core
-  Set CurrentPPath = Nothing
+  Dim CurrentpPath As pPath.Core
+  Set CurrentpPath = Nothing
   Set This.CurrentEvaluatedPPath = Nothing
   
-  Set CurrentPPath = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
-  CurrentPPath.Initialise
+  Set CurrentpPath = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
+  CurrentpPath.Initialise
 
   'We should have released the MasterWindowsDriverElement when it gets closed!
+  Dim InitialpPath As String
   If Not RootElement Is Nothing Then
-    CurrentPPath.SetApplicationRootElement RootElement
+    InitialpPath = RootElement.FoundBypPath
+    CurrentpPath.SetApplicationRootElement RootElement.UIAElement
   ElseIf (This.MasterWindowsDriverElement Is Nothing) Then
-    CurrentPPath.SetApplicationRootElement pWinDriver.pWindowsDriverStatic.gUIADesktopUIElement
+    InitialpPath = "{Desktop}"
+    CurrentpPath.SetApplicationRootElement pWinDriver.pWindowsDriverStatic.gUIADesktopUIElement
   Else
-    CurrentPPath.SetApplicationRootElement This.MasterWindowsDriverElement.GetUIAElement
+    InitialpPath = This.MasterWindowsDriverElement.FoundBypPath
+    CurrentpPath.SetApplicationRootElement This.MasterWindowsDriverElement.UIAElement
   End If
+  Logger.InternalDebug "Root Element pPath: " & InitialpPath
 
   'Get default timeout if none set (it might be 0!)
   If IsMissing(TimeoutInSeconds) Then
@@ -391,9 +433,7 @@ Public Function FindElement( _
   Dim i As Integer
   i = 0
   While Not (boolElementFound Or boolPassedEndTime)
-    
-    'Phosphorus.Configuration.GetValue("PowerShellPipeClient", "Visible", False)
-    Set This.CurrentEvaluatedPPath = CurrentPPath.Evaluate(pPathString)
+    Set This.CurrentEvaluatedPPath = CurrentpPath.Evaluate(FullLocationPathExpression:=pPathString, InitialpPath:=InitialpPath)
     boolElementFound = This.CurrentEvaluatedPPath.ReturnedValue
     If Not boolElementFound Then
       boolPassedEndTime = (Now > dtEndTime)
@@ -404,29 +444,27 @@ Public Function FindElement( _
   Wend
 
   If Not boolElementFound And Not CheckExistenceOnly Then
-    
-    'Element not found - raise exception
+    Logger.ExternalFatal "Element named '" & Name & "' not found by pPath: " & pPathString
     Phosphorus.pExceptions.Raise _
       Phosphorus.Exceptions.WindowsDriverUIElementNotFoundBeforeTimeout, _
+      Name, _
       VBA.Conversion.CStr(TimeoutInSeconds), _
       pPathString
-  
   End If
-  
-  Dim FoundUIAElement As UIAutomationClient.IUIAutomationElement
-  
+    
   If boolElementFound Then
     
-    'Element has been found if we get here!
-  
+    Logger.InternalDebug "Element has been found"
+    
     'TODO: Check for only 1 matching element!
     
     'Store the current UIA element
+    Dim FoundUIAElement As UIAutomationClient.IUIAutomationElement
     Set FoundUIAElement = This.CurrentEvaluatedPPath.GetMatchingElement(1)
     Dim NewWindowsDriverElement As pWindowsDriverElement
     Set NewWindowsDriverElement = New pWindowsDriverElement
-    NewWindowsDriverElement.SetUIAElement Name, Me, FoundUIAElement, pPathString
-    Set CurrentPPath = Nothing
+    NewWindowsDriverElement.Initialise Name, Me, FoundUIAElement, pPathString
+    Set CurrentpPath = Nothing
 
     'Prepare to Kill PID at end of session! - Needed for test cases and error handling
     If GetPID Then

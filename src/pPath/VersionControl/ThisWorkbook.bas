@@ -18,18 +18,48 @@ Attribute VB_Exposed = True
 ' =======================================================================
 Option Explicit
 
+Private Const ThisVBProjectName = "pPath"
+
 Private Sub Workbook_Open()
+
+  'Trust Settings: Ensure "Trust access to the VBA project object model" is enabled in Excel's Trust Center (File > Options > Trust Center > Trust Center Settings > Macro Settings).
+
+  'Microsoft Visual Basic for Applications Extensilbility 5.3 - needed for VBProject
+  'This is not built in but needs adding manually for the References module
+  
+  'Microsoft Scripting Runtime - needed for Scripting.dictionary
+  pPath.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\scrrun.dll"
+  
+  'UIAutomationClient
+  pPath.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\UIAutomationCore.dll"
+  
   Dim strPhosphorusWBFullName As String
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
-  pPath.References.AddReferenceToWorkbook strPhosphorusWBFullName
+  pPath.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
+
+End Sub
+
+Private Sub Test_ListAllReferencesInProject()
+  pPath.References.ListAllReferencesInAProject ThisVBProjectName
+End Sub
+
+Private Sub Test_RemoveAllNonBuiltInReferencesInProject()
+  pPath.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
 End Sub
 
 'Always Save Code Changes on Closing Workbootk
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
+
   If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ExportPhosphorusSourceCode
+  End If
+  
+  pPath.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+  
+  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
     ThisWorkbook.Save
   End If
+
 End Sub
 
 Private Sub SetModulesToKeep()
@@ -44,7 +74,7 @@ End Sub
 
 Private Sub RemoveAllPhosphorusSourceCode()
   SetModulesToKeep
-  Phosphorus.ModuleManagement.RemoveAllComponentsExcept ThisWorkbook.VBProject
+  Phosphorus.ModuleManagement.RemoveAllComponentsExcept ThisWorkbook.vbProject
 End Sub
 
 Private Sub ImportAllPhosphorusSourceCode()

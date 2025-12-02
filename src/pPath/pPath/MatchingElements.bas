@@ -28,13 +28,13 @@ Public Sub AddMatchingElement( _
   ByRef MatchingElement As UIAutomationClient.IUIAutomationElement, _
   AttributeName As String, _
   NavigationalXPath As String)
-  
+
   ReDim Preserve MatchingElements(longMatchingElementNumber)
   Set MatchingElements(longMatchingElementNumber) = MatchingElement
-  
+
   ReDim Preserve AttributeNames(longMatchingElementNumber)
   AttributeNames(longMatchingElementNumber) = AttributeName
-  
+
   ReDim Preserve NavigationalPPaths(longMatchingElementNumber)
   NavigationalPPaths(longMatchingElementNumber) = NavigationalXPath
 

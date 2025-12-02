@@ -73,9 +73,9 @@ End Sub
 Private Sub AfterTest()
   On Error GoTo ErrorHandler
   'this method runs after every test in the module.
-  If testpPath.GetDebugMode Then
-    pPathTestsCommon.OutputActualXPaths EvaluatedPPath.GetMatchingNavigationalPPaths
-  End If
+'  If testpPath.GetDebugMode Then
+'    pPathTestsCommon.OutputActualXPaths EvaluatedPPath.GetMatchingNavigationalPPaths
+'  End If
   Set InterimEvaluatedPPath1 = Nothing
   Set InterimEvaluatedPPath2 = Nothing
   Set InterimEvaluatedPPath3 = Nothing

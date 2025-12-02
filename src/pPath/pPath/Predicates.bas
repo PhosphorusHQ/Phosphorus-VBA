@@ -40,12 +40,12 @@ Public Sub ProcessPredicates(myNextStep As pPath.Step)
     Dim intPredicateGroupCounter As Integer
     intNumberOfPredicateGroups = myNextStep.PredicateSet(intPredicateSetCounter).NumberOfPredicateGroups
     For intPredicateGroupCounter = 1 To intNumberOfPredicateGroups
-      
+
       'Do we have any predicates to process for this group?
       Dim strCurrentGroupAttributesPPath As String
       strCurrentGroupAttributesPPath = myNextStep.PredicateSet(intPredicateSetCounter).PredicateGroup(intPredicateGroupCounter).FinalPPath
       If strCurrentGroupAttributesPPath <> "" Then
-  
+
         Dim boolIsFirstSetPositionalPredicate As Boolean
         boolIsFirstSetPositionalPredicate = ( _
           intPredicateSetCounter = 1 And _
@@ -57,7 +57,7 @@ Public Sub ProcessPredicates(myNextStep As pPath.Step)
         Dim strCurrentNavigationalPPath As String
         Dim strCurrentAttributeName As String
         Dim strCurrentNodeControlType As String
-    
+
         'Prepare context node counter variables
         If boolIsFirstSetPositionalPredicate Then
           Dim eleCurrentParentUIElement As UIAutomationClient.IUIAutomationElement
@@ -65,15 +65,15 @@ Public Sub ProcessPredicates(myNextStep As pPath.Step)
           Dim intContextElementPositionCounter As Integer
           Dim intContextElementLastCounter As Integer
         End If
-        
+
         intNumberOfSetElements = This.pPathReturnClass.GetNumberOfWorkingCopyOfCandidateElements(This.CurrentLocationPathExpressionCounter)
         For intSetElementCounter = 1 To intNumberOfSetElements
-    
+
           Set eleCurrentUIElement = This.pPathReturnClass.GetWorkingCopyElement(This.CurrentLocationPathExpressionCounter, intSetElementCounter)
           strCurrentNavigationalPPath = This.pPathReturnClass.GetWorkingCopyNavigationalPPath(This.CurrentLocationPathExpressionCounter, intSetElementCounter)
           strCurrentAttributeName = This.pPathReturnClass.GetWorkingCopyAttributeName(This.CurrentLocationPathExpressionCounter, intSetElementCounter)
           strCurrentNodeControlType = This.AutomationDictionaries.ControlTypeIDs(eleCurrentUIElement.CurrentControlType)
-  
+
           If boolIsFirstSetPositionalPredicate Then
             Set eleCurrentParentUIElement = This.TreeWalker.GetParentElement(eleCurrentUIElement)
             strCurrentParentElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(eleCurrentParentUIElement)
@@ -131,7 +131,7 @@ Public Sub ProcessPredicates(myNextStep As pPath.Step)
           ProcessAttributeChecks eleCurrentUIElement, strCurrentNavigationalPPath & "/"
           ProcessTextAndValueChecks eleCurrentUIElement
           lstrCurrentPredicateTest = pPath.ExcelUserDefinedFunctions.RenameExcelFunctions(lstrCurrentPredicateTest)
-          
+
           Dim boolCurrentPredicateTestPasses As Boolean
           On Error Resume Next
           boolCurrentPredicateTestPasses = True
@@ -155,12 +155,12 @@ Public Sub ProcessPredicates(myNextStep As pPath.Step)
       End If
 
     Next intPredicateGroupCounter
-    
+
     'Reset Working Copy after each interim predicate set
     If (intPredicateSetCounter < intNumberOfPredicateSets) And (strCurrentSetAttributesPPath <> "") Then
       This.pPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
     End If
-    
+
   Next intPredicateSetCounter
 
 End Sub
@@ -168,19 +168,19 @@ End Sub
 Private Sub ProcessPPathFunctions( _
   eleCurrentContextUIElement As UIAutomationClient.IUIAutomationElement, _
   strInitialPPath As String)
-  
+
   While SourcePPathContainedATopLevelFunction(eleCurrentContextUIElement, strInitialPPath, "count")
   Wend
   While SourcePPathContainedATopLevelFunction(eleCurrentContextUIElement, strInitialPPath, "not")
   Wend
-    
+
 End Sub
 
 Private Function SourcePPathContainedATopLevelFunction( _
   eleCurrentContextUIElement As UIAutomationClient.IUIAutomationElement, _
   strInitialPPath As String, _
   strFunctionName As String) As Boolean
-  
+
   SourcePPathContainedATopLevelFunction = False
   Dim intStartOfFunction As Integer
   intStartOfFunction = VBA.Strings.InStr(1, lstrCurrentPredicateTest, strFunctionName & "(")
@@ -224,16 +224,16 @@ End Function
 Private Sub ProcessNestedPPaths( _
   eleCurrentContextUIElement As UIAutomationClient.IUIAutomationElement, _
   strInitialPPath As String)
-  
+
   While SourcePPathContainedANestedPPath(eleCurrentContextUIElement, strInitialPPath)
   Wend
-    
+
 End Sub
 
 Private Function SourcePPathContainedANestedPPath( _
   eleCurrentContextUIElement As UIAutomationClient.IUIAutomationElement, _
   strInitialPPath As String) As Boolean
-  
+
   SourcePPathContainedANestedPPath = False
   Dim intStartOfNestedPPath As Integer
   intStartOfNestedPPath = VBA.Strings.InStr(1, lstrCurrentPredicateTest, "./")
@@ -281,7 +281,7 @@ End Function
 Private Sub ProcessAttributeChecks( _
   eleCurrentContextUIElement As UIAutomationClient.IUIAutomationElement, _
   strInitialPPath As String)
-  
+
   While SourcePPathContainedAnAttributeCheck(eleCurrentContextUIElement, strInitialPPath)
   Wend
   lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, "{AtSign}", "@")
@@ -337,7 +337,7 @@ Private Function SourcePPathContainedAnAttributeCheck( _
               End If
             End If
           End If
-          
+
           If IsArray(varPropertyValue) Then
             If UBound(varPropertyValue) = -1 Then
               varPropertyValue = ""
@@ -419,7 +419,7 @@ End If
                   boolAttributeValueStarted = True
                 End If
               End If
-            
+
             Next intEndOfTargetAttibuteValue
             Dim strAttributeValue As String
             If intEndOfTargetAttibuteValue = VBA.Strings.Len(lstrCurrentPredicateTest) Then
@@ -427,7 +427,7 @@ End If
             Else
               strAttributeValue = VBA.Strings.Mid(lstrCurrentPredicateTest, intStartOfTargetAttibuteValue, intEndOfTargetAttibuteValue - intStartOfTargetAttibuteValue + 1)
             End If
-    
+
             Dim strSourcePredicateString As String
             strSourcePredicateString = "@" & strAttributeName & strComparisonOperator
             If boolAttributeValueIsString Then
@@ -435,7 +435,7 @@ End If
             Else
               strSourcePredicateString = strSourcePredicateString & strAttributeValue
             End If
-    
+
             If varPropertyValue = strAttributeValue Then
               lstrCurrentPredicateTest = VBA.Strings.Replace(lstrCurrentPredicateTest, strSourcePredicateString, "TRUE")
             Else
@@ -449,9 +449,9 @@ End If
         Exit For
       End If
     Next Key
-  
+
   End If
-  
+
 End Function
 
 Private Sub ProcessTextAndValueChecks(eleCurrentContextUIElement As UIAutomationClient.IUIAutomationElement)

@@ -21,7 +21,7 @@ Public Sub OpenWB()
 End Sub
 
 Public Sub CloseWB()
-  'Auotmatically closed on Module Cleanup?
+  'Automatically closed on Module Cleanup?
   On Error Resume Next
   gPPathWB.Close savechanges:=False
   Set gPPathWB = Nothing

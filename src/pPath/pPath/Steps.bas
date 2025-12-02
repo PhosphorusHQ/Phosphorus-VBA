@@ -65,21 +65,21 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
 
   'Get Next Axis
   intCharacter = intCharacter + 1
-    
+
   If VBA.Strings.Left(strRemainingPPath, 2) = Axes.DescendantShorthand Then
     NextStep.Axis = Axes.DescendantShorthand
     strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, 3, VBA.Strings.Len(strRemainingPPath))
-      
+
   ElseIf VBA.Strings.Left(strRemainingPPath, 1) = "/" Then
-     
+
     'New Step - Remove the leading step character
     strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, 2)
-      
+
     'Child
     If VBA.Strings.InStr(strRemainingPPath, Axes.Child) = 1 Then
       NextStep.Axis = Axes.ChildShorthand
       strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, VBA.Len(Axes.Child) + 1)
-      
+
     'Descendants
     ElseIf VBA.Strings.InStr(strRemainingPPath, Axes.Descendant) = 1 Then
       NextStep.Axis = Axes.DescendantShorthand
@@ -87,7 +87,7 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
     ElseIf VBA.Strings.InStr(strRemainingPPath, Axes.DescendantOrSelf) = 1 Then
       NextStep.Axis = Axes.DescendantOrSelf
       strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, VBA.Len(Axes.DescendantOrSelf) + 1)
-       
+
     'Parents
     'NOTE: We must check for the parent axes ".." before checking for the self axis "."
     ElseIf VBA.Strings.InStr(strRemainingPPath, Axes.Parent) = 1 Then
@@ -96,7 +96,7 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
     ElseIf VBA.Strings.InStr(strRemainingPPath, Axes.ParentShorthand) = 1 Then
       NextStep.Axis = Axes.ParentShorthand
       strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, VBA.Len(Axes.ParentShorthand) + 1)
-        
+
     'Self only
     ElseIf VBA.Strings.InStr(strRemainingPPath, Axes.SelfShorthand) = 1 Then
       NextStep.Axis = Axes.SelfShorthand
@@ -104,7 +104,7 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
     ElseIf VBA.Strings.InStr(strRemainingPPath, Axes.Self) = 1 Then
       NextStep.Axis = Axes.SelfShorthand
       strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, VBA.Len(Axes.Self) + 1)
-      
+
     'Ancestor Axes
     ElseIf VBA.Strings.InStr(strRemainingPPath, Axes.Ancestor) = 1 Then
       NextStep.Axis = Axes.Ancestor
@@ -112,7 +112,7 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
     ElseIf VBA.Strings.InStr(strRemainingPPath, Axes.AncestorOrSelf) = 1 Then
       NextStep.Axis = Axes.AncestorOrSelf
       strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, VBA.Len(Axes.AncestorOrSelf) + 1)
-      
+
     'Siblings
     ElseIf VBA.Strings.InStr(strRemainingPPath, Axes.PrecedingSibling) = 1 Then
       NextStep.Axis = Axes.PrecedingSibling
@@ -120,33 +120,33 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
     ElseIf VBA.Strings.InStr(strRemainingPPath, Axes.FollowingSibling) = 1 Then
       NextStep.Axis = Axes.FollowingSibling
       strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, VBA.Len(Axes.FollowingSibling) + 1)
-      
+
     'Preceding
     ElseIf (VBA.Strings.InStr(strRemainingPPath, Axes.Preceding) = 1) Then
       NextStep.Axis = Axes.Preceding
       strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, VBA.Len(Axes.Preceding) + 1)
-      
+
     'Following
     ElseIf (VBA.Strings.InStr(strRemainingPPath, Axes.Following) = 1) Then
       NextStep.Axis = Axes.Following
       strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, VBA.Len(Axes.Following) + 1)
-      
+
     'Attribute
     ElseIf (VBA.Strings.InStr(strRemainingPPath, Axes.Attribute) = 1) Then
       NextStep.Axis = Axes.Attribute
       strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, VBA.Len(Axes.Following) + 1)
-      
+
     Else
-      
+
       'No recognised axis so this must be an implicit default child axis
       NextStep.Axis = Axes.ChildShorthand
-      
+
     End If
-  
+
   End If
-    
+
   intCharacter = 0
-        
+
   'Get Next Node Test
   If VBA.Strings.Left(strRemainingPPath, 1) = "*" Then
     NextStep.NodeTest = "*"
@@ -206,7 +206,7 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
       Exit Function
     End If
   End If
-        
+
   'Get Predicates
   If strRemainingPPath = "" Then
     'End of step - skip to end of step
@@ -237,7 +237,7 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
          End If
       End If
     Next intCharacter
-      
+
     Dim strNextPredicates As String
     If intStartOfNextStep = 0 Then
       'No more steps so we expect only predicates
@@ -248,9 +248,9 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
       strNextPredicates = VBA.Strings.Left(strRemainingPPath, intStartOfNextStep - 1)
       strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, intStartOfNextStep, VBA.Strings.Len(strRemainingPPath))
     End If
-      
+
     NextStep.AddPredicates strNextPredicates
-      
+
   Else
     This.pPathReturnClass.SetErrorMessage = _
       pPath.ConstantsAndStatic.ILLEGAL_START_OF_PREDICATE_ERROR_MESSAGE & _
@@ -259,9 +259,9 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
   End If
 
   NextStep.RemainingPPath = strRemainingPPath
-  
+
   Set GetNextStep = NextStep
- 
+
 End Function
 
 

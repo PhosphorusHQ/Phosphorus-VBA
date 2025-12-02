@@ -56,19 +56,19 @@ Public Sub AddMatchingElement( _
   ByRef MatchingElement As UIAutomationClient.IUIAutomationElement, _
   AttributeName As String, _
   pPathToAdd As String)
-  
+
   Dim boolElementAddedAlready As Boolean
   boolElementAddedAlready = False
-      
+
   Dim strNewUIElementRuntimeID As String
   strNewUIElementRuntimeID = pPath.RuntimeIDs.GetElementRuntimeID(MatchingElement)
- 
+
 'If strNewUIElementRuntimeID = "" Then
 '  Debug.Print MatchingElement.GetCachedPropertyValue(UIAutomationClient.UIA_PropertyIds.UIA_NativeWindowHandlePropertyId)
 'End If
 
   If TargetMatchingElements.GetNumberOfMatchingElements > 0 Then
-    
+
     'Ignore transient elements with no runtime ID - these could be MSAA elements!?
     If strNewUIElementRuntimeID <> "" Then
       Dim i As Integer
@@ -92,7 +92,7 @@ Public Sub AddMatchingElement( _
     Logger.InternalDebug "Adding Matching Element pPath: " & pPathToAdd
     TargetMatchingElements.AddMatchingElement TargetMatchingElements.GetNumberOfMatchingElements + 1, MatchingElement, AttributeName, pPathToAdd
   End If
-  
+
 End Sub
 
 Property Get GetErrorMessage() As String

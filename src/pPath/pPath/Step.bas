@@ -77,27 +77,27 @@ Public Sub AddPredicates(PredicatePPath As String)
   Else
     Dim intNumberOfPredicateSets As Integer
     intNumberOfPredicateSets = 0
-    
+
   '  strPredicatesArray = VBA.Strings.Split(PredicatePPath, ")")
 'MsgBox "PJG1"
 'TODO: Split arr by ")"'s that are not inside a [] pair
     Dim intLengthOfPredicatePPath As Integer
     intLengthOfPredicatePPath = VBA.Strings.Len(PredicatePPath)
-    
+
     Dim intPredicateSetCounter As Integer
     intPredicateSetCounter = 0
-    
+
     Dim intStartOfCurrentPredicateSet As Integer
     intStartOfCurrentPredicateSet = 1
-    
+
     Dim intCharacterCounter As Integer
     For intCharacterCounter = 1 To intLengthOfPredicatePPath
-      
+
       Dim boolInsideAPredicate As Boolean
       Dim strCurrentPredicateSetPPath As String
       Dim strCurrentCharacter As String
       strCurrentCharacter = VBA.Strings.Mid(PredicatePPath, intCharacterCounter, 1)
-      
+
       If strCurrentCharacter = "[" Then
         boolInsideAPredicate = True
       Else
@@ -136,10 +136,10 @@ Public Sub AddPredicates(PredicatePPath As String)
           intStartOfCurrentPredicateSet = intCharacterCounter + 1
         End If
       End If
-      
+
     Next intCharacterCounter
-    
-    
+
+
 '    intNumberOfPredicateSets = UBound(strPredicatesArray) + 1
 '    ReDim this.PredicateSets(intNumberOfPredicateSets)
 '    Dim intPredicateSetCounter As Integer
@@ -150,7 +150,7 @@ Public Sub AddPredicates(PredicatePPath As String)
 
 'MsgBox "PJG!"
   End If
-  
+
 '  Dim intCharacterCounter
 End Sub
 

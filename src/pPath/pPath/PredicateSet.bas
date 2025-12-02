@@ -64,7 +64,7 @@ Public Sub Initialise(SourcePPath As String)
       strNextPredicateGroup = strNextPredicateGroup & strCurrentCharacter
     End If
   Next iCharacterCounter
- 
+
 End Sub
 
 Public Function SourcePPath() As String

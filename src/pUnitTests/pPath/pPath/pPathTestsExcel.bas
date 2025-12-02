@@ -71,9 +71,9 @@ Private Sub AfterTest()
   On Error GoTo ErrorHandler
   
   If Not testpPath Is Nothing Then
-    If testpPath.GetDebugMode Then
-      pUnitTests_pPath.pPathTestsCommon.OutputActualXPaths EvaluatedPPath.GetMatchingNavigationalPPaths
-    End If
+'    If testpPath.GetDebugMode Then
+'      pUnitTests_pPath.pPathTestsCommon.OutputActualXPaths EvaluatedPPath.GetMatchingNavigationalPPaths
+'    End If
   End If
   Set EvaluatedPPath = Nothing
   Set testpPath = Nothing
@@ -990,7 +990,7 @@ Arrange:
   End If
 
   If Not wbUDFs Is Nothing Then
-    AddReferenceToWorkbook wbUDFs.FullName
+    pUnitTests_pPath.References.AddReferenceToWorkbookOrLibrary wbUDFs.FullName
   End If
     
   strTestPPath = "//Pane[@Name=""Sheet Sheet1""]//element(*, string)[udf:alldogsarecats(text())=""Cat""]"
@@ -1006,7 +1006,7 @@ Assert:
   Phosphorus.AssertionsStatic.pAssert.Equal True, EvaluatedPPath.ReturnedValue, "ReturnedValue", isCritical:=True
     
 'Tidy up
-  RemoveAllAddedReferences
+'  RemoveAllAddedReferences
   wbUDFs.Close savechanges:=False
   Set wbUDFs = Nothing
   

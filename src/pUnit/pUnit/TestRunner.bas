@@ -34,7 +34,7 @@ Private TotalSetupDuration As Double
 Private TotalTeardownDuration As Double
 
 ' Cache for method signatures to optimize parsing
-Private MethodSignatures As Object ' Scripting.Dictionary
+Private MethodSignatures As Scripting.dictionary
 
 'Last created log file for unit testing of pUnit itself
 Public LastCreatedPUnitLogFile As String
@@ -44,7 +44,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
 
   Phosphorus.Log4PStatic.GetLogger
   
-  Set MethodSignatures = CreateObject("Scripting.Dictionary") ' Initialize signature cache
+  Set MethodSignatures = New Scripting.dictionary ' Initialize signature cache
   TotalTestMethodDuration = 0
   TotalSetupDuration = 0
   TotalTeardownDuration = 0
@@ -1790,7 +1790,7 @@ Private Function GetProcedureSignature(codeMod As CodeModule, procedureName As S
         
   'Initialse the dictionary of test signatures if necessary
   If MethodSignatures Is Nothing Then
-    Set MethodSignatures = CreateObject("Scripting.Dictionary")
+    Set MethodSignatures = New Scripting.dictionary
   End If
     
   'If the method signature already exists in the collection just return it
@@ -2178,7 +2178,7 @@ Private Function ParseComplexParameters(paramString As String, TestName As Strin
                 Phosphorus.Log4PStatic.Logger.ExternalWarning "Empty key in dictionary parameter for test " & TestName & ": " & paramString
                 isValid = False
             Else
-                Set dict = CreateObject("Scripting.Dictionary")
+                Set dict = New Scripting.dictionary
                 Dim dictValue As Variant
                 On Error Resume Next
                 dictValue = ParseParameterValue(currentParam.ToString, TestName)
@@ -2243,7 +2243,7 @@ Private Function ParseParameterValue(paramString As String, TestName As String) 
     End If
   ElseIf InStr(paramString, "=") > 0 And Not (paramString Like """*""") Then
     Dim dict As Object
-    Set dict = CreateObject("Scripting.Dictionary")
+    Set dict = New Scripting.dictionary
     Dim pairs As Variant
     On Error Resume Next
     pairs = ParseComplexParameters(paramString, TestName)

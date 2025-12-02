@@ -120,7 +120,7 @@ Private Const NMPWAIT_WAIT_FOREVER As Long = -1
 Private PipeHandle As LongPtr
 Private ProcessId As Long
 Private ProcessHandle As LongPtr
-Private myWshShell As wshShell 'Object
+Private myWshShell As wshShell
 'https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb776890(v=vs.85)
 'Microsoft Shell Controls and Automation (Shell32)
 Private ScriptPath As String

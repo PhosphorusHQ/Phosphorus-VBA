@@ -26,9 +26,9 @@ Private This As pPath.Common
 Private lstrRemainingXpath As String
 Private lstrNextAxis As String
 Private lstrNextNodeTest As String
-Private leleContextNodes() As UIAutomationClient.IUIAutomationElement 'Requres reference to UIAutomationClient
+Private leleContextNodes() As UIAutomationClient.IUIAutomationElement
 Private lstrInitialPPaths() As String
-  
+
 Public Sub Initialise()
   Set This = New pPath.Common
   Erase leleContextNodes
@@ -58,7 +58,7 @@ Public Sub SetApplicationRootElement(eleNewRootUIElement As UIAutomationClient.I
   Set This.ApplicationRootUIElement = eleNewRootUIElement
 End Sub
 
-Public Sub AddContextNode(ContextNode As UIAutomationClient.IUIAutomationElement, InitialPPath As String, Optional FirstNode As Boolean)
+Public Sub AddContextNode(ContextNode As UIAutomationClient.IUIAutomationElement, InitialpPath As String, Optional FirstNode As Boolean)
   If FirstNode Then
     Erase leleContextNodes
     Erase lstrInitialPPaths
@@ -73,7 +73,7 @@ Public Sub AddContextNode(ContextNode As UIAutomationClient.IUIAutomationElement
     ReDim Preserve lstrInitialPPaths(i)
   End If
   Set leleContextNodes(i) = ContextNode
-  lstrInitialPPaths(i) = InitialPPath
+  lstrInitialPPaths(i) = InitialpPath
 End Sub
 
 Public Sub InitialiseEvaluation(intNumberOfXPathExpressions As Integer)
@@ -81,7 +81,7 @@ Public Sub InitialiseEvaluation(intNumberOfXPathExpressions As Integer)
   Set This.pPathReturnClass = Nothing
   Set This.pPathReturnClass = pPath.ConstantsAndStatic.GetNewPhosphorusPPathReturnClass(intNumberOfXPathExpressions)
 End Sub
- 
+
 'See: https://www.w3schools.com/xml/xpath_syntax.asp
 
 'XPath Set operators
@@ -90,7 +90,7 @@ End Sub
 Public Function Evaluate( _
   ByVal FullLocationPathExpression As String, _
   Optional ContextNode As UIAutomationClient.IUIAutomationElement, _
-  Optional InitialPPath As String, _
+  Optional InitialpPath As String, _
   Optional UnitTestingMode As Boolean) As pPath.ReturnClass
 
   Logger.InternalTrace "Entering 'pPath.Core.Evaluate' function"
@@ -98,29 +98,29 @@ Public Function Evaluate( _
 
   Logger.InternalTrace "Checking for Context Node"
   If Not ContextNode Is Nothing Then 'An InitialPPath should also be provided
-    Logger.InternalDebug "Adding first context node: " & InitialPPath
-    AddContextNode ContextNode, InitialPPath, True
+    Logger.InternalDebug "Adding first context node: " & InitialpPath
+    AddContextNode ContextNode, InitialpPath, True
   Else
-    Logger.InternalDebug "Initial pPath: " & VBA.Interaction.IIf(InitialPPath = "", "{null}", InitialPPath)
+    Logger.InternalDebug "Initial pPath: " & VBA.Interaction.IIf(InitialpPath = "", "{null}", InitialpPath)
   End If
 
   This.UnitTestingMode = UnitTestingMode
-  
+
   'Extract any top level node set functions
   Dim strTopLevelFunctionPrefix As String
   Dim strTopLevelFunctionSuffix As String
   strTopLevelFunctionPrefix = ""
   strTopLevelFunctionSuffix = ""
-    
+
   Dim intTopLevelFunctionArrayCounter As Integer
   Dim boolTopLEvelFunctionSet As Boolean
   boolTopLEvelFunctionSet = True
   While boolTopLEvelFunctionSet
     boolTopLEvelFunctionSet = False
-  
+
     Dim strCurrentTopLevelFunction As String
     Dim intNumberOfAddtionalParameters As Integer
-    
+
     Dim TopLevelFunction As Collection
     For Each TopLevelFunction In pPath.ExcelTopLevelFunctions.TopLevelFunctions
       strCurrentTopLevelFunction = TopLevelFunction("FunctionName")
@@ -139,13 +139,13 @@ Public Function Evaluate( _
         Exit For
       End If
     Next TopLevelFunction
-  
+
   Wend
-  
+
   Dim strAllXPathExpressions() As String
   strAllXPathExpressions = This.Steps.GetAllXPathExpressions(FullLocationPathExpression)
   lintNumberOfXPathExpressions = UBound(strAllXPathExpressions)
-  
+
   InitialiseEvaluation lintNumberOfXPathExpressions
   This.pPathReturnClass.TopLevelFunctionPrefix = strTopLevelFunctionPrefix
   This.pPathReturnClass.TopLevelFunctionSuffix = strTopLevelFunctionSuffix
@@ -153,7 +153,7 @@ Public Function Evaluate( _
   If Not PreValidateFullPPathExpression(FullLocationPathExpression) Then
     GoTo ExitFunction:
   End If
-  
+
   If Not PreValidateSplitPPathExpression(strAllXPathExpressions, leleContextNodes) Then
     GoTo ExitFunction:
   End If
@@ -179,21 +179,21 @@ Public Function Evaluate( _
   intNumberOfContextNodes = Phosphorus.Utils.GetSizeOfArray(leleContextNodes)
 
   For intLocationPathExpressionCounter = 1 To lintNumberOfXPathExpressions
-  
+
     This.CurrentLocationPathExpressionCounter = intLocationPathExpressionCounter
     strCurrentLocationPathExpression = strAllXPathExpressions(This.CurrentLocationPathExpressionCounter)
- 
+
     Dim CurrentContextNode As UIAutomationClient.IUIAutomationElement
     Dim strInitialPPathForCurrentExpression As String
     If VBA.Strings.Left(strCurrentLocationPathExpression, 1) = "." Then
-    
+
       Dim intNumberOfTargetContextNode As Integer
       If intNumberOfContextNodes = 1 Then
         intNumberOfTargetContextNode = 1
       Else
         intNumberOfTargetContextNode = intLocationPathExpressionCounter
       End If
-      
+
       Set CurrentContextNode = leleContextNodes(intNumberOfTargetContextNode)
       strInitialPPathForCurrentExpression = lstrInitialPPaths(intNumberOfTargetContextNode)
       If strInitialPPathForCurrentExpression = "" Then
@@ -205,7 +205,7 @@ Public Function Evaluate( _
       Set CurrentContextNode = This.ApplicationRootUIElement
       strInitialPPathForCurrentExpression = ""
     End If
-    
+
     'Start each Location Path Expression at the Current Context Node
     This.pPathReturnClass.AddMatchingElement _
       This.pPathReturnClass.GetWorkingCopyOfCandidateElements(This.CurrentLocationPathExpressionCounter), _
@@ -235,10 +235,10 @@ Public Function Evaluate( _
     Dim intNumberOfSteps As Integer
     intNumberOfSteps = UBound(mySteps)
     For intStepCounter = 1 To intNumberOfSteps
-    
+
       Dim myNextStep As pPath.Step
       Set myNextStep = mySteps(intStepCounter)
-    
+
       'Check for error messages with the next step
       If myNextStep.Axis = Axes.None Then
         This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NULL_PPATH_ERROR_MESSAGE
@@ -251,30 +251,30 @@ Public Function Evaluate( _
 
         This.Axes.ProcessNextAxis myNextStep
         This.pPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
-        
+
         This.NodeTests.ProcessNextNodeTest myNextStep
-   
+
         If myNextStep.NumberOfPredicateSets > 0 Then
           This.pPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
           This.Predicates.ProcessPredicates myNextStep
         End If
-        
+
         'Don't MoveCandidateElementsToWorkingCopy at the last action if we have no more PPath, ie. another step to process
         If myNextStep.RemainingPPath <> "" Then
           This.pPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
         End If
-      
+
       End If
       If This.pPathReturnClass.GetErrorMessage <> "" Then
         Exit For
       End If
-     
+
     Next intStepCounter
 
   Next intLocationPathExpressionCounter
-  
+
   This.pPathReturnClass.PromoteCandidateElementsToMatchingElements
-    
+
   'Set a return value - apply top level functions
   If This.pPathReturnClass.TopLevelFunctionPrefix = "count(" And This.pPathReturnClass.TopLevelFunctionSuffix = ")" Then
     This.pPathReturnClass.ReturnedValue = This.pPathReturnClass.GetFinalNumberOfMatchingElements
@@ -289,10 +289,10 @@ Public Function Evaluate( _
     Else
 '      Excel.Application.ScreenUpdating = False
       pPath.Workbook.OpenWB
-      
+
       Dim PPathWS As Worksheet
       Set PPathWS = gPPathWB.Worksheets("Sheet1")
-      
+
       gPPathWB.Worksheets("Sheet1").Cells.ClearContents
       Dim strOutputArray As String
       Dim varValue As Variant
@@ -321,7 +321,7 @@ Public Function Evaluate( _
 
 ExitFunction:
     Set Evaluate = This.pPathReturnClass
-  
+
 End Function
 
 Private Function PreValidateFullPPathExpression(pPathToValidate As String) As Boolean
@@ -391,7 +391,7 @@ Private Function PreValidateFullPPathExpression(pPathToValidate As String) As Bo
       End If
     End If
   End If
-  
+
 Pass:
   PreValidateFullPPathExpression = True
   Exit Function
@@ -411,14 +411,14 @@ Function FindUnexpectedBracket(pPath As String) As Long
   Dim i As Long
   Dim bracketStack As String
   Dim char As String
-    
+
   ' Initialize stack to track opening brackets
   bracketStack = ""
-    
+
   ' Iterate through each character
   For i = 1 To VBA.Strings.Len(pPath)
     char = VBA.Strings.Mid(pPath, i, 1)
-       
+
     Select Case char
       Case "("
         ' Push opening round bracket to stack
@@ -444,7 +444,7 @@ Function FindUnexpectedBracket(pPath As String) As Long
         bracketStack = VBA.Strings.Left(bracketStack, VBA.Strings.Len(bracketStack) - 1)
     End Select
   Next i
-    
+
   ' Return 0 if no unexpected brackets found
   FindUnexpectedBracket = 0
 End Function
@@ -452,13 +452,13 @@ End Function
 Private Function PreValidateSplitPPathExpression(pPathArray() As String, ContextNodes() As UIAutomationClient.IUIAutomationElement) As Boolean
   '/& // are absolute and start at the root
   'Anything else is relative to a context node which must be set
-  
+
   Dim intNumberOfContextNodes As Integer
   intNumberOfContextNodes = Phosphorus.Utils.GetSizeOfArray(ContextNodes)
-  
+
   Dim intNumberOfRelativeExpressions As Integer
   intNumberOfRelativeExpressions = 0
-  
+
   Dim boolContextModeUsed As Boolean
   boolContextModeUsed = False
   'Null PPath are caught elsewhere
@@ -484,21 +484,21 @@ Private Function PreValidateSplitPPathExpression(pPathArray() As String, Context
       End If
     End If
   Next iCounter
-  
+
   If intNumberOfContextNodes >= 1 And Not boolContextModeUsed Then
     This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.UNUSED_RELATIVE_PPATH_CONTEXT_NODE
     PreValidateSplitPPathExpression = False
     Exit Function
   End If
-  
+
   If intNumberOfContextNodes > 1 And (intNumberOfContextNodes <> intNumberOfRelativeExpressions) Then
     This.pPathReturnClass.SetErrorMessage = pPath.ConstantsAndStatic.NUMBER_OF_RELATIVE_PPATHS_TO_CONTEXT_NODES_MISMATCH
     PreValidateSplitPPathExpression = False
     Exit Function
   End If
-  
+
   PreValidateSplitPPathExpression = True
-  
+
 End Function
 
 '============================================

@@ -32,7 +32,7 @@ Public Sub ProcessNextNodeTest(myNextStep As pPath.Step)
   Dim strCurrentNavigationalPPath As String
   Dim strCurrentAttributeName As String
   Dim strCurrentNodeControlType As String
-  
+
   intNumberOfElements = This.pPathReturnClass.GetNumberOfWorkingCopyOfCandidateElements(This.CurrentLocationPathExpressionCounter)
   For intElementCounter = 1 To intNumberOfElements
     Set eleCurrentUIElement = This.pPathReturnClass.GetWorkingCopyElement(This.CurrentLocationPathExpressionCounter, intElementCounter)
@@ -57,22 +57,22 @@ Public Sub ProcessNextNodeTest(myNextStep As pPath.Step)
     If (myNextStep.NodeTest = "node()") Then
       This.Axes.GetAttributes eleCurrentUIElement, strCurrentNavigationalPPath & "/"
     End If
-  
+
     'Get text?
     If (myNextStep.NodeTest = "text()") Then
       GetTextNode eleCurrentUIElement, strCurrentNavigationalPPath
     End If
-  
+
   Next intElementCounter
 
 End Sub
 
 'https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controlpattern-ids
-Public Sub GetTextNode(UIElement As UIAutomationClient.IUIAutomationElement, InitialPPath As String)
+Public Sub GetTextNode(UIElement As UIAutomationClient.IUIAutomationElement, InitialpPath As String)
 
   If GetTextValue(UIElement) <> "" Then
     Dim strCurrentNavigationalPPath As String
-    strCurrentNavigationalPPath = InitialPPath & "/text()"
+    strCurrentNavigationalPPath = InitialpPath & "/text()"
     This.pPathReturnClass.AddMatchingElement This.pPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), UIElement, "text()", strCurrentNavigationalPPath
   End If
 
@@ -94,16 +94,16 @@ Public Function GetTextValue(UIElement As UIAutomationClient.IUIAutomationElemen
       TextContent = TextPattern.DocumentRange.GetText(-1) 'Get all text
     End If
   End If
-  
+
   GetTextValue = TextContent
-  
+
 End Function
 
-Public Sub GetValuesOfDataType(UIElement As UIAutomationClient.IUIAutomationElement, DataType As String, InitialPPath As String)
-  
+Public Sub GetValuesOfDataType(UIElement As UIAutomationClient.IUIAutomationElement, DataType As String, InitialpPath As String)
+
   Dim varValue As Variant
   Dim strElementDataType As String
-  
+
   varValue = pPath.Utils.GetValue(UIElement)
   If varValue = "" Then
     strElementDataType = "null"
@@ -129,15 +129,15 @@ Public Sub GetValuesOfDataType(UIElement As UIAutomationClient.IUIAutomationElem
       End If
       On Error GoTo 0
     End If
-    
+
     If (strElementDataType = DataType) Or _
        (strElementDataType = "integer" And DataType = "decimal") Then
       Dim strCurrentNavigationalPPath As String
-      strCurrentNavigationalPPath = InitialPPath & "/@value"
+      strCurrentNavigationalPPath = InitialpPath & "/@value"
       This.pPathReturnClass.AddMatchingElement This.pPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), UIElement, "text()", strCurrentNavigationalPPath
     End If
   End If
-  
+
 End Sub
 
 

@@ -21,7 +21,7 @@ Option Explicit
 
 Private Type Settings
   configFilePath As String
-  configData As Scripting.dictionary ' Requires Microsoft Scripting Runtime
+  configData As Scripting.dictionary
   IsInitialized As Boolean
 End Type
 

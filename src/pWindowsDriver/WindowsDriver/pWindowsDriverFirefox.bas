@@ -101,4 +101,7 @@ Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
   Phosphorus.pExceptions.Raise Phosphorus.Exceptions.MethodNotImplementedYet, "pWindowsDriverFirefox.CloseAllOtherTabs"
 End Sub
 
+Public Sub IWindowsDriverWebBrowser_RefreshPage()
+  Phosphorus.pExceptions.Raise Phosphorus.Exceptions.MethodNotImplementedYet, "pWindowsDriverFirefox.RefreshPage"
+End Sub
 

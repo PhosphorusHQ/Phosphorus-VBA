@@ -151,8 +151,9 @@ End Function
 
 Public Function Actions() As pWindowsDriverElement_Actions
   If This.Actions Is Nothing Then
-    Set Actions = New pWindowsDriverElement_Actions
-    Actions.Initialise This.UIAElement
+    Set This.Actions = New pWindowsDriverElement_Actions
+    This.Actions.Initialise This.UIAElement
+    Set Actions = This.Actions
   Else
     Set Actions = This.Actions
   End If

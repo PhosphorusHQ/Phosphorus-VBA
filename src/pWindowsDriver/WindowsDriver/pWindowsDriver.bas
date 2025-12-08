@@ -28,6 +28,7 @@ Private Type DriverProperties
   TempDirectoryForCurrentAppInstance As String
   WindowsApp As Phosphorus.WindowsApp
   SubDriver As Object
+  Navigate As pWindowsDriver_Navigate
   WebAppTitle As String
   PageLoadedElementPPath As String 'PPath of an element that indicates the driver has at least partially loaded
   PageLoadedElementExpectedWindowInteractionState As UIAutomationClient.WindowInteractionState
@@ -285,7 +286,7 @@ Private Function RefreshPageUntilBrowserRootElementExists(Name As String, pPath 
   While Continue
     Set ReturnElement = FindElement("BrowserRootWebAreaElement", pPath, TimeoutInSeconds:=0, RootElement:=This.MasterWindowsDriverElement, CheckExistenceOnly:=True)
     If ReturnElement Is Nothing And i <= 10 Then
-      This.SubDriver.RefreshPage
+      Navigate.Refresh
       i = i + 1
     Else
       Continue = False
@@ -510,3 +511,13 @@ End Sub
 Public Sub CloseAllOtherTabs()
    This.SubDriver.IWindowsDriverWebBrowser_CloseAllOtherTabs
 End Sub
+
+Public Function Navigate() As pWindowsDriver_Navigate
+  If This.Navigate Is Nothing Then
+    Set This.Navigate = New pWindowsDriver_Navigate
+    This.Navigate.Initialise Me, This.SubDriver
+    Set Navigate = This.Navigate
+  Else
+    Set Navigate = This.Navigate
+  End If
+End Function

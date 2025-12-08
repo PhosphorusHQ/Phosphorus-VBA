@@ -32,3 +32,6 @@ End Function
 
 Public Sub CloseAllOtherTabs()
 End Sub
+
+Public Sub RefreshPage()
+End Sub

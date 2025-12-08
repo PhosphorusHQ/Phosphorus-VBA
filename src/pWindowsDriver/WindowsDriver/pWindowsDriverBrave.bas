@@ -92,3 +92,7 @@ End Function
 Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
   Phosphorus.pExceptions.Raise Phosphorus.Exceptions.MethodNotImplementedYet, "pWindowsDriverBrave.CloseAllOtherTabs"
 End Sub
+
+Public Sub IWindowsDriverWebBrowser_RefreshPage()
+  Phosphorus.pExceptions.Raise Phosphorus.Exceptions.MethodNotImplementedYet, "pWindowsDriverBrave.RefreshPage"
+End Sub

@@ -123,6 +123,10 @@ Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
   Phosphorus.pExceptions.Raise Phosphorus.Exceptions.MethodNotImplementedYet, "pWindowsDriverMSEdge.CloseAllOtherTabs"
 End Sub
 
+Public Sub IWindowsDriverWebBrowser_RefreshPage()
+  Phosphorus.pExceptions.Raise Phosphorus.Exceptions.MethodNotImplementedYet, "pWindowsDriverMSEdge.RefreshPage"
+End Sub
+
 '        'TODO: How to open new window for edge?
 
 

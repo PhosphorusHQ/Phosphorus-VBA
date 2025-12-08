@@ -90,12 +90,6 @@ Public Function IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType As p
   End Select
 End Function
 
-Public Sub RefreshPage()
-  Dim ele As pWinDriver.pWindowsDriverElement
-  Set ele = This.ParentWindowsDriver.FindElement("Last Tab", "/Pane//ToolBar[@Name=""Navigation""]//Button[@Name=""Reload""]")
-  ele.Actions.Click
-End Sub
-
 Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
   Dim ele As pWinDriver.pWindowsDriverElement
   Set ele = This.ParentWindowsDriver.FindElement("Last Tab", "/Pane//Tab[@Name=""Tab bar""]//TabItem[last()]")
@@ -104,5 +98,9 @@ Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
   ele.Actions.Click
 End Sub
 
-
+Public Sub IWindowsDriverWebBrowser_RefreshPage()
+  Dim ele As pWinDriver.pWindowsDriverElement
+  Set ele = This.ParentWindowsDriver.FindElement("Last Tab", "/Pane//ToolBar[@Name=""Navigation""]//Button[@Name=""Reload""]")
+  ele.Actions.Click
+End Sub
 

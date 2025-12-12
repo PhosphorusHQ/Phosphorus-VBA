@@ -93,7 +93,6 @@ Public Function Evaluate( _
   Optional InitialpPath As String, _
   Optional UnitTestingMode As Boolean) As pPath.ReturnClass
 
-  Logger.InternalTrace "Entering 'pPath.Core.Evaluate' function"
   Logger.InternalInfo "Evaluating PPath: " & FullLocationPathExpression
 
   Logger.InternalTrace "Checking for Context Node"

@@ -178,7 +178,7 @@ End Sub
 
 'Reusable commom method
 Private Sub ValidPageLoadElementByBrowserTypeAndInstanceType(WebBrowserType As pWinDriver.pWebBrowserType, InstanceType As pWinDriver.pInstanceType)
-'Check for no error if we open the URL in the current browser with a valid page load element - parameterised WebBrowserType and InstanceType
+  'Check for no error if we open the URL in the current browser with a valid page load element - parameterised WebBrowserType and InstanceType
 Arrange:
   Set pWindowsDriver = pWinDriver.pWindowsDriverStatic.GetNewPDriver(pWinDriver.pWindowsDriverType.WebBrowser)
   pWindowsDriver.SetWindowsDriverWebBrowserType _
@@ -194,8 +194,6 @@ Act:
   Dim FullBrowserRootWebAreaPPath As String
   FullBrowserRootWebAreaPPath = pWindowsDriver.GetWebBrowserFullBrowserRootWebAreaPPath()
     
-  Dim CurrentPPath As String
-    
   Dim HeaderNodeText As String
   Dim HeaderNodePPath As String
   If WebBrowserType = pWebBrowserType.Opera Then
@@ -203,28 +201,25 @@ Act:
   Else
     HeaderNodeText = "Example Domain"
   End If
-  HeaderNodePPath = pWindowsDriver.GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HeaderNodePPath, HeaderNodeText)
-  CurrentPPath = FullBrowserRootWebAreaPPath & HeaderNodePPath
+  HeaderNodePPath = pWindowsDriver.GetWebBrowserpPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HeaderNodePPath, HeaderNodeText)
   If HeaderNodePPath <> "" Then
-    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", CurrentPPath), "Check for 'Example Domain' Header Element", isCritical:=True
+    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", HeaderNodePPath), "Check for 'Example Domain' Header Element", isCritical:=True
   End If
   
   Dim TextNodeText As String
   Dim TextNodePPath As String
   TextNodeText = "This domain is for use in documentation examples without needing permission. Avoid use in operations."
-  TextNodePPath = pWindowsDriver.GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.TextNodePPath, TextNodeText)
-  CurrentPPath = FullBrowserRootWebAreaPPath & TextNodePPath
+  TextNodePPath = pWindowsDriver.GetWebBrowserpPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.TextNodePPath, TextNodeText)
   If TextNodePPath <> "" Then
-    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", CurrentPPath), "Check for 'Example Domain' Text Element", isCritical:=True
+    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", TextNodePPath), "Check for 'Example Domain' Text Element", isCritical:=True
   End If
 
   Dim HyperlinkNodeText As String
   Dim HyperlinkNodePPath As String
   HyperlinkNodeText = "Learn more"
-  HyperlinkNodePPath = pWindowsDriver.GetWebBrowserPPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HyperlinkNodePPath, HyperlinkNodeText)
-  CurrentPPath = FullBrowserRootWebAreaPPath & HyperlinkNodePPath
+  HyperlinkNodePPath = pWindowsDriver.GetWebBrowserpPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HyperlinkNodePPath, HyperlinkNodeText)
   If HyperlinkNodePPath <> "" Then
-    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", CurrentPPath), "Check for 'Example Domain' Hypelink Element", isCritical:=True
+    Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", HyperlinkNodePPath), "Check for 'Example Domain' Hypelink Element", isCritical:=True
   End If
 
   Exit Sub

@@ -25,6 +25,7 @@ Private Type Configuration
   TempDirectory As String
   ParentWindowsDriver As pWinDriver.pWindowsDriver
   pPathConfiguration As pWinDriver.pWebBrowserPPathConfiguration
+  RefreshPageElement As pWinDriver.pWindowsDriverElement
 End Type
 
 Private Sub Class_Initialize()
@@ -92,15 +93,22 @@ End Function
 
 Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
   Dim ele As pWinDriver.pWindowsDriverElement
-  Set ele = This.ParentWindowsDriver.FindElement("Last Tab", "/Pane//Tab[@Name=""Tab bar""]//TabItem[last()]")
+  Set ele = This.ParentWindowsDriver.FindElement( _
+    "Last Tab", "/Pane//Tab[@Name=""Tab bar""]//TabItem[last()]", _
+    RootElement:=This.ParentWindowsDriver.GetMasterWindowsDriverElement)
   ele.Actions.RightClick
-  Set ele = This.ParentWindowsDriver.FindElement("Close Tab Context Menu Item", "/Pane[1]//MenuBar//MenuItem[@Name=""Close other tabs""]", TimeoutInSeconds:=5)
+  Set ele = This.ParentWindowsDriver.FindElement( _
+    "Close Tab Context Menu Item", _
+    "/Pane[1]//MenuBar//MenuItem[@Name=""Close other tabs""]", _
+    TimeoutInSeconds:=5, _
+    RootElement:=This.ParentWindowsDriver.GetMasterWindowsDriverElement)
   ele.Actions.Click
 End Sub
 
 Public Sub IWindowsDriverWebBrowser_RefreshPage()
-  Dim ele As pWinDriver.pWindowsDriverElement
-  Set ele = This.ParentWindowsDriver.FindElement("Last Tab", "/Pane//ToolBar[@Name=""Navigation""]//Button[@Name=""Reload""]")
-  ele.Actions.Click
+  If This.RefreshPageElement Is Nothing Then
+    Set This.RefreshPageElement = This.ParentWindowsDriver.FindElement("Refresh Page", "/Pane//ToolBar[@Name=""Navigation""]//Button[@Name=""Reload""]", RootElement:=This.ParentWindowsDriver.GetMasterWindowsDriverElement)
+  End If
+  This.RefreshPageElement.Actions.Click
 End Sub
 

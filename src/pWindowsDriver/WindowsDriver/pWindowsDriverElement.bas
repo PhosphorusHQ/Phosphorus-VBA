@@ -25,6 +25,7 @@ Private Type WindowsDriverElement
   UIAElement As UIAutomationClient.IUIAutomationElement
   FoundBypPath As String
   FoundFromUIAElement As UIAutomationClient.IUIAutomationElement
+  FullFoundBypPath As String
   ParentWindowsDriver As pWindowsDriver
   Actions As pWindowsDriverElement_Actions
 End Type
@@ -42,24 +43,30 @@ Public Sub Initialise( _
   ByRef ParentWindowsDriver As pWindowsDriver, _
   ByRef UIAElement As UIAutomationClient.IUIAutomationElement, _
   ByVal FoundBypPath As String, _
+  ByVal ParentFullFoundBypPath As String, _
   Optional ByRef FoundFromUIAElement As UIAutomationClient.IUIAutomationElement)
   
   This.Name = Name
   Set This.ParentWindowsDriver = ParentWindowsDriver
   Set This.UIAElement = UIAElement
   This.FoundBypPath = FoundBypPath
+  This.FullFoundBypPath = ParentFullFoundBypPath & This.FoundBypPath
   If Not FoundFromUIAElement Is Nothing Then
     Set This.FoundFromUIAElement = FoundFromUIAElement
   End If
 
 End Sub
 
-Public Property Get UIAElement() As UIAutomationClient.IUIAutomationElement
-  Set UIAElement = This.UIAElement
-End Property
+Public Function GetUIAElement() As UIAutomationClient.IUIAutomationElement
+  Set GetUIAElement = This.UIAElement
+End Function
 
 Public Property Get FoundBypPath() As String
   FoundBypPath = This.FoundBypPath
+End Property
+
+Public Property Get FullFoundBypPath() As String
+  FullFoundBypPath = This.FullFoundBypPath
 End Property
 
 Public Sub WaitForWindowInteractionState( _

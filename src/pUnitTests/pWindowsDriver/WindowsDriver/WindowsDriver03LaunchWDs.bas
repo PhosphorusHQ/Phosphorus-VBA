@@ -13,11 +13,12 @@ Option Explicit
 
 Private pWindowsDriver As pWinDriver.pWindowsDriver
 Const WEB_APP_NAME = "Example.com"
-Const TARGET_PAGE_URL = "https://www.example.com"
+Dim LocalTargetPageURL As String
 Const TARGET_PAGE_TITLE = "Example Domain"
 
 Private Sub BeforeModule()
   On Error GoTo ErrorHandler
+  LocalTargetPageURL = """" & VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "") & "Tests\Web\ExampleDotCom\Example Domain.mhtml" & """"
   Exit Sub
 ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
@@ -58,7 +59,7 @@ Arrange:
   ExpectedErrorNumber = 0
 Act:
   'Open the browser with a valid url
-  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=30
+  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, LocalTargetPageURL, TimeoutInSeconds:=30
   Exit Sub
 ErrorHandler:
 Assert:
@@ -81,7 +82,7 @@ Arrange:
   ExpectedErrorNumber = VBA.Constants.vbObjectError + Exceptions.WindowsDriverInvalidHTTPStatus
 Act:
   'Open the browser with an invalid url - valid format, syntactically correct
-  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL & "/invalid-url", TimeoutInSeconds:=30
+  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, LocalTargetPageURL & "/invalid-url", TimeoutInSeconds:=30
   Exit Sub
 ErrorHandler:
 Assert:
@@ -104,7 +105,7 @@ Arrange:
   ExpectedErrorNumber = VBA.Constants.vbObjectError + Exceptions.WindowsDriverInvalidURL
 Act:
   'Open the browser with an invalid url - valid format, syntactically incorrect
-  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL & "invalid-url", TimeoutInSeconds:=30
+  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, LocalTargetPageURL & "invalid-url", TimeoutInSeconds:=30
   Exit Sub
 ErrorHandler:
 Assert:
@@ -128,7 +129,7 @@ Arrange:
   ExpectedErrorNumber = 0
 Act:
   'Open the browser with the valid page
-  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=30
+  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, LocalTargetPageURL, TimeoutInSeconds:=30
 Assert:
   Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Document[@AutomationId=""RootWebArea""]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
   Exit Sub
@@ -152,7 +153,7 @@ Arrange:
   ExpectedErrorNumber = VBA.Constants.vbObjectError + Phosphorus.Exceptions.WindowsDriverUIElementNotFoundBeforeTimeout
 Act:
   'Open the browser - Use a short timeout as is doesn't matter if the page hasn't fully loaded yet
-  pWindowsDriver.Launch WEB_APP_NAME, "NOT " & TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=5
+  pWindowsDriver.Launch WEB_APP_NAME, "NOT " & TARGET_PAGE_TITLE, LocalTargetPageURL, TimeoutInSeconds:=5
   'Resumes here after Asser if all ok
   On Error GoTo ErrorHandler1
   ExpectedErrorNumber = 0
@@ -189,7 +190,7 @@ Arrange:
   On Error GoTo ErrorHandler
 Act:
   'Open the browser with the valid page
-  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=30
+  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, LocalTargetPageURL, TimeoutInSeconds:=30
   
   Dim FullBrowserRootWebAreaPPath As String
   FullBrowserRootWebAreaPPath = pWindowsDriver.GetWebBrowserFullBrowserRootWebAreaPPath()

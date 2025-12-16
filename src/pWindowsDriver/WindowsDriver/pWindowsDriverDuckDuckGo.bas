@@ -25,6 +25,7 @@ Private Type Configuration
   TempDirectory As String
   ParentWindowsDriver As pWinDriver.pWindowsDriver
   pPathConfiguration As pWinDriver.pWebBrowserPPathConfiguration
+  RefreshPageElement As pWinDriver.pWindowsDriverElement
 End Type
 
 Private Sub Class_Initialize()

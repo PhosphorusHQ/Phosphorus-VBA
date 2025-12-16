@@ -28,10 +28,10 @@ Private Type Configuration
 End Type
 
 Private Sub Class_Initialize()
-  This.pPathConfiguration.BrowserRootViewControlType = ""
+  This.pPathConfiguration.BrowserRootViewControlType = "Document"
   This.pPathConfiguration.BrowserRootViewClassName = ""
-  This.pPathConfiguration.BrowserRootViewUseWebAppTitleAsName = False
-  This.pPathConfiguration.RootWebAreaControlType = "Document"
+  This.pPathConfiguration.BrowserRootViewUseWebAppTitleAsName = True
+  This.pPathConfiguration.RootWebAreaControlType = ""
   This.pPathConfiguration.RootWebAreaAutomationID = ""
   This.pPathConfiguration.HeaderNodeAriaRole = "heading"
   This.pPathConfiguration.TextNodeAriaRole = ""

@@ -193,6 +193,7 @@ Public Sub Launch( _
       Set This.MasterWindowsDriverElement = FindElement("PageLoadedElement", This.PageLoadedElementPPath, TimeoutInSeconds)
       'Store this as the Master Window element so that we can easily close the current driver window when it is finished with
       This.MasterWindowsDriverElement.Name = "MasterWindowsDriverElement"
+      Logger.InternalInfo "MasterWindowsDriverElement:=" & This.MasterWindowsDriverElement.FoundBypPath
 
       'Set the default element PPath which indicate the driver has been unloaded/closed
       Me.SetPageUnloadedElementPPath GetPageLoadedElementPPath
@@ -260,9 +261,10 @@ Private Sub CheckForBrowserRootElements()
       Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverWebBrowserRootViewElementNotFound, CurrentpPath
     End If
   End If
+  Logger.InternalInfo "BrowserRootViewpPath:=" & BrowserRootViewpPath
 
   BrowserRootWebAreapPath = GetWebBrowserRootWebAreapPath
-  CurrentpPath = BrowserRootViewpPath & BrowserRootWebAreapPath
+  CurrentpPath = BrowserRootWebAreapPath
   If BrowserRootWebAreapPath <> "" Then
     Set This.BrowserRootWebAreaElement = RefreshPageUntilBrowserRootElementExists("BrowserRootWebAreaPPath", CurrentpPath, RootElement:=This.BrowserRootViewElement)
       If This.BrowserRootWebAreaElement Is Nothing Then
@@ -273,6 +275,7 @@ Private Sub CheckForBrowserRootElements()
     Logger.InternalTrace "Opera uses the same element for these two, so don't waste time searching for it again"
     Set This.BrowserRootWebAreaElement = This.BrowserRootViewElement
   End If
+  Logger.InternalInfo "BrowserRootWebAreapPath:=" & BrowserRootWebAreapPath
 
 End Sub
 
@@ -355,16 +358,23 @@ Private Function GetWebBrowserRootWebAreapPath()
 End Function
 
 Public Function GetWebBrowserpPathConfigurationItem(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems, Optional Parameter1 As Variant) As Variant
+  
   Select Case ItemType
+    
     Case pWinDriver.pWebBrowserPPathConfigurationItems.HeaderNodePPath
       GetWebBrowserpPathConfigurationItem = GetWebBrowserpPathConfigurationTextItemPPath(pWinDriver.pWebBrowserPPathConfigurationItems.HeaderNodeAriaRole, VBA.Conversion.CStr(Parameter1))
+    
     Case pWinDriver.pWebBrowserPPathConfigurationItems.TextNodePPath
       GetWebBrowserpPathConfigurationItem = GetWebBrowserpPathConfigurationTextItemPPath(pWinDriver.pWebBrowserPPathConfigurationItems.TextNodeAriaRole, VBA.Conversion.CStr(Parameter1))
+    
     Case pWinDriver.pWebBrowserPPathConfigurationItems.HyperlinkNodePPath
       GetWebBrowserpPathConfigurationItem = GetWebBrowserpPathConfigurationTextItemPPath(pWinDriver.pWebBrowserPPathConfigurationItems.HyperlinkNodeAriaRole, VBA.Conversion.CStr(Parameter1))
+    
     Case Else
       GetWebBrowserpPathConfigurationItem = This.SubDriver.IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType)
+  
   End Select
+
 End Function
 
 Private Function GetWebBrowserpPathConfigurationTextItemPPath(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems, TextNodeText As String) As String

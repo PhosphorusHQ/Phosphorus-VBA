@@ -11,7 +11,13 @@ Attribute VB_Name = "TestRuns"
 Option Explicit
 
 Sub RunSingleTest()
-  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Opera_Executable", "pUnitTests_pWindowsDriver"
+'Main Browser Test Launches - with no start-up complications
+'ok   pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Brave_Executable", "pUnitTests_pWindowsDriver"
+'ok  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Chrome_Executable", "pUnitTests_pWindowsDriver"
+'Automation disabled  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_DuckDuckGo_ApplicationUserModelID", "pUnitTests_pWindowsDriver"
+'ok  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Edge_Executable", "pUnitTests_pWindowsDriver"
+  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Firefox_Executable", "pUnitTests_pWindowsDriver"
+'ok  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Opera_Executable", "pUnitTests_pWindowsDriver"
 End Sub
 
 Sub RunAllWorkingWebBrowserLaunchTests()

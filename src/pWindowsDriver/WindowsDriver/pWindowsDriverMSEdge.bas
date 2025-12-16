@@ -25,6 +25,7 @@ Private Type Configuration
   TempDirectory As String
   ParentWindowsDriver As pWinDriver.pWindowsDriver
   pPathConfiguration As pWinDriver.pWebBrowserPPathConfiguration
+  RefreshPageElement As pWinDriver.pWindowsDriverElement
 End Type
 
 Private Sub Class_Initialize()
@@ -97,26 +98,38 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
 End Sub
 
 Public Function IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems) As Variant
+  
   Select Case ItemType
+    
     Case pWebBrowserPPathConfigurationItems.WebAppTitle
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.WebAppTitle
+    
     Case pWebBrowserPPathConfigurationItems.BrowserRootViewControlType
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.BrowserRootViewControlType
+    
     Case pWebBrowserPPathConfigurationItems.BrowserRootViewClassName
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.BrowserRootViewClassName
+    
     Case pWebBrowserPPathConfigurationItems.BrowserRootViewUseWebAppTitleAsName
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.BrowserRootViewUseWebAppTitleAsName
+    
     Case pWebBrowserPPathConfigurationItems.RootWebAreaControlType
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.RootWebAreaControlType
+    
     Case pWebBrowserPPathConfigurationItems.RootWebAreaAutomationID
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.RootWebAreaAutomationID
+    
     Case pWebBrowserPPathConfigurationItems.HeaderNodeAriaRole
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.HeaderNodeAriaRole
+    
     Case pWebBrowserPPathConfigurationItems.TextNodeAriaRole
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.TextNodeAriaRole
+    
     Case pWebBrowserPPathConfigurationItems.HyperlinkNodeAriaRole
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.HyperlinkNodeAriaRole
+  
   End Select
+
 End Function
 
 Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
@@ -124,7 +137,10 @@ Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()
 End Sub
 
 Public Sub IWindowsDriverWebBrowser_RefreshPage()
-  Phosphorus.pExceptions.Raise Phosphorus.Exceptions.MethodNotImplementedYet, "pWindowsDriverMSEdge.RefreshPage"
+  If This.RefreshPageElement Is Nothing Then
+    Set This.RefreshPageElement = This.ParentWindowsDriver.FindElement("Refresh Page", "/Pane//ToolBar[@Name=""App bar""]//Button[@Name=""Refresh""]", RootElement:=This.ParentWindowsDriver.GetMasterWindowsDriverElement)
+  End If
+  This.RefreshPageElement.Actions.Click
 End Sub
 
 '        'TODO: How to open new window for edge?

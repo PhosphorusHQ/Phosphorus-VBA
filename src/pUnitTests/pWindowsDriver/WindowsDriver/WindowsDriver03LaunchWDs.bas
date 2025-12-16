@@ -13,12 +13,11 @@ Option Explicit
 
 Private pWindowsDriver As pWinDriver.pWindowsDriver
 Const WEB_APP_NAME = "Example.com"
-Dim LocalTargetPageURL As String
+Const TARGET_PAGE_URL = "https://www.example.com/"
 Const TARGET_PAGE_TITLE = "Example Domain"
 
 Private Sub BeforeModule()
   On Error GoTo ErrorHandler
-  LocalTargetPageURL = """" & VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "") & "Tests\Web\ExampleDotCom\Example Domain.mhtml" & """"
   Exit Sub
 ErrorHandler:
   Phosphorus.pUnitErrorStatic.TrapError Err.Number, Err.Description
@@ -59,7 +58,7 @@ Arrange:
   ExpectedErrorNumber = 0
 Act:
   'Open the browser with a valid url
-  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, LocalTargetPageURL, TimeoutInSeconds:=30
+  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=30
   Exit Sub
 ErrorHandler:
 Assert:
@@ -82,7 +81,7 @@ Arrange:
   ExpectedErrorNumber = VBA.Constants.vbObjectError + Exceptions.WindowsDriverInvalidHTTPStatus
 Act:
   'Open the browser with an invalid url - valid format, syntactically correct
-  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, LocalTargetPageURL & "/invalid-url", TimeoutInSeconds:=30
+  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL & "/invalid-url", TimeoutInSeconds:=30
   Exit Sub
 ErrorHandler:
 Assert:
@@ -105,7 +104,7 @@ Arrange:
   ExpectedErrorNumber = VBA.Constants.vbObjectError + Exceptions.WindowsDriverInvalidURL
 Act:
   'Open the browser with an invalid url - valid format, syntactically incorrect
-  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, LocalTargetPageURL & "invalid-url", TimeoutInSeconds:=30
+  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL & "invalid-url", TimeoutInSeconds:=30
   Exit Sub
 ErrorHandler:
 Assert:
@@ -129,7 +128,7 @@ Arrange:
   ExpectedErrorNumber = 0
 Act:
   'Open the browser with the valid page
-  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, LocalTargetPageURL, TimeoutInSeconds:=30
+  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=30
 Assert:
   Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", "//Document[@AutomationId=""RootWebArea""]//Text[And(@AriaRole=""heading"",@Name=""Example Domain"")]"), isCritical:=True
   Exit Sub
@@ -153,7 +152,7 @@ Arrange:
   ExpectedErrorNumber = VBA.Constants.vbObjectError + Phosphorus.Exceptions.WindowsDriverUIElementNotFoundBeforeTimeout
 Act:
   'Open the browser - Use a short timeout as is doesn't matter if the page hasn't fully loaded yet
-  pWindowsDriver.Launch WEB_APP_NAME, "NOT " & TARGET_PAGE_TITLE, LocalTargetPageURL, TimeoutInSeconds:=5
+  pWindowsDriver.Launch WEB_APP_NAME, "NOT " & TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=5
   'Resumes here after Asser if all ok
   On Error GoTo ErrorHandler1
   ExpectedErrorNumber = 0
@@ -190,8 +189,8 @@ Arrange:
   On Error GoTo ErrorHandler
 Act:
   'Open the browser with the valid page
-  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, LocalTargetPageURL, TimeoutInSeconds:=30
-  
+  pWindowsDriver.Launch WEB_APP_NAME, TARGET_PAGE_TITLE, TARGET_PAGE_URL, TimeoutInSeconds:=30
+ 
   Dim FullBrowserRootWebAreaPPath As String
   FullBrowserRootWebAreaPPath = pWindowsDriver.GetWebBrowserFullBrowserRootWebAreaPPath()
     
@@ -203,6 +202,7 @@ Act:
     HeaderNodeText = "Example Domain"
   End If
   HeaderNodePPath = pWindowsDriver.GetWebBrowserpPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HeaderNodePPath, HeaderNodeText)
+  Logger.InternalInfo "HeaderNodePPath:=" & HeaderNodePPath
   If HeaderNodePPath <> "" Then
     Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", HeaderNodePPath), "Check for 'Example Domain' Header Element", isCritical:=True
   End If
@@ -211,6 +211,7 @@ Act:
   Dim TextNodePPath As String
   TextNodeText = "This domain is for use in documentation examples without needing permission. Avoid use in operations."
   TextNodePPath = pWindowsDriver.GetWebBrowserpPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.TextNodePPath, TextNodeText)
+  Logger.InternalInfo "TextNodePPath:=" & TextNodePPath
   If TextNodePPath <> "" Then
     Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", TextNodePPath), "Check for 'Example Domain' Text Element", isCritical:=True
   End If
@@ -219,6 +220,7 @@ Act:
   Dim HyperlinkNodePPath As String
   HyperlinkNodeText = "Learn more"
   HyperlinkNodePPath = pWindowsDriver.GetWebBrowserpPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HyperlinkNodePPath, HyperlinkNodeText)
+  Logger.InternalInfo "HyperlinkNodePPath:=" & HyperlinkNodePPath
   If HyperlinkNodePPath <> "" Then
     Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", HyperlinkNodePPath), "Check for 'Example Domain' Hypelink Element", isCritical:=True
   End If
@@ -238,7 +240,6 @@ End Sub
 'Test all options for launching MSEDGE
 '**************************************
 
-'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_ReuseACurrentOpenInstance()
 'Check for no error if we open the URL in the current browser with a valid page load element - ReuseACurrentOpenInstance Instance Type
@@ -252,28 +253,24 @@ Public Sub ValidPageLoadElement_Edge_Executable()
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.Executable
 End Sub
 
-'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_NewWindow()
 'Check for no error if we open the URL in the current browser with a valid page load element - NewWindow Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.NewWindow
 End Sub
 
-'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_AppMode()
 'Check for no error if we open the URL in the current browser with a valid page load element - AppMode Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.AppMode
 End Sub
 
-'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_NewProfile()
 'Check for no error if we open the URL in the current browser with a valid page load element - NewProfile Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.NewProfile
 End Sub
 
-'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_ApplicationUserModelID()
 'Check for no error if we open the URL in the current browser with a valid page load element - ApplicationUserModelID Instance Type
@@ -284,7 +281,6 @@ End Sub
 'Test other browsers
 '**************************************
 
-'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_DuckDuckGo_ApplicationUserModelID() 'DuckDuckGo is only an app?
 'Check for no error if we open the URL in the current browser with a valid page load element - ApplicationUserModelID Instance Type
@@ -298,14 +294,12 @@ Public Sub ValidPageLoadElement_Chrome_Executable()
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Chrome, pWinDriver.pInstanceType.Executable
 End Sub
 
-'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Chrome_NewProfile()
 'Check for no error if we open the URL in the current browser with a valid page load element - NewProfile Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.Chrome, pWinDriver.pInstanceType.NewProfile
 End Sub
 
-'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Chrome_GuestModeNoSignIn()
 'Check for no error if we open the URL in the current browser with a valid page load element - GuestModeNoSignIn Instance Type
@@ -364,5 +358,4 @@ End Sub
 Public Sub ValidPageLoadElement_MicrosoftWindowsCalculator()
   ValidPageLoadElementForApps Phosphorus.WindowsWindowsApps.MicrosoftWindowsCalculator
 End Sub
-
 

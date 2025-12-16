@@ -30,7 +30,7 @@ End Type
 
 Private Sub Class_Initialize()
   'Opera doesn't have a BrowserRootView so we force it to be the same as the BrowserRootWebArea element
-  This.pPathConfiguration.BrowserRootViewControlType = "Document" '
+  This.pPathConfiguration.BrowserRootViewControlType = "Document"
   This.pPathConfiguration.BrowserRootViewClassName = ""
   This.pPathConfiguration.BrowserRootViewUseWebAppTitleAsName = True
   This.pPathConfiguration.RootWebAreaControlType = ""
@@ -69,26 +69,38 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
 End Sub
 
 Public Function IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems) As Variant
+  
   Select Case ItemType
+    
     Case pWebBrowserPPathConfigurationItems.WebAppTitle
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.WebAppTitle
+    
     Case pWebBrowserPPathConfigurationItems.BrowserRootViewControlType
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.BrowserRootViewControlType
+    
     Case pWebBrowserPPathConfigurationItems.BrowserRootViewClassName
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.BrowserRootViewClassName
+    
     Case pWebBrowserPPathConfigurationItems.BrowserRootViewUseWebAppTitleAsName
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.BrowserRootViewUseWebAppTitleAsName
+    
     Case pWebBrowserPPathConfigurationItems.RootWebAreaControlType
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.RootWebAreaControlType
+    
     Case pWebBrowserPPathConfigurationItems.RootWebAreaAutomationID
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.RootWebAreaAutomationID
+    
     Case pWebBrowserPPathConfigurationItems.HeaderNodeAriaRole
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.HeaderNodeAriaRole
+    
     Case pWebBrowserPPathConfigurationItems.TextNodeAriaRole
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.TextNodeAriaRole
+    
     Case pWebBrowserPPathConfigurationItems.HyperlinkNodeAriaRole
       IWindowsDriverWebBrowser_GetPPathConfigurationItem = This.pPathConfiguration.HyperlinkNodeAriaRole
+  
   End Select
+
 End Function
 
 Public Sub IWindowsDriverWebBrowser_CloseAllOtherTabs()

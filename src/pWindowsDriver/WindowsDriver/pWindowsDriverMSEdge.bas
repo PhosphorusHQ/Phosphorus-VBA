@@ -24,6 +24,7 @@ Dim This As Configuration
 Private Type Configuration
   TempDirectory As String
   ParentWindowsDriver As pWinDriver.pWindowsDriver
+  InstanceType As pWinDriver.pInstanceType
   pPathConfiguration As pWinDriver.pWebBrowserPPathConfiguration
   RefreshPageElement As pWinDriver.pWindowsDriverElement
 End Type
@@ -48,11 +49,10 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   This.pPathConfiguration.WebAppTitle = WebAppTitle
   
   Set This.ParentWindowsDriver = ParentWindowsDriver
-  Dim InstanceType As pWinDriver.pInstanceType
-  InstanceType = This.ParentWindowsDriver.GetWindowsDriverWebBrowserType.InstanceType
-  If InstanceType = 0 Then
+  This.InstanceType = This.ParentWindowsDriver.GetWindowsDriverWebBrowserType.InstanceType
+  If This.InstanceType = 0 Then
 'TODO: Make new window the default?
-    InstanceType = pWinDriver.pInstanceType.ReuseACurrentOpenInstance
+    This.InstanceType = pWinDriver.pInstanceType.ReuseACurrentOpenInstance
   End If
   
   'Set the default PPath
@@ -61,7 +61,7 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   CurrentPPathOfPageLoadedPPath = "/Window[xp:starts-with(@Name,""" & WebAppTitle & """)]"
   PageLoadedElementExpectedWindowInteractionState = UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
   
-  Select Case InstanceType
+  Select Case This.InstanceType
     
     Case pWinDriver.pInstanceType.ReuseACurrentOpenInstance
       'Launch Edge via protocol
@@ -82,18 +82,52 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
     Case pWinDriver.pInstanceType.NewProfile
       This.TempDirectory = This.ParentWindowsDriver.CreateTempDirectory
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--user-data-dir=""" & This.TempDirectory & """ --new-window " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
-      CurrentPPathOfPageLoadedPPath = "/Window[And(xp:starts-with(@Name,""Sign Up – Create a Free Account""),@ClassName=""Chrome_WidgetWin_1"")]"
-      PageLoadedElementExpectedWindowInteractionState = UIAutomationClient.WindowInteractionState.WindowInteractionState_BlockedByModalWindow
-    
+
     Case pWinDriver.pInstanceType.ApplicationUserModelID
       Phosphorus.WindowsProcesses.LaunchAppByAUMID Phosphorus.WindowsWindowsApps.MicrosoftEdge, URL, Phosphorus.WindowShowStates.SW_SHOWNORMAL
     
     Case Else
-      Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledAppConfiguration, "Microsoft Edge, Instance Type: #" & InstanceType
+      Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledAppConfiguration, "Microsoft Edge, Instance Type: #" & This.InstanceType
   
   End Select
   
   This.ParentWindowsDriver.SetPageLoadedElement CurrentPPathOfPageLoadedPPath, PageLoadedElementExpectedWindowInteractionState
+
+End Sub
+
+Public Sub IWindowsDriverWebBrowser_PostLaunchApp()
+  Select Case This.InstanceType
+    Case pWinDriver.pInstanceType.NewProfile
+      PostLaunchApp_NewProfile
+  End Select
+End Sub
+
+Private Sub PostLaunchApp_NewProfile()
+  
+  pWinDriver.pWindowsDriverStatic.GetUIADesktopWindowsDriverElement
+  
+  Dim MSRootViewElement As pWinDriver.pWindowsDriverElement
+  Set MSRootViewElement = This.ParentWindowsDriver.FindElement("MS Root View", "/Window[@ClassName=""Chrome_WidgetWin_1""]/Pane[@ClassName=""BrowserRootView""]/Pane[2]/Window[@ClassName=""RootView""]//Document[@AutomationId=""RootWebArea""]", RootElement:=pWinDriver.pWindowsDriverStatic.gUIADesktopWindowsDriverElement, TimeoutInSeconds:=10)
+  
+  Dim MSSignMeOutElement As pWinDriver.pWindowsDriverElement
+  Set MSSignMeOutElement = This.ParentWindowsDriver.FindElement("MS Sign Me Out", "//Button[@Name=""No, sign me out""]", RootElement:=MSRootViewElement, TimeoutInSeconds:=10)
+  MSSignMeOutElement.Actions.Click
+  
+  Dim MSDontAllowElement1 As pWinDriver.pWindowsDriverElement
+  Set MSDontAllowElement1 = This.ParentWindowsDriver.FindElement("MS Don't Allow1", "//RadioButton[@Name=""Don't allow""]", RootElement:=MSRootViewElement, TimeoutInSeconds:=10)
+  MSDontAllowElement1.Actions.Click
+
+  Dim MSConfirmAndContinueElement1 As pWinDriver.pWindowsDriverElement
+  Set MSConfirmAndContinueElement1 = This.ParentWindowsDriver.FindElement("Confirm and continue1", "//Button[@Name=""Confirm and continue""]", RootElement:=MSRootViewElement, TimeoutInSeconds:=10)
+  MSConfirmAndContinueElement1.Actions.Click
+  
+  Dim MSDontAllowElement2 As pWinDriver.pWindowsDriverElement
+  Set MSDontAllowElement2 = This.ParentWindowsDriver.FindElement("MS Don't Allow1", "//RadioButton[@Name=""Don't allow""]", RootElement:=MSRootViewElement, TimeoutInSeconds:=10)
+  MSDontAllowElement2.Actions.Click
+  
+  Dim MSConfirmAndContinueElement2 As pWinDriver.pWindowsDriverElement
+  Set MSConfirmAndContinueElement2 = This.ParentWindowsDriver.FindElement("Confirm and continue1", "//Button[@Name=""Confirm and start browsing""]", RootElement:=MSRootViewElement, TimeoutInSeconds:=10)
+  MSConfirmAndContinueElement2.Actions.Click
 
 End Sub
 

@@ -240,6 +240,7 @@ End Sub
 'Test all options for launching MSEDGE
 '**************************************
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_ReuseACurrentOpenInstance()
 'Check for no error if we open the URL in the current browser with a valid page load element - ReuseACurrentOpenInstance Instance Type
@@ -253,12 +254,14 @@ Public Sub ValidPageLoadElement_Edge_Executable()
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.Executable
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_NewWindow()
 'Check for no error if we open the URL in the current browser with a valid page load element - NewWindow Instance Type
   ValidPageLoadElementByBrowserTypeAndInstanceType pWinDriver.pWebBrowserType.MicrosoftEdge, pWinDriver.pInstanceType.NewWindow
 End Sub
 
+'@WebBrowserLaunch
 '@TestMethod
 Public Sub ValidPageLoadElement_Edge_AppMode()
 'Check for no error if we open the URL in the current browser with a valid page load element - AppMode Instance Type

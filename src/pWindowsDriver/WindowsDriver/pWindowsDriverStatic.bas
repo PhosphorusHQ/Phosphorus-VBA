@@ -12,6 +12,7 @@ Option Explicit
 
 Public gCUIAutomation As CUIAutomation
 Public gUIADesktopUIElement As UIAutomationClient.IUIAutomationElement
+Public gUIADesktopWindowsDriverElement As pWinDriver.pWindowsDriverElement
 Public DesktopWindowsDriver As pWinDriver.pWindowsDriver
   
 Public Enum pWindowsDriverType
@@ -75,10 +76,24 @@ Public Function GetNewPDriver(dType As pWinDriver.pWindowsDriverType) As pWinDri
   GetNewPDriver.SetDriverType dType
   If pWinDriver.pWindowsDriverStatic.gCUIAutomation Is Nothing Then
     Set pWinDriver.pWindowsDriverStatic.gCUIAutomation = New CUIAutomation
-    If gUIADesktopUIElement Is Nothing Then
-      Set gUIADesktopUIElement = pWinDriver.pWindowsDriverStatic.gCUIAutomation.GetRootElement
-    End If
+    GetUIADesktopUIElement
   End If
+End Function
+
+Public Function GetUIADesktopUIElement() As UIAutomationClient.IUIAutomationElement
+  If gUIADesktopUIElement Is Nothing Then
+    Set gUIADesktopUIElement = pWinDriver.pWindowsDriverStatic.gCUIAutomation.GetRootElement
+  End If
+  Set GetUIADesktopUIElement = gUIADesktopUIElement
+End Function
+
+Public Function GetUIADesktopWindowsDriverElement() As pWinDriver.pWindowsDriverElement
+  If gUIADesktopWindowsDriverElement Is Nothing Then
+    GetUIADesktopUIElement
+    Set gUIADesktopWindowsDriverElement = New pWindowsDriverElement
+    gUIADesktopWindowsDriverElement.Initialise "Desktop", Nothing, gUIADesktopUIElement, "", ""
+  End If
+  Set GetUIADesktopWindowsDriverElement = gUIADesktopWindowsDriverElement
 End Function
 
 Public Sub GetDesktopWindowsDriver()

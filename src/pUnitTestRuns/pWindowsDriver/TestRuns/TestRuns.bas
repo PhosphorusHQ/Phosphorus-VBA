@@ -16,7 +16,12 @@ Sub RunSingleTest()
 'ok  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Chrome_Executable", "pUnitTests_pWindowsDriver"
 'Automation disabled  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_DuckDuckGo_ApplicationUserModelID", "pUnitTests_pWindowsDriver"
 'ok  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Edge_Executable", "pUnitTests_pWindowsDriver"
-  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Firefox_Executable", "pUnitTests_pWindowsDriver"
+'ok pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Edge_ReuseACurrentOpenInstance", "pUnitTests_pWindowsDriver"
+'ok pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Edge_NewWindow", "pUnitTests_pWindowsDriver"
+'ok pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Edge_AppMode", "pUnitTests_pWindowsDriver"
+pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Edge_NewProfile", "pUnitTests_pWindowsDriver"
+
+'ok  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Firefox_Executable", "pUnitTests_pWindowsDriver"
 'ok  pUnit.TestRunner.RunAllTests "WindowsDriver03LaunchWDs", "ValidPageLoadElement_Opera_Executable", "pUnitTests_pWindowsDriver"
 End Sub
 

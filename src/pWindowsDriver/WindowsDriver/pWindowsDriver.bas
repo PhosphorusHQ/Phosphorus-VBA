@@ -188,7 +188,11 @@ Public Sub Launch( _
       Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverNoPageLoadElementDefined, AppName, This.WebAppTitle
     
     Else
-    
+
+      If This.DriverType = pWinDriver.pWindowsDriverType.WebBrowser Then
+        This.SubDriver.IWindowsDriverWebBrowser_PostLaunchApp
+      End If
+      
       'Wait for the Page Load Element
       Set This.MasterWindowsDriverElement = FindElement("PageLoadedElement", This.PageLoadedElementPPath, TimeoutInSeconds)
       'Store this as the Master Window element so that we can easily close the current driver window when it is finished with

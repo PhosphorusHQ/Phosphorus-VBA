@@ -27,6 +27,9 @@ End Function
 Public Sub LaunchApp(ByRef ParentWindowsDriver As pWindowsDriver, WebAppName As String, WebAppTitle As String, Optional URL As String)
 End Sub
 
+Public Sub PostLaunchApp()
+End Sub
+
 Public Function GetPPathConfigurationItem(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems) As Variant
 End Function
 

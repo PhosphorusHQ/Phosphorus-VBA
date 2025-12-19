@@ -68,6 +68,10 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   This.ParentWindowsDriver.SetPageLoadedElement CurrentpPath, UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
 End Sub
 
+Public Sub IWindowsDriverWebBrowser_PostLaunchApp()
+  'Nothing to do if empty!
+End Sub
+
 Public Function IWindowsDriverWebBrowser_GetPPathConfigurationItem(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems) As Variant
   
   Select Case ItemType

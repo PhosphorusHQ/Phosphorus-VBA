@@ -10,11 +10,7 @@ Attribute VB_Exposed = True
 '@Folder VersionControl
 Option Explicit
 
-Private Const ThisVBProjectName = "pEscence"
-
-Sub test()
-  Workbook_BeforeClose False
-End Sub
+Private Const ThisVBProjectName = "pEssence"
 
 'Always Save Code Changes on Closing Workbootk
 Private Sub Workbook_BeforeClose(Cancel As Boolean)

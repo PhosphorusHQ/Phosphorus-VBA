@@ -24,5 +24,5 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
 End Sub
 
 Private Sub ExportPhosphorusSourceCode()
-  ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pEscence"
+  ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pEssence"
 End Sub

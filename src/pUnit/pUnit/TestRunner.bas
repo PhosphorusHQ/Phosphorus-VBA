@@ -24,7 +24,7 @@ Private Declare PtrSafe Function QueryPerformanceFrequency Lib "kernel32" (lpFre
 'Private Assertions As Phosphorus.Assertions
 
 ' Collection to store test results
-Private TestResults As collection
+Private TestResults As Collection
 
 ' Total duration of test methods (excluding setup/teardown)
 Private TotalTestMethodDuration As Double
@@ -52,7 +52,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
   Dim passCount As Long
   Dim skipCount As Long
   Dim projectName As String
-  Dim executableTests As collection
+  Dim executableTests As Collection
   Dim moduleSetupSuccess As Boolean
   Dim TestResult As pUnit.TestResult
   Dim TestName As Variant
@@ -117,8 +117,8 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
   Phosphorus.Log4PStatic.Logger.ExternalInfo "Annotation filter: " & IIf(Len(annotationFilter) > 0, annotationFilter, "All tests")
 
   'Make a collection of all test module names
-  Dim allTestModuleNames As collection
-  Set allTestModuleNames = New collection
+  Dim allTestModuleNames As Collection
+  Set allTestModuleNames = New Collection
   Dim vbCompnnt As VBComponent
   For Each vbCompnnt In vbProj.VBComponents
     If vbCompnnt.Type = vbext_ct_StdModule And IsTestModule(vbCompnnt) Then
@@ -127,7 +127,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
   Next vbCompnnt
   
   'Initialise a collection of test results
-  Set TestResults = New collection
+  Set TestResults = New Collection
   
   'Loop through all the test modules
   Dim testModuleName As Variant
@@ -141,7 +141,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
     If ShouldIncludeTestModule(vbTestModule, moduleNameFilter, allTestModuleNames) Then
     
       'Start a new collection of executable tests
-      Set executableTests = New collection
+      Set executableTests = New Collection
       
       'Does the test module have any tests that match the annotations filter
       If HasTestsToRun(projectName, vbTestModule, annotationFilter, executableTests) Then
@@ -170,7 +170,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
             If testSetupSuccess Then
 
               ' Get test data for parameterized tests
-              Dim testData As collection
+              Dim testData As Collection
               Set testData = GetTestData(vbTestModule, VBA.Conversion.CStr(TestName))
                        
               'Get the test method's signature
@@ -510,8 +510,8 @@ Private Function ParseAnnotationTags(annotation As String) As Variant
   annotation = VBA.Strings.Trim(annotation)
 
   'Start a collection of tags in the current line
-  Dim tags As collection
-  Set tags = New collection
+  Dim tags As Collection
+  Set tags = New Collection
   Dim tagString As String
 
   'Is the line a straight single tag ... and has no comma separator or brackets - check this after processing complex tags
@@ -677,13 +677,13 @@ End Function
 
 ' Split nested tags within {} into individual tags
 Private Function SplitNestedTags(nestedTagString As String) As Variant
-    Dim tags As collection
+    Dim tags As Collection
     Dim currentTag As String
     Dim i As Long
     Dim inQuotes As Boolean
     Dim inBraces As Long
     
-    Set tags = New collection
+    Set tags = New Collection
     currentTag = ""
     inQuotes = False
     inBraces = 0
@@ -731,7 +731,7 @@ Private Function SplitNestedTags(nestedTagString As String) As Variant
 End Function
 
 ' Convert a Collection to a Variant array
-Private Function CollectionToArray(col As collection) As Variant
+Private Function CollectionToArray(col As Collection) As Variant
 
   Dim result() As Variant
   Dim i As Long
@@ -755,7 +755,7 @@ Private Function CollectionToArray(col As collection) As Variant
 End Function
 
 ' Check if a module should be included based on moduleFilter
-Private Function ShouldIncludeTestModule(vbComp As VBComponent, moduleNameFilter As String, allTestModuleNames As collection) As Boolean
+Private Function ShouldIncludeTestModule(vbComp As VBComponent, moduleNameFilter As String, allTestModuleNames As Collection) As Boolean
 
   'Include all test mode
   If Len(moduleNameFilter) = 0 Then
@@ -793,19 +793,19 @@ EvalError:
 End Function
 
 ' Check if a module has any tests that pass the annotation filter
-Private Function HasTestsToRun(projectName As String, vbTestModule As VBComponent, annotationFilter As String, ByRef executableTests As collection) As Boolean
+Private Function HasTestsToRun(projectName As String, vbTestModule As VBComponent, annotationFilter As String, ByRef executableTests As Collection) As Boolean
 
   'Store a reference to the test module's code module
   Dim testModuleCode As CodeModule
   Set testModuleCode = vbTestModule.CodeModule
   
   'Initialise a collection of test method annotations for the whole module
-  Dim currentModuleMethodAnnotations As collection
-  Set currentModuleMethodAnnotations = New collection
+  Dim currentModuleMethodAnnotations As Collection
+  Set currentModuleMethodAnnotations = New Collection
   Dim moduleLevelAnnotation As Variant
   
   'Initialise a collection of test method annotations for each test method
-  Dim currentTestMethodAnnotations As collection
+  Dim currentTestMethodAnnotations As Collection
 '  Set currentTestMethodAnnotations = New collection
     
   Dim currentLineNum As Long
@@ -842,7 +842,7 @@ Private Function HasTestsToRun(projectName As String, vbTestModule As VBComponen
     If currentLineNum = intCountOfDeclarationLines Then
     
       'Add the module level annotations for the first test
-      Set currentTestMethodAnnotations = New collection
+      Set currentTestMethodAnnotations = New Collection
       For Each moduleLevelAnnotation In currentModuleMethodAnnotations
         currentTestMethodAnnotations.Add moduleLevelAnnotation
       Next
@@ -888,7 +888,7 @@ Private Function HasTestsToRun(projectName As String, vbTestModule As VBComponen
       End If
       
       'Start a new collections of annotations that will apply to the next test method based on the module annotations
-      Set currentTestMethodAnnotations = New collection
+      Set currentTestMethodAnnotations = New Collection
       For Each moduleLevelAnnotation In currentModuleMethodAnnotations
         currentTestMethodAnnotations.Add moduleLevelAnnotation
       Next
@@ -905,7 +905,7 @@ Private Function HasTestsToRun(projectName As String, vbTestModule As VBComponen
 End Function
 
 ' Determine if a test should be included based on its annotations
-Private Function ShouldIncludeTest(testMethodAnnotations As collection, testAnnotationsFilter As String) As Boolean
+Private Function ShouldIncludeTest(testMethodAnnotations As Collection, testAnnotationsFilter As String) As Boolean
   
   'Include all tests if the test annotations filter is empty
   If Len(testAnnotationsFilter) = 0 Then
@@ -914,8 +914,8 @@ Private Function ShouldIncludeTest(testMethodAnnotations As collection, testAnno
   End If
   
   'Prepare a list of all tags, including expanded ones
-  Dim allTags As collection
-  Set allTags = New collection
+  Dim allTags As Collection
+  Set allTags = New Collection
   Dim annotation As Variant
   
   'Loop through all annotations for the current test method
@@ -1272,8 +1272,8 @@ Private Function ExecuteTest(vbProj As VBProject, vbComp As VBComponent, TestNam
   ' Build test parameters string
   If Not IsMissing(parameters) Then
     Dim param As Variant
-    Dim paramStrings As collection
-    Set paramStrings = New collection
+    Dim paramStrings As Collection
+    Set paramStrings = New Collection
     For Each param In parameters
       paramStrings.Add StringifyParameter(param)
     Next param
@@ -1502,18 +1502,18 @@ TestError:
 End Function
 
 ' Get test data for a specific test method
-Private Function GetTestData(vbComp As VBComponent, TestName As String) As collection
+Private Function GetTestData(vbComp As VBComponent, TestName As String) As Collection
 
   Dim annotation As Variant
     
-  Dim testData As collection
-  Set testData = New collection
+  Dim testData As Collection
+  Set testData = New Collection
   
   Dim codeMod As CodeModule
   Set codeMod = vbComp.CodeModule
   
-  Dim annotations As collection
-  Set annotations = New collection
+  Dim annotations As Collection
+  Set annotations = New Collection
   
   'Start at line 1
   Dim currentLineNumber As Long
@@ -1568,7 +1568,7 @@ Private Function GetTestData(vbComp As VBComponent, TestName As String) As colle
       End If
       
       'Start a new collection of annotations after each test method
-      Set annotations = New collection
+      Set annotations = New Collection
     
     End If
         
@@ -1629,10 +1629,10 @@ Private Function ParseTestData(annotation As String, TestName As String) As Vari
   Dim inQuotes As Boolean
   Dim inBraces As Long
   Dim inParens As Long
-  Dim dataSet As collection
+  Dim dataSet As Collection
   
-  Dim testData As collection
-  Set testData = New collection
+  Dim testData As Collection
+  Set testData = New Collection
 
   For i = 1 To dataString.Length
   
@@ -1660,7 +1660,7 @@ Private Function ParseTestData(annotation As String, TestName As String) As Vari
           inBraces = inBraces - 1
           'Have we finished a first level nested set
           If inBraces = 1 Then
-            Set dataSet = New collection
+            Set dataSet = New Collection
             Dim params As Variant
             On Error Resume Next
             params = ParseComplexParameters(currentData.ToString, TestName)
@@ -1708,7 +1708,7 @@ Private Function ParseTestData(annotation As String, TestName As String) As Vari
         End If
       Case ","
         If Not inQuotes And inBraces = 1 And inParens = 0 Then
-          Set dataSet = New collection
+          Set dataSet = New Collection
           Dim params2 As Variant
           'Parse the test data only if we have data - the comma's between sets will otherwise be interpreted as empty data sets
           If VBA.Strings.Len(currentData.ToString) <> 0 Then
@@ -1755,7 +1755,7 @@ Private Function ParseTestData(annotation As String, TestName As String) As Vari
   End If
     
   If currentData.Length > 0 And inBraces = 1 And isValid Then
-    Set dataSet = New collection
+    Set dataSet = New Collection
     Dim finalParams As Variant
     On Error Resume Next
     finalParams = ParseComplexParameters(currentData.ToString, TestName)
@@ -1847,8 +1847,8 @@ Private Function GetProcedureSignature(codeMod As CodeModule, procedureName As S
   End If
     
   'Prepare a collecion of parameters
-  Dim parameters As collection
-  Set parameters = New collection
+  Dim parameters As Collection
+  Set parameters = New Collection
   
   'Current parameter
   Dim currentParameterString As String
@@ -2071,7 +2071,7 @@ End Function
 ' Parse parameters, including complex types
 Private Function ParseComplexParameters(paramString As String, TestName As String) As Variant
 
-    Dim params As collection
+    Dim params As Collection
     Dim currentParam As StringBuilder
     Dim i As Long
     Dim inQuotes As Boolean
@@ -2081,7 +2081,7 @@ Private Function ParseComplexParameters(paramString As String, TestName As Strin
     Dim dict As Object
     Dim isValid As Boolean
     
-  Set params = New collection
+  Set params = New Collection
   Set currentParam = New StringBuilder
     
   inQuotes = False
@@ -2323,8 +2323,8 @@ Private Function GetTestAnnotations(vbComp As VBComponent, TestName As String) A
   Dim codeMod As CodeModule
   Set codeMod = vbComp.CodeModule
   
-  Dim annotations As collection
-  Set annotations = New collection
+  Dim annotations As Collection
+  Set annotations = New Collection
   
   Dim lineNum As Long
   lineNum = 1
@@ -2355,7 +2355,7 @@ Private Function GetTestAnnotations(vbComp As VBComponent, TestName As String) A
         Exit Function
       End If
       'Clear down the collection of annotations every time have passed any test method
-      Set annotations = New collection
+      Set annotations = New Collection
     End If
     lineNum = lineNum + 1
   Wend

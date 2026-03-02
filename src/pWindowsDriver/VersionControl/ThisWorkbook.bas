@@ -50,6 +50,10 @@ Private Sub Workbook_Open()
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
   pWinDriver.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
 
+  Dim strPEssenceWBFullName As String
+  strPEssenceWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pEssence.xlam")
+  pWinDriver.References.AddReferenceToWorkbookOrLibrary strPEssenceWBFullName
+
 End Sub
 
 Private Sub Test_ListAllReferencesInProject()

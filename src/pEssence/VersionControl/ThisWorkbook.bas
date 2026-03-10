@@ -12,13 +12,37 @@ Option Explicit
 
 Private Const ThisVBProjectName = "pEssence"
 
-'Always Save Code Changes on Closing Workbootk
-Private Sub Workbook_BeforeClose(Cancel As Boolean)
-  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
-    ExportPhosphorusSourceCode
-  End If
+Private Sub Workbook_Open()
+  'Microsoft Visual Basic for Applications Extensilbility 5.3 - needed for VBProject
+  'This is not built in but needs adding manually for the References module
+    
+  'Microsoft Scripting Runtime - needed for Scripting.dictionary/File System Object
+  pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\scrrun.dll"
+    
+  'OLE Automation - needed for IUnknown type
+  pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\stdole2.tlb"
+    
+  'UIAutomationClient
+  pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\UIAutomationCore.dll"
+
 End Sub
 
 Private Sub ExportPhosphorusSourceCode()
   ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pEssence"
 End Sub
+
+Private Sub Workbook_BeforeClose(Cancel As Boolean)
+
+  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
+    ExportPhosphorusSourceCode
+  End If
+  
+  pEssence.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+  
+  'Always Save Code Changes on Closing Workbootk
+  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
+    ThisWorkbook.Save
+  End If
+
+End Sub
+

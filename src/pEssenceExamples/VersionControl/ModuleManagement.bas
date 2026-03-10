@@ -110,6 +110,7 @@ Public Sub RemoveAllComponentsExcept(vbProj As Object)
       shouldKeep = False
       If IsArray(ModulesToKeep) Then
         For i = LBound(ModulesToKeep) To UBound(ModulesToKeep)
+'Debug.Print ModulesToKeep(i)
           If vbComp.Name = CStr(ModulesToKeep(i)) Then
            shouldKeep = True
             Exit For

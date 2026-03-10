@@ -43,18 +43,18 @@ Private Sub FindMasterWindowElement()
   With MasterWindowElement
     .Initialise _
       "MasterWindowElement", _
-      pEssence.UIACommon.GetRootDesktopElement, _
-      UIAutomationClient.TreeScope.TreeScope_Children
+      UIACommon.GetRootDesktopElement, _
+      pEssence.TreeScope.Children
     .AddCondition "NameIsCalculator", UIAProperties.Name, UIAPropertyComparisons.Equals, "Calculator"
-    .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIA_ControlTypeIds.UIA_WindowControlTypeId
-    .AddCondition "ClassNameIsApplicationFrameWindow", UIA_PropertyIds.UIA_ClassNamePropertyId, UIAPropertyComparisons.Equals, "ApplicationFrameWindow"
+    .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
+    .AddCondition "ClassNameIsApplicationFrameWindow", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "ApplicationFrameWindow"
     .Locator By.pConditions, "AND(NameIsCalculator, ControlTypeIsWindow, ClassNameIsApplicationFrameWindow)"
     .Find
   End With
 
   MasterWindowElement.WaitForPropertyValue _
-    UIAutomationClient.UIA_PropertyIds.UIA_WindowWindowInteractionStatePropertyId, _
-    UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
+    UIAProperties.WindowWindowInteractionState, _
+    pEssence.UIAWindowInteractionStates.ReadyForUserInteraction
 
 End Sub
 
@@ -64,10 +64,10 @@ Private Sub FindNavigationElements()
     .Initialise _
       "MainCalculatorSubWindowElement", _
       MasterWindowElement.FoundUIAElement, _
-      UIAutomationClient.TreeScope.TreeScope_Children
+      pEssence.TreeScope.Children
     .AddCondition "NameIsCalculator", UIAProperties.Name, UIAPropertyComparisons.Equals, "Calculator"
-    .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIA_ControlTypeIds.UIA_WindowControlTypeId
-    .AddCondition "ClassNameIsWindowsUICoreCoreWindow", UIAutomationClient.UIA_PropertyIds.UIA_ClassNamePropertyId, pEssence.UIAPropertyComparisons.Equals, "Windows.UI.Core.CoreWindow"
+    .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
+    .AddCondition "ClassNameIsWindowsUICoreCoreWindow", UIAProperties.ClassName, pEssence.UIAPropertyComparisons.Equals, "Windows.UI.Core.CoreWindow"
     .Locator By.pConditions, "AND(NameIsCalculator, ControlTypeIsWindow, ClassNameIsWindowsUICoreCoreWindow)"
     .Find
   End With
@@ -76,7 +76,7 @@ Private Sub FindNavigationElements()
     .Initialise _
       "NavViewElement", _
       MainCalculatorSubWindowElement.FoundUIAElement, _
-      UIAutomationClient.TreeScope.TreeScope_Children
+      pEssence.TreeScope.Children
     .AddCondition "AutomationIdIsNavView", UIAProperties.AutomationId, UIAPropertyComparisons.Equals, "NavView"
     .Locator By.pConditions, "AutomationIdIsNavView"
     .Find
@@ -86,11 +86,11 @@ Private Sub FindNavigationElements()
     .Initialise _
       "OpenCloseNavigationMenuButtonElement", _
       NavViewElement.FoundUIAElement, _
-      UIAutomationClient.TreeScope.TreeScope_Children
+      pEssence.TreeScope.Children
     .AddCondition "NameIsOpenNavigation", UIAProperties.Name, UIAPropertyComparisons.Equals, "Open Navigation"
     .AddCondition "NameIsCloseNavigation", UIAProperties.Name, UIAPropertyComparisons.Equals, "Close Navigation"
-    .AddCondition "ControlTypeIsButton", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIA_ControlTypeIds.UIA_ButtonControlTypeId
-    .AddCondition "ClassNameIsButton", UIAutomationClient.UIA_PropertyIds.UIA_ClassNamePropertyId, pEssence.UIAPropertyComparisons.Equals, "Button"
+    .AddCondition "ControlTypeIsButton", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Button
+    .AddCondition "ClassNameIsButton", UIAProperties.ClassName, pEssence.UIAPropertyComparisons.Equals, "Button"
     .Locator By.pConditions, "AND(OR(NameIsOpenNavigation,NameIsCloseNavigation), ControlTypeIsButton, ClassNameIsButton)"
     .Find
   End With
@@ -107,7 +107,7 @@ Private Sub InitialiseExpandedNavigationMenuElements()
     .Initialise _
       "NavigationMenuRootPaneWindowElement", _
       NavViewElement.FoundUIAElement, _
-      UIAutomationClient.TreeScope.TreeScope_Children
+      pEssence.TreeScope.Children
     .AddCondition "AutomationIdIsPaneRoot", UIAProperties.AutomationId, UIAPropertyComparisons.Equals, "PaneRoot"
     .Locator By.pConditions, "AutomationIdIsPaneRoot"
     .Find
@@ -117,10 +117,10 @@ Private Sub InitialiseExpandedNavigationMenuElements()
     .Initialise _
       "StandardCalculatorNavigationMenuItemElement", _
       NavigationMenuRootPaneWindowElement.FoundUIAElement, _
-      UIAutomationClient.TreeScope.TreeScope_Descendants
+      pEssence.TreeScope.Descendants
     .Locator By.pConditions, "AND(NameIsStandardCalculator, ControlTypeIsListItem)"
     .AddCondition "NameIsStandardCalculator", UIAProperties.Name, UIAPropertyComparisons.Equals, "Standard Calculator"
-    .AddCondition "ControlTypeIsListItem", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIA_ControlTypeIds.UIA_ListItemControlTypeId
+    .AddCondition "ControlTypeIsListItem", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.ListItem
     .Find
   End With
 
@@ -133,7 +133,7 @@ Public Sub SelectCalculatorType(CalculatorType As String)
   Select Case CalculatorType
     Case "Standard Calculator"
       StandardCalculatorNavigationMenuItemElement.Find
-      Actions.SelectListItem StandardCalculatorNavigationMenuItemElement.ElementName, StandardCalculatorNavigationMenuItemElement.FoundUIAElement
+      Actions.Click StandardCalculatorNavigationMenuItemElement.ElementName, StandardCalculatorNavigationMenuItemElement.FoundUIAElement
     Case Else
       MsgBox "?"
   End Select

@@ -11,22 +11,25 @@ Attribute VB_Exposed = True
 'VB_PredeclaredId - see: https://www.vbaplanet.com/attributes.php
 Option Explicit
 
-Public Function Click(ElementName As String, CurrentElement As IUIAutomationElement)
-  Dim CurrentElementInvokePattern As IUIAutomationInvokePattern
-  Set CurrentElementInvokePattern = UIACommon.GetPattern(ElementName, CurrentElement, UIA_PatternIds.UIA_InvokePatternId, RaiseError:=True)
-  CurrentElementInvokePattern.Invoke
-End Function
-
-Public Function SelectListItem(ElementName As String, CurrentElement As IUIAutomationElement)
-  Dim CurrentElementSelectionItemPattern As IUIAutomationSelectionItemPattern
-  Set CurrentElementSelectionItemPattern = UIACommon.GetPattern(ElementName, CurrentElement, UIA_PatternIds.UIA_SelectionItemPatternId, RaiseError:=True)
-Debug.Print "CurrentIsSelected: " & (CurrentElementSelectionItemPattern.CurrentIsSelected = 1)
-  CurrentElementSelectionItemPattern.Select
-Debug.Print "CurrentIsSelected: " & (CurrentElementSelectionItemPattern.CurrentIsSelected = 1)
+Public Sub Click(ElementName As String, CurrentElement As IUIAutomationElement)
+  'Try the Invoke pattern
+  If UIAPatts.HasPattern(ElementName, CurrentElement, UIA_PatternIds.UIA_InvokePatternId) Then
+    Dim CurrentElementInvokePattern As IUIAutomationInvokePattern
+    Set CurrentElementInvokePattern = UIAPatts.GetPattern(ElementName, CurrentElement, UIA_PatternIds.UIA_InvokePatternId, RaiseError:=True)
+    CurrentElementInvokePattern.Invoke
+    Exit Sub
+  End If
   
-'  Dim CurrentElementScrollItemPattern As IUIAutomationScrollItemPattern
-'  Set CurrentElementScrollItemPattern = UIACommon.GetPattern(ElementName, CurrentElement, UIA_PatternIds.UIA_ScrollItemPatternId, RaiseError:=True)
-'  CurrentElementScrollItemPattern.ScrollIntoView
-End Function
+  If UIAProps.GetProperty(CurrentElement, UIA_PropertyIds.UIA_ControlTypePropertyId) = UIA_ControlTypeIds.UIA_ListItemControlTypeId Then
+    If UIAPatts.HasPattern(ElementName, CurrentElement, UIA_PatternIds.UIA_SelectionItemPatternId) Then
+      Dim CurrentElementSelectionItemPattern As IUIAutomationSelectionItemPattern
+      Set CurrentElementSelectionItemPattern = UIAPatts.GetPattern(ElementName, CurrentElement, UIA_PatternIds.UIA_SelectionItemPatternId, RaiseError:=True)
+      '?  CurrentElementScrollItemPattern.ScrollIntoView
+      CurrentElementSelectionItemPattern.Select
+      Exit Sub
+    End If
+  End If
+
+End Sub
 
 

@@ -66,8 +66,18 @@ Public Sub ListAllConditions()
 End Sub
 
 Public Sub Locator(FindBy As pEssence.By, Locator As String)
-  This.FindBy = FindBy
-  This.Locator = Locator
+  Select Case FindBy
+    Case By.pConditions
+      This.FindBy = FindBy
+      This.Locator = Locator
+    Case By.AutomationId
+      AddCondition "AutomationIdIs" & Locator, UIAProperties.AutomationId, UIAPropertyComparisons.Equals, Locator
+      This.FindBy = By.pConditions
+      This.Locator = "AutomationIdIs" & Locator
+    Case Else
+      pEssence.ErrorLogging.LogError pEssence.Errors.FindElementUnhandledByInLocator, "Unhanded By Locator: " & UIACommon.GetByName(FindBy)
+      Exit Sub
+  End Select
 End Sub
 
 Public Sub Find(Optional TimeoutInMilliseconds As Long, Optional AcceptNoElements As Boolean)

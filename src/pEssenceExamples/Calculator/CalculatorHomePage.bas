@@ -77,8 +77,7 @@ Private Sub FindNavigationElements()
       "NavViewElement", _
       MainCalculatorSubWindowElement.FoundUIAElement, _
       pEssence.TreeScope.Children
-    .AddCondition "AutomationIdIsNavView", UIAProperties.AutomationId, UIAPropertyComparisons.Equals, "NavView"
-    .Locator By.pConditions, "AutomationIdIsNavView"
+    .Locator By.AutomationId, "NavView"
     .Find
   End With
     

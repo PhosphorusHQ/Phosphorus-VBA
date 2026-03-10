@@ -10,6 +10,7 @@ Public Enum Errors
   FindElementsExpectedOneElementFoundNone = VBA.Constants.vbObjectError + 2002
   FindElementsRootElementIsNothing = VBA.Constants.vbObjectError + 2003
   FindElementsFindNoElements = VBA.Constants.vbObjectError + 2004
+  FindElementUnhandledByInLocator = VBA.Constants.vbObjectError + 2005
   PatternFailedForElement = VBA.Constants.vbObjectError + 3001
 End Enum
 

@@ -49,6 +49,12 @@ Option Explicit
 
 #End If
 
+#If VBA7 Then
+  Private Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+#Else
+  Private Declare Sub Sleep Lib "kernel32.dll" (ByVal dwMilliseconds As Long)
+#End If
+
 Public Enum WindowStyle
   Hide = 0
   Normal = 1
@@ -91,4 +97,15 @@ Public Sub RunShellExecuteToStartNewProcess( _
   End If
   
 End Sub
+
+Public Sub Snooze(ByVal SleepTimeInMilliseconds As Long)
+  Dim CappedSleepTimeoutInMilliseconds As Long
+  CappedSleepTimeoutInMilliseconds = 5000
+  If SleepTimeInMilliseconds <= SleepTimeInMilliseconds Then
+    Sleep SleepTimeInMilliseconds
+  Else
+     MsgBox "Snooze exceeds max snooze!"
+  End If
+End Sub
+
 

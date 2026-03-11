@@ -2,32 +2,32 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "pElement"
+Attribute VB_Name = "pSearch"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
-'@Folder UIAutomation
+'@Folder pEssence
 Option Explicit
 
 'Private pConditions() As pCondition
-'Requires a reference Windows Scripting Runtime
+'Requires a reference Windows Scripting Runtime for Scripting.Dictionary
 
-Private Type SearchCriteriaForFindingElement
+Private Type Criteria
   ElementName As String
   RootUIAElement As IUIAutomationElement
   TreeScope As Long
   FindBy As pEssence.By
-  AllConditions As Scripting.Dictionary
+  AllSearchConditions As Scripting.Dictionary
   Locator As String
   FoundUIAElement As IUIAutomationElement
   FoundUIAElements() As IUIAutomationElement
 End Type
 
-Private This As SearchCriteriaForFindingElement
+Private This As Criteria
 
 Private Sub Class_Initialize()
-  Set This.AllConditions = New Scripting.Dictionary
+  Set This.AllSearchConditions = New Scripting.Dictionary
 End Sub
 
 Public Sub Initialise(ElementName As String, RootUIAElement As IUIAutomationElement, TreeScope As Long)
@@ -51,16 +51,16 @@ Public Sub AddCondition( _
   cond.UIAProperty = UIAProperty
   cond.UIAPropertyComparison = UIAPropertyComparison
   cond.UIAPropertyValue = UIAPropertyValue
-  This.AllConditions.Add ConditionName, cond
+  This.AllSearchConditions.Add ConditionName, cond
   Set cond = Nothing
   
 End Sub
 
 Public Sub ListAllConditions()
   Dim k As Variant
-  For Each k In This.AllConditions.Keys
+  For Each k In This.AllSearchConditions.Keys
     Dim c As New pCondition
-    Set c = This.AllConditions(k)
+    Set c = This.AllSearchConditions(k)
     Debug.Print c.ConditionName; c.UIAProperty; c.UIAPropertyComparison, c.UIAPropertyValue
   Next k
 End Sub
@@ -132,9 +132,9 @@ Private Function Findlements(TimeoutInMilliseconds As Long, AcceptNoElements As 
     CurrentEvaluation = This.Locator
     
     Dim k As Variant
-    For Each k In This.AllConditions.Keys
+    For Each k In This.AllSearchConditions.Keys
       Dim c As New pCondition
-      Set c = This.AllConditions(k)
+      Set c = This.AllSearchConditions(k)
       CurrentEvaluation = VBA.Strings.Replace(CurrentEvaluation, c.ConditionName, c.Evaluate(CurrentElement))
     Next k
 
@@ -193,9 +193,9 @@ Private Function EvaluationLogicIsOk() As Boolean
   End If
   
   Dim k As Variant
-  For Each k In This.AllConditions.Keys
+  For Each k In This.AllSearchConditions.Keys
     Dim c As New pCondition
-    Set c = This.AllConditions(k)
+    Set c = This.AllSearchConditions(k)
     RedactedEvaluationLogic = VBA.Strings.Replace(RedactedEvaluationLogic, c.ConditionName, "")
   Next k
     

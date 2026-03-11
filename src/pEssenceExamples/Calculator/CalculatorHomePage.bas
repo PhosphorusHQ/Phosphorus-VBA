@@ -10,12 +10,12 @@ Attribute VB_Exposed = False
 '@Folder Calculator
 Option Explicit
 
-Private MasterWindowElement As pEssence.pElement
-Private MainCalculatorSubWindowElement As pEssence.pElement
-Private NavViewElement As pEssence.pElement
-Private OpenCloseNavigationMenuButtonElement As pEssence.pElement
-Private NavigationMenuRootPaneWindowElement As pEssence.pElement
-Private StandardCalculatorNavigationMenuItemElement As pEssence.pElement
+Private MasterWindowElement As pSearch
+Private MainCalculatorSubWindowElement As pSearch
+Private NavViewElement As pSearch
+Private OpenCloseNavigationMenuButtonElement As pSearch
+Private NavigationMenuRootPaneWindowElement As pSearch
+Private StandardCalculatorNavigationMenuItemElement As pSearch
 
 Private Sub OpenCalculator()
   pEssence.WindowsProcesses.RunShellExecuteToStartNewProcess "Microsoft Windows Calculator", "open", "shell:appsFolder\Microsoft.WindowsCalculator_8wekyb3d8bbwe!App", VBA.Constants.vbNullString, VBA.Constants.vbNullString, WindowStyle.Normal
@@ -30,12 +30,12 @@ Private Sub Class_Initialize()
 End Sub
 
 Private Sub InitializeAllElements()
-  Set MasterWindowElement = pEssence.UIACommon.GetNewpElement
-  Set MainCalculatorSubWindowElement = pEssence.UIACommon.GetNewpElement
-  Set NavViewElement = pEssence.UIACommon.GetNewpElement
-  Set OpenCloseNavigationMenuButtonElement = pEssence.UIACommon.GetNewpElement
-  Set NavigationMenuRootPaneWindowElement = pEssence.UIACommon.GetNewpElement
-  Set StandardCalculatorNavigationMenuItemElement = pEssence.UIACommon.GetNewpElement
+  Set MasterWindowElement = pEssence.UIACommon.GetNewSearch
+  Set MainCalculatorSubWindowElement = pEssence.UIACommon.GetNewSearch
+  Set NavViewElement = pEssence.UIACommon.GetNewSearch
+  Set OpenCloseNavigationMenuButtonElement = pEssence.UIACommon.GetNewSearch
+  Set NavigationMenuRootPaneWindowElement = pEssence.UIACommon.GetNewSearch
+  Set StandardCalculatorNavigationMenuItemElement = pEssence.UIACommon.GetNewSearch
 End Sub
 
 Private Sub FindMasterWindowElement()

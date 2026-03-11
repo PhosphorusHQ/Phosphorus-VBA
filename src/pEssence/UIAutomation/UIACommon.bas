@@ -33,10 +33,10 @@ Public Function GetRootDesktopElement() As IUIAutomationElement
   End If
 End Function
 
-Public Function GetNewpElement() As pElement
-  Dim Element As pElement
-  Set Element = New pElement
-  Set GetNewpElement = Element
+Public Function GetNewSearch() As pSearch
+  Dim Element As pSearch
+  Set Element = New pSearch
+  Set GetNewSearch = Element
 End Function
 
 Public Function GetByName(NamedBy As By) As String

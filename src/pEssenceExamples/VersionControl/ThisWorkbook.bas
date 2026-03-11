@@ -13,9 +13,14 @@ Option Explicit
 Private Const ThisVBProjectName = "pEssenceExamples"
 
 Private Sub Workbook_Open()
+  
   Dim strPEssenceWBFullName As String
   strPEssenceWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pEssence.xlam")
   pEssenceExamples.References.AddReferenceToWorkbookOrLibrary strPEssenceWBFullName
+  
+  'UIAutomationClient
+  pEssenceExamples.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\UIAutomationCore.dll"
+
 End Sub
 
 Private Sub ExportPhosphorusSourceCode()

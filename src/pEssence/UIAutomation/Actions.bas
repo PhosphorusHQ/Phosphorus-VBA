@@ -32,4 +32,19 @@ Public Sub Click(ElementName As String, CurrentElement As IUIAutomationElement)
 
 End Sub
 
-
+Public Sub WaitForPropertyValue( _
+  ElementName As String, _
+  CurrentElement As IUIAutomationElement, _
+  UIAProperty As UIAProperties, _
+  UIAPropertyValue As Variant, _
+  Optional TimeoutInMilliseconds As Long)
+  
+  Dim CurrentPropertyValue As Variant
+  CurrentPropertyValue = pEssence.GetProperty(CurrentElement, UIAProperty)
+  If CurrentPropertyValue = UIAPropertyValue Then
+    'Success - exit here!
+    Exit Sub
+  Else
+    MsgBox "Need to wait for the value before timeout here!"
+  End If
+End Sub

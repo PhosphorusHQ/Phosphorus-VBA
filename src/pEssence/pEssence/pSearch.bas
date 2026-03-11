@@ -9,8 +9,6 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@Folder pEssence
 Option Explicit
-
-'Private pConditions() As pCondition
 'Requires a reference Windows Scripting Runtime for Scripting.Dictionary
 
 Private Type Criteria
@@ -20,8 +18,6 @@ Private Type Criteria
   FindBy As pEssence.By
   AllSearchConditions As Scripting.Dictionary
   Locator As String
-  FoundUIAElement As IUIAutomationElement
-  FoundUIAElements() As IUIAutomationElement
 End Type
 
 Private This As Criteria
@@ -80,20 +76,20 @@ Public Sub Locator(FindBy As pEssence.By, Locator As String)
   End Select
 End Sub
 
-Public Sub Find(Optional TimeoutInMilliseconds As Long, Optional AcceptNoElements As Boolean)
+Public Function Find(Optional TimeoutInMilliseconds As Long, Optional AcceptNoElements As Boolean) As IUIAutomationElement
   Dim FoundElements() As IUIAutomationElement
   FoundElements = Findlements(TimeoutInMilliseconds, AcceptNoElements)
   Dim CountOfFoundElements As Integer
   CountOfFoundElements = UBound(FoundElements) + 1
   If CountOfFoundElements > 1 Then
     pEssence.ErrorLogging.LogError pEssence.Errors.FindElementsExpectedOneElementFoundMany, "Expected to find one element but found " & CountOfFoundElements
-    Exit Sub
+    Exit Function
   ElseIf CountOfFoundElements < 1 Then
     pEssence.ErrorLogging.LogError pEssence.Errors.FindElementsExpectedOneElementFoundNone, "Expected to find one element but found none."
-    Exit Sub
+    Exit Function
   End If
-  Set This.FoundUIAElement = FoundElements(0)
-End Sub
+  Set Find = FoundElements(0)
+End Function
 
 Public Function FindAll(Optional TimeoutInMilliseconds As Long, Optional AcceptNoElements As Boolean) As IUIAutomationElement
   Findlements TimeoutInMilliseconds, AcceptNoElements
@@ -140,11 +136,10 @@ Private Function Findlements(TimeoutInMilliseconds As Long, AcceptNoElements As 
 
     Dim MatchFound As Boolean
     On Error Resume Next
-    'Evaluate the formula with Excel
-    MatchFound = Excel.Evaluate(CurrentEvaluation)
+    MatchFound = Excel.Evaluate(CurrentEvaluation) 'Evaluate the formula with Excel!
     'Did we get and error?
     If Err.Number = 0 Then
-      'DO nothing!
+      'Do nothing!
     Else
       If Err.Number = 13 Then
         On Error GoTo 0
@@ -228,25 +223,6 @@ Private Function CountOccurrences(Text As String, SearchTerm As String) As Integ
   End If
 End Function
 
-Public Sub WaitForPropertyValue(UIAProperty As UIAProperties, UIAPropertyValue As Variant, Optional TimeoutInMilliseconds As Long)
-  Dim CurrentPropertyValue As Variant
-  CurrentPropertyValue = pEssence.GetProperty(This.FoundUIAElement, UIAProperty)
-  If CurrentPropertyValue = UIAPropertyValue Then
-    'Success - exit here!
-    Exit Sub
-  Else
-    MsgBox "Need to wait for the value before timeout here!"
-  End If
-End Sub
-
 Public Function ElementName() As String
   ElementName = This.ElementName
 End Function
-
-Public Function FoundUIAElement() As IUIAutomationElement
-  Set FoundUIAElement = This.FoundUIAElement
-End Function
-
-'Dim pattern As IUIAutomationInvokePattern
-'Set pattern = GetPattern(element, UIA_InvokePatternId)
-

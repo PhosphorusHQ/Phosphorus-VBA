@@ -17,19 +17,16 @@ Private OpenCloseNavigationMenuButtonElementSearch As pSearch
 Private NavigationMenuRootPaneWindowElementSearch As pSearch
 Private StandardCalculatorNavigationMenuItemElementSearch As pSearch
 
-Public Elements As New Scripting.Dictionary
-Private PrivateElements As New Scripting.Dictionary
-
 Private Type PrivateElementNames
   MasterWindow As String
   MainCalculatorSubWindow As String
   NavigationViewRoot As String
   OpenCloseNavigationMenuButton As String
   NavigationMenuRootPaneWindow As String
-  StandardCalculatorNavigationMenuItem As String
 End Type
 
 Private This As PrivateElementNames
+Private PrivateElements As New Scripting.Dictionary
 
 Private Sub Class_Initialize()
   OpenCalculator
@@ -46,7 +43,6 @@ Private Sub Class_Terminate()
   Set OpenCloseNavigationMenuButtonElementSearch = Nothing
   Set NavigationMenuRootPaneWindowElementSearch = Nothing
   Set StandardCalculatorNavigationMenuItemElementSearch = Nothing
-  Set Elements = Nothing
   Set PrivateElements = Nothing
 End Sub
 
@@ -66,7 +62,6 @@ Private Sub InitializeAllElements()
   This.NavigationViewRoot = "NavigationView"
   This.OpenCloseNavigationMenuButton = "OpenCloseNavigationMenuButton"
   This.NavigationMenuRootPaneWindow = "NavigationMenuRootPaneWindow"
-  This.StandardCalculatorNavigationMenuItem = "StandardCalculatorNavigationMenuItem"
 End Sub
 
 Private Sub FindMasterWindowElement()
@@ -117,21 +112,18 @@ Private Sub FindNavigationElements()
         
 End Sub
 
+'Public Sub SelectCalculatorType(CalculatorType As String)
 Public Sub SelectCalculatorType(CalculatorType As String)
   OpenNavigationMenu
   WindowsProcesses.Snooze 2000
   InitialiseExpandedNavigationMenuElements
-  Select Case CalculatorType
-    Case "Standard Calculator"
-      Actions.Click This.StandardCalculatorNavigationMenuItem, PrivateElements(This.StandardCalculatorNavigationMenuItem)
-    Case Else
-      MsgBox "?"
-  End Select
+  Dim TargetMenuElement As IUIAutomationElement
+  Set TargetMenuElement = Calculator.HomePageMenuElements(CalculatorType)
+  Actions.Click CalculatorType, TargetMenuElement
 End Sub
 
 Private Sub OpenNavigationMenu()
   Actions.Click OpenCloseNavigationMenuButtonElementSearch.ElementName, PrivateElements(This.OpenCloseNavigationMenuButton)
-  'OpenCloseNavigationMenuButtonElementSearch.FoundUIAElement
 End Sub
 
 Private Sub InitialiseExpandedNavigationMenuElements()
@@ -143,12 +135,15 @@ Private Sub InitialiseExpandedNavigationMenuElements()
     PrivateElements.Add This.NavigationMenuRootPaneWindow, .Find
   End With
 
+  Set Calculator.HomePageMenuElements = Nothing
+  Set HomePageMenuElements = New Scripting.Dictionary
   With StandardCalculatorNavigationMenuItemElementSearch
-    .Initialise This.StandardCalculatorNavigationMenuItem, PrivateElements(This.NavigationMenuRootPaneWindow), TreeScope.Descendants
+    .Initialise Calculator.HomePageMenuNames.StandardCalculator, PrivateElements(This.NavigationMenuRootPaneWindow), TreeScope.Descendants
     .Locator By.pConditions, "AND(NameIsStandardCalculator, ControlTypeIsListItem)"
     .AddCondition "NameIsStandardCalculator", UIAProperties.Name, UIAPropertyComparisons.Equals, "Standard Calculator"
     .AddCondition "ControlTypeIsListItem", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.ListItem
-    PrivateElements.Add This.StandardCalculatorNavigationMenuItem, .Find
+    Calculator.HomePageMenuElements.Add Calculator.HomePageMenuNames.StandardCalculator, .Find
   End With
 
 End Sub
+

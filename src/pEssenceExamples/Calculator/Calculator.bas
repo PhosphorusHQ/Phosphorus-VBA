@@ -2,21 +2,25 @@ Attribute VB_Name = "Calculator"
 '@Folder Calculator
 Option Explicit
 
-Public Type CHPElements
-  MasterWindow As String
+Private Type PublicMenuElementNames
+  StandardCalculator As String
 End Type
+
+Public HomePageMenuNames As PublicMenuElementNames
+Public HomePageMenuElements As Scripting.Dictionary
 
 Public Sub Calculator()
 
   On Error GoTo ErrorHandler
-  
+    
   GetRootDesktopElement
   
   Dim HomePage As CalculatorHomePage
   Set HomePage = New CalculatorHomePage
-  HomePage.SelectCalculatorType "Standard Calculator"
   
-MsgBox "What next? List all calculate types. Then use buttons!"
+  HomePage.SelectCalculatorType HomePageMenuNames.StandardCalculator
+
+MsgBox "What next? Select each calculate types. Then use buttons!"
   
   Exit Sub
 ErrorHandler:
@@ -25,5 +29,10 @@ ErrorHandler:
   
 ExitSub:
   Set HomePage = Nothing
-   
+  Set HomePageMenuElements = Nothing
+
+End Sub
+
+Private Sub SetHomePageMenuNames()
+  HomePageMenuNames.StandardCalculator = "StandardCalculator"
 End Sub

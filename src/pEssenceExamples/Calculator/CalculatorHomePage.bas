@@ -15,7 +15,6 @@ Private MainCalculatorSubWindowElementSearch As pSearch
 Private NavViewRootElementSearch As pSearch
 Private OpenCloseNavigationMenuButtonElementSearch As pSearch
 Private NavigationMenuRootPaneWindowElementSearch As pSearch
-Private StandardCalculatorNavigationMenuItemElementSearch As pSearch
 
 Private Type PrivateElementNames
   MasterWindow As String
@@ -42,7 +41,6 @@ Private Sub Class_Terminate()
   Set NavViewRootElementSearch = Nothing
   Set OpenCloseNavigationMenuButtonElementSearch = Nothing
   Set NavigationMenuRootPaneWindowElementSearch = Nothing
-  Set StandardCalculatorNavigationMenuItemElementSearch = Nothing
   Set PrivateElements = Nothing
 End Sub
 
@@ -56,7 +54,6 @@ Private Sub InitializeAllElements()
   Set NavViewRootElementSearch = UIACommon.GetNewSearch
   Set OpenCloseNavigationMenuButtonElementSearch = UIACommon.GetNewSearch
   Set NavigationMenuRootPaneWindowElementSearch = UIACommon.GetNewSearch
-  Set StandardCalculatorNavigationMenuItemElementSearch = UIACommon.GetNewSearch
   This.MasterWindow = "MasterWindow"
   This.MainCalculatorSubWindow = "MainCalculatorSubWindow"
   This.NavigationViewRoot = "NavigationView"
@@ -115,35 +112,41 @@ End Sub
 'Public Sub SelectCalculatorType(CalculatorType As String)
 Public Sub SelectCalculatorType(CalculatorType As String)
   OpenNavigationMenu
-  WindowsProcesses.Snooze 2000
-  InitialiseExpandedNavigationMenuElements
-  Dim TargetMenuElement As IUIAutomationElement
-  Set TargetMenuElement = Calculator.HomePageMenuElements(CalculatorType)
-  Actions.Click CalculatorType, TargetMenuElement
+  WindowsProcesses.Snooze 1000
+  Actions.Click CalculatorType, GetMenuElement(CalculatorType)
+  WindowsProcesses.Snooze 500
 End Sub
 
 Private Sub OpenNavigationMenu()
   Actions.Click OpenCloseNavigationMenuButtonElementSearch.ElementName, PrivateElements(This.OpenCloseNavigationMenuButton)
 End Sub
 
-Private Sub InitialiseExpandedNavigationMenuElements()
+Private Function GetMenuElement(CalculatorType As String) As IUIAutomationElement
   
+  'We need to find this element each time the menu is opened
   With NavigationMenuRootPaneWindowElementSearch
-    .Initialise This.NavigationMenuRootPaneWindow, PrivateElements(This.NavigationViewRoot), TreeScope.Children
-    .AddCondition "AutomationIdIsPaneRoot", UIAProperties.AutomationId, UIAPropertyComparisons.Equals, "PaneRoot"
-    .Locator By.pConditions, "AutomationIdIsPaneRoot"
+  
+     If NavigationMenuRootPaneWindowElementSearch.ElementName = "" Then
+      .Initialise This.NavigationMenuRootPaneWindow, PrivateElements(This.NavigationViewRoot), TreeScope.Children
+      .AddCondition "AutomationIdIsPaneRoot", UIAProperties.AutomationId, UIAPropertyComparisons.Equals, "PaneRoot"
+      .Locator By.pConditions, "AutomationIdIsPaneRoot"
+     Else
+      PrivateElements.Remove This.NavigationMenuRootPaneWindow
+     End If
     PrivateElements.Add This.NavigationMenuRootPaneWindow, .Find
   End With
 
-  Set Calculator.HomePageMenuElements = Nothing
-  Set HomePageMenuElements = New Scripting.Dictionary
-  With StandardCalculatorNavigationMenuItemElementSearch
-    .Initialise Calculator.HomePageMenuNames.StandardCalculator, PrivateElements(This.NavigationMenuRootPaneWindow), TreeScope.Descendants
-    .Locator By.pConditions, "AND(NameIsStandardCalculator, ControlTypeIsListItem)"
-    .AddCondition "NameIsStandardCalculator", UIAProperties.Name, UIAPropertyComparisons.Equals, "Standard Calculator"
-    .AddCondition "ControlTypeIsListItem", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.ListItem
-    Calculator.HomePageMenuElements.Add Calculator.HomePageMenuNames.StandardCalculator, .Find
+  Dim CurrentNavigationMenuItemElementSearch As pSearch
+  Set CurrentNavigationMenuItemElementSearch = Nothing
+  Set CurrentNavigationMenuItemElementSearch = UIACommon.GetNewSearch
+  
+  With CurrentNavigationMenuItemElementSearch
+    .Initialise CalculatorType, PrivateElements(This.NavigationMenuRootPaneWindow), TreeScope.Descendants
+    .Locator By.pConditions, "AND(NameIs, ControlTypeIsListItem)"
+    .AddCondition "NameIs", UIAProperties.Name, UIAPropertyComparisons.Equals, CalculatorType
+    .AddCondition "ControlTypeIsListItem", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.ListItem
+    Set GetMenuElement = .Find
   End With
 
-End Sub
+End Function
 

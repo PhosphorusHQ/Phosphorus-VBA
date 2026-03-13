@@ -234,6 +234,15 @@ Public Function GetProperty(Element As IUIAutomationElement, PropertyId As Long)
   On Error GoTo 0
 End Function
 
+Public Function HasProperty(ElementName As String, Element As IUIAutomationElement, PropertyId As Long, Optional RaiseError As Boolean) As Boolean
+  On Error Resume Next
+  Dim property As Variant
+  On Error Resume Next
+  property = Element.GetCurrentPropertyValue(PropertyId)
+  On Error GoTo 0
+  HasProperty = Not IsEmpty(property)
+End Function
+
 Public Function GetWindowInteractionStateName(WindowInteractionState As Long) As String
   Dim r As String
   Select Case WindowInteractionState 'UIAutomationClient.WindowInteractionState

@@ -11,22 +11,28 @@ Attribute VB_Exposed = True
 'VB_PredeclaredId - see: https://www.vbaplanet.com/attributes.php
 Option Explicit
 
-Public Sub Click(ElementName As String, CurrentElement As IUIAutomationElement)
-  'Try the Invoke pattern
-  If UIAPatts.HasPattern(ElementName, CurrentElement, UIA_PatternIds.UIA_InvokePatternId) Then
-    Dim CurrentElementInvokePattern As IUIAutomationInvokePattern
-    Set CurrentElementInvokePattern = UIAPatts.GetPattern(ElementName, CurrentElement, UIA_PatternIds.UIA_InvokePatternId, RaiseError:=True)
-    CurrentElementInvokePattern.Invoke
-    Exit Sub
-  End If
+Public Sub Click(Name As String, Ele As IUIAutomationElement)
   
-  If UIAProps.GetProperty(CurrentElement, UIA_PropertyIds.UIA_ControlTypePropertyId) = UIA_ControlTypeIds.UIA_ListItemControlTypeId Then
-    If UIAPatts.HasPattern(ElementName, CurrentElement, UIA_PatternIds.UIA_SelectionItemPatternId) Then
-      Dim CurrentElementSelectionItemPattern As IUIAutomationSelectionItemPattern
-      Set CurrentElementSelectionItemPattern = UIAPatts.GetPattern(ElementName, CurrentElement, UIA_PatternIds.UIA_SelectionItemPatternId, RaiseError:=True)
-      '?  CurrentElementScrollItemPattern.ScrollIntoView
-      CurrentElementSelectionItemPattern.Select
+  IsElementReady Name, Ele
+  
+  'Try the Invoke pattern
+  If UIAProps.HasProperty(Name, Ele, UIAProperties.IsInvokePatternAvailable) Then
+    If UIAProps.GetProperty(Ele, UIAProperties.IsInvokePatternAvailable) Then
+      Dim CurrentElementInvokePattern As IUIAutomationInvokePattern
+      Set CurrentElementInvokePattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_InvokePatternId, RaiseError:=True)
+      CurrentElementInvokePattern.Invoke
       Exit Sub
+    End If
+  End If
+    
+  If UIAProps.HasProperty(Name, Ele, UIAProperties.ControlType) Then
+    If UIAProps.GetProperty(Ele, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
+      If UIAProps.HasProperty(Name, Ele, UIAProperties.IsSelectionItemPatternAvailable) Then
+        Dim CurrentElementSelectionItemPattern As IUIAutomationSelectionItemPattern
+        Set CurrentElementSelectionItemPattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_SelectionItemPatternId, RaiseError:=True)
+        CurrentElementSelectionItemPattern.Select
+        Exit Sub
+      End If
     End If
   End If
 
@@ -48,3 +54,36 @@ Public Sub WaitForPropertyValue( _
     MsgBox "Need to wait for the value before timeout here!"
   End If
 End Sub
+
+Private Function IsElementReady(Name As String, Ele As IUIAutomationElement) As Boolean
+  Dim ret As Boolean
+  ret = True
+  ret = ret And IsElementAlive(Name, Ele)
+  If ret Then
+    TryToScrollItemIntoView Name, Ele
+  Else
+    'Raise an error
+  End If
+  IsElementReady = ret
+End Function
+
+Private Function IsElementAlive(Name As String, Ele As IUIAutomationElement) As Boolean
+  On Error Resume Next
+  Dim pid As Long
+  pid = Ele.CurrentProcessId  'any property access will fail if stale
+  IsElementAlive = (Err.Number = 0) And (pid > 0)
+  On Error GoTo 0
+End Function
+
+Private Sub TryToScrollItemIntoView(Name As String, Ele As IUIAutomationElement)
+  If UIAProps.HasProperty(Name, Ele, UIAProperties.IsScrollItemPatternAvailable) Then
+    If UIAProps.HasProperty(Name, Ele, UIAProperties.IsOffscreen) Then
+      If UIAProps.GetProperty(Ele, UIAProperties.IsOffscreen) Then
+        Dim patt As IUIAutomationScrollItemPattern
+        Set patt = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_ScrollItemPatternId, RaiseError:=True)
+        patt.ScrollIntoView
+      End If
+    End If
+  End If
+End Sub
+

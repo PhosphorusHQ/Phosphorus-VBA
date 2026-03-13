@@ -76,26 +76,59 @@ Public Sub Locator(FindBy As pEssence.By, Locator As String)
   End Select
 End Sub
 
-Public Function Find(Optional TimeoutInMilliseconds As Long, Optional AcceptNoElements As Boolean) As IUIAutomationElement
+Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean) As IUIAutomationElement
+'Find a single element with a timeout
+
   Dim FoundElements() As IUIAutomationElement
-  FoundElements = Findlements(TimeoutInMilliseconds, AcceptNoElements)
   Dim CountOfFoundElements As Integer
-  CountOfFoundElements = UBound(FoundElements) + 1
+  
+  'Calculate the end time
+  Dim EndTime As Date
+  EndTime = DateAdd("s", TimeoutInSeconds, Now)
+    
+  'Loop until element(s) found or timed out
+  Dim SomeElementsFound As Boolean
+  SomeElementsFound = False
+  
+  Dim PassedEndTime As Boolean
+  PassedEndTime = False
+  
+  While Not (SomeElementsFound Or PassedEndTime)
+    FoundElements = Findlements(True)
+    CountOfFoundElements = 0
+    If Not UIACommon.IsArrayEmpty(FoundElements) Then
+      CountOfFoundElements = UBound(FoundElements) + 1
+    End If
+    SomeElementsFound = (CountOfFoundElements > 0)
+    If Not SomeElementsFound Then
+      PassedEndTime = (Now > EndTime)
+      If Not PassedEndTime Then
+        WindowsProcesses.Snooze 100
+      End If
+    End If
+  Wend
+    
   If CountOfFoundElements > 1 Then
     pEssence.ErrorLogging.LogError pEssence.Errors.FindElementsExpectedOneElementFoundMany, "Expected to find one element but found " & CountOfFoundElements
     Exit Function
-  ElseIf CountOfFoundElements < 1 Then
-    pEssence.ErrorLogging.LogError pEssence.Errors.FindElementsExpectedOneElementFoundNone, "Expected to find one element but found none."
+  ElseIf CountOfFoundElements = 0 And Not AcceptNoElements Then
+    pEssence.ErrorLogging.LogError _
+      pEssence.Errors.FindElementsExpectedOneElementFoundNone, _
+      "Expected to find one element but found none." & vbCrLf & vbCrLf & _
+      "Looking for '" & This.ElementName & "' element, locator: '" & This.Locator & "', timeout (" & TimeoutInSeconds & " seconds)"
     Exit Function
   End If
   Set Find = FoundElements(0)
+
 End Function
 
-Public Function FindAll(Optional TimeoutInMilliseconds As Long, Optional AcceptNoElements As Boolean) As IUIAutomationElement
-  Findlements TimeoutInMilliseconds, AcceptNoElements
+Public Function FindAll(Optional AcceptNoElements As Boolean) As IUIAutomationElement
+'Find more than 1 elements with no timeout
+  Findlements AcceptNoElements
 End Function
 
-Private Function Findlements(TimeoutInMilliseconds As Long, AcceptNoElements As Boolean) As IUIAutomationElement()
+Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElement()
+'Find 1 or more elements with no timeout
 
   If Not EvaluationLogicIsOk Then
     pEssence.ErrorLogging.LogError pEssence.Errors.FaultyEvaluationLogicUnspecifiedError, "The evaluation logic is faulty: '" & This.Locator & "'"

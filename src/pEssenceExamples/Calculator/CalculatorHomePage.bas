@@ -30,7 +30,6 @@ Private PrivateElements As New Scripting.Dictionary
 Private Sub Class_Initialize()
   OpenCalculator
   InitializeAllElements
-  pEssence.WindowsProcesses.Snooze 2000
   FindMasterWindowElement
   FindNavigationElements
 End Sub
@@ -69,7 +68,7 @@ Private Sub FindMasterWindowElement()
     .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
     .AddCondition "ClassNameIsApplicationFrameWindow", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "ApplicationFrameWindow"
     .Locator By.pConditions, "AND(NameIsCalculator, ControlTypeIsWindow, ClassNameIsApplicationFrameWindow)"
-    PrivateElements.Add This.MasterWindow, .Find
+    PrivateElements.Add This.MasterWindow, .Find(10)
   End With
 
   Actions.WaitForPropertyValue _
@@ -88,13 +87,13 @@ Private Sub FindNavigationElements()
     .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
     .AddCondition "ClassNameIsWindowsUICoreCoreWindow", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "Windows.UI.Core.CoreWindow"
     .Locator By.pConditions, "AND(NameIsCalculator, ControlTypeIsWindow, ClassNameIsWindowsUICoreCoreWindow)"
-    PrivateElements.Add This.MainCalculatorSubWindow, .Find
+    PrivateElements.Add This.MainCalculatorSubWindow, .Find(10)
   End With
   
   With NavViewRootElementSearch
     .Initialise This.NavigationViewRoot, PrivateElements(This.MainCalculatorSubWindow), pEssence.TreeScope.Children
     .Locator By.AutomationId, "NavView"
-    PrivateElements.Add This.NavigationViewRoot, .Find
+    PrivateElements.Add This.NavigationViewRoot, .Find(10)
   End With
     
   With OpenCloseNavigationMenuButtonElementSearch
@@ -104,7 +103,7 @@ Private Sub FindNavigationElements()
     .AddCondition "ControlTypeIsButton", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Button
     .AddCondition "ClassNameIsButton", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "Button"
     .Locator By.pConditions, "AND(OR(NameIsOpenNavigation,NameIsCloseNavigation), ControlTypeIsButton, ClassNameIsButton)"
-    PrivateElements.Add This.OpenCloseNavigationMenuButton, .Find
+    PrivateElements.Add This.OpenCloseNavigationMenuButton, .Find(10)
   End With
         
 End Sub
@@ -112,9 +111,7 @@ End Sub
 'Public Sub SelectCalculatorType(CalculatorType As String)
 Public Sub SelectCalculatorType(CalculatorType As String)
   OpenNavigationMenu
-  WindowsProcesses.Snooze 1000
   Actions.Click CalculatorType, GetMenuElement(CalculatorType)
-  WindowsProcesses.Snooze 500
 End Sub
 
 Private Sub OpenNavigationMenu()

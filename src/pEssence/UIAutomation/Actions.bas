@@ -89,7 +89,12 @@ End Sub
 
 Public Sub CloseWindow(Name As String, Ele As IUIAutomationElement)
   IsElementReady Name, Ele
-  Dim patt As IUIAutomationWindowPattern
-  Set patt = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_WindowPatternId, RaiseError:=True)
-  patt.Close
+  If UIAProps.GetProperty(Ele, UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
+    If UIAProps.HasProperty(Name, Ele, UIAProperties.IsWindowPatternAvailable) Then
+      Dim patt As IUIAutomationWindowPattern
+      Set patt = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_WindowPatternId, RaiseError:=True)
+      patt.Close
+      Exit Sub
+    End If
+  End If
 End Sub

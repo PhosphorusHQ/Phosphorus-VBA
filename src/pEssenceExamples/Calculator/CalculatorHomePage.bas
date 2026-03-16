@@ -35,6 +35,7 @@ Private Sub Class_Initialize()
 End Sub
 
 Private Sub Class_Terminate()
+  Actions.CloseWindow This.MasterWindow, PrivateElements(This.MasterWindow)
   Set MasterWindowElementSearch = Nothing
   Set MainCalculatorSubWindowElementSearch = Nothing
   Set NavViewRootElementSearch = Nothing

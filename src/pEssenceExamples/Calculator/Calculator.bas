@@ -45,16 +45,15 @@ Public Sub Calculator()
     Application.Run "pEssenceExamples.Calculator." & VBA.Strings.Replace(CurrentMenuName, " ", "")
     On Error GoTo 0
   Next
+  GoTo ExitSub
 
-MsgBox "What next? Timeout on wait for property value. Use buttons! Close application window."
-  
-  Exit Sub
 ErrorHandler:
   MsgBox Err.Description & " (Error Number #" & Err.Number & ")"
-  Exit Sub
+  GoTo ExitSub
   
 ExitSub:
   Set HomePage = Nothing
+MsgBox "What next? Timeout on wait for property value. Use buttons!"
 
 End Sub
 

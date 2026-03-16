@@ -2,61 +2,51 @@ Attribute VB_Name = "Calculator"
 '@Folder Calculator
 Option Explicit
 
-Private Type PublicMenuElementNames
-  StandardCalculator As String
-  ScientificCalculator As String
-  GraphingCalculator As String
-  ProgrammerCalculator As String
-  DatecalculationCalculator As String
-  CurrencyConverter As String
-  VolumeConverter As String
-  LengthConverter As String
-  WeightAndMassConverter As String
-  TemperatureConverter As String
-  EnergyConverter As String
-  AreaConverter As String
-  SpeedConverter As String
-  TimeConverter As String
-  PowerConverter As String
-  DataConverter As String
-  PressureConverter As String
-  AngleConverter As String
-End Type
+Dim MenuNames As New Collection
 
-Public HomePageMenuNames As PublicMenuElementNames
+Private Sub InitialiseMenuNames()
+  MenuNames.Add "Standard Calculator"
+  MenuNames.Add "Scientific Calculator"
+  MenuNames.Add "Graphing Calculator"
+  MenuNames.Add "Programmer Calculator"
+  MenuNames.Add "Date calculation Calculator"
+  MenuNames.Add "Currency Converter"
+  MenuNames.Add "Volume Converter"
+  MenuNames.Add "Length Converter"
+  MenuNames.Add "Weight and mass Converter"
+  MenuNames.Add "Temperature Converter"
+  MenuNames.Add "Energy Converter"
+  MenuNames.Add "Area Converter"
+  MenuNames.Add "Speed Converter"
+  MenuNames.Add "Time Converter"
+  MenuNames.Add "Power Converter"
+  MenuNames.Add "Data Converter"
+  MenuNames.Add "Pressure Converter"
+  MenuNames.Add "Angle Converter"
+End Sub
 
 Public Sub Calculator()
 
   On Error GoTo ErrorHandler
-    
+  
   GetRootDesktopElement
-  SetHomePageMenuNames
+  InitialiseMenuNames
   
   Dim HomePage As CalculatorHomePage
   Set HomePage = New CalculatorHomePage
-  
-  HomePage.SelectCalculatorType HomePageMenuNames.ScientificCalculator
-  HomePage.SelectCalculatorType HomePageMenuNames.GraphingCalculator
-  HomePage.SelectCalculatorType HomePageMenuNames.ProgrammerCalculator
-  HomePage.SelectCalculatorType HomePageMenuNames.DatecalculationCalculator
-  
-  HomePage.SelectCalculatorType HomePageMenuNames.CurrencyConverter
-  HomePage.SelectCalculatorType HomePageMenuNames.VolumeConverter
-  HomePage.SelectCalculatorType HomePageMenuNames.LengthConverter
-  HomePage.SelectCalculatorType HomePageMenuNames.WeightAndMassConverter
-  HomePage.SelectCalculatorType HomePageMenuNames.TemperatureConverter
-  HomePage.SelectCalculatorType HomePageMenuNames.AreaConverter
-  HomePage.SelectCalculatorType HomePageMenuNames.SpeedConverter
-  HomePage.SelectCalculatorType HomePageMenuNames.TimeConverter
-  HomePage.SelectCalculatorType HomePageMenuNames.PowerConverter
-  HomePage.SelectCalculatorType HomePageMenuNames.DataConverter
-  HomePage.SelectCalculatorType HomePageMenuNames.PressureConverter
-  HomePage.SelectCalculatorType HomePageMenuNames.AngleConverter
-  
-'Last
-  HomePage.SelectCalculatorType HomePageMenuNames.StandardCalculator
 
-MsgBox "What next? Scroll menu into view. Select each calculate types. Then use buttons!"
+  Dim i As Integer
+  Dim CurrentMenuName As String
+  For i = 1 To MenuNames.Count
+    Debug.Print CurrentMenuName
+    CurrentMenuName = MenuNames(i)
+    HomePage.SelectCalculatorType CurrentMenuName
+    On Error Resume Next
+    Application.Run "pEssenceExamples.Calculator." & VBA.Strings.Replace(CurrentMenuName, " ", "")
+    On Error GoTo 0
+  Next
+
+MsgBox "What next? Timeout on wait for property value. Use buttons! Close application window."
   
   Exit Sub
 ErrorHandler:
@@ -68,25 +58,12 @@ ExitSub:
 
 End Sub
 
-Private Sub SetHomePageMenuNames()
-  With HomePageMenuNames
-    .StandardCalculator = "Standard Calculator"
-    .ScientificCalculator = "Scientific Calculator"
-    .GraphingCalculator = "Graphing Calculator"
-    .ProgrammerCalculator = "Programmer Calculator"
-    .DatecalculationCalculator = "Date calculation Calculator"
-    .CurrencyConverter = "Currency Converter"
-    .VolumeConverter = "Volume Converter"
-    .LengthConverter = "Length Converter"
-    .WeightAndMassConverter = "Weight and mass Converter"
-    .TemperatureConverter = "Temperature Converter"
-    .EnergyConverter = "Energy Converter"
-    .AreaConverter = "Area Converter"
-    .SpeedConverter = "Speed Converter"
-    .TimeConverter = "Time Converter"
-    .PowerConverter = "Power Converter"
-    .DataConverter = "Data Converter"
-    .PressureConverter = "Pressure Converter"
-    .AngleConverter = "Angle Converter"
-  End With
+Private Sub StandardCalculator()
+'  MsgBox "PJG: StandardCalculator"
+  'Squared = asc 253 ² https://www.ascii-code.com/character/%C2%B2
+  '{SquareRoot} ???
+  '{Reciprocal}
+  '{BackSpace}
+  '%
+  '± alt 241 or {Negate}
 End Sub

@@ -12,7 +12,7 @@ Option Explicit
 
 Private MasterWindowElementSearch As pSearch
 Private MainCalculatorSubWindowElementSearch As pSearch
-Private NavViewRootElementSearch As pSearch
+Private NavigationViewRootElementSearch As pSearch
 Private OpenCloseNavigationMenuButtonElementSearch As pSearch
 Private NavigationMenuRootPaneWindowElementSearch As pSearch
 
@@ -38,7 +38,7 @@ Private Sub Class_Terminate()
   Actions.CloseWindow This.MasterWindow, PrivateElements(This.MasterWindow)
   Set MasterWindowElementSearch = Nothing
   Set MainCalculatorSubWindowElementSearch = Nothing
-  Set NavViewRootElementSearch = Nothing
+  Set NavigationViewRootElementSearch = Nothing
   Set OpenCloseNavigationMenuButtonElementSearch = Nothing
   Set NavigationMenuRootPaneWindowElementSearch = Nothing
   Set PrivateElements = Nothing
@@ -51,7 +51,7 @@ End Sub
 Private Sub InitializeAllElements()
   Set MasterWindowElementSearch = UIACommon.GetNewSearch
   Set MainCalculatorSubWindowElementSearch = UIACommon.GetNewSearch
-  Set NavViewRootElementSearch = UIACommon.GetNewSearch
+  Set NavigationViewRootElementSearch = UIACommon.GetNewSearch
   Set OpenCloseNavigationMenuButtonElementSearch = UIACommon.GetNewSearch
   Set NavigationMenuRootPaneWindowElementSearch = UIACommon.GetNewSearch
   This.MasterWindow = "MasterWindow"
@@ -91,7 +91,7 @@ Private Sub FindNavigationElements()
     PrivateElements.Add This.MainCalculatorSubWindow, .Find(10)
   End With
   
-  With NavViewRootElementSearch
+  With NavigationViewRootElementSearch
     .Initialise This.NavigationViewRoot, PrivateElements(This.MainCalculatorSubWindow), pEssence.TreeScope.Children
     .Locator By.AutomationId, "NavView"
     PrivateElements.Add This.NavigationViewRoot, .Find(10)
@@ -109,7 +109,6 @@ Private Sub FindNavigationElements()
         
 End Sub
 
-'Public Sub SelectCalculatorType(CalculatorType As String)
 Public Sub SelectCalculatorType(CalculatorType As String)
   OpenNavigationMenu
   Actions.Click CalculatorType, GetMenuElement(CalculatorType)

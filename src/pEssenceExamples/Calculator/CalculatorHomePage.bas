@@ -37,7 +37,7 @@ Private Sub Class_Initialize()
 End Sub
 
 Private Sub Class_Terminate()
-  Actions.CloseWindow This.MasterWindow, PrivateElements(This.MasterWindow)
+  Window.CloseWindow This.MasterWindow, PrivateElements(This.MasterWindow)
   Set MasterWindowElementSearch = Nothing
   Set MainCalculatorSubWindowElementSearch = Nothing
   Set NavigationViewRootCustomControlElementSearch = Nothing
@@ -80,12 +80,11 @@ Private Sub FindMasterWindowElement()
     PrivateElements.Add This.MasterWindow, .Find(10)
   End With
 
-  Actions.WaitForPropertyValue _
+  Window.WaitForInteractionState _
     This.MasterWindow, _
     PrivateElements(This.MasterWindow), _
-    UIAProperties.WindowWindowInteractionState, _
     pEssence.UIAWindowInteractionStates.ReadyForUserInteraction
-    
+      
 End Sub
 
 Private Sub FindNavigationElements()

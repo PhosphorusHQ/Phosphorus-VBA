@@ -53,9 +53,10 @@ Public Sub WaitForPropertyValue( _
   Else
     MsgBox "Need to wait for the value before timeout here!"
   End If
+  
 End Sub
 
-Private Function IsElementReady(Name As String, Ele As IUIAutomationElement) As Boolean
+Public Function IsElementReady(Name As String, Ele As IUIAutomationElement) As Boolean
   Dim ret As Boolean
   ret = True
   ret = ret And IsElementAlive(Name, Ele)
@@ -87,14 +88,3 @@ Private Sub TryToScrollItemIntoView(Name As String, Ele As IUIAutomationElement)
   End If
 End Sub
 
-Public Sub CloseWindow(Name As String, Ele As IUIAutomationElement)
-  IsElementReady Name, Ele
-  If UIAProps.GetProperty(Ele, UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
-    If UIAProps.HasProperty(Name, Ele, UIAProperties.IsWindowPatternAvailable) Then
-      Dim patt As IUIAutomationWindowPattern
-      Set patt = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_WindowPatternId, RaiseError:=True)
-      patt.Close
-      Exit Sub
-    End If
-  End If
-End Sub

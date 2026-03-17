@@ -3,8 +3,10 @@ Attribute VB_Name = "Calculator"
 Option Explicit
 
 Dim MenuNames As New Collection
+Dim HomePage As CalculatorHomePage
 
 Private Sub InitialiseMenuNames()
+  Set MenuNames = Nothing
   MenuNames.Add "Standard Calculator"
   MenuNames.Add "Scientific Calculator"
   MenuNames.Add "Graphing Calculator"
@@ -32,18 +34,17 @@ Public Sub Calculator()
   GetRootDesktopElement
   InitialiseMenuNames
   
-  Dim HomePage As CalculatorHomePage
   Set HomePage = New CalculatorHomePage
-
   Dim i As Integer
   Dim CurrentMenuName As String
   For i = 1 To MenuNames.Count
     Debug.Print CurrentMenuName
     CurrentMenuName = MenuNames(i)
     HomePage.SelectCalculatorType CurrentMenuName
-    On Error Resume Next
-    Application.Run "pEssenceExamples.Calculator." & VBA.Strings.Replace(CurrentMenuName, " ", "")
-    On Error GoTo 0
+    Select Case CurrentMenuName
+      Case "Standard Calculator"
+        StandardCalculator
+    End Select
   Next
   GoTo ExitSub
 
@@ -53,16 +54,32 @@ ErrorHandler:
   
 ExitSub:
   Set HomePage = Nothing
-MsgBox "What next? Timeout on wait for property value. Use buttons!"
+MsgBox "What next? Window class. Timeout on wait for property value? Use buttons!"
 
 End Sub
 
 Private Sub StandardCalculator()
-'  MsgBox "PJG: StandardCalculator"
-  'Squared = asc 253 ² https://www.ascii-code.com/character/%C2%B2
-  '{SquareRoot} ???
-  '{Reciprocal}
-  '{BackSpace}
-  '%
-  '± alt 241 or {Negate}
+
+  Dim StandardCalculatorPage As CalculatorStandardPage
+  Set StandardCalculatorPage = New CalculatorStandardPage
+  StandardCalculatorPage.FindAllControls HomePage
+  
+  With StandardCalculatorPage
+    .Calculate "12345678.09=", "12,345,678.09"
+    .Calculate "1+2=", "3"
+    .Calculate "=", "5"
+    .Calculate "=", "7"
+    .Calculate "210-105=", "105"
+    .Calculate "21x3=", "63"
+    .Calculate "21/3=", "7"
+    .Calculate "9{Sqr}", "81"
+    .Calculate "9{SqrRt}", "3"
+    .Calculate "C", "0"
+    .Calculate "12{BS}4-3{Negate}=", "17"
+    .Calculate "4{1/x}", "0.25"
+  .Calculate "6{M+}7{M+}{MR}", "13"
+  End With
+  
+  Set StandardCalculatorPage = Nothing
+
 End Sub

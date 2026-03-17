@@ -122,9 +122,9 @@ Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElement
 
 End Function
 
-Public Function FindAll(Optional AcceptNoElements As Boolean) As IUIAutomationElement
+Public Function FindAll(Optional AcceptNoElements As Boolean) As IUIAutomationElement()
 'Find more than 1 elements with no timeout
-  Findlements AcceptNoElements
+  FindAll = Findlements(AcceptNoElements)
 End Function
 
 Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElement()
@@ -212,8 +212,8 @@ Private Function EvaluationLogicIsOk() As Boolean
   
   Dim CountOfLeftBraces As Integer
   Dim CountOfRightBraces As Integer
-  CountOfLeftBraces = CountOccurrences(RedactedEvaluationLogic, "(")
-  CountOfRightBraces = CountOccurrences(RedactedEvaluationLogic, ")")
+  CountOfLeftBraces = Utils.CountOccurrences(RedactedEvaluationLogic, "(")
+  CountOfRightBraces = Utils.CountOccurrences(RedactedEvaluationLogic, ")")
   If Not (CountOfLeftBraces = CountOfRightBraces) Then
     EvaluationLogicIsOk = False
     pEssence.ErrorLogging.LogError pEssence.Errors.FaultyEvaluationLogicMismatchBracketsError, "The evaluation logic is faulty, there are mismatchng brackets: '" & This.Locator & "'"
@@ -246,14 +246,6 @@ Private Function EvaluationLogicIsOk() As Boolean
   
   EvaluationLogicIsOk = (RedactedEvaluationLogic = "")
 
-End Function
-
-Private Function CountOccurrences(Text As String, SearchTerm As String) As Integer
-  If Len(SearchTerm) = 0 Then
-    CountOccurrences = 0
-  Else
-    CountOccurrences = (VBA.Strings.Len(Text) - VBA.Strings.Len(VBA.Strings.Replace(Text, SearchTerm, "")))
-  End If
 End Function
 
 Public Function ElementName() As String

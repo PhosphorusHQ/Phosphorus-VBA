@@ -22,6 +22,7 @@ Option Explicit
 Public Sub Click(Name As String, Ele As IUIAutomationElement)
   
   IsElementReady Name, Ele
+  Window.HighlightElement Ele
     
   'Try the Invoke pattern
   If UIAProps.HasProperty(Name, Ele, UIAProperties.IsInvokePatternAvailable) Then
@@ -29,7 +30,7 @@ Public Sub Click(Name As String, Ele As IUIAutomationElement)
       Dim CurrentElementInvokePattern As IUIAutomationInvokePattern
       Set CurrentElementInvokePattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_InvokePatternId, RaiseError:=True)
       CurrentElementInvokePattern.Invoke
-      GoTo Finish
+      GoTo Cleanup
     End If
   End If
     
@@ -39,15 +40,15 @@ Public Sub Click(Name As String, Ele As IUIAutomationElement)
         Dim CurrentElementSelectionItemPattern As IUIAutomationSelectionItemPattern
         Set CurrentElementSelectionItemPattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_SelectionItemPatternId, RaiseError:=True)
         CurrentElementSelectionItemPattern.Select
-      GoTo Finish
+      GoTo Cleanup
       End If
     End If
   End If
   
   Exit Sub
 
-Finish:
-  Window.HighlightElement Ele
+Cleanup:
+  Window.ReleaseHighlighting
 
 End Sub
 

@@ -126,6 +126,9 @@ Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElement
       "Looking for '" & This.ElementName & "' element, locator: '" & This.Locator & "', timeout (" & TimeoutInSeconds & " seconds)"
     Exit Function
   End If
+  
+  Window.HighlightElement FoundElements(0), borderColor:=&H808000 'Cyan
+  Window.ReleaseHighlighting
   Set Find = FoundElements(0)
 
 End Function

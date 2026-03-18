@@ -39,6 +39,8 @@ Public Sub Calculator()
 
   On Error GoTo ErrorHandler
   
+  Window.HighlightElements = True
+  
   GetRootDesktopElement
   InitialiseMenuNames
   
@@ -61,7 +63,8 @@ ErrorHandler:
   
 ExitSub:
   Set HomePage = Nothing
-MsgBox "What next? Timeout on wait for property value?"
+  Window.HighlightElements = False
+MsgBox "What next? Timeout on wait for property value? Why not all menu items highlighted? Select Interaction speeds - slow, medium, fast, no delay?"
 
 End Sub
 

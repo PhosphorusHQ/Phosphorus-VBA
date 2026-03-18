@@ -22,14 +22,14 @@ Option Explicit
 Public Sub Click(Name As String, Ele As IUIAutomationElement)
   
   IsElementReady Name, Ele
-  
+    
   'Try the Invoke pattern
   If UIAProps.HasProperty(Name, Ele, UIAProperties.IsInvokePatternAvailable) Then
     If UIAProps.GetProperty(Ele, UIAProperties.IsInvokePatternAvailable) Then
       Dim CurrentElementInvokePattern As IUIAutomationInvokePattern
       Set CurrentElementInvokePattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_InvokePatternId, RaiseError:=True)
       CurrentElementInvokePattern.Invoke
-      Exit Sub
+      GoTo Finish
     End If
   End If
     
@@ -39,10 +39,15 @@ Public Sub Click(Name As String, Ele As IUIAutomationElement)
         Dim CurrentElementSelectionItemPattern As IUIAutomationSelectionItemPattern
         Set CurrentElementSelectionItemPattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_SelectionItemPatternId, RaiseError:=True)
         CurrentElementSelectionItemPattern.Select
-        Exit Sub
+      GoTo Finish
       End If
     End If
   End If
+  
+  Exit Sub
+
+Finish:
+  Window.HighlightElement Ele
 
 End Sub
 
@@ -71,7 +76,7 @@ Public Function IsElementReady(Name As String, Ele As IUIAutomationElement) As B
   If ret Then
     TryToScrollItemIntoView Name, Ele
   Else
-    'Raise an error
+    MsgBox "Raise an error?"
   End If
   IsElementReady = ret
 End Function
@@ -95,3 +100,4 @@ Private Sub TryToScrollItemIntoView(Name As String, Ele As IUIAutomationElement)
     End If
   End If
 End Sub
+

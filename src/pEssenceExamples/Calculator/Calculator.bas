@@ -46,7 +46,6 @@ Public Sub Calculator()
   Dim i As Integer
   Dim CurrentMenuName As String
   For i = 1 To MenuNames.Count
-    Debug.Print CurrentMenuName
     CurrentMenuName = MenuNames(i)
     HomePage.SelectCalculatorType CurrentMenuName
     Select Case CurrentMenuName

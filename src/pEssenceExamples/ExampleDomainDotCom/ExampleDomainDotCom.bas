@@ -10,10 +10,15 @@ Attribute VB_Name = "ExampleDomainDotCom"
 ' =======================================================================
 Option Explicit
 
+Private ExampleDomain As ExampleDomainDotComPage
+
 Sub ExampleDomainDotCom()
-Const WEB_APP_NAME = "Example.com"
-Const TARGET_PAGE_URL = "https://www.example.com/"
-Const TARGET_PAGE_TITLE = "Example Domain"
-  WindowsBrowsers.StartEdge WEB_APP_NAME, TARGET_PAGE_URL
+  
+  Set ExampleDomain = New ExampleDomainDotComPage
+  
+  ExampleDomain.Initialize
+  
+  Set ExampleDomain = Nothing
+
 End Sub
 

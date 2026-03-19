@@ -11,8 +11,7 @@ Attribute VB_Name = "UIACommon"
 Option Explicit
 
 ' Requires reference to UIAutomationClient - Tools > References > UIAutomationClient
-Public uiAutomation As New CUIAutomation
-Private RootDesktopUIAElement As IUIAutomationElement
+Public UIA As New CUIAutomation
 
 Public Enum By
   pConditions
@@ -32,20 +31,6 @@ Public Enum TreeScope
   Parent = UIAutomationClient.TreeScope.TreeScope_Parent
   Subtree = UIAutomationClient.TreeScope.TreeScope_Subtree
 End Enum
-
-Public Function GetRootDesktopElement() As IUIAutomationElement
-  If RootDesktopUIAElement Is Nothing Then
-    Set RootDesktopUIAElement = uiAutomation.GetRootElement
-  Else
-    Set GetRootDesktopElement = RootDesktopUIAElement
-  End If
-End Function
-
-Public Function GetNewSearch() As pSearch
-  Dim Element As pSearch
-  Set Element = New pSearch
-  Set GetNewSearch = Element
-End Function
 
 Public Function GetByName(NamedBy As By) As String
   Dim R As String

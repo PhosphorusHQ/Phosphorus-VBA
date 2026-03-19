@@ -162,7 +162,7 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
     pEssence.ErrorLogging.LogError pEssence.Errors.FindElementsRootElementIsNothing, "The root element is nothing for element '" & This.ElementName & "'!"
     Exit Function
   Else
-    Set AllElements = This.RootUIAElement.FindAll(This.TreeScope, pEssence.UIACommon.uiAutomation.CreateTrueCondition)
+    Set AllElements = This.RootUIAElement.FindAll(This.TreeScope, UIA.CreateTrueCondition)
   End If
   If AllElements.Length = 0 Then
     Debug.Print "Could not find elements below the Root Element"

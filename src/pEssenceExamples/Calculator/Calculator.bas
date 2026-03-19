@@ -10,8 +10,8 @@ Attribute VB_Name = "Calculator"
 ' =======================================================================
 Option Explicit
 
-Dim MenuNames As New Collection
-Dim HomePage As CalculatorHomePage
+Private MenuNames As New Collection
+Private HomePage As CalculatorHomePage
 
 Private Sub InitialiseMenuNames()
   Set MenuNames = Nothing
@@ -41,7 +41,7 @@ Public Sub Calculator()
   
   Window.HighlightElements = True
   
-  GetRootDesktopElement
+  Factory.GetRootDesktopElement
   InitialiseMenuNames
   
   Set HomePage = New CalculatorHomePage

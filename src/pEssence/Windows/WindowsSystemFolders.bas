@@ -7,7 +7,7 @@ Attribute VB_Name = "WindowsSystemFolders"
 '  Licensed under the GNU GENERAL PUBLIC License
 '  Full licence: see LICENCE in the distribution folder & main module
 '  https://www.gnu.org/licenses/gpl-3.0.html#license-text
-' =======================================================================Option Explicit
+' =======================================================================
 
 'Taken from: https://www.devhut.net/vba-getting-the-path-of-system-folders/
 

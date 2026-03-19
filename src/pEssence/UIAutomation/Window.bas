@@ -16,7 +16,7 @@ Attribute VB_Exposed = True
 '  Licensed under the GNU GENERAL PUBLIC License
 '  Full licence: see LICENCE in the distribution folder & main module
 '  https://www.gnu.org/licenses/gpl-3.0.html#license-text
-' =======================================================================Option Explicit
+' =======================================================================
 Option Explicit
 
 #If VBA7 Then

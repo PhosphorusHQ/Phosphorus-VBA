@@ -64,7 +64,7 @@ ErrorHandler:
 ExitSub:
   Set HomePage = Nothing
   Window.HighlightElements = False
-MsgBox "What next? Timeout on wait for property value? Why not all menu items highlighted? Select Interaction speeds - slow, medium, fast, no delay?"
+MsgBox "What next? Select Interaction speeds - slow, medium, fast, no delay?"
 
 End Sub
 

@@ -84,7 +84,7 @@ Public Sub Locator(FindBy As pEssence.By, Locator As String)
   End Select
 End Sub
 
-Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean) As IUIAutomationElement
+Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = True) As IUIAutomationElement
 'Find a single element with a timeout
 
   Dim FoundElements() As IUIAutomationElement
@@ -127,9 +127,19 @@ Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElement
     Exit Function
   End If
   
-  Window.HighlightElement FoundElements(0), borderColor:=&H808000 'Cyan
-  Window.ReleaseHighlighting
-  Set Find = FoundElements(0)
+  Dim FoundElement As IUIAutomationElement
+  If CountOfFoundElements = 1 Then
+    Set FoundElement = FoundElements(0)
+    If FindElementAgain Then
+      If UIAProps.HasProperty(This.ElementName, FoundElement, UIAProperties.IsScrollItemPatternAvailable) Then
+        Actions.TryToScrollItemIntoView This.ElementName, FoundElement
+        Set Find = Find(TimeoutInSeconds, AcceptNoElements, FindElementAgain:=False)
+      End If
+    End If
+    Window.HighlightElement FoundElements(0), BorderColor:=&H808000 'Cyan
+    Window.ReleaseHighlighting
+    Set Find = FoundElements(0)
+  End If
 
 End Function
 

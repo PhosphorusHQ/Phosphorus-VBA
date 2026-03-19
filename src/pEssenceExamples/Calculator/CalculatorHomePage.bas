@@ -88,7 +88,7 @@ Private Sub FindMasterWindowElement()
     .Locator by.pConditions, "AND(NameIsCalculator, ControlTypeIsWindow, ClassNameIsApplicationFrameWindow, WindowInteractionStateIsReadyForUserInteraction)"
     PrivateElements.Add This.MasterWindow, .Find(10)
   End With
-
+      
 End Sub
 
 Private Sub FindNavigationElements()

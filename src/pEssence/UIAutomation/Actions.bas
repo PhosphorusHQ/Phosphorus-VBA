@@ -90,7 +90,7 @@ Private Function IsElementAlive(Name As String, Ele As IUIAutomationElement) As 
   On Error GoTo 0
 End Function
 
-Private Sub TryToScrollItemIntoView(Name As String, Ele As IUIAutomationElement)
+Public Sub TryToScrollItemIntoView(Name As String, Ele As IUIAutomationElement)
   If UIAProps.HasProperty(Name, Ele, UIAProperties.IsScrollItemPatternAvailable) Then
     If UIAProps.HasProperty(Name, Ele, UIAProperties.IsOffscreen) Then
       If UIAProps.GetProperty(Ele, UIAProperties.IsOffscreen) Then

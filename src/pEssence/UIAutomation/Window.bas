@@ -28,9 +28,9 @@ Option Explicit
     Private Declare PtrSafe Function ShowWindow Lib "user32" (ByVal hwnd As LongPtr, ByVal nCmdShow As Long) As Long
     Private Declare PtrSafe Function UpdateWindow Lib "user32" (ByVal hwnd As LongPtr) As Long
     Private Declare PtrSafe Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
-    Private Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hdc As LongPtr) As Long
+    Private Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal Hdc As LongPtr) As Long
     Private Declare PtrSafe Function CreateSolidBrush Lib "gdi32" (ByVal crColor As Long) As LongPtr
-    Private Declare PtrSafe Function FillRect Lib "user32" (ByVal hdc As LongPtr, lpRect As RECT, ByVal hBrush As LongPtr) As Long
+    Private Declare PtrSafe Function FillRect Lib "user32" (ByVal Hdc As LongPtr, lpRect As RECT, ByVal HBrush As LongPtr) As Long
     Private Declare PtrSafe Function DeleteObject Lib "gdi32" (ByVal hObject As LongPtr) As Long
     Private Declare PtrSafe Function SetLayeredWindowAttributes Lib "user32" (ByVal hwnd As LongPtr, ByVal crKey As Long, ByVal bAlpha As Byte, ByVal dwFlags As Long) As Long
 #Else
@@ -70,7 +70,7 @@ Private Const SW_SHOWNA          As Long = 8
 Private Const LWA_ALPHA          As Long = &H2
 
 'Highlight element overlay
-Private hwndOverlay As LongPtr
+Private HwndOverlay As LongPtr
 Public HighlightElements As Boolean
 
 Public Sub WaitForInteractionState( _
@@ -104,9 +104,9 @@ End Sub
 ' =============================================================
 
 Public Sub HighlightElement(Ele As IUIAutomationElement, _
-  Optional borderThickness As Long = 6, _
-  Optional borderColor As Long = &HFF0000, _
-  Optional durationMs As Long = 10)
+  Optional BorderThickness As Long = 6, _
+  Optional BorderColor As Long = &HFF0000, _
+  Optional DurationMs As Long = 10)
 'Default is &HFF0000 Blue (BGR)
 'https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/4b7087c6-20fc-4d90-8d83-730a0c6a4aad
 '&H808000 421376 Cyan
@@ -118,18 +118,18 @@ Public Sub HighlightElement(Ele As IUIAutomationElement, _
   End If
     
   ' Get bounding rect
-  Dim rectArray As Variant
-  rectArray = Ele.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
+  Dim RectArray As Variant
+  RectArray = Ele.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
     
-  If Not IsArray(rectArray) Or UBound(rectArray) < 3 Then
+  If Not IsArray(RectArray) Or UBound(RectArray) < 3 Then
     Debug.Print "Invalid bounding rectangle"
     Exit Sub
   End If
     
-  Dim Left   As Long: Left = CLng(rectArray(0)) - borderThickness
-  Dim Top    As Long: Top = CLng(rectArray(1)) - borderThickness
-  Dim width  As Long: width = CLng(rectArray(2)) + borderThickness * 2
-  Dim height As Long: height = CLng(rectArray(3)) + borderThickness * 2
+  Dim Left   As Long: Left = CLng(RectArray(0)) - BorderThickness
+  Dim Top    As Long: Top = CLng(RectArray(1)) - BorderThickness
+  Dim width  As Long: width = CLng(RectArray(2)) + BorderThickness * 2
+  Dim height As Long: height = CLng(RectArray(3)) + BorderThickness * 2
     
   ' Clamp to prevent off-screen creation issues
   If Left < 0 Then Left = 0
@@ -137,74 +137,74 @@ Public Sub HighlightElement(Ele As IUIAutomationElement, _
   If width > 5000 Then width = 5000
   If height > 5000 Then height = 5000
     
-  Debug.Print "Highlight border at: " & Left & "," & Top & "  size " & width & "×" & height
-
-If Left = 0 And Top = 0 Then
-'Stop
-Debug.Print "???"
-End If
+'  Debug.Print "Highlight border at: " & Left & "," & Top & "  size " & width & "×" & height
 
   ' Create layered overlay
-  hwndOverlay = CreateWindowEx( _
+  HwndOverlay = CreateWindowEx( _
     WS_EX_LAYERED Or WS_EX_TRANSPARENT Or WS_EX_TOOLWINDOW Or WS_EX_TOPMOST, _
     "Static", "HighlightOverlay", _
     WS_POPUP Or WS_VISIBLE, _
     Left, Top, width, height, _
     0, 0, 0, 0)
     
-  If hwndOverlay = 0 Then
+  If HwndOverlay = 0 Then
     Debug.Print "CreateWindowEx failed: " & Err.LastDllError
     Exit Sub
   End If
 
-  SetLayeredWindowAttributes hwndOverlay, 0, 50, LWA_ALPHA  ' fully opaque
-    
-  ShowWindow hwndOverlay, SW_SHOWNA
-  UpdateWindow hwndOverlay
+  If BorderColor = &HFF0000 Then
+    ' Set borderColour to fully opaque for Actions (default colour)
+    SetLayeredWindowAttributes HwndOverlay, 0, 225, LWA_ALPHA  ' fully opaque
+  Else
+    ' Set borderColour to almost transparent for other events, e.g. Finds (non-default colour)
+    SetLayeredWindowAttributes HwndOverlay, 0, 100, LWA_ALPHA
+  End If
+  ShowWindow HwndOverlay, SW_SHOWNA
+  UpdateWindow HwndOverlay
     
   ' === DRAW BORDER (not fill) ===
-  Dim hdc As LongPtr: hdc = GetDC(hwndOverlay)
-  If hdc = 0 Then GoTo Cleanup
+  Dim Hdc As LongPtr: Hdc = GetDC(HwndOverlay)
+  If Hdc = 0 Then GoTo Cleanup
     
-  Dim hBrush As LongPtr: hBrush = CreateSolidBrush(borderColor)
+  Dim HBrush As LongPtr: HBrush = CreateSolidBrush(BorderColor)
     
-  Dim r As RECT
-  r.Left = 0: r.Top = 0
-  r.Right = width: r.Bottom = height
+  Dim R As RECT
+  R.Left = 0: R.Top = 0
+  R.Right = width: R.Bottom = height
     
   ' Draw outer border
-  FillRect hdc, r, hBrush
+  FillRect Hdc, R, HBrush
     
   ' Erase inner area (make border only)
-  r.Left = borderThickness: r.Top = borderThickness
-  r.Right = width - borderThickness: r.Bottom = height - borderThickness
-  Dim hWhiteBrush As LongPtr: hWhiteBrush = CreateSolidBrush(vbWhite)
-  FillRect hdc, r, hWhiteBrush
+  R.Left = BorderThickness: R.Top = BorderThickness
+  R.Right = width - BorderThickness: R.Bottom = height - BorderThickness
+  Dim HWhiteBrush As LongPtr: HWhiteBrush = CreateSolidBrush(vbWhite)
+  FillRect Hdc, R, HWhiteBrush
     
-  DeleteObject hBrush
-  DeleteObject hWhiteBrush
-  ReleaseDC hwndOverlay, hdc
+  DeleteObject HBrush
+  DeleteObject HWhiteBrush
+  ReleaseDC HwndOverlay, Hdc
     
-  WindowsProcesses.Snooze durationMs
+  WindowsProcesses.Snooze DurationMs
     
 Cleanup:
   Exit Sub
 
 ErrHandler:
   Debug.Print "Highlight error: " & Err.Number & " - " & Err.Description
-  If hwndOverlay <> 0 Then DestroyWindow hwndOverlay
+  If HwndOverlay <> 0 Then DestroyWindow HwndOverlay
     
 End Sub
 
-Public Sub ReleaseHighlighting(Optional durationMs As Long = 50)
+Public Sub ReleaseHighlighting(Optional DurationMs As Long = 50)
   
   If Not HighlightElements Then
     Exit Sub
   End If
 
   'Slight delay for better user experience
-  WindowsProcesses.Snooze durationMs
-  If hwndOverlay <> 0 Then DestroyWindow hwndOverlay
+  WindowsProcesses.Snooze DurationMs
+  If HwndOverlay <> 0 Then DestroyWindow HwndOverlay
   
 End Sub
 

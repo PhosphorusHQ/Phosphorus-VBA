@@ -108,4 +108,7 @@ Public Sub Snooze(ByVal SleepTimeInMilliseconds As Long)
   End If
 End Sub
 
+Public Sub LaunchCommandByProtocol(ByVal ApplicationName, Protocol As String, URL As String, ByVal ShowCmd As WindowStyle)
+  RunShellExecuteToStartNewProcess ApplicationName, "open", Protocol & URL, VBA.Constants.vbNullString, VBA.Constants.vbNullString, ShowCmd
+End Sub
 

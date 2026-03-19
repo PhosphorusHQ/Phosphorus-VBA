@@ -40,16 +40,16 @@ Public Function GetNewSearch() As pSearch
 End Function
 
 Public Function GetByName(NamedBy As By) As String
-  Dim r As String
+  Dim R As String
   Select Case NamedBy
     Case By.pConditions
-      r = "pConditon"
+      R = "pConditon"
     Case By.AutomationId
-      r = "AutomationId"
+      R = "AutomationId"
     Case Else
-     r = "Unhandled By Id (" & NamedBy & ")"
+     R = "Unhandled By Id (" & NamedBy & ")"
   End Select
-  GetByName = r
+  GetByName = R
 End Function
 
 Public Function IsArrayEmpty(arrInput As Variant) As Boolean

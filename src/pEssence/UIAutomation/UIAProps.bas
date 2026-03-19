@@ -244,14 +244,14 @@ Public Function HasProperty(ElementName As String, Element As IUIAutomationEleme
 End Function
 
 Public Function GetWindowInteractionStateName(WindowInteractionState As Long) As String
-  Dim r As String
+  Dim R As String
   Select Case WindowInteractionState 'UIAutomationClient.WindowInteractionState
-    Case WindowInteractionState_Running: r = "Running"
-    Case WindowInteractionState_Closing: r = "Closing"
-    Case WindowInteractionState_ReadyForUserInteraction: r = "ReadyForUserInteraction"
-    Case WindowInteractionState_BlockedByModalWindow: r = "BlockedByModalWindow"
-    Case WindowInteractionState_NotResponding: r = "NotResponding"
-    Case Else: r = "Unknown Window Interaction State (" & WindowInteractionState & ")"
+    Case WindowInteractionState_Running: R = "Running"
+    Case WindowInteractionState_Closing: R = "Closing"
+    Case WindowInteractionState_ReadyForUserInteraction: R = "ReadyForUserInteraction"
+    Case WindowInteractionState_BlockedByModalWindow: R = "BlockedByModalWindow"
+    Case WindowInteractionState_NotResponding: R = "NotResponding"
+    Case Else: R = "Unknown Window Interaction State (" & WindowInteractionState & ")"
   End Select
-  GetWindowInteractionStateName = r
+  GetWindowInteractionStateName = R
 End Function

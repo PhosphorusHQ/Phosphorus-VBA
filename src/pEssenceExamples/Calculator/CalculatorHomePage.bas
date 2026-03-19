@@ -84,15 +84,11 @@ Private Sub FindMasterWindowElement()
     .AddCondition "NameIsCalculator", UIAProperties.Name, UIAPropertyComparisons.Equals, "Calculator"
     .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
     .AddCondition "ClassNameIsApplicationFrameWindow", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "ApplicationFrameWindow"
-    .Locator by.pConditions, "AND(NameIsCalculator, ControlTypeIsWindow, ClassNameIsApplicationFrameWindow)"
+    .AddCondition "WindowInteractionStateIsReadyForUserInteraction", UIAProperties.WindowWindowInteractionState, UIAPropertyComparisons.Equals, UIAWindowInteractionStates.ReadyForUserInteraction
+    .Locator by.pConditions, "AND(NameIsCalculator, ControlTypeIsWindow, ClassNameIsApplicationFrameWindow, WindowInteractionStateIsReadyForUserInteraction)"
     PrivateElements.Add This.MasterWindow, .Find(10)
   End With
 
-  Window.WaitForInteractionState _
-    This.MasterWindow, _
-    PrivateElements(This.MasterWindow), _
-    pEssence.UIAWindowInteractionStates.ReadyForUserInteraction
-      
 End Sub
 
 Private Sub FindNavigationElements()

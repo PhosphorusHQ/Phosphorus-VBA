@@ -51,8 +51,8 @@ Option Explicit
 #End If
 
 Private Type RECT
-    left   As Long
-    top    As Long
+    Left   As Long
+    Top    As Long
     Right  As Long
     Bottom As Long
 End Type
@@ -126,20 +126,20 @@ Public Sub HighlightElement(Ele As IUIAutomationElement, _
     Exit Sub
   End If
     
-  Dim left   As Long: left = CLng(rectArray(0)) - borderThickness
-  Dim top    As Long: top = CLng(rectArray(1)) - borderThickness
+  Dim Left   As Long: Left = CLng(rectArray(0)) - borderThickness
+  Dim Top    As Long: Top = CLng(rectArray(1)) - borderThickness
   Dim width  As Long: width = CLng(rectArray(2)) + borderThickness * 2
   Dim height As Long: height = CLng(rectArray(3)) + borderThickness * 2
     
   ' Clamp to prevent off-screen creation issues
-  If left < 0 Then left = 0
-  If top < 0 Then top = 0
+  If Left < 0 Then Left = 0
+  If Top < 0 Then Top = 0
   If width > 5000 Then width = 5000
   If height > 5000 Then height = 5000
     
-  Debug.Print "Highlight border at: " & left & "," & top & "  size " & width & "×" & height
+  Debug.Print "Highlight border at: " & Left & "," & Top & "  size " & width & "×" & height
 
-If left = 0 And top = 0 Then
+If Left = 0 And Top = 0 Then
 'Stop
 Debug.Print "???"
 End If
@@ -149,7 +149,7 @@ End If
     WS_EX_LAYERED Or WS_EX_TRANSPARENT Or WS_EX_TOOLWINDOW Or WS_EX_TOPMOST, _
     "Static", "HighlightOverlay", _
     WS_POPUP Or WS_VISIBLE, _
-    left, top, width, height, _
+    Left, Top, width, height, _
     0, 0, 0, 0)
     
   If hwndOverlay = 0 Then
@@ -169,14 +169,14 @@ End If
   Dim hBrush As LongPtr: hBrush = CreateSolidBrush(borderColor)
     
   Dim r As RECT
-  r.left = 0: r.top = 0
+  r.Left = 0: r.Top = 0
   r.Right = width: r.Bottom = height
     
   ' Draw outer border
   FillRect hdc, r, hBrush
     
   ' Erase inner area (make border only)
-  r.left = borderThickness: r.top = borderThickness
+  r.Left = borderThickness: r.Top = borderThickness
   r.Right = width - borderThickness: r.Bottom = height - borderThickness
   Dim hWhiteBrush As LongPtr: hWhiteBrush = CreateSolidBrush(vbWhite)
   FillRect hdc, r, hWhiteBrush

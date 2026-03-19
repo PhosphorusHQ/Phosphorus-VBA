@@ -12,13 +12,14 @@ Option Explicit
 
 Public Enum Errors
   FaultyEvaluationLogicUnspecifiedError = VBA.Constants.vbObjectError + 1001
-  FaultyEvaluationLogicMismatchBracketsError = VBA.Constants.vbObjectError + 1002
-  FaultyEvaluationLogicUnspecifiedErrorOnEvaluation = VBA.Constants.vbObjectError + 1003
+  FaultyEvaluationLogicMismatchBracketsError
+  FaultyEvaluationLogicUnspecifiedErrorOnEvaluation
+  FaultyEvaluationLogicUnhandledPropertyComparison
   FindElementsExpectedOneElementFoundMany = VBA.Constants.vbObjectError + 2001
-  FindElementsExpectedOneElementFoundNone = VBA.Constants.vbObjectError + 2002
-  FindElementsRootElementIsNothing = VBA.Constants.vbObjectError + 2003
-  FindElementsFindNoElements = VBA.Constants.vbObjectError + 2004
-  FindElementUnhandledByInLocator = VBA.Constants.vbObjectError + 2005
+  FindElementsExpectedOneElementFoundNone
+  FindElementsRootElementIsNothing
+  FindElementsFindNoElements
+  FindElementUnhandledByInLocator
   PatternFailedForElement = VBA.Constants.vbObjectError + 3001
 End Enum
 

@@ -17,7 +17,7 @@ Public Function GetPattern(ElementName As String, Element As IUIAutomationElemen
   On Error GoTo 0
   If RaiseError Then
     If GetPattern Is Nothing Then
-      pEssence.ErrorLogging.LogError pEssence.Errors.PatternFailedForElement, "Expected to find one element but found " & ElementName
+      ErrorLogging.LogError Errors.PatternFailedForElement, "Expected to find one element but found " & ElementName
       Exit Function
     End If
   End If

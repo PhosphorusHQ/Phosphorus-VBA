@@ -76,7 +76,7 @@ Public HighlightElements As Boolean
 Public Sub WaitForInteractionState( _
   ElementName As String, _
   CurrentElement As IUIAutomationElement, _
-  UIAPropertyValue As pEssence.UIAWindowInteractionStates, _
+  UIAPropertyValue As UIAWindowInteractionStates, _
   Optional TimeoutInMilliseconds As Long)
   
   Actions.WaitForPropertyValue _

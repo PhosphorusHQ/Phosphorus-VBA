@@ -60,7 +60,7 @@ Public Sub WaitForPropertyValue( _
   Optional TimeoutInMilliseconds As Long)
   
   Dim CurrentPropertyValue As Variant
-  CurrentPropertyValue = pEssence.GetProperty(CurrentElement, UIAProperty)
+  CurrentPropertyValue = GetProperty(CurrentElement, UIAProperty)
   If CurrentPropertyValue = UIAPropertyValue Then
     'Success - exit here!
     Exit Sub

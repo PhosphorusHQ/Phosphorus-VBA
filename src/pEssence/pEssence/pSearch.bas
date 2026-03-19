@@ -23,7 +23,7 @@ Private Type Criteria
   ElementName As String
   RootUIAElement As IUIAutomationElement
   TreeScope As Long
-  FindBy As pEssence.By
+  FindBy As By
   AllSearchConditions As Scripting.Dictionary
   Locator As String
 End Type
@@ -69,7 +69,7 @@ Public Sub ListAllConditions()
   Next k
 End Sub
 
-Public Sub Locator(FindBy As pEssence.By, Locator As String)
+Public Sub Locator(FindBy As By, Locator As String)
   Select Case FindBy
     Case By.pConditions
       This.FindBy = FindBy
@@ -79,7 +79,7 @@ Public Sub Locator(FindBy As pEssence.By, Locator As String)
       This.FindBy = By.pConditions
       This.Locator = "AutomationIdIs" & Locator
     Case Else
-      pEssence.ErrorLogging.LogError pEssence.Errors.FindElementUnhandledByInLocator, "Unhanded By Locator: " & UIACommon.GetByName(FindBy)
+      ErrorLogging.LogError Errors.FindElementUnhandledByInLocator, "Unhanded By Locator: " & UIACommon.GetByName(FindBy)
       Exit Sub
   End Select
 End Sub
@@ -117,11 +117,11 @@ Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElement
   Wend
     
   If CountOfFoundElements > 1 Then
-    pEssence.ErrorLogging.LogError pEssence.Errors.FindElementsExpectedOneElementFoundMany, "Expected to find one element but found " & CountOfFoundElements
+    ErrorLogging.LogError Errors.FindElementsExpectedOneElementFoundMany, "Expected to find one element but found " & CountOfFoundElements
     Exit Function
   ElseIf CountOfFoundElements = 0 And Not AcceptNoElements Then
-    pEssence.ErrorLogging.LogError _
-      pEssence.Errors.FindElementsExpectedOneElementFoundNone, _
+    ErrorLogging.LogError _
+      Errors.FindElementsExpectedOneElementFoundNone, _
       "Expected to find one element but found none." & vbCrLf & vbCrLf & _
       "Looking for '" & This.ElementName & "' element, locator: '" & This.Locator & "', timeout (" & TimeoutInSeconds & " seconds)"
     Exit Function
@@ -152,14 +152,14 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
 'Find 1 or more elements with no timeout
 
   If Not EvaluationLogicIsOk Then
-    pEssence.ErrorLogging.LogError pEssence.Errors.FaultyEvaluationLogicUnspecifiedError, "The evaluation logic is faulty: '" & This.Locator & "'"
+    ErrorLogging.LogError Errors.FaultyEvaluationLogicUnspecifiedError, "The evaluation logic is faulty: '" & This.Locator & "'"
     Exit Function
   End If
   
   ' Find the child/descendant elements of the root element
   Dim AllElements As IUIAutomationElementArray
   If This.RootUIAElement Is Nothing Then
-    pEssence.ErrorLogging.LogError pEssence.Errors.FindElementsRootElementIsNothing, "The root element is nothing for element '" & This.ElementName & "'!"
+    ErrorLogging.LogError Errors.FindElementsRootElementIsNothing, "The root element is nothing for element '" & This.ElementName & "'!"
     Exit Function
   Else
     Set AllElements = This.RootUIAElement.FindAll(This.TreeScope, UIA.CreateTrueCondition)
@@ -197,8 +197,8 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
     Else
       If Err.Number = 13 Then
         On Error GoTo 0
-        pEssence.ErrorLogging.LogError _
-          pEssence.Errors.FaultyEvaluationLogicUnspecifiedErrorOnEvaluation, _
+        ErrorLogging.LogError _
+          Errors.FaultyEvaluationLogicUnspecifiedErrorOnEvaluation, _
           "The evaluation logic did not evaluate to TRUE or FALSE:" & vbCrLf & vbCrLf & _
           "'" & This.Locator & "' returned '" & VBA.Conversion.CStr(Excel.Evaluate(CurrentEvaluation)) & "'"
         Exit Function
@@ -218,7 +218,7 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
     If AcceptNoElements Then
       'Find elements is nothing?
     Else
-      pEssence.ErrorLogging.LogError pEssence.Errors.FindElementsFindNoElements, "Locator : By " & UIACommon.GetByName(This.FindBy) & " '" & This.Locator & "'"
+      ErrorLogging.LogError Errors.FindElementsFindNoElements, "Locator : By " & UIACommon.GetByName(This.FindBy) & " '" & This.Locator & "'"
     End If
   Else
     Findlements = ReturnElements
@@ -237,7 +237,7 @@ Private Function EvaluationLogicIsOk() As Boolean
   CountOfRightBraces = Utils.CountOccurrences(RedactedEvaluationLogic, ")")
   If Not (CountOfLeftBraces = CountOfRightBraces) Then
     EvaluationLogicIsOk = False
-    pEssence.ErrorLogging.LogError pEssence.Errors.FaultyEvaluationLogicMismatchBracketsError, "The evaluation logic is faulty, there are mismatchng brackets: '" & This.Locator & "'"
+    ErrorLogging.LogError Errors.FaultyEvaluationLogicMismatchBracketsError, "The evaluation logic is faulty, there are mismatchng brackets: '" & This.Locator & "'"
     Exit Function
   End If
   

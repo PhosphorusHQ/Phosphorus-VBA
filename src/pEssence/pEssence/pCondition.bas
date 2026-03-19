@@ -30,8 +30,8 @@ Public Function Evaluate(Element As IUIAutomationElement) As Boolean
       'Cast from IUnknown type
        ReturnValue = ((VBA.Conversion.CVar(UIAProps.GetProperty(Element, UIAProperty)) = UIAPropertyValue))
     Case Else
-      MsgBox "PJG?"
-      Debug.Print "Unhandled UIAPropertyComparison " & UIAPropertyComparison
+      ErrorLogging.LogError Errors.FaultyEvaluationLogicUnhandledPropertyComparison, "The comparison : '" & UIAPropertyComparison & "' needs implementing!"
+      Exit Function
   End Select
   Evaluate = ReturnValue
 End Function

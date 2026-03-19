@@ -32,8 +32,8 @@ Private PrivateElements As New Scripting.Dictionary
 Private KeystrokePositionCounter As Integer
 
 Private Sub Class_Initialize()
-  Set CalculatorControlElementsSearch = UIACommon.GetNewSearch
-  Set DisplayElementSearch = UIACommon.GetNewSearch
+  Set CalculatorControlElementsSearch = Factory.GetNewSearch
+  Set DisplayElementSearch = Factory.GetNewSearch
   Set PrivateElements = Nothing
   This.LandmarkGroupControl = "Landmark"
   This.DisplayTextControl = "Display"

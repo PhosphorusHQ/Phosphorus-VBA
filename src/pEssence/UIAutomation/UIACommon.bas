@@ -20,6 +20,8 @@ End Enum
 
 Public Enum UIAPropertyComparisons
   Equals
+  StartsWith
+  EndsWith
 End Enum
 
 Public Enum TreeScope

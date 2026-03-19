@@ -20,5 +20,7 @@ Sub ExampleDomainDotCom()
   
   Set ExampleDomain = Nothing
 
+MsgBox "What next?"
+
 End Sub
 

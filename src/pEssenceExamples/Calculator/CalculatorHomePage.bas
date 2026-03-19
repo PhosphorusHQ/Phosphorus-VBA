@@ -61,12 +61,12 @@ End Sub
 
 Private Sub InitializeAllElements()
   
-  Set MasterWindowElementSearch = UIACommon.GetNewSearch
-  Set MainCalculatorSubWindowElementSearch = UIACommon.GetNewSearch
-  Set NavigationViewRootCustomControlElementSearch = UIACommon.GetNewSearch
-  Set OpenCloseNavigationMenuButtonElementSearch = UIACommon.GetNewSearch
-  Set NavigationMenuRootPaneWindowElementSearch = UIACommon.GetNewSearch
-  Set CurrentCalculatorLandmarkGroupControlElementSearch = UIACommon.GetNewSearch
+  Set MasterWindowElementSearch = Factory.GetNewSearch
+  Set MainCalculatorSubWindowElementSearch = Factory.GetNewSearch
+  Set NavigationViewRootCustomControlElementSearch = Factory.GetNewSearch
+  Set OpenCloseNavigationMenuButtonElementSearch = Factory.GetNewSearch
+  Set NavigationMenuRootPaneWindowElementSearch = Factory.GetNewSearch
+  Set CurrentCalculatorLandmarkGroupControlElementSearch = Factory.GetNewSearch
   
   This.MasterWindow = "MasterWindow"
   This.MainCalculatorSubWindow = "MainCalculatorSubWindow"
@@ -146,7 +146,7 @@ Private Function GetMenuElement(CalculatorType As String) As IUIAutomationElemen
 
   Dim CurrentNavigationMenuItemElementSearch As pSearch
   Set CurrentNavigationMenuItemElementSearch = Nothing
-  Set CurrentNavigationMenuItemElementSearch = UIACommon.GetNewSearch
+  Set CurrentNavigationMenuItemElementSearch = Factory.GetNewSearch
   
   With CurrentNavigationMenuItemElementSearch
     .Initialise CalculatorType, PrivateElements(This.NavigationMenuRootPaneWindow), TreeScope.Descendants

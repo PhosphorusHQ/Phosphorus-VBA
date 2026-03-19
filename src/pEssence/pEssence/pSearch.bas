@@ -177,7 +177,10 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
   Dim CurrentElement As IUIAutomationElement
   For i = 0 To AllElements.Length - 1
     Set CurrentElement = AllElements.GetElement(i)
+    
+Debug.Print "Name is: " & CurrentElement.CurrentName
 
+'CStr(CurrentElement.GetCachedPropertyValue(UIAProperties.Name))
     Dim CurrentEvaluation  As String
     CurrentEvaluation = This.Locator
     

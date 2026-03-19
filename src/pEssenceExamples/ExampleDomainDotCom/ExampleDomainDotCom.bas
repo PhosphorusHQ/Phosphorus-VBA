@@ -13,14 +13,25 @@ Option Explicit
 Private ExampleDomain As ExampleDomainDotComPage
 
 Sub ExampleDomainDotCom()
-  
+
+  On Error GoTo ErrorHandler
+
+  Window.HighlightElements = True
+
   Set ExampleDomain = New ExampleDomainDotComPage
   
   ExampleDomain.Initialize
-  
-  Set ExampleDomain = Nothing
+  GoTo ExitSub
 
-MsgBox "What next?"
+ErrorHandler:
+  MsgBox Err.Description & " (Error Number #" & Err.Number & ")"
+  GoTo ExitSub
+  
+ExitSub:
+  Set ExampleDomain = Nothing
+  Window.HighlightElements = False
+  
+MsgBox "What next? EndsWith Doesn't work!? - 2nd pass of Find doesn't loop through all elements!?"
 
 End Sub
 

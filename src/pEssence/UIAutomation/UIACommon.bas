@@ -47,6 +47,21 @@ Public Function GetByName(NamedBy As By) As String
   GetByName = R
 End Function
 
+Public Function GetUIAPropertyComparisonsName(NamedComparison As UIAPropertyComparisons) As String
+  Dim R As String
+  Select Case NamedComparison
+    Case UIAPropertyComparisons.Equals
+      R = "NamedComparison"
+    Case UIAPropertyComparisons.StartsWith
+      R = "StartsWith"
+    Case UIAPropertyComparisons.EndsWith
+      R = "EndsWith"
+    Case Else
+     R = "Unhandled UIAPropertyComparisons Id (" & NamedComparison & ")"
+  End Select
+  GetUIAPropertyComparisonsName = R
+End Function
+
 Public Function IsArrayEmpty(arrInput As Variant) As Boolean
   
   Dim lngTemp As Long

@@ -116,7 +116,7 @@ Private Type CREDENTIAL_ATTRIBUTE
     Keyword   As LongPtr   ' LPWSTR — pointer to Unicode string (keyword/name)
     Flags     As Long      ' DWORD — reserved; MUST be 0
     ValueSize As Long      ' DWORD — size of Value in bytes (= 256)
-    value     As LongPtr   ' LPBYTE — pointer to the raw byte data
+    Value     As LongPtr   ' LPBYTE — pointer to the raw byte data
 End Type
 
 Private Const CRED_TYPE_GENERIC     As Long = 1
@@ -303,7 +303,7 @@ Public Function WriteCredentialWithAttributes(gc As GenericCredential) As Boolea
       .Keyword = StrPtr(k)
       .Flags = 0
       .ValueSize = UBound(attrData) + 1   ' bytes
-      .value = VarPtr(attrData(0))
+      .Value = VarPtr(attrData(0))
     End With
   Next
 
@@ -367,7 +367,7 @@ Public Function ReadCredentialWithAttributes(Target As String) As GenericCredent
     
         Dim valBytes() As Byte
         ReDim valBytes(0 To attr.ValueSize - 1)
-        CopyMemory valBytes(0), ByVal attr.value, attr.ValueSize
+        CopyMemory valBytes(0), ByVal attr.Value, attr.ValueSize
 
         'Get value
         ' ------------------------------------------------

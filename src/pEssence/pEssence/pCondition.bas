@@ -25,12 +25,18 @@ Public UIAPropertyValue As Variant
 
 Public Function Evaluate(Element As IUIAutomationElement) As Boolean
   Dim ReturnValue As Boolean
+  'Cast from IUnknown type
+  Dim CurrentValue As Variant
+  CurrentValue = VBA.Conversion.CVar(UIAProps.GetProperty(Element, UIAProperty))
   Select Case UIAPropertyComparison
     Case UIAPropertyComparisons.Equals
-      'Cast from IUnknown type
-       ReturnValue = ((VBA.Conversion.CVar(UIAProps.GetProperty(Element, UIAProperty)) = UIAPropertyValue))
+       ReturnValue = (CurrentValue = UIAPropertyValue)
+    Case UIAPropertyComparisons.StartsWith
+       ReturnValue = (VBA.Strings.InStr(1, CurrentValue, UIAPropertyValue) = 1)
+    Case UIAPropertyComparisons.EndsWith
+       ReturnValue = (VBA.Strings.Right(CurrentValue, VBA.Strings.Len(UIAPropertyValue)) = UIAPropertyValue)
     Case Else
-      ErrorLogging.LogError Errors.FaultyEvaluationLogicUnhandledPropertyComparison, "The comparison : '" & UIAPropertyComparison & "' needs implementing!"
+      ErrorLogging.LogError Errors.FaultyEvaluationLogicUnhandledPropertyComparison, "The comparison : '" & UIACommon.GetUIAPropertyComparisonsName(UIAPropertyComparison) & "' needs implementing!"
       Exit Function
   End Select
   Evaluate = ReturnValue

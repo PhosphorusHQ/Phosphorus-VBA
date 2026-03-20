@@ -34,4 +34,3 @@ ExitSub:
 MsgBox "What next? More Edge Window elements!"
 
 End Sub
-

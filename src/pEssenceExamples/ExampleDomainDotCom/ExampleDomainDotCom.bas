@@ -25,13 +25,13 @@ Sub ExampleDomainDotCom()
 
 ErrorHandler:
   MsgBox Err.Description & " (Error Number #" & Err.Number & ")"
-  GoTo ExitSub
+  Exit Sub
   
 ExitSub:
   Set ExampleDomain = Nothing
   Window.HighlightElements = False
   
-MsgBox "What next? EndsWith Doesn't work!? - 2nd pass of Find doesn't loop through all elements!?"
+MsgBox "What next? More Edge Window elements!"
 
 End Sub
 

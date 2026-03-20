@@ -41,19 +41,15 @@ Public Sub Initialize()
 End Sub
 
 Private Sub FindMasterWindowElement()
-
   With MasterWindowElementSearch
     .Initialise This.MasterWindow, GetRootDesktopElement, TreeScope.Children
     .AddCondition "NameStartsWithExampleDomain", UIAProperties.Name, UIAPropertyComparisons.StartsWith, "Example Domain - "
-'Not Working    .AddCondition "NameEndsWithMicrosoftEdge", UIAProperties.Name, UIAPropertyComparisons.EndsWith, "Microsoft? Edge"
-'    .AddCondition "NameEndsWithMicrosoftEdge", UIAProperties.Name, UIAPropertyComparisons.EndsWith, "Edge"
+    .AddCondition "NameEndsWithMicrosoftEdge", UIAProperties.Name, UIAPropertyComparisons.EndsWith, "Microsoft" & ChrW(8203) & " Edge" 'Use: AscW & ChrW
     .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
     .AddCondition "ClassNameIsChromeWidgetWin1", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "Chrome_WidgetWin_1"
     .AddCondition "WindowInteractionStateIsReadyForUserInteraction", UIAProperties.WindowWindowInteractionState, UIAPropertyComparisons.Equals, UIAWindowInteractionStates.ReadyForUserInteraction
-'    .Locator by.pConditions, "AND(NameStartsWithExampleDomain, NameEndsWithMicrosoftEdge, ControlTypeIsWindow, ClassNameIsChromeWidgetWin1, WindowInteractionStateIsReadyForUserInteraction)"
-    .Locator by.pConditions, "AND(NameStartsWithExampleDomain, ControlTypeIsWindow, ClassNameIsChromeWidgetWin1, WindowInteractionStateIsReadyForUserInteraction)"
+    .Locator by.pConditions, "AND(NameStartsWithExampleDomain, NameEndsWithMicrosoftEdge, ControlTypeIsWindow, ClassNameIsChromeWidgetWin1, WindowInteractionStateIsReadyForUserInteraction)"
      PrivateElements.Add This.MasterWindow, .Find(10)
   End With
-      
 End Sub
 

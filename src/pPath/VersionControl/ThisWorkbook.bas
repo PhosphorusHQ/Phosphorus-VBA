@@ -50,13 +50,13 @@ End Sub
 'Always Save Code Changes on Closing Workbootk
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
 
-  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
+  If (VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY") Or (VBA.Interaction.Environ$("COMPUTERNAME") = "ASPIRE16") Then
     ExportPhosphorusSourceCode
   End If
   
   pPath.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
   
-  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
+  If (VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY") Or (VBA.Interaction.Environ$("COMPUTERNAME") = "ASPIRE16") Then
     ThisWorkbook.Save
   End If
 

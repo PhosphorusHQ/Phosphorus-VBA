@@ -56,12 +56,12 @@ Private Sub Test_RemoveAllNonBuiltInReferencesInProject()
 End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
-  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
+  If (VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY") Or (VBA.Interaction.Environ$("COMPUTERNAME") = "ASPIRE16") Then
     ExportPhosphorusSourceCode
   End If
   pUnitTestRuns_pPath.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
   'Always Save Code Changes on Closing Workbook
-  If VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY" Then
+  If (VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY") Or (VBA.Interaction.Environ$("COMPUTERNAME") = "ASPIRE16") Then
     ThisWorkbook.Save
   End If
 End Sub

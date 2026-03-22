@@ -23,7 +23,13 @@ Private Type BrowserAttributes
   URL As String
   WebAppPageTitle As String
   MasterWindowElementSearch As pSearch
-  MasterWindow As String
+  MasterWindowName As String
+  BrowserRootViewElementSearch As pSearch
+  BrowserRootViewElementName As String
+'  SidebarContentsSplitViewSearch As pSearch
+'  SidebarContentsSplitViewName As String
+  RootWebAreaElementSearch As pSearch
+  BrowserRootWebAreaElementName As String
 End Type
 
 Private This As BrowserAttributes
@@ -31,12 +37,22 @@ Private PrivateElements As New Scripting.Dictionary
   
 Private Sub Class_Initialize()
   Set This.MasterWindowElementSearch = Factory.GetNewSearch
-  This.MasterWindow = "MasterWindow"
+  Set This.BrowserRootViewElementSearch = Factory.GetNewSearch
+  Set This.RootWebAreaElementSearch = Factory.GetNewSearch
+  This.MasterWindowName = "MasterWindow"
+  This.BrowserRootViewElementName = "BrowserRootViewElement"
+'  This.SidebarContentsSplitViewName = "SidebarContentsSplitView"
+  This.BrowserRootWebAreaElementName = "BrowserRootWebArea"
 End Sub
 
 Private Sub Class_Terminate()
-  Window.CloseWindow This.MasterWindow, PrivateElements(This.MasterWindow)
+  On Error Resume Next
+  Window.CloseWindow This.MasterWindowName, PrivateElements(This.MasterWindowName)
+  On Error GoTo 0
   Set This.MasterWindowElementSearch = Nothing
+  Set This.BrowserRootViewElementSearch = Nothing
+'  Set This.SidebarContentsSplitViewSearch = Nothing
+  Set This.RootWebAreaElementSearch = Nothing
 End Sub
 
 Public Sub StartEdge(WebAppName As String, URL As String, WebAppPageTitle As String)
@@ -50,20 +66,52 @@ End Sub
 Private Sub FindRootWindowElements()
 
   With This.MasterWindowElementSearch
-    .Initialise This.MasterWindow, GetRootDesktopElement, TreeScope.Children
-    .AddCondition "NameStartsWithExampleDomain", UIAProperties.Name, UIAPropertyComparisons.StartsWith, This.WebAppPageTitle & " - "
+    .Initialise This.MasterWindowName, GetRootDesktopElement, TreeScope.Children
+    .AddCondition "NameStartsWithWebAppPageTitle", UIAProperties.Name, UIAPropertyComparisons.StartsWith, This.WebAppPageTitle & " - "
     'Use: AscW & ChrW to determine embedded Unicode characters
     .AddCondition "NameEndsWithMicrosoftEdge", UIAProperties.Name, UIAPropertyComparisons.EndsWith, "Microsoft" & ChrW(8203) & " Edge"
-    .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
+    .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Window
     .AddCondition "ClassNameIsChromeWidgetWin1", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "Chrome_WidgetWin_1"
     .AddCondition "WindowInteractionStateIsReadyForUserInteraction", UIAProperties.WindowWindowInteractionState, UIAPropertyComparisons.Equals, UIAWindowInteractionStates.ReadyForUserInteraction
-    .Locator By.pConditions, "AND(NameStartsWithExampleDomain, NameEndsWithMicrosoftEdge, ControlTypeIsWindow, ClassNameIsChromeWidgetWin1, WindowInteractionStateIsReadyForUserInteraction)"
-     PrivateElements.Add This.MasterWindow, .Find(10)
+    .Locator By.pConditions, "AND(NameStartsWithWebAppPageTitle, NameEndsWithMicrosoftEdge, ControlTypeIsWindow, ClassNameIsChromeWidgetWin1, WindowInteractionStateIsReadyForUserInteraction)"
+    PrivateElements.Add This.MasterWindowName, .Find(10)
   End With
-  
-End Sub
-'BrowserRootViewElement
-'//Pane[@ClassName="BrowserRootView"]
+
+  With This.BrowserRootViewElementSearch
+    .Initialise This.BrowserRootViewElementName, PrivateElements(This.MasterWindowName), TreeScope.Children
+    .AddCondition "ControlTypeIsPane", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Pane
+    .AddCondition "ClassNameIsBrowserRootView", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "BrowserRootView"
+    .Locator By.pConditions, "AND(ControlTypeIsPane, ClassNameIsBrowserRootView)"
+    PrivateElements.Add This.BrowserRootViewElementName, .Find(10)
+  End With
+'More elelement here:
+'ClassName "NonClientView"
+'ClassName "BrowserFrameViewWin"
+'ClassName "BrowserView"
+
+'Then:
+'ClassName: "SidebarContentsSplitView"
+'ControlType: Pane
+'FrameworkID: "Chrome"
+'  With This.SidebarContentsSplitViewSearch
+'    .Initialise This.SidebarContentsSplitViewName, PrivateElements(This.BrowserRootViewElementName), TreeScope.Children
+'    .AddCondition "ControlTypeIsPane", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Pane
+'  End With
+
+
+'-------------
+
+'Then finally the RootWebArea ... this needs to return after finding the first match!
+'  With This.RootWebAreaElementSearch
+'    .Initialise This.BrowserRootWebAreaElementName, PrivateElements(This.BrowserRootViewElementName), TreeScope.Children
+'    .AddCondition "NameIsWebAppPageTitle", UIAProperties.Name, UIAPropertyComparisons.Equals, This.WebAppPageTitle
+'    .AddCondition "ControlTypeIsDocument", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Document
+'    .AddCondition "AutomationIdIsRootWebArea", UIAProperties.AutomationId, UIAPropertyComparisons.Equals, "RootWebArea"
+'    .Locator By.pConditions, "AND(NameIsWebAppPageTitle, ControlTypeIsDocument, AutomationIdIsRootWebArea)"
+'    PrivateElements.Add This.BrowserRootWebAreaElementName, .Find(10)
+'  End With
 
 'BrowserRootWebAreaElement
 '//Document[And(@AutomationId="RootWebArea",@Name="Example Domain")]
+  
+End Sub

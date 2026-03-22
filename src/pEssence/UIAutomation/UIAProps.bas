@@ -41,7 +41,7 @@ Public Enum UIAProperties 'UIA_PropertyIds
   FillType = UIA_FillTypePropertyId
   FlowsFrom = UIA_FlowsFromPropertyId
   FlowsTo = UIA_FlowsToPropertyId
-  FrameworkId = UIA_FrameworkIdPropertyId
+  FrameworkID = UIA_FrameworkIdPropertyId
   FullDescription = UIA_FullDescriptionPropertyId
   GridColumnCount = UIA_GridColumnCountPropertyId
   GridItemColumn = UIA_GridItemColumnPropertyId

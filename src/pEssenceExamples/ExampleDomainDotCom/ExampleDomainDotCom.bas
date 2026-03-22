@@ -17,6 +17,8 @@ Sub ExampleDomainDotCom()
   On Error GoTo ErrorHandler
 
   Window.HighlightElements = True
+  
+  Factory.GetRootDesktopElement
 
   Set ExampleDomain = New ExampleDomainDotComPage
   

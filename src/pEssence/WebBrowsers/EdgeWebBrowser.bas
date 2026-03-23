@@ -66,22 +66,20 @@ End Sub
 Private Sub FindRootWindowElements()
 
   With This.MasterWindowElementSearch
-    .Initialise This.MasterWindowName, Factory.RootDesktopUIAElement, TreeScope.Children
+    .Initialise This.MasterWindowName, Factory.RootDesktopUIAElement, TreeScope.Children, By.pConditions, "AND(NameStartsWithWebAppPageTitle, NameEndsWithMicrosoftEdge, ControlTypeIsWindow, ClassNameIsChromeWidgetWin1, WindowInteractionStateIsReadyForUserInteraction)"
     .AddCondition "NameStartsWithWebAppPageTitle", UIAProperties.Name, UIAPropertyComparisons.StartsWith, This.WebAppPageTitle & " - "
     'Use: AscW & ChrW to determine embedded Unicode characters
     .AddCondition "NameEndsWithMicrosoftEdge", UIAProperties.Name, UIAPropertyComparisons.EndsWith, "Microsoft" & ChrW(8203) & " Edge"
     .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Window
     .AddCondition "ClassNameIsChromeWidgetWin1", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "Chrome_WidgetWin_1"
     .AddCondition "WindowInteractionStateIsReadyForUserInteraction", UIAProperties.WindowWindowInteractionState, UIAPropertyComparisons.Equals, UIAWindowInteractionStates.ReadyForUserInteraction
-    .Locator By.pConditions, "AND(NameStartsWithWebAppPageTitle, NameEndsWithMicrosoftEdge, ControlTypeIsWindow, ClassNameIsChromeWidgetWin1, WindowInteractionStateIsReadyForUserInteraction)"
     PrivateElements.Add This.MasterWindowName, .Find(10)
   End With
 
   With This.BrowserRootViewElementSearch
-    .Initialise This.BrowserRootViewElementName, PrivateElements(This.MasterWindowName), TreeScope.Children
+    .Initialise This.BrowserRootViewElementName, PrivateElements(This.MasterWindowName), TreeScope.Children, By.pConditions, "AND(ControlTypeIsPane, ClassNameIsBrowserRootView)"
     .AddCondition "ControlTypeIsPane", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Pane
     .AddCondition "ClassNameIsBrowserRootView", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "BrowserRootView"
-    .Locator By.pConditions, "AND(ControlTypeIsPane, ClassNameIsBrowserRootView)"
     PrivateElements.Add This.BrowserRootViewElementName, .Find(10)
   End With
 'More elelement here:

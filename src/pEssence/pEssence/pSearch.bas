@@ -34,10 +34,29 @@ Private Sub Class_Initialize()
   Set This.AllSearchConditions = New Scripting.Dictionary
 End Sub
 
-Public Sub Initialise(ElementName As String, RootUIAElement As IUIAutomationElement, TreeScope As Long)
+Public Sub Initialise( _
+  ElementName As String, _
+  RootUIAElement As IUIAutomationElement, _
+  TreeScope As Long, _
+  FindBy As By, _
+  Locator As String)
+  
   This.ElementName = ElementName
   Set This.RootUIAElement = RootUIAElement
   This.TreeScope = TreeScope
+  Select Case FindBy
+    Case By.pConditions
+      This.FindBy = FindBy
+      This.Locator = Locator
+    Case By.AutomationId
+      AddCondition "AutomationIdIs" & Locator, UIAProperties.AutomationId, UIAPropertyComparisons.Equals, Locator
+      This.FindBy = By.pConditions
+      This.Locator = "AutomationIdIs" & Locator
+    Case Else
+      ErrorLogging.LogError Errors.FindElementUnhandledByInLocator, "Unhanded By Locator: " & UIACommon.GetByName(FindBy)
+      Exit Sub
+  End Select
+
 End Sub
 
 Public Sub SetTreeScope(UIAElement As IUIAutomationElement)
@@ -67,21 +86,6 @@ Public Sub ListAllConditions()
     Set c = This.AllSearchConditions(k)
     Debug.Print c.ConditionName; c.UIAProperty; c.UIAPropertyComparison, c.UIAPropertyValue
   Next k
-End Sub
-
-Public Sub Locator(FindBy As By, Locator As String)
-  Select Case FindBy
-    Case By.pConditions
-      This.FindBy = FindBy
-      This.Locator = Locator
-    Case By.AutomationId
-      AddCondition "AutomationIdIs" & Locator, UIAProperties.AutomationId, UIAPropertyComparisons.Equals, Locator
-      This.FindBy = By.pConditions
-      This.Locator = "AutomationIdIs" & Locator
-    Case Else
-      ErrorLogging.LogError Errors.FindElementUnhandledByInLocator, "Unhanded By Locator: " & UIACommon.GetByName(FindBy)
-      Exit Sub
-  End Select
 End Sub
 
 Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = True) As IUIAutomationElement

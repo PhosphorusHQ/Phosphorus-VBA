@@ -50,10 +50,9 @@ Public Sub FindAllControls(HomePage As CalculatorHomePage)
   
   Dim CalculatorControls() As IUIAutomationElement
   With CalculatorControlElementsSearch
-    .Initialise This.LandmarkGroupControl, PrivateElements(This.LandmarkGroupControl), TreeScope.Descendants
+    .Initialise This.LandmarkGroupControl, PrivateElements(This.LandmarkGroupControl), TreeScope.Descendants, By.pConditions, "AND(ControlTypeIsButton, ClassNameIsButton)"
     .AddCondition "ControlTypeIsButton", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Button
     .AddCondition "ClassNameIsButton", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "Button"
-    .Locator by.pConditions, "AND(ControlTypeIsButton, ClassNameIsButton)"
      CalculatorControls = .FindAll
   End With
 
@@ -129,11 +128,10 @@ Public Sub FindAllControls(HomePage As CalculatorHomePage)
 
   PrivateElements.Add This.DisplayTextControl, Nothing
   With DisplayElementSearch
-    .Initialise This.DisplayTextControl, PrivateElements(This.LandmarkGroupControl), TreeScope.Descendants
+    .Initialise This.DisplayTextControl, PrivateElements(This.LandmarkGroupControl), TreeScope.Descendants, By.pConditions, "AND(ControlTypeIsText, AutomationIdIsCalculatorResults)"
     .AddCondition "ControlTypeIsText", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Text
     .AddCondition "AutomationIdIsCalculatorResults", UIAProperties.AutomationId, UIAPropertyComparisons.Equals, "CalculatorResults"
-    .Locator by.pConditions, "AND(ControlTypeIsText, AutomationIdIsCalculatorResults)"
-  End With
+    End With
 
 End Sub
 

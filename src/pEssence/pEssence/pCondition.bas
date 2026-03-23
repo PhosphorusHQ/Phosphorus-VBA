@@ -35,9 +35,9 @@ Public Function Evaluate(Element As IUIAutomationElement) As Boolean
        ReturnValue = (CurrentValue = UIAPropertyValue)
     Case UIAPropertyComparisons.IsLikeTheString
        ReturnValue = (CurrentValue Like UIAPropertyValue)
-    Case UIAPropertyComparisons.StartsWith
+    Case UIAPropertyComparisons.StartsWithTheString
        ReturnValue = (VBA.Strings.InStr(1, CurrentValue, UIAPropertyValue) = 1)
-    Case UIAPropertyComparisons.EndsWith
+    Case UIAPropertyComparisons.EndsWithTheString
        ReturnValue = (VBA.Strings.Right(CurrentValue, VBA.Strings.Len(UIAPropertyValue)) = UIAPropertyValue)
     Case Else
       ErrorLogging.LogError Errors.FaultyEvaluationLogicUnhandledPropertyComparison, "The comparison : '" & UIACommon.GetUIAPropertyComparisonsName(UIAPropertyComparison) & "' needs implementing!"

@@ -23,8 +23,8 @@ Public Enum UIAPropertyComparisons
   IsTheString
   IsLikeTheString
   EqualsNumber
-  StartsWith
-  EndsWith
+  StartsWithTheString
+  EndsWithTheString
 End Enum
 
 Public Enum TreeScope
@@ -60,9 +60,9 @@ Public Function GetUIAPropertyComparisonsName(Comparison As UIAPropertyCompariso
       R = "IsLike"
     Case UIAPropertyComparisons.EqualsNumber
       R = "Equals"
-    Case UIAPropertyComparisons.StartsWith
+    Case UIAPropertyComparisons.StartsWithTheString
       R = "StartsWith"
-    Case UIAPropertyComparisons.EndsWith
+    Case UIAPropertyComparisons.EndsWithTheString
       R = "EndsWith"
     Case Else
       ErrorLogging.LogError Errors.UnhandledGetName, "Unhanded UIAPropertyComparisons: " & "(" & Comparison & ")"

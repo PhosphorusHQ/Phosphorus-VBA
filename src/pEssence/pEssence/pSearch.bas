@@ -49,7 +49,7 @@ Public Sub Initialise( _
       This.FindBy = FindBy
       This.Locator = Locator
     Case By.AutomationId
-      Condition "AutomationIdIs" & Locator, UIAProperties.AutomationId, UIAPropertyComparisons.Equals, Locator
+      Condition "AutomationIdIs" & Locator, UIAProperties.AutomationId, UIAPropertyComparisons.IsTheString, Locator
       This.FindBy = By.pConditions
       This.Locator = "AutomationIdIs" & Locator
     Case Else

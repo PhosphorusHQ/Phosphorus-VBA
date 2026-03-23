@@ -20,8 +20,9 @@ Public Enum By
 End Enum
 
 Public Enum UIAPropertyComparisons
-  IsLike
-  Equals
+  IsTheString
+  IsLikeTheString
+  EqualsNumber
   StartsWith
   EndsWith
 End Enum
@@ -44,7 +45,7 @@ Public Function GetByName(NamedBy As By) As String
     Case By.AutomationId
       R = "AutomationId"
     Case Else
-      ErrorLogging.LogError Errors.UnhandledGetName, "Unhanded UIAPropertyComparisons: " & "(" & Comparison & ")"
+      ErrorLogging.LogError Errors.UnhandledGetName, "Unhanded UIAPropertyComparisons: " & "(" & NamedBy & ")"
       Exit Function
   End Select
   GetByName = R
@@ -53,16 +54,18 @@ End Function
 Public Function GetUIAPropertyComparisonsName(Comparison As UIAPropertyComparisons) As String
   Dim R As String
   Select Case Comparison
-    Case UIAPropertyComparisons.IsLike
+    Case UIAPropertyComparisons.IsTheString
+      R = "IsTheString"
+    Case UIAPropertyComparisons.IsLikeTheString
       R = "IsLike"
-    Case UIAPropertyComparisons.Equals
+    Case UIAPropertyComparisons.EqualsNumber
       R = "Equals"
     Case UIAPropertyComparisons.StartsWith
       R = "StartsWith"
     Case UIAPropertyComparisons.EndsWith
       R = "EndsWith"
     Case Else
-      ErrorLogging.LogError Errors.UnhandledGetName, "Unhanded UIAPropertyComparisons: " & "(" & NamedComparison & ")"
+      ErrorLogging.LogError Errors.UnhandledGetName, "Unhanded UIAPropertyComparisons: " & "(" & Comparison & ")"
       Exit Function
   End Select
   GetUIAPropertyComparisonsName = R

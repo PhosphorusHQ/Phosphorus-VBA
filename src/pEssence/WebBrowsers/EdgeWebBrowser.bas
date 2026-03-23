@@ -68,17 +68,17 @@ Private Sub FindRootWindowElements()
   'Use: AscW & ChrW to determine embedded Unicode characters
   With This.MasterWindowElementSearch
     .Initialise This.MasterWindowName, RootDesktopUIAElement, Children, pConditions, "AND(NameLike, ControlType, ClassName, WindowInteractionState  )"
-    .Condition "NameLike", Name, IsLike, This.WebAppPageTitle & " - " & "*" & " - Microsoft" & ChrW(8203) & " Edge"
-    .Condition "ControlType", ControlType, Equals, UIAControlTypeIDs.Window
-    .Condition "ClassName", ClassName, Equals, "Chrome_WidgetWin_1"
-    .Condition "WindowInteractionState", WindowWindowInteractionState, Equals, UIAWindowInteractionStates.ReadyForUserInteraction
+    .Condition "NameLike", Name, IsLikeTheString, This.WebAppPageTitle & " - " & "*" & " - Microsoft" & ChrW(8203) & " Edge"
+    .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
+    .Condition "ClassName", ClassName, IsTheString, "Chrome_WidgetWin_1"
+    .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
     PrivateElements.Add This.MasterWindowName, .Find(10)
   End With
 
   With This.BrowserRootViewElementSearch
     .Initialise This.BrowserRootViewElementName, PrivateElements(This.MasterWindowName), TreeScope.Children, By.pConditions, "AND(ControlType, ClassName)"
-    .Condition "ControlType", ControlType, Equals, UIAControlTypeIDs.Pane
-    .Condition "ClassName", ClassName, Equals, "BrowserRootView"
+    .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Pane
+    .Condition "ClassName", ClassName, IsTheString, "BrowserRootView"
     PrivateElements.Add This.BrowserRootViewElementName, .Find(10)
   End With
 'More elelement here:

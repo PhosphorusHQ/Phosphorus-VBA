@@ -29,9 +29,11 @@ Public Function Evaluate(Element As IUIAutomationElement) As Boolean
   Dim CurrentValue As Variant
   CurrentValue = VBA.Conversion.CVar(UIAProps.GetProperty(Element, UIAProperty))
   Select Case UIAPropertyComparison
-    Case UIAPropertyComparisons.Equals
+    Case UIAPropertyComparisons.IsTheString
        ReturnValue = (CurrentValue = UIAPropertyValue)
-    Case UIAPropertyComparisons.IsLike
+    Case UIAPropertyComparisons.EqualsNumber
+       ReturnValue = (CurrentValue = UIAPropertyValue)
+    Case UIAPropertyComparisons.IsLikeTheString
        ReturnValue = (CurrentValue Like UIAPropertyValue)
     Case UIAPropertyComparisons.StartsWith
        ReturnValue = (VBA.Strings.InStr(1, CurrentValue, UIAPropertyValue) = 1)

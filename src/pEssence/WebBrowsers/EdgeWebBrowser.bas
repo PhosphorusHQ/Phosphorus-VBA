@@ -65,21 +65,21 @@ End Sub
 
 Private Sub FindRootWindowElements()
 
+  'Use: AscW & ChrW to determine embedded Unicode characters
   With This.MasterWindowElementSearch
-    .Initialise This.MasterWindowName, Factory.RootDesktopUIAElement, TreeScope.Children, By.pConditions, "AND(NameStartsWithWebAppPageTitle, NameEndsWithMicrosoftEdge, ControlTypeIsWindow, ClassNameIsChromeWidgetWin1, WindowInteractionStateIsReadyForUserInteraction)"
-    .Condition "NameStartsWithWebAppPageTitle", UIAProperties.Name, UIAPropertyComparisons.StartsWith, This.WebAppPageTitle & " - "
-    'Use: AscW & ChrW to determine embedded Unicode characters
-    .Condition "NameEndsWithMicrosoftEdge", UIAProperties.Name, UIAPropertyComparisons.EndsWith, "Microsoft" & ChrW(8203) & " Edge"
-    .Condition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Window
-    .Condition "ClassNameIsChromeWidgetWin1", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "Chrome_WidgetWin_1"
-    .Condition "WindowInteractionStateIsReadyForUserInteraction", UIAProperties.WindowWindowInteractionState, UIAPropertyComparisons.Equals, UIAWindowInteractionStates.ReadyForUserInteraction
+    .Initialise This.MasterWindowName, RootDesktopUIAElement, Children, pConditions, "AND(NameStartsWith, NameEndsWith, ControlType, ClassName, WindowInteractionState  )"
+    .Condition "NameStartsWith", Name, StartsWith, This.WebAppPageTitle & " - "
+    .Condition "NameEndsWith", Name, EndsWith, "Microsoft" & ChrW(8203) & " Edge"
+    .Condition "ControlType", ControlType, Equals, UIAControlTypeIDs.Window
+    .Condition "ClassName", ClassName, Equals, "Chrome_WidgetWin_1"
+    .Condition "WindowInteractionState", WindowWindowInteractionState, Equals, UIAWindowInteractionStates.ReadyForUserInteraction
     PrivateElements.Add This.MasterWindowName, .Find(10)
   End With
 
   With This.BrowserRootViewElementSearch
-    .Initialise This.BrowserRootViewElementName, PrivateElements(This.MasterWindowName), TreeScope.Children, By.pConditions, "AND(ControlTypeIsPane, ClassNameIsBrowserRootView)"
-    .Condition "ControlTypeIsPane", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Pane
-    .Condition "ClassNameIsBrowserRootView", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "BrowserRootView"
+    .Initialise This.BrowserRootViewElementName, PrivateElements(This.MasterWindowName), TreeScope.Children, By.pConditions, "AND(ControlType, ClassName)"
+    .Condition "ControlType", ControlType, Equals, UIAControlTypeIDs.Pane
+    .Condition "ClassName", ClassName, Equals, "BrowserRootView"
     PrivateElements.Add This.BrowserRootViewElementName, .Find(10)
   End With
 'More elelement here:

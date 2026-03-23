@@ -31,6 +31,8 @@ Public Function Evaluate(Element As IUIAutomationElement) As Boolean
   Select Case UIAPropertyComparison
     Case UIAPropertyComparisons.Equals
        ReturnValue = (CurrentValue = UIAPropertyValue)
+    Case UIAPropertyComparisons.IsLike
+       ReturnValue = (CurrentValue Like UIAPropertyValue)
     Case UIAPropertyComparisons.StartsWith
        ReturnValue = (VBA.Strings.InStr(1, CurrentValue, UIAPropertyValue) = 1)
     Case UIAPropertyComparisons.EndsWith

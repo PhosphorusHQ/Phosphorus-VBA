@@ -67,9 +67,8 @@ Private Sub FindRootWindowElements()
 
   'Use: AscW & ChrW to determine embedded Unicode characters
   With This.MasterWindowElementSearch
-    .Initialise This.MasterWindowName, RootDesktopUIAElement, Children, pConditions, "AND(NameStartsWith, NameEndsWith, ControlType, ClassName, WindowInteractionState  )"
-    .Condition "NameStartsWith", Name, StartsWith, This.WebAppPageTitle & " - "
-    .Condition "NameEndsWith", Name, EndsWith, "Microsoft" & ChrW(8203) & " Edge"
+    .Initialise This.MasterWindowName, RootDesktopUIAElement, Children, pConditions, "AND(NameLike, ControlType, ClassName, WindowInteractionState  )"
+    .Condition "NameLike", Name, IsLike, This.WebAppPageTitle & " - " & "*" & " - Microsoft" & ChrW(8203) & " Edge"
     .Condition "ControlType", ControlType, Equals, UIAControlTypeIDs.Window
     .Condition "ClassName", ClassName, Equals, "Chrome_WidgetWin_1"
     .Condition "WindowInteractionState", WindowWindowInteractionState, Equals, UIAWindowInteractionStates.ReadyForUserInteraction

@@ -13,6 +13,7 @@ Option Explicit
 Public Enum Errors
   FaultyEvaluationLogicUnspecifiedError = VBA.Constants.vbObjectError + 1001
   FaultyEvaluationLogicMismatchBracketsError
+  FaultyEvaluationLogicConditionIsNotUsed
   FaultyEvaluationLogicUnspecifiedErrorOnEvaluation
   FaultyEvaluationLogicUnhandledPropertyComparison
   FindElementsExpectedOneElementFoundMany = VBA.Constants.vbObjectError + 2001

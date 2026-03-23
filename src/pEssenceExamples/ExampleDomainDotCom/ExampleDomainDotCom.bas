@@ -25,7 +25,7 @@ Sub ExampleDomainDotCom()
 
 ErrorHandler:
   MsgBox Err.Description & " (Error Number #" & Err.Number & ")"
-  Exit Sub
+  GoTo ExitSub
   
 ExitSub:
   Set ExampleDomain = Nothing

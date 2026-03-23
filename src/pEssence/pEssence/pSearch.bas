@@ -231,14 +231,11 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
 End Function
 
 Private Function EvaluationLogicIsOk() As Boolean
-
-  Dim RedactedEvaluationLogic As String
-  RedactedEvaluationLogic = This.Locator
   
   Dim CountOfLeftBraces As Integer
   Dim CountOfRightBraces As Integer
-  CountOfLeftBraces = Utils.CountOccurrences(RedactedEvaluationLogic, "(")
-  CountOfRightBraces = Utils.CountOccurrences(RedactedEvaluationLogic, ")")
+  CountOfLeftBraces = Utils.CountOccurrences(This.Locator, "(")
+  CountOfRightBraces = Utils.CountOccurrences(This.Locator, ")")
   If Not (CountOfLeftBraces = CountOfRightBraces) Then
     EvaluationLogicIsOk = False
     ErrorLogging.LogError Errors.FaultyEvaluationLogicMismatchBracketsError, "The evaluation logic is faulty, there are mismatchng brackets: '" & This.Locator & "'"
@@ -246,8 +243,20 @@ Private Function EvaluationLogicIsOk() As Boolean
   End If
   
   Dim k As Variant
+  Dim c As New pCondition
   For Each k In This.AllSearchConditions.Keys
-    Dim c As New pCondition
+    Set c = This.AllSearchConditions(k)
+    If VBA.Strings.InStr(This.Locator, c.ConditionName) = 0 Then
+      EvaluationLogicIsOk = False
+      ErrorLogging.LogError Errors.FaultyEvaluationLogicConditionIsNotUsed, "The Condition '" & c.ConditionName & "' is not used in the locator '" & This.Locator & "'"
+      Exit Function
+    End If
+  Next k
+    
+  Dim RedactedEvaluationLogic As String
+  RedactedEvaluationLogic = This.Locator
+    
+  For Each k In This.AllSearchConditions.Keys
     Set c = This.AllSearchConditions(k)
     RedactedEvaluationLogic = VBA.Strings.Replace(RedactedEvaluationLogic, c.ConditionName, "")
   Next k

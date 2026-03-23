@@ -49,7 +49,7 @@ Public Sub Initialise( _
       This.FindBy = FindBy
       This.Locator = Locator
     Case By.AutomationId
-      AddCondition "AutomationIdIs" & Locator, UIAProperties.AutomationId, UIAPropertyComparisons.Equals, Locator
+      Condition "AutomationIdIs" & Locator, UIAProperties.AutomationId, UIAPropertyComparisons.Equals, Locator
       This.FindBy = By.pConditions
       This.Locator = "AutomationIdIs" & Locator
     Case Else
@@ -63,7 +63,7 @@ Public Sub SetTreeScope(UIAElement As IUIAutomationElement)
   Set This.RootUIAElement = UIAElement
 End Sub
 
-Public Sub AddCondition( _
+Public Sub Condition( _
   ConditionName As String, _
   UIAProperty As UIAProperties, _
   UIAPropertyComparison As UIAPropertyComparisons, _

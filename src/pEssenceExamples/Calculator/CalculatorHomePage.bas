@@ -82,10 +82,10 @@ Private Sub FindMasterWindowElement()
   
   With MasterWindowElementSearch
     .Initialise This.MasterWindow, Factory.RootDesktopUIAElement, TreeScope.Children, By.pConditions, "AND(NameIsCalculator, ControlTypeIsWindow, ClassNameIsApplicationFrameWindow, WindowInteractionStateIsReadyForUserInteraction)"
-    .AddCondition "NameIsCalculator", UIAProperties.Name, UIAPropertyComparisons.Equals, "Calculator"
-    .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
-    .AddCondition "ClassNameIsApplicationFrameWindow", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "ApplicationFrameWindow"
-    .AddCondition "WindowInteractionStateIsReadyForUserInteraction", UIAProperties.WindowWindowInteractionState, UIAPropertyComparisons.Equals, UIAWindowInteractionStates.ReadyForUserInteraction
+    .Condition "NameIsCalculator", UIAProperties.Name, UIAPropertyComparisons.Equals, "Calculator"
+    .Condition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
+    .Condition "ClassNameIsApplicationFrameWindow", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "ApplicationFrameWindow"
+    .Condition "WindowInteractionStateIsReadyForUserInteraction", UIAProperties.WindowWindowInteractionState, UIAPropertyComparisons.Equals, UIAWindowInteractionStates.ReadyForUserInteraction
     PrivateElements.Add This.MasterWindow, .Find(10)
   End With
       
@@ -95,9 +95,9 @@ Private Sub FindNavigationElements()
   
   With MainCalculatorSubWindowElementSearch
     .Initialise This.MainCalculatorSubWindow, PrivateElements(This.MasterWindow), TreeScope.Children, By.pConditions, "AND(NameIsCalculator, ControlTypeIsWindow, ClassNameIsWindowsUICoreCoreWindow)"
-    .AddCondition "NameIsCalculator", UIAProperties.Name, UIAPropertyComparisons.Equals, "Calculator"
-    .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
-    .AddCondition "ClassNameIsWindowsUICoreCoreWindow", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "Windows.UI.Core.CoreWindow"
+    .Condition "NameIsCalculator", UIAProperties.Name, UIAPropertyComparisons.Equals, "Calculator"
+    .Condition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
+    .Condition "ClassNameIsWindowsUICoreCoreWindow", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "Windows.UI.Core.CoreWindow"
     PrivateElements.Add This.MainCalculatorSubWindow, .Find(10)
   End With
   
@@ -108,10 +108,10 @@ Private Sub FindNavigationElements()
     
   With OpenCloseNavigationMenuButtonElementSearch
     .Initialise This.OpenCloseNavigationMenuButton, PrivateElements(This.NavigationViewRootCustomControl), TreeScope.Children, By.pConditions, "AND(OR(NameIsOpenNavigation,NameIsCloseNavigation), ControlTypeIsButton, ClassNameIsButton)"
-    .AddCondition "NameIsOpenNavigation", UIAProperties.Name, UIAPropertyComparisons.Equals, "Open Navigation"
-    .AddCondition "NameIsCloseNavigation", UIAProperties.Name, UIAPropertyComparisons.Equals, "Close Navigation"
-    .AddCondition "ControlTypeIsButton", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Button
-    .AddCondition "ClassNameIsButton", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "Button"
+    .Condition "NameIsOpenNavigation", UIAProperties.Name, UIAPropertyComparisons.Equals, "Open Navigation"
+    .Condition "NameIsCloseNavigation", UIAProperties.Name, UIAPropertyComparisons.Equals, "Close Navigation"
+    .Condition "ControlTypeIsButton", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Button
+    .Condition "ClassNameIsButton", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "Button"
     PrivateElements.Add This.OpenCloseNavigationMenuButton, .Find(10)
   End With
         
@@ -133,7 +133,7 @@ Private Function GetMenuElement(CalculatorType As String) As IUIAutomationElemen
   
      If NavigationMenuRootPaneWindowElementSearch.ElementName = "" Then
       .Initialise This.NavigationMenuRootPaneWindow, PrivateElements(This.NavigationViewRootCustomControl), TreeScope.Children, By.pConditions, "AutomationIdIsPaneRoot"
-      .AddCondition "AutomationIdIsPaneRoot", UIAProperties.AutomationId, UIAPropertyComparisons.Equals, "PaneRoot"
+      .Condition "AutomationIdIsPaneRoot", UIAProperties.AutomationId, UIAPropertyComparisons.Equals, "PaneRoot"
      Else
       PrivateElements.Remove This.NavigationMenuRootPaneWindow
      End If
@@ -146,8 +146,8 @@ Private Function GetMenuElement(CalculatorType As String) As IUIAutomationElemen
   
   With CurrentNavigationMenuItemElementSearch
     .Initialise CalculatorType, PrivateElements(This.NavigationMenuRootPaneWindow), TreeScope.Descendants, By.pConditions, "AND(NameIs, ControlTypeIsListItem)"
-    .AddCondition "NameIs", UIAProperties.Name, UIAPropertyComparisons.Equals, CalculatorType
-    .AddCondition "ControlTypeIsListItem", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.ListItem
+    .Condition "NameIs", UIAProperties.Name, UIAPropertyComparisons.Equals, CalculatorType
+    .Condition "ControlTypeIsListItem", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.ListItem
     Set GetMenuElement = .Find(10)
   End With
 
@@ -160,8 +160,8 @@ Public Function GetCurrentCalculatorLandmarkElement() As IUIAutomationElement
   
   With CurrentCalculatorLandmarkGroupControlElementSearch
     .Initialise This.CurrentCalculatorLandmarkGroupControl, PrivateElements(This.NavigationViewRootCustomControl), TreeScope.Children, By.pConditions, "AND(ControlTypeIsGroup, ClassNameIsLandmarkTarget)"
-    .AddCondition "ControlTypeIsGroup", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Group
-    .AddCondition "ClassNameIsLandmarkTarget", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "LandmarkTarget"
+    .Condition "ControlTypeIsGroup", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Group
+    .Condition "ClassNameIsLandmarkTarget", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "LandmarkTarget"
     PrivateElements.Add This.CurrentCalculatorLandmarkGroupControl, .Find(10)
   End With
   Set GetCurrentCalculatorLandmarkElement = PrivateElements(This.CurrentCalculatorLandmarkGroupControl)

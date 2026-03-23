@@ -18,8 +18,6 @@ Attribute VB_Exposed = True
 ' =======================================================================
 Option Explicit
 
-Public RootDesktopUIAElement As IUIAutomationElement
-
 Public Function GetRootDesktopElement() As IUIAutomationElement
   If RootDesktopUIAElement Is Nothing Then
     Set RootDesktopUIAElement = UIA.GetRootElement

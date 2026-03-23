@@ -12,6 +12,7 @@ Option Explicit
 
 ' Requires reference to UIAutomationClient - Tools > References > UIAutomationClient
 Public UIA As New CUIAutomation
+Public RootDesktopUIAElement As IUIAutomationElement
 
 Public Enum By
   pConditions

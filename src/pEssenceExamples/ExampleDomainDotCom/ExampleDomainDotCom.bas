@@ -18,8 +18,6 @@ Sub ExampleDomainDotCom()
 
   Window.HighlightElements = True
   
-  Factory.GetRootDesktopElement
-
   Set ExampleDomain = New ExampleDomainDotComPage
   
   ExampleDomain.Initialize

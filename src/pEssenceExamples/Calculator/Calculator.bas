@@ -40,8 +40,7 @@ Public Sub Calculator()
   On Error GoTo ErrorHandler
   
   Window.HighlightElements = True
-  
-  Factory.GetRootDesktopElement
+
   InitialiseMenuNames
   
   Set HomePage = New CalculatorHomePage

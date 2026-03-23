@@ -18,6 +18,7 @@ Public Enum Errors
   FindElementsExpectedOneElementFoundMany = VBA.Constants.vbObjectError + 2001
   FindElementsExpectedOneElementFoundNone
   FindElementsRootElementIsNothing
+  FindElementsFindNoElementsBelowRoot
   FindElementsFindNoElements
   FindElementUnhandledByInLocator
   PatternFailedForElement = VBA.Constants.vbObjectError + 3001

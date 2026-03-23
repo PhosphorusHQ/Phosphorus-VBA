@@ -66,7 +66,7 @@ End Sub
 Private Sub FindRootWindowElements()
 
   With This.MasterWindowElementSearch
-    .Initialise This.MasterWindowName, GetRootDesktopElement, TreeScope.Children
+    .Initialise This.MasterWindowName, Factory.RootDesktopUIAElement, TreeScope.Children
     .AddCondition "NameStartsWithWebAppPageTitle", UIAProperties.Name, UIAPropertyComparisons.StartsWith, This.WebAppPageTitle & " - "
     'Use: AscW & ChrW to determine embedded Unicode characters
     .AddCondition "NameEndsWithMicrosoftEdge", UIAProperties.Name, UIAPropertyComparisons.EndsWith, "Microsoft" & ChrW(8203) & " Edge"

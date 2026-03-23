@@ -165,7 +165,7 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
     Set AllElements = This.RootUIAElement.FindAll(This.TreeScope, UIA.CreateTrueCondition)
   End If
   If AllElements.Length = 0 Then
-    Debug.Print "Could not find elements below the Root Element"
+    ErrorLogging.LogError Errors.FindElementsFindNoElementsBelowRoot, "Could not find any elements below the Root Element!"
     Exit Function
   End If
 

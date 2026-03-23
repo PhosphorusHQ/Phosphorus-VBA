@@ -21,6 +21,9 @@ Private Sub Workbook_Open()
   'UIAutomationClient
   pEssenceExamples.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\UIAutomationCore.dll"
 
+  'Microsoft Scripting Runtime - needed for Scripting.dictionary/File System Object
+  pEssenceExamples.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\scrrun.dll"
+
 End Sub
 
 Private Sub ExportPhosphorusSourceCode()

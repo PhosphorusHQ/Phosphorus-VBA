@@ -38,6 +38,7 @@ Private This As PrivateElementNames
 Private PrivateElements As New Scripting.Dictionary
 
 Private Sub Class_Initialize()
+  Factory.GetRootDesktopElement
   OpenCalculator
   InitializeAllElements
   FindMasterWindowElement
@@ -80,7 +81,7 @@ End Sub
 Private Sub FindMasterWindowElement()
   
   With MasterWindowElementSearch
-    .Initialise This.MasterWindow, GetRootDesktopElement, TreeScope.Children
+    .Initialise This.MasterWindow, RootDesktopUIAElement, TreeScope.Children
     .AddCondition "NameIsCalculator", UIAProperties.Name, UIAPropertyComparisons.Equals, "Calculator"
     .AddCondition "ControlTypeIsWindow", UIAProperties.ControlType, UIAPropertyComparisons.Equals, pEssence.UIAControlTypeIDs.Window
     .AddCondition "ClassNameIsApplicationFrameWindow", UIAProperties.ClassName, UIAPropertyComparisons.Equals, "ApplicationFrameWindow"

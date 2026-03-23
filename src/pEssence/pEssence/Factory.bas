@@ -1,4 +1,12 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
 Attribute VB_Name = "Factory"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
 '@Folder pEssence
 ' =======================================================================
 '  Phosphorus Test & Automation Suite
@@ -10,7 +18,7 @@ Attribute VB_Name = "Factory"
 ' =======================================================================
 Option Explicit
 
-Private RootDesktopUIAElement As IUIAutomationElement
+Public RootDesktopUIAElement As IUIAutomationElement
 
 Public Function GetRootDesktopElement() As IUIAutomationElement
   If RootDesktopUIAElement Is Nothing Then
@@ -31,4 +39,5 @@ Public Function GetNewEdgeWebBrowser() As EdgeWebBrowser
   Set Edge = New EdgeWebBrowser
   Set GetNewEdgeWebBrowser = Edge
 End Function
+
 

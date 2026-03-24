@@ -22,37 +22,34 @@ Private Type BrowserAttributes
   WebAppName As String
   URL As String
   WebAppPageTitle As String
-  MasterWindowElementSearch As pSearch
-  MasterWindowName As String
-  BrowserRootViewElementSearch As pSearch
-  BrowserRootViewElementName As String
+  MasterWindowSearch As pSearch
+  BrowserRootViewSearch As pSearch
+'  BrowserRootViewElementName As String
 '  SidebarContentsSplitViewSearch As pSearch
 '  SidebarContentsSplitViewName As String
-  RootWebAreaElementSearch As pSearch
-  BrowserRootWebAreaElementName As String
+  RootWebAreaSearch As pSearch
 End Type
 
 Private This As BrowserAttributes
-Private PrivateElements As New Scripting.Dictionary
   
 Private Sub Class_Initialize()
-  Set This.MasterWindowElementSearch = Factory.GetNewSearch
-  Set This.BrowserRootViewElementSearch = Factory.GetNewSearch
-  Set This.RootWebAreaElementSearch = Factory.GetNewSearch
-  This.MasterWindowName = "MasterWindow"
-  This.BrowserRootViewElementName = "BrowserRootViewElement"
+  Set This.MasterWindowSearch = Factory.GetNewSearch
+  Set This.BrowserRootViewSearch = Factory.GetNewSearch
+  Set This.RootWebAreaSearch = Factory.GetNewSearch
+'  This.MasterWindowName = "MasterWindow"
+'  This.BrowserRootViewElementName = "BrowserRootViewElement"
 '  This.SidebarContentsSplitViewName = "SidebarContentsSplitView"
-  This.BrowserRootWebAreaElementName = "BrowserRootWebArea"
+'  This.BrowserRootWebAreaElementName = "BrowserRootWebArea"
 End Sub
 
 Private Sub Class_Terminate()
   On Error Resume Next
-  Window.CloseWindow This.MasterWindowName, PrivateElements(This.MasterWindowName)
+  Window.CloseWindow This.MasterWindowSearch.ElementName, This.MasterWindowSearch.FoundUIAElement
   On Error GoTo 0
-  Set This.MasterWindowElementSearch = Nothing
-  Set This.BrowserRootViewElementSearch = Nothing
+  Set This.MasterWindowSearch = Nothing
+  Set This.BrowserRootViewSearch = Nothing
 '  Set This.SidebarContentsSplitViewSearch = Nothing
-  Set This.RootWebAreaElementSearch = Nothing
+  Set This.RootWebAreaSearch = Nothing
 End Sub
 
 Public Sub StartEdge(WebAppName As String, URL As String, WebAppPageTitle As String)
@@ -66,22 +63,23 @@ End Sub
 Private Sub FindRootWindowElements()
 
   'Use: AscW & ChrW to determine embedded Unicode characters
-  With This.MasterWindowElementSearch
-    .Initialise This.MasterWindowName, RootDesktopUIAElement, Children, pConditions, "AND(NameLike, ControlType, ClassName, WindowInteractionState  )"
+  With This.MasterWindowSearch
+    .Initialise "MasterWindow", RootDesktopUIAElement, Children, pConditions, "AND(NameLike, ControlType, ClassName, WindowInteractionState  )"
     .Condition "NameLike", Name, IsLikeTheString, This.WebAppPageTitle & " - " & "*" & " - Microsoft" & ChrW(8203) & " Edge"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
     .Condition "ClassName", ClassName, IsTheString, "Chrome_WidgetWin_1"
     .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
-    PrivateElements.Add This.MasterWindowName, .Find(10)
+    .Find (10)
   End With
 
-  With This.BrowserRootViewElementSearch
-    .Initialise This.BrowserRootViewElementName, PrivateElements(This.MasterWindowName), TreeScope.Children, By.pConditions, "AND(ControlType, ClassName)"
+  With This.BrowserRootViewSearch
+    .Initialise "BrowserRootView", This.MasterWindowSearch.FoundUIAElement, Children, pConditions, "AND(ControlType, ClassName)"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Pane
     .Condition "ClassName", ClassName, IsTheString, "BrowserRootView"
-    PrivateElements.Add This.BrowserRootViewElementName, .Find(10)
+    .Find (10)
   End With
-'More elelement here:
+
+'Add: More elements here:
 'ClassName "NonClientView"
 'ClassName "BrowserFrameViewWin"
 'ClassName "BrowserView"

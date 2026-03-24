@@ -18,24 +18,16 @@ Attribute VB_Exposed = False
 ' =======================================================================
 Option Explicit
 
-Private MasterWindowElementSearch As pSearch
-Private MainCalculatorSubWindowElementSearch As pSearch
-Private NavigationViewRootCustomControlElementSearch As pSearch
-Private OpenCloseNavigationMenuButtonElementSearch As pSearch
-Private NavigationMenuRootPaneWindowElementSearch As pSearch
-Private CurrentCalculatorLandmarkGroupControlElementSearch As pSearch
-
-Private Type PrivateElementNames
-  MasterWindow As String
-  MainCalculatorSubWindow As String
-  NavigationViewRootCustomControl As String
-  OpenCloseNavigationMenuButton As String
-  NavigationMenuRootPaneWindow As String
-  CurrentCalculatorLandmarkGroupControl As String
+Private Type PageAttributes
+  MasterWindowSearch As pSearch
+  MainCalculatorSubWindowSearch As pSearch
+  NavigationViewRootCustomControlSearch As pSearch
+  OpenCloseNavigationMenuButtonSearch As pSearch
+  NavigationMenuRootPaneWindowSearch As pSearch
+  CurrentCalculatorLandmarkGroupControlSearch As pSearch
 End Type
 
-Private This As PrivateElementNames
-Private PrivateElements As New Scripting.Dictionary
+Private This As PageAttributes
 
 Private Sub Class_Initialize()
   Factory.GetRootDesktopElement
@@ -46,14 +38,13 @@ Private Sub Class_Initialize()
 End Sub
 
 Private Sub Class_Terminate()
-  Window.CloseWindow This.MasterWindow, PrivateElements(This.MasterWindow)
-  Set MasterWindowElementSearch = Nothing
-  Set MainCalculatorSubWindowElementSearch = Nothing
-  Set NavigationViewRootCustomControlElementSearch = Nothing
-  Set OpenCloseNavigationMenuButtonElementSearch = Nothing
-  Set NavigationMenuRootPaneWindowElementSearch = Nothing
-  Set CurrentCalculatorLandmarkGroupControlElementSearch = Nothing
-  Set PrivateElements = Nothing
+  Window.CloseWindow This.MasterWindowSearch.ElementName, This.MasterWindowSearch.FoundUIAElement
+  Set This.MasterWindowSearch = Nothing
+  Set This.MainCalculatorSubWindowSearch = Nothing
+  Set This.NavigationViewRootCustomControlSearch = Nothing
+  Set This.OpenCloseNavigationMenuButtonSearch = Nothing
+  Set This.NavigationMenuRootPaneWindowSearch = Nothing
+  Set This.CurrentCalculatorLandmarkGroupControlSearch = Nothing
 End Sub
 
 Private Sub OpenCalculator()
@@ -61,60 +52,51 @@ Private Sub OpenCalculator()
 End Sub
 
 Private Sub InitializeAllElements()
-  
-  Set MasterWindowElementSearch = Factory.GetNewSearch
-  Set MainCalculatorSubWindowElementSearch = Factory.GetNewSearch
-  Set NavigationViewRootCustomControlElementSearch = Factory.GetNewSearch
-  Set OpenCloseNavigationMenuButtonElementSearch = Factory.GetNewSearch
-  Set NavigationMenuRootPaneWindowElementSearch = Factory.GetNewSearch
-  Set CurrentCalculatorLandmarkGroupControlElementSearch = Factory.GetNewSearch
-  
-  This.MasterWindow = "MasterWindow"
-  This.MainCalculatorSubWindow = "MainCalculatorSubWindow"
-  This.NavigationViewRootCustomControl = "NavigationView"
-  This.OpenCloseNavigationMenuButton = "OpenCloseNavigationMenuButton"
-  This.NavigationMenuRootPaneWindow = "NavigationMenuRootPaneWindow"
-  This.CurrentCalculatorLandmarkGroupControl = "CurrentCalculatorLandmarkGroupControlElement"
-
+  Set This.MasterWindowSearch = Factory.GetNewSearch
+  Set This.MainCalculatorSubWindowSearch = Factory.GetNewSearch
+  Set This.NavigationViewRootCustomControlSearch = Factory.GetNewSearch
+  Set This.OpenCloseNavigationMenuButtonSearch = Factory.GetNewSearch
+  Set This.NavigationMenuRootPaneWindowSearch = Factory.GetNewSearch
+  Set This.CurrentCalculatorLandmarkGroupControlSearch = Factory.GetNewSearch
 End Sub
 
 Private Sub FindMasterWindowElement()
   
-  With MasterWindowElementSearch
-    .Initialise This.MasterWindow, RootDesktopUIAElement, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState)"
-    'Can't use just 'Name' as this appears in 'ClassName'!
+  With This.MasterWindowSearch
+    .Initialise "MasterWindow", RootDesktopUIAElement, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState)"
+    'We can't use just 'Name' as this appears in 'ClassName'!
     .Condition "NameIs", Name, IsTheString, "Calculator"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
     .Condition "ClassName", ClassName, IsTheString, "ApplicationFrameWindow"
     .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
-    PrivateElements.Add This.MasterWindow, .Find(10)
+    .Find (10)
   End With
       
 End Sub
 
 Private Sub FindNavigationElements()
   
-  With MainCalculatorSubWindowElementSearch
-    .Initialise This.MainCalculatorSubWindow, PrivateElements(This.MasterWindow), Children, pConditions, "AND(NameIs, ControlType, ClassName)"
+  With This.MainCalculatorSubWindowSearch
+    .Initialise "MainCalculatorSubWindow", This.MasterWindowSearch.FoundUIAElement, Children, pConditions, "AND(NameIs, ControlType, ClassName)"
     .Condition "NameIs", Name, IsTheString, "Calculator"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
     .Condition "ClassName", ClassName, IsTheString, "Windows.UI.Core.CoreWindow"
-    PrivateElements.Add This.MainCalculatorSubWindow, .Find(10)
+    .Find (10)
   End With
-  
-  With NavigationViewRootCustomControlElementSearch
-    .Initialise This.NavigationViewRootCustomControl, PrivateElements(This.MainCalculatorSubWindow), pEssence.TreeScope.Children, By.AutomationId, "NavView"
-    PrivateElements.Add This.NavigationViewRootCustomControl, .Find(10)
+
+  With This.NavigationViewRootCustomControlSearch
+    .Initialise "NavigationView", This.MainCalculatorSubWindowSearch.FoundUIAElement, Children, By.AutomationId, "NavView"
+    .Find (10)
   End With
     
-  With OpenCloseNavigationMenuButtonElementSearch
-    .Initialise This.OpenCloseNavigationMenuButton, PrivateElements(This.NavigationViewRootCustomControl), Children, pConditions, _
+  With This.OpenCloseNavigationMenuButtonSearch
+    .Initialise "OpenCloseNavigationMenuButton", This.NavigationViewRootCustomControlSearch.FoundUIAElement, Children, pConditions, _
       "AND(OR(NameIsOpen,NameIsClose), ControlType, ClassName)"
     .Condition "NameIsOpen", Name, IsTheString, "Open Navigation"
     .Condition "NameIsClose", Name, IsTheString, "Close Navigation"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
     .Condition "ClassName", ClassName, IsTheString, "Button"
-    PrivateElements.Add This.OpenCloseNavigationMenuButton, .Find(10)
+    .Find (10)
   End With
         
 End Sub
@@ -125,49 +107,45 @@ Public Sub SelectCalculatorType(CalculatorType As String)
 End Sub
 
 Private Sub OpenNavigationMenu()
-  Actions.Click OpenCloseNavigationMenuButtonElementSearch.ElementName, PrivateElements(This.OpenCloseNavigationMenuButton)
+  Actions.Click This.OpenCloseNavigationMenuButtonSearch.ElementName, This.OpenCloseNavigationMenuButtonSearch.FoundUIAElement
 End Sub
 
 Private Function GetMenuElement(CalculatorType As String) As IUIAutomationElement
   
   'We need to find this element each time the menu is opened
-  With NavigationMenuRootPaneWindowElementSearch
-  
-     If NavigationMenuRootPaneWindowElementSearch.ElementName = "" Then
-      .Initialise This.NavigationMenuRootPaneWindow, PrivateElements(This.NavigationViewRootCustomControl), Children, By.AutomationId, "PaneRoot"
-     Else
-      PrivateElements.Remove This.NavigationMenuRootPaneWindow
+  With This.NavigationMenuRootPaneWindowSearch
+     'Has it been initialised yet?
+     If This.NavigationMenuRootPaneWindowSearch.ElementName = "" Then
+      .Initialise "NavigationMenuRootPaneWindow", This.NavigationViewRootCustomControlSearch.FoundUIAElement, Children, By.AutomationId, "PaneRoot"
      End If
-    PrivateElements.Add This.NavigationMenuRootPaneWindow, .Find
+     .Find
   End With
 
   Dim CurrentNavigationMenuItemElementSearch As pSearch
-  Set CurrentNavigationMenuItemElementSearch = Nothing
   Set CurrentNavigationMenuItemElementSearch = Factory.GetNewSearch
-  
   With CurrentNavigationMenuItemElementSearch
-    .Initialise CalculatorType, PrivateElements(This.NavigationMenuRootPaneWindow), Descendants, pConditions, "AND(Name, ControlType)"
+    .Initialise CalculatorType, This.NavigationMenuRootPaneWindowSearch.FoundUIAElement, Descendants, pConditions, "AND(Name, ControlType)"
     .Condition "Name", Name, IsTheString, CalculatorType
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.ListItem
-    Set GetMenuElement = .Find(10)
+    .Find (10)
+    Set GetMenuElement = CurrentNavigationMenuItemElementSearch.FoundUIAElement
   End With
+  Set CurrentNavigationMenuItemElementSearch = Nothing
 
 End Function
 
 Public Function GetCurrentCalculatorLandmarkElement() As IUIAutomationElement
   
-  'We need to find the NavViewRoot Element again
-  PrivateElements(This.NavigationViewRootCustomControl) = NavigationViewRootCustomControlElementSearch.Find(10)
-
-  With CurrentCalculatorLandmarkGroupControlElementSearch
-    .Initialise This.CurrentCalculatorLandmarkGroupControl, PrivateElements(This.NavigationViewRootCustomControl), Children, pConditions, _
+  'We need to find the NavViewRoot Element again for the new current calculator
+  This.NavigationViewRootCustomControlSearch.Find (10)
+  
+  With This.CurrentCalculatorLandmarkGroupControlSearch
+    .Initialise "CurrentCalculatorLandmarkGroupControl", This.NavigationViewRootCustomControlSearch.FoundUIAElement, Children, pConditions, _
       "AND(ControlType, ClassName)"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Group
     .Condition "ClassName", ClassName, IsTheString, "LandmarkTarget"
-    PrivateElements.Add This.CurrentCalculatorLandmarkGroupControl, .Find(10)
+    .Find (10)
   End With
-  Set GetCurrentCalculatorLandmarkElement = PrivateElements(This.CurrentCalculatorLandmarkGroupControl)
+  Set GetCurrentCalculatorLandmarkElement = This.CurrentCalculatorLandmarkGroupControlSearch.FoundUIAElement
   
 End Function
-
-

@@ -102,7 +102,7 @@ Public Function FoundUIAElements() As IUIAutomationElement()
   FoundUIAElements = This.FoundUIAElements
 End Function
 
-Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = True) As IUIAutomationElement
+Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = True)
 'Find a single element with a timeout
 
   Dim FoundElements() As IUIAutomationElement
@@ -148,26 +148,21 @@ Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElement
   Dim FoundElement As IUIAutomationElement
   If CountOfFoundElements = 1 Then
     Set This.FoundUIAElement = FoundElements(0)
-'    Set FoundElement = FoundElements(0)
     If FindElementAgain Then
       If UIAProps.HasProperty(This.ElementName, This.FoundUIAElement, UIAProperties.IsScrollItemPatternAvailable) Then
         Actions.TryToScrollItemIntoView This.ElementName, This.FoundUIAElement
-        Set Find = Find(TimeoutInSeconds, AcceptNoElements, FindElementAgain:=False)
+        Find TimeoutInSeconds, AcceptNoElements, FindElementAgain:=False
       End If
     End If
     Window.HighlightElement FoundElements(0), BorderColor:=&H808000 'Cyan
     Window.ReleaseHighlighting
-'PJG Remove this!
-    Set Find = FoundElements(0)
   End If
 
 End Function
 
-Public Function FindAll(Optional AcceptNoElements As Boolean) As IUIAutomationElement()
+Public Function FindAll(Optional AcceptNoElements As Boolean)
 'Find more than 1 elements with no timeout
   This.FoundUIAElements = Findlements(AcceptNoElements)
-'PJG Remove this!
-  FindAll = This.FoundUIAElements 'Findlements(AcceptNoElements)
 End Function
 
 Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElement()
@@ -299,4 +294,3 @@ Private Function EvaluationLogicIsOk() As Boolean
   EvaluationLogicIsOk = (RedactedEvaluationLogic = "")
 
 End Function
-

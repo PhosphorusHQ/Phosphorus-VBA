@@ -26,10 +26,10 @@ Public Function GetRootDesktopElement() As IUIAutomationElement
   End If
 End Function
 
-Public Function GetNewSearch() As pSearch
-  Dim Element As pSearch
-  Set Element = New pSearch
-  Set GetNewSearch = Element
+Public Function GetNewLocator() As pLocator
+  Dim Element As pLocator
+  Set Element = New pLocator
+  Set GetNewLocator = Element
 End Function
 
 Public Function GetNewEdgeWebBrowser() As EdgeWebBrowser

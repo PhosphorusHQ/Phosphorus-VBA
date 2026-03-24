@@ -19,8 +19,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Type PageAttributes
-  CalculatorControlsSearch As pSearch
-  DisplaySearch As pSearch
+  CalculatorControls As pLocator
+  DisplaySearch As pLocator
   DisplayTextControl As String
   Elements As New Scripting.Dictionary
 End Type
@@ -30,14 +30,14 @@ Private This As PageAttributes
 Private KeystrokePositionCounter As Integer
 
 Private Sub Class_Initialize()
-  Set This.CalculatorControlsSearch = Factory.GetNewSearch
-  Set This.DisplaySearch = Factory.GetNewSearch
+  Set This.CalculatorControls = Factory.GetNewLocator
+  Set This.DisplaySearch = Factory.GetNewLocator
   Set This.Elements = Nothing
   This.DisplayTextControl = "Display"
 End Sub
 
 Private Sub Class_Terminate()
-  Set This.CalculatorControlsSearch = Nothing
+  Set This.CalculatorControls = Nothing
   Set This.Elements = Nothing
 End Sub
 
@@ -47,13 +47,13 @@ Public Sub FindAllControls(HomePage As CalculatorHomePage)
   Set LandmarkGroupControl = HomePage.GetCurrentCalculatorLandmarkElement
 
   Dim CalculatorControls() As IUIAutomationElement
-  With This.CalculatorControlsSearch
+  With This.CalculatorControls
     .Initialise "CalculatorControls", LandmarkGroupControl, Descendants, pConditions, "AND(ControlType, ClassName)"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
     .Condition "ClassName", ClassName, IsTheString, "Button"
     .FindAll
   End With
-  CalculatorControls = This.CalculatorControlsSearch.FoundUIAElements
+  CalculatorControls = This.CalculatorControls.FoundUIAElements
 
   Dim i As Integer
   Dim CurrentUIAElement As IUIAutomationElement

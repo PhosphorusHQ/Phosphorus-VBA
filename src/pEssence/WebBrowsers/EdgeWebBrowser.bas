@@ -22,20 +22,20 @@ Private Type BrowserAttributes
   WebAppName As String
   URL As String
   WebAppPageTitle As String
-  MasterWindowSearch As pSearch
-  BrowserRootViewSearch As pSearch
+  MasterWindowSearch As pLocator
+  BrowserRootViewSearch As pLocator
 '  BrowserRootViewElementName As String
-'  SidebarContentsSplitViewSearch As pSearch
+'  SidebarContentsSplitViewSearch As pLocator
 '  SidebarContentsSplitViewName As String
-  RootWebAreaSearch As pSearch
+  RootWebAreaSearch As pLocator
 End Type
 
 Private This As BrowserAttributes
   
 Private Sub Class_Initialize()
-  Set This.MasterWindowSearch = Factory.GetNewSearch
-  Set This.BrowserRootViewSearch = Factory.GetNewSearch
-  Set This.RootWebAreaSearch = Factory.GetNewSearch
+  Set This.MasterWindowSearch = Factory.GetNewLocator
+  Set This.BrowserRootViewSearch = Factory.GetNewLocator
+  Set This.RootWebAreaSearch = Factory.GetNewLocator
 '  This.MasterWindowName = "MasterWindow"
 '  This.BrowserRootViewElementName = "BrowserRootViewElement"
 '  This.SidebarContentsSplitViewName = "SidebarContentsSplitView"

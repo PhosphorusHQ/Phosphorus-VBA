@@ -19,12 +19,12 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Type PageAttributes
-  MasterWindowSearch As pSearch
-  MainCalculatorSubWindowSearch As pSearch
-  NavigationViewRootCustomControlSearch As pSearch
-  OpenCloseNavigationMenuButtonSearch As pSearch
-  NavigationMenuRootPaneWindowSearch As pSearch
-  CurrentCalculatorLandmarkGroupControlSearch As pSearch
+  MasterWindowSearch As pLocator
+  MainCalculatorSubWindowSearch As pLocator
+  NavigationViewRootCustomControlSearch As pLocator
+  OpenCloseNavigationMenuButtonSearch As pLocator
+  NavigationMenuRootPaneWindowSearch As pLocator
+  CurrentCalculatorLandmarkGroupControlSearch As pLocator
 End Type
 
 Private This As PageAttributes
@@ -52,12 +52,12 @@ Private Sub OpenCalculator()
 End Sub
 
 Private Sub InitializeAllElements()
-  Set This.MasterWindowSearch = Factory.GetNewSearch
-  Set This.MainCalculatorSubWindowSearch = Factory.GetNewSearch
-  Set This.NavigationViewRootCustomControlSearch = Factory.GetNewSearch
-  Set This.OpenCloseNavigationMenuButtonSearch = Factory.GetNewSearch
-  Set This.NavigationMenuRootPaneWindowSearch = Factory.GetNewSearch
-  Set This.CurrentCalculatorLandmarkGroupControlSearch = Factory.GetNewSearch
+  Set This.MasterWindowSearch = Factory.GetNewLocator
+  Set This.MainCalculatorSubWindowSearch = Factory.GetNewLocator
+  Set This.NavigationViewRootCustomControlSearch = Factory.GetNewLocator
+  Set This.OpenCloseNavigationMenuButtonSearch = Factory.GetNewLocator
+  Set This.NavigationMenuRootPaneWindowSearch = Factory.GetNewLocator
+  Set This.CurrentCalculatorLandmarkGroupControlSearch = Factory.GetNewLocator
 End Sub
 
 Private Sub FindMasterWindowElement()
@@ -121,8 +121,8 @@ Private Function GetMenuElement(CalculatorType As String) As IUIAutomationElemen
      .Find
   End With
 
-  Dim CurrentNavigationMenuItemElementSearch As pSearch
-  Set CurrentNavigationMenuItemElementSearch = Factory.GetNewSearch
+  Dim CurrentNavigationMenuItemElementSearch As pLocator
+  Set CurrentNavigationMenuItemElementSearch = Factory.GetNewLocator
   With CurrentNavigationMenuItemElementSearch
     .Initialise CalculatorType, This.NavigationMenuRootPaneWindowSearch.FoundUIAElement, Descendants, pConditions, "AND(Name, ControlType)"
     .Condition "Name", Name, IsTheString, CalculatorType

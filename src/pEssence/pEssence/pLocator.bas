@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "pSearch"
+Attribute VB_Name = "pLocator"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -25,7 +25,7 @@ Private Type Properties
   TreeScope As Long
   FindBy As By
   AllSearchConditions As Scripting.Dictionary
-  Locator As String
+  EvaluationLogic As String
   FoundUIAElement As IUIAutomationElement
   FoundUIAElements() As IUIAutomationElement
 End Type
@@ -41,7 +41,7 @@ Public Sub Initialise( _
   RootUIAElement As IUIAutomationElement, _
   TreeScope As Long, _
   FindBy As By, _
-  Locator As String)
+  EvaluationLogic As String)
   
   This.ElementName = ElementName
   Set This.RootUIAElement = RootUIAElement
@@ -49,11 +49,11 @@ Public Sub Initialise( _
   Select Case FindBy
     Case By.pConditions
       This.FindBy = FindBy
-      This.Locator = Locator
+      This.EvaluationLogic = EvaluationLogic
     Case By.AutomationId
-      Condition "AutomationIdIs" & Locator, UIAProperties.AutomationId, UIAPropertyComparisons.IsTheString, Locator
       This.FindBy = By.pConditions
-      This.Locator = "AutomationIdIs" & Locator
+      This.EvaluationLogic = "AutomationId"
+      Condition This.EvaluationLogic, UIAProperties.AutomationId, UIAPropertyComparisons.IsTheString, EvaluationLogic
     Case Else
       ErrorLogging.LogError Errors.FindElementUnhandledByInLocator, "Unhanded By Locator: " & UIACommon.GetByName(FindBy)
       Exit Sub
@@ -141,7 +141,7 @@ Public Function Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElement
     ErrorLogging.LogError _
       Errors.FindElementsExpectedOneElementFoundNone, _
       "Expected to find one element but found none." & vbCrLf & vbCrLf & _
-      "Looking for '" & This.ElementName & "' element, locator: '" & This.Locator & "', timeout (" & TimeoutInSeconds & " seconds)"
+      "Looking for '" & This.ElementName & "' element, evaluation logic: '" & This.EvaluationLogic & "', timeout (" & TimeoutInSeconds & " seconds)"
     Exit Function
   End If
   
@@ -169,7 +169,7 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
 'Find 1 or more elements with no timeout
 
   If Not EvaluationLogicIsOk Then
-    ErrorLogging.LogError Errors.FaultyEvaluationLogicUnspecifiedError, "The evaluation logic is faulty: '" & This.Locator & "'"
+    ErrorLogging.LogError Errors.FaultyEvaluationLogicUnspecifiedError, "The evaluation logic is faulty: '" & This.EvaluationLogic & "'"
     Exit Function
   End If
   
@@ -195,19 +195,19 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
   For i = 0 To AllElements.Length - 1
     Set CurrentElement = AllElements.GetElement(i)
  
-    Dim CurrentEvaluation  As String
-    CurrentEvaluation = This.Locator
+    Dim CurrentEvaluationLogic  As String
+    CurrentEvaluationLogic = This.EvaluationLogic
     
     Dim k As Variant
     For Each k In This.AllSearchConditions.Keys
       Dim c As New pCondition
       Set c = This.AllSearchConditions(k)
-      CurrentEvaluation = VBA.Strings.Replace(CurrentEvaluation, c.ConditionName, c.Evaluate(CurrentElement))
+      CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, c.ConditionName, c.Evaluate(CurrentElement))
     Next k
 
     Dim MatchFound As Boolean
     On Error Resume Next
-    MatchFound = Excel.Evaluate(CurrentEvaluation) 'Evaluate the formula with Excel!
+    MatchFound = Excel.Evaluate(CurrentEvaluationLogic) 'Evaluate the formula with Excel!
     'Did we get and error?
     If Err.Number = 0 Then
       'Do nothing!
@@ -217,7 +217,7 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
         ErrorLogging.LogError _
           Errors.FaultyEvaluationLogicUnspecifiedErrorOnEvaluation, _
           "The evaluation logic did not evaluate to TRUE or FALSE:" & vbCrLf & vbCrLf & _
-          "'" & This.Locator & "' returned '" & VBA.Conversion.CStr(Excel.Evaluate(CurrentEvaluation)) & "'"
+          "'" & This.EvaluationLogic & "' returned '" & VBA.Conversion.CStr(Excel.Evaluate(CurrentEvaluationLogic)) & "'"
         Exit Function
       Else
         Err.Raise Err.Number, Err.Description
@@ -235,7 +235,7 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
     If AcceptNoElements Then
       'Find elements is nothing?
     Else
-      ErrorLogging.LogError Errors.FindElementsFindNoElements, "Locator : By " & UIACommon.GetByName(This.FindBy) & " '" & This.Locator & "'"
+      ErrorLogging.LogError Errors.FindElementsFindNoElements, "Locator : By " & UIACommon.GetByName(This.FindBy) & " '" & This.EvaluationLogic & "'"
     End If
   Else
     Findlements = ReturnElements
@@ -247,11 +247,11 @@ Private Function EvaluationLogicIsOk() As Boolean
   
   Dim CountOfLeftBraces As Integer
   Dim CountOfRightBraces As Integer
-  CountOfLeftBraces = Utils.CountOccurrences(This.Locator, "(")
-  CountOfRightBraces = Utils.CountOccurrences(This.Locator, ")")
+  CountOfLeftBraces = Utils.CountOccurrences(This.EvaluationLogic, "(")
+  CountOfRightBraces = Utils.CountOccurrences(This.EvaluationLogic, ")")
   If Not (CountOfLeftBraces = CountOfRightBraces) Then
     EvaluationLogicIsOk = False
-    ErrorLogging.LogError Errors.FaultyEvaluationLogicMismatchBracketsError, "The evaluation logic is faulty, there are mismatchng brackets: '" & This.Locator & "'"
+    ErrorLogging.LogError Errors.FaultyEvaluationLogicMismatchBracketsError, "The evaluation logic is faulty, there are mismatchng brackets: '" & This.EvaluationLogic & "'"
     Exit Function
   End If
   
@@ -259,15 +259,15 @@ Private Function EvaluationLogicIsOk() As Boolean
   Dim c As New pCondition
   For Each k In This.AllSearchConditions.Keys
     Set c = This.AllSearchConditions(k)
-    If VBA.Strings.InStr(This.Locator, c.ConditionName) = 0 Then
+    If VBA.Strings.InStr(This.EvaluationLogic, c.ConditionName) = 0 Then
       EvaluationLogicIsOk = False
-      ErrorLogging.LogError Errors.FaultyEvaluationLogicConditionIsNotUsed, "The Condition '" & c.ConditionName & "' is not used in the locator '" & This.Locator & "'"
+      ErrorLogging.LogError Errors.FaultyEvaluationLogicConditionIsNotUsed, "The Condition '" & c.ConditionName & "' is not used in the locator '" & This.EvaluationLogic & "'"
       Exit Function
     End If
   Next k
     
   Dim RedactedEvaluationLogic As String
-  RedactedEvaluationLogic = This.Locator
+  RedactedEvaluationLogic = This.EvaluationLogic
     
   For Each k In This.AllSearchConditions.Keys
     Set c = This.AllSearchConditions(k)

@@ -46,8 +46,8 @@ Public Sub FindAllControls(HomePage As CalculatorHomePage)
   Dim CurrentCalculatorLandmarkGroupControl As pLocator
   Set CurrentCalculatorLandmarkGroupControl = HomePage.GetCurrentCalculatorLandmarkGroupControl
   CurrentCalculatorLandmarkGroupControl.Find
-  Dim CalculatorControls() As IUIAutomationElement
   
+  Dim CalculatorControls() As IUIAutomationElement
   With This.CalculatorControls
     .Initialise "CalculatorControls", CurrentCalculatorLandmarkGroupControl, Descendants, pConditions, "AND(ControlType, ClassName)"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button

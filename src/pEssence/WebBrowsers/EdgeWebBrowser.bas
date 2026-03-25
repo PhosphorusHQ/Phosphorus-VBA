@@ -57,10 +57,11 @@ Public Sub StartEdge(WebAppName As String, URL As String, WebAppPageTitle As Str
   This.URL = URL
   This.WebAppPageTitle = WebAppPageTitle
   LaunchCommandByProtocol This.WebAppName, "microsoft-edge:", This.URL, WindowStyle.Maximized
-  FindRootWindowElements
+  InitialiseAllLocators
+  This.BrowserRootView.Find 10
 End Sub
 
-Private Sub FindRootWindowElements()
+Private Sub InitialiseAllLocators()
 
   'Use: AscW & ChrW to determine embedded Unicode characters
   With This.MasterWindow
@@ -76,8 +77,6 @@ Private Sub FindRootWindowElements()
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Pane
     .Condition "ClassName", ClassName, IsTheString, "BrowserRootView"
   End With
-
-  This.BrowserRootView.Find 10
 
 'Add: More elements here:
 'ClassName "NonClientView"

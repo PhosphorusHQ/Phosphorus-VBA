@@ -31,9 +31,7 @@ Private This As PageAttributes
 
 Private Sub Class_Initialize()
   OpenCalculator
-  InitializeAllElements
-  FindMasterWindowElement
-  FindNavigationElements
+  InitialiseAllLocators
 End Sub
 
 Private Sub Class_Terminate()
@@ -50,16 +48,14 @@ Private Sub OpenCalculator()
   WindowsProcesses.RunShellExecuteToStartNewProcess "Microsoft Windows Calculator", "open", "shell:appsFolder\Microsoft.WindowsCalculator_8wekyb3d8bbwe!App", VBA.Constants.vbNullString, VBA.Constants.vbNullString, WindowStyle.Normal
 End Sub
 
-Private Sub InitializeAllElements()
+Private Sub InitialiseAllLocators()
+  
   Set This.MasterWindow = Factory.GetNewLocator
   Set This.MainCalculatorSubWindow = Factory.GetNewLocator
   Set This.NavigationViewRootCustomControl = Factory.GetNewLocator
   Set This.OpenCloseNavigationMenuButton = Factory.GetNewLocator
   Set This.NavigationMenuRootPaneWindow = Factory.GetNewLocator
   Set This.CurrentCalculatorLandmarkGroupControl = Factory.GetNewLocator
-End Sub
-
-Private Sub FindMasterWindowElement()
   
   With This.MasterWindow
     .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState)"
@@ -69,11 +65,7 @@ Private Sub FindMasterWindowElement()
     .Condition "ClassName", ClassName, IsTheString, "ApplicationFrameWindow"
     .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
   End With
-      
-End Sub
-
-Private Sub FindNavigationElements()
-  
+        
   With This.MainCalculatorSubWindow
     .Initialise "MainCalculatorSubWindow", This.MasterWindow, Children, pConditions, "AND(NameIs, ControlType, ClassName)"
     .Condition "NameIs", Name, IsTheString, "Calculator"

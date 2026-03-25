@@ -26,6 +26,7 @@ Private Type Properties
   RootUIAElementIsDesktop As Boolean
   TreeScope As Long
   FindBy As By
+  FindFirst As Boolean
   AllSearchConditions As Scripting.Dictionary
   EvaluationLogic As String
   FoundUIAElement As IUIAutomationElement
@@ -51,7 +52,8 @@ Public Sub Initialise( _
   RootUIAElementLocator As pLocator, _
   TreeScope As Long, _
   FindBy As By, _
-  EvaluationLogic As String)
+  EvaluationLogic As String, _
+  Optional FindFirst As Boolean)
   
   This.ElementName = ElementName
   If RootUIAElementLocator Is Nothing Then
@@ -74,7 +76,8 @@ Public Sub Initialise( _
       ErrorLogging.LogError Errors.FindElementUnhandledByInLocator, "Unhanded By Locator: " & UIACommon.GetByName(FindBy)
       Exit Sub
   End Select
-
+  This.FindFirst = FindFirst
+  
 End Sub
 
 Public Sub SetTreeScope(UIAElement As IUIAutomationElement)
@@ -261,6 +264,9 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
       ReDim Preserve ReturnElements(CountOfMatchingElements)
       Set ReturnElements(CountOfMatchingElements) = CurrentElement
       CountOfMatchingElements = CountOfMatchingElements + 1
+      If This.FindFirst Then
+        Exit For
+      End If
     End If
   Next i
 

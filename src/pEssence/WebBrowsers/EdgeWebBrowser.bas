@@ -24,9 +24,10 @@ Private Type BrowserAttributes
   WebAppPageTitle As String
   MasterWindow As pLocator
   BrowserRootView As pLocator
-'  BrowserRootViewElementName As String
-'  SidebarContentsSplitViewSearch As pLocator
-'  SidebarContentsSplitViewName As String
+  NonClientView As pLocator
+  BrowserFrameViewWin As pLocator
+  BrowserView As pLocator
+  SidebarContentsSplitView As pLocator
   RootWebArea As pLocator
 End Type
 
@@ -36,10 +37,11 @@ Private Sub Class_Initialize()
   Set This.MasterWindow = Factory.GetNewLocator
   Set This.BrowserRootView = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
-'  This.MasterWindowName = "MasterWindow"
-'  This.BrowserRootViewElementName = "BrowserRootViewElement"
-'  This.SidebarContentsSplitViewName = "SidebarContentsSplitView"
-'  This.BrowserRootWebAreaElementName = "BrowserRootWebArea"
+  Set This.NonClientView = Factory.GetNewLocator
+  Set This.BrowserFrameViewWin = Factory.GetNewLocator
+  Set This.BrowserView = Factory.GetNewLocator
+  Set This.SidebarContentsSplitView = Factory.GetNewLocator
+  Set This.RootWebArea = Factory.GetNewLocator
 End Sub
 
 Private Sub Class_Terminate()
@@ -48,7 +50,10 @@ Private Sub Class_Terminate()
   On Error GoTo 0
   Set This.MasterWindow = Nothing
   Set This.BrowserRootView = Nothing
-'  Set This.SidebarContentsSplitViewSearch = Nothing
+  Set This.NonClientView = Nothing
+  Set This.BrowserFrameViewWin = Nothing
+  Set This.BrowserView = Nothing
+  Set This.SidebarContentsSplitView = Nothing
   Set This.RootWebArea = Nothing
 End Sub
 
@@ -58,7 +63,7 @@ Public Sub StartEdge(WebAppName As String, URL As String, WebAppPageTitle As Str
   This.WebAppPageTitle = WebAppPageTitle
   LaunchCommandByProtocol This.WebAppName, "microsoft-edge:", This.URL, WindowStyle.Maximized
   InitialiseAllLocators
-  This.BrowserRootView.Find 10
+  This.RootWebArea.Find 10
 End Sub
 
 Private Sub InitialiseAllLocators()
@@ -73,39 +78,33 @@ Private Sub InitialiseAllLocators()
   End With
 
   With This.BrowserRootView
-    .Initialise "BrowserRootView", This.MasterWindow, Children, pConditions, "AND(ControlType, ClassName)"
-    .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Pane
+    .Initialise "BrowserRootView", This.MasterWindow, Children, pConditions, "ClassName"
     .Condition "ClassName", ClassName, IsTheString, "BrowserRootView"
   End With
 
-'Add: More elements here:
-'ClassName "NonClientView"
-'ClassName "BrowserFrameViewWin"
-'ClassName "BrowserView"
+  With This.NonClientView
+    .Initialise "NonClientView", This.BrowserRootView, Children, pConditions, "ClassName"
+    .Condition "ClassName", ClassName, IsTheString, "NonClientView"
+  End With
 
-'Then:
-'ClassName: "SidebarContentsSplitView"
-'ControlType: Pane
-'FrameworkID: "Chrome"
-'  With This.SidebarContentsSplitViewSearch
-'    .Initialise This.SidebarContentsSplitViewName, PrivateElements(This.BrowserRootViewElementName), TreeScope.Children
-'    .AddCondition "ControlTypeIsPane", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Pane
-'  End With
+  With This.BrowserFrameViewWin
+    .Initialise "BrowserFrameViewWin", This.NonClientView, Children, pConditions, "ClassName"
+    .Condition "ClassName", ClassName, IsTheString, "BrowserFrameViewWin"
+  End With
 
+  With This.BrowserView
+    .Initialise "BrowserView", This.BrowserFrameViewWin, Children, pConditions, "ClassName"
+    .Condition "ClassName", ClassName, IsTheString, "BrowserView"
+  End With
 
-'-------------
+  With This.SidebarContentsSplitView
+    .Initialise "SidebarContentsSplitView", This.BrowserView, Children, pConditions, "ClassName"
+    .Condition "ClassName", ClassName, IsTheString, "SidebarContentsSplitView"
+  End With
 
-'Then finally the RootWebArea ... this needs to return after finding the first match!
-'  With This.RootWebAreaElementSearch
-'    .Initialise This.BrowserRootWebAreaElementName, PrivateElements(This.BrowserRootViewElementName), TreeScope.Children
-'    .AddCondition "NameIsWebAppPageTitle", UIAProperties.Name, UIAPropertyComparisons.Equals, This.WebAppPageTitle
-'    .AddCondition "ControlTypeIsDocument", UIAProperties.ControlType, UIAPropertyComparisons.Equals, UIAControlTypeIDs.Document
-'    .AddCondition "AutomationIdIsRootWebArea", UIAProperties.AutomationId, UIAPropertyComparisons.Equals, "RootWebArea"
-'    .Locator By.pConditions, "AND(NameIsWebAppPageTitle, ControlTypeIsDocument, AutomationIdIsRootWebArea)"
-'    PrivateElements.Add This.BrowserRootWebAreaElementName, .Find(10)
-'  End With
-
-'BrowserRootWebAreaElement
-'//Document[And(@AutomationId="RootWebArea",@Name="Example Domain")]
+  With This.RootWebArea
+    .Initialise "RootWebArea", This.BrowserView, Descendants, pConditions, "AutomationId", FindFirst:=True
+    .Condition "AutomationId", UIAProperties.AutomationId, IsTheString, "RootWebArea"
+  End With
   
 End Sub

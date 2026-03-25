@@ -77,12 +77,12 @@ Public Function IsElementReady(Name As String, Ele As IUIAutomationElement) As B
   If ret Then
     TryToScrollItemIntoView Name, Ele
   Else
-    MsgBox "Raise an error?"
+    ErrorLogging.LogError Errors.ElementIsNotAlive, "Element '" & Name & "' is not alive!"
   End If
   IsElementReady = ret
 End Function
 
-Private Function IsElementAlive(Name As String, Ele As IUIAutomationElement) As Boolean
+Public Function IsElementAlive(Name As String, Ele As IUIAutomationElement) As Boolean
   On Error Resume Next
   Dim pid As Long
   pid = Ele.CurrentProcessId  'any property access will fail if stale

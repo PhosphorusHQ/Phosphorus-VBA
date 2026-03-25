@@ -22,8 +22,9 @@ Public Enum Errors
   FindElementsFindNoElementsBelowRoot
   FindElementsFindNoElements
   FindElementUnhandledByInLocator
-  UnhandledGetName = 3001
-  PatternFailedForElement = VBA.Constants.vbObjectError + 4001
+  ElementIsNotAlive = VBA.Constants.vbObjectError + 3001
+  UnhandledGetName = VBA.Constants.vbObjectError + 4001
+  PatternFailedForElement = VBA.Constants.vbObjectError + 5001
 End Enum
 
 Public Sub LogError(ErrNumber As Errors, Description As String)

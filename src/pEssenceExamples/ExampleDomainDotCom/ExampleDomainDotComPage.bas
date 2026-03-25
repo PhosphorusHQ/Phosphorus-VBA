@@ -32,7 +32,6 @@ Private This As PrivateElementNames
 Private PrivateElements As New Scripting.Dictionary
 
 Private Sub Class_Initialize()
-  Factory.GetRootDesktopElement
   Set WebBrowser = Factory.GetNewEdgeWebBrowser
 End Sub
 

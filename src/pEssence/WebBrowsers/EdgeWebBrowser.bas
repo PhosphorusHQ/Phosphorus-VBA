@@ -22,20 +22,20 @@ Private Type BrowserAttributes
   WebAppName As String
   URL As String
   WebAppPageTitle As String
-  MasterWindowSearch As pLocator
-  BrowserRootViewSearch As pLocator
+  MasterWindow As pLocator
+  BrowserRootView As pLocator
 '  BrowserRootViewElementName As String
 '  SidebarContentsSplitViewSearch As pLocator
 '  SidebarContentsSplitViewName As String
-  RootWebAreaSearch As pLocator
+  RootWebArea As pLocator
 End Type
 
 Private This As BrowserAttributes
   
 Private Sub Class_Initialize()
-  Set This.MasterWindowSearch = Factory.GetNewLocator
-  Set This.BrowserRootViewSearch = Factory.GetNewLocator
-  Set This.RootWebAreaSearch = Factory.GetNewLocator
+  Set This.MasterWindow = Factory.GetNewLocator
+  Set This.BrowserRootView = Factory.GetNewLocator
+  Set This.RootWebArea = Factory.GetNewLocator
 '  This.MasterWindowName = "MasterWindow"
 '  This.BrowserRootViewElementName = "BrowserRootViewElement"
 '  This.SidebarContentsSplitViewName = "SidebarContentsSplitView"
@@ -44,12 +44,12 @@ End Sub
 
 Private Sub Class_Terminate()
   On Error Resume Next
-  Window.CloseWindow This.MasterWindowSearch.ElementName, This.MasterWindowSearch.FoundUIAElement
+  Window.CloseWindow This.MasterWindow.ElementName, This.MasterWindow.FoundUIAElement
   On Error GoTo 0
-  Set This.MasterWindowSearch = Nothing
-  Set This.BrowserRootViewSearch = Nothing
+  Set This.MasterWindow = Nothing
+  Set This.BrowserRootView = Nothing
 '  Set This.SidebarContentsSplitViewSearch = Nothing
-  Set This.RootWebAreaSearch = Nothing
+  Set This.RootWebArea = Nothing
 End Sub
 
 Public Sub StartEdge(WebAppName As String, URL As String, WebAppPageTitle As String)
@@ -63,21 +63,21 @@ End Sub
 Private Sub FindRootWindowElements()
 
   'Use: AscW & ChrW to determine embedded Unicode characters
-  With This.MasterWindowSearch
-    .Initialise "MasterWindow", RootDesktopUIAElement, Children, pConditions, "AND(NameLike, ControlType, ClassName, WindowInteractionState  )"
+  With This.MasterWindow
+    .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameLike, ControlType, ClassName, WindowInteractionState  )"
     .Condition "NameLike", Name, IsLikeTheString, This.WebAppPageTitle & " - " & "*" & " - Microsoft" & ChrW(8203) & " Edge"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
     .Condition "ClassName", ClassName, IsTheString, "Chrome_WidgetWin_1"
     .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
-    .Find (10)
   End With
 
-  With This.BrowserRootViewSearch
-    .Initialise "BrowserRootView", This.MasterWindowSearch.FoundUIAElement, Children, pConditions, "AND(ControlType, ClassName)"
+  With This.BrowserRootView
+    .Initialise "BrowserRootView", This.MasterWindow, Children, pConditions, "AND(ControlType, ClassName)"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Pane
     .Condition "ClassName", ClassName, IsTheString, "BrowserRootView"
-    .Find (10)
   End With
+
+  This.BrowserRootView.Find 10
 
 'Add: More elements here:
 'ClassName "NonClientView"

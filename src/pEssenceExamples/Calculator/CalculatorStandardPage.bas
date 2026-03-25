@@ -43,12 +43,13 @@ End Sub
 
 Public Sub FindAllControls(HomePage As CalculatorHomePage)
 
-  Dim LandmarkGroupControl As IUIAutomationElement
-  Set LandmarkGroupControl = HomePage.GetCurrentCalculatorLandmarkElement
-
+  Dim CurrentCalculatorLandmarkGroupControl As pLocator
+  Set CurrentCalculatorLandmarkGroupControl = HomePage.GetCurrentCalculatorLandmarkGroupControl
+  CurrentCalculatorLandmarkGroupControl.Find
   Dim CalculatorControls() As IUIAutomationElement
+  
   With This.CalculatorControls
-    .Initialise "CalculatorControls", LandmarkGroupControl, Descendants, pConditions, "AND(ControlType, ClassName)"
+    .Initialise "CalculatorControls", CurrentCalculatorLandmarkGroupControl, Descendants, pConditions, "AND(ControlType, ClassName)"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
     .Condition "ClassName", ClassName, IsTheString, "Button"
     .FindAll
@@ -131,7 +132,7 @@ Public Sub FindAllControls(HomePage As CalculatorHomePage)
   
   This.Elements.Add This.DisplayTextControl, Nothing
   With This.DisplaySearch
-    .Initialise This.DisplayTextControl, LandmarkGroupControl, Descendants, pConditions, "AND(ControlType, AutomationId)"
+    .Initialise This.DisplayTextControl, CurrentCalculatorLandmarkGroupControl, Descendants, pConditions, "AND(ControlType, AutomationId)"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Text
     .Condition "AutomationId", UIAProperties.AutomationId, IsTheString, "CalculatorResults"
   End With

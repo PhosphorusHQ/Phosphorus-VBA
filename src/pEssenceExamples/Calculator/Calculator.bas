@@ -13,28 +13,6 @@ Option Explicit
 Private MenuNames As New Collection
 Private HomePage As CalculatorHomePage
 
-Private Sub InitialiseMenuNames()
-  Set MenuNames = Nothing
-  MenuNames.Add "Standard Calculator"
-  MenuNames.Add "Scientific Calculator"
-  MenuNames.Add "Graphing Calculator"
-  MenuNames.Add "Programmer Calculator"
-  MenuNames.Add "Date calculation Calculator"
-  MenuNames.Add "Currency Converter"
-  MenuNames.Add "Volume Converter"
-  MenuNames.Add "Length Converter"
-  MenuNames.Add "Weight and mass Converter"
-  MenuNames.Add "Temperature Converter"
-  MenuNames.Add "Energy Converter"
-  MenuNames.Add "Area Converter"
-  MenuNames.Add "Speed Converter"
-  MenuNames.Add "Time Converter"
-  MenuNames.Add "Power Converter"
-  MenuNames.Add "Data Converter"
-  MenuNames.Add "Pressure Converter"
-  MenuNames.Add "Angle Converter"
-End Sub
-
 Public Sub Calculator()
 
   On Error GoTo ErrorHandler
@@ -67,6 +45,28 @@ MsgBox "What next? Select Interaction speeds - slow, medium, fast, no delay?"
 
 End Sub
 
+Private Sub InitialiseMenuNames()
+  Set MenuNames = Nothing
+  MenuNames.Add "Standard Calculator"
+  MenuNames.Add "Scientific Calculator"
+  MenuNames.Add "Graphing Calculator"
+  MenuNames.Add "Programmer Calculator"
+  MenuNames.Add "Date calculation Calculator"
+  MenuNames.Add "Currency Converter"
+  MenuNames.Add "Volume Converter"
+  MenuNames.Add "Length Converter"
+  MenuNames.Add "Weight and mass Converter"
+  MenuNames.Add "Temperature Converter"
+  MenuNames.Add "Energy Converter"
+  MenuNames.Add "Area Converter"
+  MenuNames.Add "Speed Converter"
+  MenuNames.Add "Time Converter"
+  MenuNames.Add "Power Converter"
+  MenuNames.Add "Data Converter"
+  MenuNames.Add "Pressure Converter"
+  MenuNames.Add "Angle Converter"
+End Sub
+
 Private Sub StandardCalculator()
 
   Dim StandardCalculatorPage As CalculatorStandardPage
@@ -86,7 +86,7 @@ Private Sub StandardCalculator()
     .Calculate "C", "0"
     .Calculate "12{BS}4-3{Negate}=", "17"
     .Calculate "4{1/x}", "0.25"
-  .Calculate "6{M+}7{M+}{MR}", "13"
+    .Calculate "6{M+}7{M+}{MR}", "13"
   End With
   
   Set StandardCalculatorPage = Nothing

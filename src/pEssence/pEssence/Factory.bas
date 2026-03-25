@@ -21,9 +21,8 @@ Option Explicit
 Public Function GetRootDesktopElement() As IUIAutomationElement
   If RootDesktopUIAElement Is Nothing Then
     Set RootDesktopUIAElement = UIA.GetRootElement
-  Else
-    Set GetRootDesktopElement = RootDesktopUIAElement
   End If
+  Set GetRootDesktopElement = RootDesktopUIAElement
 End Function
 
 Public Function GetNewLocator() As pLocator

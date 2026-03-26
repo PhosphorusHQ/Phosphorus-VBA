@@ -102,3 +102,10 @@ Public Sub TryToScrollItemIntoView(Name As String, Ele As IUIAutomationElement)
   End If
 End Sub
 
+Public Function GetValue(Name As String, Ele As IUIAutomationElement) As String
+  If UIAPatts.HasPattern(Name, Ele, UIA_PatternIds.UIA_ValuePatternId) Then
+    Dim CurrentElementValuePattern As IUIAutomationValuePattern
+    Set CurrentElementValuePattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_ValuePatternId, RaiseError:=True)
+    GetValue = CurrentElementValuePattern.CurrentValue
+  End If
+End Function

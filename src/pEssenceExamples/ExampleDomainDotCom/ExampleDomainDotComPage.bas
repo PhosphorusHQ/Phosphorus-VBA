@@ -21,14 +21,19 @@ Option Explicit
 Const WEB_APP_NAME = "Example.com"
 Const TARGET_PAGE_URL = "https://www.example.com/"
 Const TARGET_PAGE_TITLE = "Example Domain"
+Const TARGET_PAGE_LINK = "https://iana.org/domains/example"
 
 Private WebBrowser As EdgeWebBrowser
 
-Private Type PrivateElementNames
-  MasterWindow As String
+Private Type PageAttributes
+  RootWebArea As pLocator
+  Heading As pLocator
+  Description As pLocator
+  Link As pLocator
 End Type
 
-Private This As PrivateElementNames
+Private This As PageAttributes
+
 Private PrivateElements As New Scripting.Dictionary
 
 Private Sub Class_Initialize()
@@ -40,7 +45,40 @@ Private Sub Class_Terminate()
 End Sub
 
 Public Sub Initialize()
+  
   With WebBrowser
     .StartEdge WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
+    Set This.RootWebArea = .GetRootWebArea
   End With
+  
+  Set This.Heading = Factory.GetNewLocator
+  Set This.Description = Factory.GetNewLocator
+  Set This.Link = Factory.GetNewLocator
+  
+  With This.Heading
+    .Initialise "Heading", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs)"
+    .Condition "AriaRole", AriaRole, IsTheString, "heading"
+    .Condition "NameIs", Name, IsTheString, "Example Domain"
+  End With
+  
+  With This.Description
+    .Initialise "Heading", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs)"
+    .Condition "AriaRole", AriaRole, IsTheString, "description"
+    .Condition "NameIs", Name, IsTheString, "This domain is for use in documentation examples without needing permission. Avoid use in operations."
+  End With
+    
+  With This.Link
+    .Initialise "Link", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs)"
+    .Condition "AriaRole", AriaRole, IsTheString, "link"
+    .Condition "NameIs", Name, IsTheString, "Learn more"
+  End With
+  
+End Sub
+
+Public Sub RunChecks()
+  Debug.Assert UIAProps.GetProperty(This.RootWebArea.FoundUIAElement, Name) = TARGET_PAGE_TITLE
+  Debug.Assert This.Heading.ElementExists(10) = True
+  Debug.Assert This.Description.ElementExists(10) = True
+  Debug.Assert This.Link.ElementExists(10) = True
+  Debug.Assert Actions.GetValue(TARGET_PAGE_TITLE & " Link", This.Link.FoundUIAElement) = TARGET_PAGE_LINK
 End Sub

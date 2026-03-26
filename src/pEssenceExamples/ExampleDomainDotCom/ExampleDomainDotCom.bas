@@ -21,6 +21,7 @@ Sub ExampleDomainDotCom()
   Set ExampleDomain = New ExampleDomainDotComPage
   
   ExampleDomain.Initialize
+  ExampleDomain.RunChecks
   GoTo ExitSub
 
 ErrorHandler:

@@ -333,3 +333,10 @@ Private Function EvaluationLogicIsOk() As Boolean
   EvaluationLogicIsOk = (RedactedEvaluationLogic = "")
 
 End Function
+
+Public Function ElementExists(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = True)
+  Set This.FoundUIAElement = Nothing
+  Find TimeoutInSeconds, AcceptNoElements:=True
+  ElementExists = Not (This.FoundUIAElement Is Nothing)
+End Function
+

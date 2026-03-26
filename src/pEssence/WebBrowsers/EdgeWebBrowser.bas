@@ -108,3 +108,7 @@ Private Sub InitialiseAllLocators()
   End With
   
 End Sub
+
+Public Function GetRootWebArea() As pLocator
+  Set GetRootWebArea = This.RootWebArea
+End Function

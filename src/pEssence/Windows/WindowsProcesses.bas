@@ -20,7 +20,7 @@ Option Explicit
   #If Win64 Then
     ' 64-bit Office
     Private Declare PtrSafe Function ShellExecuteW Lib "shell32.dll" ( _
-      ByVal hwnd As LongPtr, _
+      ByVal hWnd As LongPtr, _
       ByVal lpOperation As LongPtr, _
       ByVal lpFile As LongPtr, _
       ByVal lpParameters As LongPtr, _
@@ -29,7 +29,7 @@ Option Explicit
   #Else
     ' 32-bit Office (even on 64-bit Windows)
     Private Declare PtrSafe Function ShellExecuteW Lib "shell32.dll" ( _
-      ByVal hwnd As LongPtr, _
+      ByVal hWnd As LongPtr, _
       ByVal lpOperation As LongPtr, _
       ByVal lpFile As LongPtr, _
       ByVal lpParameters As LongPtr, _
@@ -70,6 +70,8 @@ Public Sub RunShellExecuteToStartNewProcess( _
   ByVal Parameters As String, _
   ByVal Directory As String, _
   ByVal ShowCmd As Long)
+  
+  Toaster.Message Operation & " " & ApplicationName
   
 #If VBA7 Then
   Dim Result As LongPtr

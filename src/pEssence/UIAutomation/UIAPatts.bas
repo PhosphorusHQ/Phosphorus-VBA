@@ -17,7 +17,7 @@ Public Function GetPattern(ElementName As String, Element As IUIAutomationElemen
   On Error GoTo 0
   If RaiseError Then
     If GetPattern Is Nothing Then
-      ErrorLogging.LogError Errors.PatternFailedForElement, "Expected to find one element but found " & ElementName
+      ErrorLogging.LogError Errors.PatternFailedForElement, "Pattern failed for element: " & ElementName
       Exit Function
     End If
   End If
@@ -25,9 +25,9 @@ End Function
 
 Public Function HasPattern(ElementName As String, Element As IUIAutomationElement, PatternId As Long, Optional RaiseError As Boolean) As Boolean
   On Error Resume Next
-  Dim pattern As IUnknown
+  Dim Pattern As IUnknown
   On Error Resume Next
-  Set pattern = Element.GetCurrentPattern(PatternId)
+  Set Pattern = Element.GetCurrentPattern(PatternId)
   On Error GoTo 0
-  HasPattern = Not pattern Is Nothing
+  HasPattern = Not Pattern Is Nothing
 End Function

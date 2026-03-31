@@ -15,7 +15,7 @@ Private Const ThisVBProjectName = "pEssenceExamples"
 Private Sub Workbook_Open()
   
   Dim strPEssenceWBFullName As String
-  strPEssenceWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pEssence.xlam")
+  strPEssenceWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "PhosphorEssence.xlam")
   pEssenceExamples.References.AddReferenceToWorkbookOrLibrary strPEssenceWBFullName
   
   'UIAutomationClient

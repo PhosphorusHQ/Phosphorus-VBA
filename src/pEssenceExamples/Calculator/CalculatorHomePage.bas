@@ -89,6 +89,7 @@ Private Sub InitialiseAllLocators()
 End Sub
 
 Public Sub SelectCalculatorType(CalculatorType As String)
+  Toaster.Message "Selecting " & CalculatorType
   OpenNavigationMenu
   Actions.Click CalculatorType, GetMenuElement(CalculatorType)
 End Sub

@@ -309,7 +309,7 @@ Private Function Get_sRfid(lREFKNOWNFOLDERID As Long) As String
   End Select
 End Function
 
-Private Sub test()
+Private Sub Test()
   Debug.Print GetFolderBySHGetKnownFolderPath(KNOWNFOLDERIDS.FOLDERID_AdminTools)
   Debug.Print GetFolderBySHGetKnownFolderPath(KNOWNFOLDERIDS.FOLDERID_Documents)
   Debug.Print GetFolderBySHGetKnownFolderPath(KNOWNFOLDERIDS.FOLDERID_Pictures)

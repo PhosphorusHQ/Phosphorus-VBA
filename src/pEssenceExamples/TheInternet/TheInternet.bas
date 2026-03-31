@@ -1,5 +1,5 @@
-Attribute VB_Name = "ExampleDomainDotCom"
-'@Folder ExampleDomainDotCom
+Attribute VB_Name = "TheInternet"
+'@Folder TheInternet
 ' =======================================================================
 '  Phosphorus Test & Automation Suite
 '  Copyright (c) 2025 Peter Jeffrey Gale
@@ -10,18 +10,21 @@ Attribute VB_Name = "ExampleDomainDotCom"
 ' =======================================================================
 Option Explicit
 
-Private ExampleDomain As ExampleDomainDotComPage
+Private The_Internet As TheInternetPage
 
-Sub ExampleDomainDotCom()
+Sub TheInternet()
 
   On Error GoTo ErrorHandler
 
   Window.HighlightElements = True
   
-  Set ExampleDomain = New ExampleDomainDotComPage
+  Set The_Internet = New TheInternetPage
   
-  ExampleDomain.Initialize
-  ExampleDomain.RunChecks
+  With The_Internet
+    .Initialize
+    .RunHomePageChecks
+    .DragAndDrop
+  End With
   GoTo ExitSub
 
 ErrorHandler:
@@ -29,7 +32,10 @@ ErrorHandler:
   GoTo ExitSub
   
 ExitSub:
-  Set ExampleDomain = Nothing
+  Set The_Internet = Nothing
   Window.HighlightElements = False
   
+MsgBox "What next? More pages ..."
+
 End Sub
+

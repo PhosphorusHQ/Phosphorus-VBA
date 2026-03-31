@@ -61,7 +61,7 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional proje
   For Each vbComp In vbProj.VBComponents
     folderName = "Uncategorized"
     If vbComp.CodeModule.CountOfLines > 0 Then
-      firstLine = VBA.Strings.Trim(vbComp.CodeModule.Lines(1, 1))
+      firstLine = VBA.Strings.Trim(vbComp.CodeModule.lines(1, 1))
       If VBA.Strings.Left(firstLine, 9) = "'@Folder " Then
         folderName = VBA.Strings.Trim(VBA.Strings.Mid(firstLine, 9))
       End If

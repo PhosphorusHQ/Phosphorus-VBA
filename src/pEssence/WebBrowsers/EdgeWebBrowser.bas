@@ -27,6 +27,12 @@ Private Type BrowserAttributes
   NonClientView As pLocator
   BrowserFrameViewWin As pLocator
   BrowserView As pLocator
+  TopContainerView As pLocator
+  EdgeToolbarView As pLocator
+  BackButton As pLocator
+  LocationBarView As pLocator
+  AddressAndSearchBar As pLocator
+  
   SidebarContentsSplitView As pLocator
   RootWebArea As pLocator
 End Type
@@ -40,6 +46,11 @@ Private Sub Class_Initialize()
   Set This.NonClientView = Factory.GetNewLocator
   Set This.BrowserFrameViewWin = Factory.GetNewLocator
   Set This.BrowserView = Factory.GetNewLocator
+  Set This.TopContainerView = Factory.GetNewLocator
+  Set This.EdgeToolbarView = Factory.GetNewLocator
+  Set This.BackButton = Factory.GetNewLocator
+  Set This.LocationBarView = Factory.GetNewLocator
+  Set This.AddressAndSearchBar = Factory.GetNewLocator
   Set This.SidebarContentsSplitView = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
 End Sub
@@ -53,16 +64,26 @@ Private Sub Class_Terminate()
   Set This.NonClientView = Nothing
   Set This.BrowserFrameViewWin = Nothing
   Set This.BrowserView = Nothing
+  Set This.TopContainerView = Nothing
+  Set This.EdgeToolbarView = Nothing
+  Set This.BackButton = Nothing
+  Set This.LocationBarView = Nothing
+  Set This.AddressAndSearchBar = Nothing
+  
   Set This.SidebarContentsSplitView = Nothing
   Set This.RootWebArea = Nothing
 End Sub
 
-Public Sub StartEdge(WebAppName As String, URL As String, WebAppPageTitle As String)
+Public Sub StartNormal(WebAppName As String, URL As String, WebAppPageTitle As String)
+  
+  Toaster.Message "Starting " & WebAppName
+  
   This.WebAppName = WebAppName
   This.URL = URL
   This.WebAppPageTitle = WebAppPageTitle
   LaunchCommandByProtocol This.WebAppName, "microsoft-edge:", This.URL, WindowStyle.Maximized
   InitialiseAllLocators
+  This.AddressAndSearchBar.Find 10
   This.RootWebArea.Find 10
 End Sub
 
@@ -97,18 +118,64 @@ Private Sub InitialiseAllLocators()
     .Condition "ClassName", ClassName, IsTheString, "BrowserView"
   End With
 
-  With This.SidebarContentsSplitView
-    .Initialise "SidebarContentsSplitView", This.BrowserView, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "SidebarContentsSplitView"
-  End With
-
-  With This.RootWebArea
-    .Initialise "RootWebArea", This.BrowserView, Descendants, pConditions, "AutomationId", FindFirst:=True
-    .Condition "AutomationId", UIAProperties.AutomationId, IsTheString, "RootWebArea"
-  End With
+    'First Pane Below Browser View
+    With This.TopContainerView
+      .Initialise "TopContainerView", This.BrowserView, Children, pConditions, "ClassName"
+      .Condition "ClassName", ClassName, IsTheString, "TopContainerView"
+    End With
   
+      With This.EdgeToolbarView
+        .Initialise "EdgeToolbarView", This.TopContainerView, Children, pConditions, "ClassName"
+        .Condition "ClassName", ClassName, IsTheString, "EdgeToolbarView"
+      End With
+  
+        With This.BackButton
+          .Initialise "EdgeToolbarView", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, NameIs)"
+          .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
+          .Condition "NameIs", Name, IsTheString, "Back"
+        End With
+  
+        With This.LocationBarView
+          .Initialise "LocationBarView", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, ClassName)"
+          .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Group
+          .Condition "ClassName", ClassName, IsTheString, "LocationBarView"
+        End With
+  
+          With This.AddressAndSearchBar
+            .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)"
+            .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Edit
+            .Condition "NameIs", Name, IsTheString, "Address and search bar"
+          End With
+  
+    'Second Pane Below Browser View
+    With This.SidebarContentsSplitView
+      .Initialise "SidebarContentsSplitView", This.BrowserView, Children, pConditions, "ClassName"
+      .Condition "ClassName", ClassName, IsTheString, "SidebarContentsSplitView"
+    End With
+
+      With This.RootWebArea
+        .Initialise "RootWebArea", This.SidebarContentsSplitView, Descendants, pConditions, "AutomationId", FindFirst:=True
+        .Condition "AutomationId", UIAProperties.AutomationId, IsTheString, "RootWebArea"
+      End With
+
 End Sub
 
 Public Function GetRootWebArea() As pLocator
   Set GetRootWebArea = This.RootWebArea
 End Function
+
+Public Function GetCurrentURL() As String
+  With This.AddressAndSearchBar
+    .Find 10
+    GetCurrentURL = Actions.GetValue(.ElementName, .FoundUIAElement)
+  End With
+End Function
+
+Public Sub NavigateBack()
+  With This.BackButton
+    .Find 10
+    Actions.Click .ElementName, This.BackButton.FoundUIAElement
+    This.RootWebArea.Find 10, FindElementAgain:=True
+  End With
+End Sub
+

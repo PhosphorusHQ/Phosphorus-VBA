@@ -39,14 +39,6 @@ Private Sub Class_Initialize()
   Set This.AllSearchConditions = New Scripting.Dictionary
 End Sub
 
-'Public Sub Initialise( _
-'  ElementName As String, _
-'  RootUIAElement As IUIAutomationElement, _
-'  TreeScope As Long, _
-'  FindBy As By, _
-'  EvaluationLogic As String, _
-'  Optional RootUIAElementLocator As pLocator)
-
 Public Sub Initialise( _
   ElementName As String, _
   RootUIAElementLocator As pLocator, _
@@ -140,6 +132,8 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
     This.RootUIAElementLocator.Find TimeoutInSeconds
     Set This.RootUIAElement = This.RootUIAElementLocator.FoundUIAElement
   End If
+
+  Toaster.Message "Finding " & This.ElementName, Finding
 
   Dim FoundElements() As IUIAutomationElement
   Dim CountOfFoundElements As Integer
@@ -238,7 +232,11 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
     For Each k In This.AllSearchConditions.Keys
       Dim c As New pCondition
       Set c = This.AllSearchConditions(k)
-      CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, c.ConditionName, c.Evaluate(CurrentElement))
+      If c.ConditionName = UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER Then
+        CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, c.ConditionName, ((i + 1) = c.UIAPropertyValue))
+      Else
+        CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, c.ConditionName, c.Evaluate(CurrentElement))
+      End If
     Next k
 
     Dim MatchFound As Boolean
@@ -334,9 +332,13 @@ Private Function EvaluationLogicIsOk() As Boolean
 
 End Function
 
-Public Function ElementExists(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = True)
+Public Function ElementExists(Optional TimeoutInSeconds As Long)
   Set This.FoundUIAElement = Nothing
   Find TimeoutInSeconds, AcceptNoElements:=True
   ElementExists = Not (This.FoundUIAElement Is Nothing)
+End Function
+
+Public Function ElementDoesntExist(Optional TimeoutInSeconds As Long)
+  ElementDoesntExist = Not ElementExists(TimeoutInSeconds)
 End Function
 

@@ -37,4 +37,3 @@ Public Function GetNewEdgeWebBrowser() As EdgeWebBrowser
   Set GetNewEdgeWebBrowser = Edge
 End Function
 
-

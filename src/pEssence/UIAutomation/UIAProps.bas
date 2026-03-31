@@ -10,6 +10,8 @@ Attribute VB_Name = "UIAProps"
 ' =======================================================================
 Option Explicit
 
+Public Const POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER = "PositionOfElementInTreescopeCounter"
+
 'https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-automation-element-propids
 Public Enum UIAProperties 'UIA_PropertyIds
   AcceleratorKey = UIA_AcceleratorKeyPropertyId
@@ -24,7 +26,7 @@ Public Enum UIAProperties 'UIA_PropertyIds
   BoundingRectangle = UIA_BoundingRectanglePropertyId
   CenterPoint = UIA_CenterPointPropertyId
   ClassName = UIA_ClassNamePropertyId
-  ClickablePoint = UIA_ClickablePointPropertyId
+  clickablePoint = UIA_ClickablePointPropertyId
   ControllerFor = UIA_ControllerForPropertyId
   ControlType = UIA_ControlTypePropertyId
   Culture = UIA_CulturePropertyId
@@ -252,14 +254,14 @@ Public Function HasProperty(ElementName As String, Element As IUIAutomationEleme
 End Function
 
 Public Function GetWindowInteractionStateName(WindowInteractionState As Long) As String
-  Dim R As String
+  Dim r As String
   Select Case WindowInteractionState 'UIAutomationClient.WindowInteractionState
-    Case WindowInteractionState_Running: R = "Running"
-    Case WindowInteractionState_Closing: R = "Closing"
-    Case WindowInteractionState_ReadyForUserInteraction: R = "ReadyForUserInteraction"
-    Case WindowInteractionState_BlockedByModalWindow: R = "BlockedByModalWindow"
-    Case WindowInteractionState_NotResponding: R = "NotResponding"
-    Case Else: R = "Unknown Window Interaction State (" & WindowInteractionState & ")"
+    Case WindowInteractionState_Running: r = "Running"
+    Case WindowInteractionState_Closing: r = "Closing"
+    Case WindowInteractionState_ReadyForUserInteraction: r = "ReadyForUserInteraction"
+    Case WindowInteractionState_BlockedByModalWindow: r = "BlockedByModalWindow"
+    Case WindowInteractionState_NotResponding: r = "NotResponding"
+    Case Else: r = "Unknown Window Interaction State (" & WindowInteractionState & ")"
   End Select
-  GetWindowInteractionStateName = R
+  GetWindowInteractionStateName = r
 End Function

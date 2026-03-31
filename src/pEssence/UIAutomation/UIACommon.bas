@@ -38,37 +38,37 @@ Public Enum TreeScope
 End Enum
 
 Public Function GetByName(NamedBy As By) As String
-  Dim R As String
+  Dim r As String
   Select Case NamedBy
     Case By.pConditions
-      R = "pConditon"
+      r = "pConditon"
     Case By.AutomationId
-      R = "AutomationId"
+      r = "AutomationId"
     Case Else
       ErrorLogging.LogError Errors.UnhandledGetName, "Unhanded UIAPropertyComparisons: " & "(" & NamedBy & ")"
       Exit Function
   End Select
-  GetByName = R
+  GetByName = r
 End Function
 
 Public Function GetUIAPropertyComparisonsName(Comparison As UIAPropertyComparisons) As String
-  Dim R As String
+  Dim r As String
   Select Case Comparison
     Case UIAPropertyComparisons.IsTheString
-      R = "IsTheString"
+      r = "IsTheString"
     Case UIAPropertyComparisons.IsLikeTheString
-      R = "IsLike"
+      r = "IsLike"
     Case UIAPropertyComparisons.EqualsNumber
-      R = "Equals"
+      r = "Equals"
     Case UIAPropertyComparisons.StartsWithTheString
-      R = "StartsWith"
+      r = "StartsWith"
     Case UIAPropertyComparisons.EndsWithTheString
-      R = "EndsWith"
+      r = "EndsWith"
     Case Else
       ErrorLogging.LogError Errors.UnhandledGetName, "Unhanded UIAPropertyComparisons: " & "(" & Comparison & ")"
       Exit Function
   End Select
-  GetUIAPropertyComparisonsName = R
+  GetUIAPropertyComparisonsName = r
 End Function
 
 Public Function IsArrayEmpty(arrInput As Variant) As Boolean

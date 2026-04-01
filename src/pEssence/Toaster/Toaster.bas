@@ -1,5 +1,5 @@
 Attribute VB_Name = "Toaster"
-'@Folder SpeechBalloon
+'@Folder Toaster
 ' =======================================================================
 '  Phosphorus Test & Automation Suite
 '  Copyright (c) 2025 Peter Jeffrey Gale

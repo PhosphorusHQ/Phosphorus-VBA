@@ -13,7 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-'@Folder SpeechBalloon
+'@Folder Toaster
 ' =======================================================================
 '  Phosphorus Test & Automation Suite
 '  Copyright (c) 2025 Peter Jeffrey Gale

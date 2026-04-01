@@ -165,6 +165,7 @@ Public Sub Click(Name As String, Ele As IUIAutomationElement)
 
   If TryInvokePattern Then GoTo Cleanup
   If TrySelectionItemPatternSelect Then GoTo Cleanup
+  If TryTogglePattern Then GoTo Cleanup
   If TryLegacyIAccessibleDefaultAction Then GoTo Cleanup
   If TryLegacyIAccessiblePatternSelect(SELFLAG_TAKEFOCUS + SELFLAG_TAKESELECTION) Then GoTo Cleanup
   ' Try this las as we don't know if it worked!
@@ -209,6 +210,30 @@ Private Function TrySelectionItemPatternSelect() As Boolean
         Set Pattern = UIAPatts.GetPattern(This.Name, This.Ele, UIA_PatternIds.UIA_SelectionItemPatternId)
         Pattern.Select
         TrySelectionItemPatternSelect = True
+      End If
+    End If
+  End If
+Finish:
+  On Error Resume Next
+End Function
+
+Private Function TryTogglePattern() As Boolean
+  On Error GoTo Finish
+  TryTogglePattern = False
+  If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.ControlType) Then
+    If UIAProps.GetProperty(This.Ele, UIAProperties.ControlType) = UIAControlTypeIDs.CheckBox Then 'Note: Applies to other control types too?
+      If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.IsTogglePatternAvailable) Then
+        Dim InitialToggleState As Integer
+        InitialToggleState = Actions.GetToggleState(This.Name, This.Ele)
+        Dim Pattern As IUIAutomationTogglePattern
+        Set Pattern = UIAPatts.GetPattern(This.Name, This.Ele, UIA_PatternIds.UIA_TogglePatternId)
+        Pattern.Toggle
+        If InitialToggleState = 0 Then
+          Actions.WaitForPropertyValue This.Name, This.Ele, UIAProperties.ToggleToggleState, 1
+        Else
+          Actions.WaitForPropertyValue This.Name, This.Ele, UIAProperties.ToggleToggleState, 0
+        End If
+        TryTogglePattern = True
       End If
     End If
   End If
@@ -450,17 +475,35 @@ Public Sub WaitForPropertyValue( _
   CurrentElement As IUIAutomationElement, _
   UIAProperty As UIAProperties, _
   UIAPropertyValue As Variant, _
-  Optional TimeoutInMilliseconds As Long)
+  Optional TimeoutInSeconds As Integer)
+  
+  'Calculate the end time
+  Dim EndTime As Date
+  EndTime = DateAdd("s", TimeoutInSeconds, Now)
+  
+  'Loop until element(s) found or timed out
+  Dim PropertyValueFound As Boolean
+  PropertyValueFound = False
+  
+  Dim PassedEndTime As Boolean
+  PassedEndTime = False
   
   Dim CurrentPropertyValue As Variant
-  CurrentPropertyValue = GetProperty(CurrentElement, UIAProperty)
-  If CurrentPropertyValue = UIAPropertyValue Then
-    'Success - exit here!
-    Exit Sub
-  Else
-    MsgBox "Need to wait for the value before timeout here!"
+  While Not (PropertyValueFound Or PassedEndTime)
+    CurrentPropertyValue = GetProperty(CurrentElement, UIAProperty)
+    PropertyValueFound = (CurrentPropertyValue = UIAPropertyValue)
+    If Not PropertyValueFound Then
+      PassedEndTime = (Now > EndTime)
+      If Not PassedEndTime Then
+        WindowsProcesses.Snooze 10
+      End If
+    End If
+  Wend
+
+  If Not PropertyValueFound Then
+    Debug.Assert PropertyValueFound
   End If
-  
+
 End Sub
 
 Public Function IsElementReady(Name As String, Ele As IUIAutomationElement) As Boolean
@@ -512,3 +555,12 @@ Public Function GetValue(Name As String, Ele As IUIAutomationElement) As String
     GetValue = CurrentElementValuePattern.CurrentValue
   End If
 End Function
+
+Public Function GetToggleState(Name As String, Ele As IUIAutomationElement) As Integer
+  If UIAPatts.HasPattern(Name, Ele, UIA_PatternIds.UIA_TogglePatternId) Then
+    Dim CurrentElementTogglePattern As IUIAutomationTogglePattern
+    Set CurrentElementTogglePattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_TogglePatternId, RaiseError:=True)
+    GetToggleState = CurrentElementTogglePattern.CurrentToggleState
+  End If
+End Function
+

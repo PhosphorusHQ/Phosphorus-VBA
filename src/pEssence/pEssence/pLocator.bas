@@ -192,6 +192,7 @@ End Sub
 
 Public Sub FindAll(Optional AcceptNoElements As Boolean)
 'Find more than 1 elements with no timeout
+  Toaster.Message "Finding all elements " & This.ElementName, Finding
   This.FoundUIAElements = Findlements(AcceptNoElements)
 End Sub
 

@@ -23,6 +23,7 @@ Sub TheInternet()
   With The_Internet
     .Initialize
     .RunHomePageChecks
+    .Checkboxes
     .DragAndDrop
   End With
   GoTo ExitSub

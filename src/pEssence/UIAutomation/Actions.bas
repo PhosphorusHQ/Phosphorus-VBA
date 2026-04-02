@@ -556,6 +556,14 @@ Public Function GetValue(Name As String, Ele As IUIAutomationElement) As String
   End If
 End Function
 
+Public Sub SetValue(Name As String, Ele As IUIAutomationElement, Value As String)
+  If UIAPatts.HasPattern(Name, Ele, UIA_PatternIds.UIA_ValuePatternId) Then
+    Dim CurrentElementValuePattern As IUIAutomationValuePattern
+    Set CurrentElementValuePattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_ValuePatternId, RaiseError:=True)
+    CurrentElementValuePattern.SetValue Value
+  End If
+End Sub
+
 Public Function GetToggleState(Name As String, Ele As IUIAutomationElement) As Integer
   If UIAPatts.HasPattern(Name, Ele, UIA_PatternIds.UIA_TogglePatternId) Then
     Dim CurrentElementTogglePattern As IUIAutomationTogglePattern

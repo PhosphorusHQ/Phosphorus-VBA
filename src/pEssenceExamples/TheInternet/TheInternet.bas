@@ -25,6 +25,7 @@ Sub TheInternet()
     .RunHomePageChecks
     .Checkboxes
     .DragAndDrop
+    .FormAuthentication
   End With
   GoTo ExitSub
 
@@ -35,8 +36,5 @@ ErrorHandler:
 ExitSub:
   Set The_Internet = Nothing
   Window.HighlightElements = False
-  
-MsgBox "What next? More pages ..."
 
 End Sub
-

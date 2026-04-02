@@ -41,7 +41,6 @@ ErrorHandler:
 ExitSub:
   Set HomePage = Nothing
   Window.HighlightElements = False
-MsgBox "What next? Select Interaction speeds - slow, medium, fast, no delay?"
 
 End Sub
 

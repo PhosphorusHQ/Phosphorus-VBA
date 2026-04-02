@@ -335,7 +335,7 @@ End Function
 
 Public Function ElementExists(Optional TimeoutInSeconds As Long)
   Set This.FoundUIAElement = Nothing
-  Find TimeoutInSeconds, AcceptNoElements:=True
+  Find TimeoutInSeconds, AcceptNoElements:=True, FindElementAgain:=True
   ElementExists = Not (This.FoundUIAElement Is Nothing)
 End Function
 

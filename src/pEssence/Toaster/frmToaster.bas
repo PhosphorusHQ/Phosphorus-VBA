@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmToaster 
    Caption         =   "Phosphorus"
-   ClientHeight    =   3624
+   ClientHeight    =   3996
    ClientLeft      =   108
    ClientTop       =   456
-   ClientWidth     =   7116
+   ClientWidth     =   4224
    OleObjectBlob   =   "frmToaster.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -38,53 +38,6 @@ Option Explicit
          ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, _
          ByVal uFlags As Long) As Long
 #End If
-
-Private FormWidth As Integer
-Private Gap As Integer
-
-Private Sub UserForm_Initialize()
-
-'    Me.BackColor = RGB(255, 255, 240)   ' Soft paper color
-  
-  Me.BorderStyle = 1 ' fmBorderStyleSingle
-  'Me.SpecialEffect = 2 ' fmSpecialEffectSunken
-
-  FormWidth = 225
-  Gap = 5
-  Me.Height = 90
-  Me.Width = FormWidth
-
-  'Logo.BackColor = Me.BackColor 'Same as form to make it transparent
-  
-  With lblTitle
-'    .BackColor = RGB(0, 120, 215)
-    .BackColor = Me.BackColor 'Same as form to make it transparent
-    .ForeColor = VBA.ColorConstants.vbCyan ' vbYellow '  vbBlue
-    .Font.Bold = True
-    .Font.Size = 18
-    
-    .Height = 28
-    .Width = (FormWidth - (2 * Gap))
-    .Left = Gap
-    .Top = 2
-    .Caption = "Phosphorus"
-    .TextAlign = 2 'fmTextAlignCenter
-  End With
-    
-  With txtLog
-    .Multiline = True
-    .ScrollBars = 2 'fmScrollBarsVertical
-      .Font.Name = "Segoe UI"
-      .Font.Size = 8
-    .BackColor = Me.BackColor 'Same as form to make it transparent
-'      .BackColor = RGB(255, 255, 255)
-      .Left = Gap
-      .Top = 30
-      .Width = lblTitle.Width '(FormWidth - (2 * Gap))
-      .Height = 80 'Me.Height - lblTitle.Height + Gap
-    End With
-                
-End Sub
 
 ' This event fires AFTER the form is fully visible
 Private Sub UserForm_Activate()
@@ -136,7 +89,7 @@ Public Sub AddLine(Text As String, Optional NotificationType As ToasterNotificat
     .SelLength = 0
 
     ' === SMART TRIMMING: Keep only last 80 lines ===
-    Const MAX_LINES As Integer = 7 ' Use fewer less that fills one screen!
+    Const MAX_LINES As Integer = 16 ' Use fewer less that fills one screen!
     Dim lineCount As Integer
     lineCount = UBound(Split(.Text, vbCrLf))
     If lineCount > MAX_LINES Then
@@ -189,20 +142,16 @@ Public Sub PopDown()
 End Sub
 
 Private Sub Pop(Up As Boolean)
-
   Dim StepHeight As Integer
-
   StepHeight = 1
   If Not Up Then
     StepHeight = -StepHeight
   End If
   Dim i As Integer
   Dim ToHeight As Integer
-  For i = 1 To 90
+  For i = 1 To 187
     Me.Height = Me.Height + StepHeight
     Toaster.PositionOnPrimaryMonitorBottomRight
-    'Snooze 1
   Next i
-  
 End Sub
 

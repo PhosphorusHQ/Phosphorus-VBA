@@ -96,13 +96,11 @@ Public Sub PositionOnPrimaryMonitorBottomRight()
   Dim NewLeft As Long
   Dim NewTop As Long
     
- '   NewLeft = ScreenWidth - Toast.Width - 30
- '   NewTop = ScreenHeight - Toast.Height - 90   ' Leave space above taskbar
   NewLeft = (ScreenWidth - Toast.Width) / 2 + 75
-  NewTop = ScreenHeight - 575 - Toast.Height ' Leave space above taskbar
+  NewTop = ScreenHeight - Toast.Height - 570 ' Leave space above taskbar
   
   ' Final safety: make sure it's not off-screen
-      If NewLeft < 0 Then NewLeft = 30
+  If NewLeft < 0 Then NewLeft = 30
   If NewTop < 0 Then NewTop = 30
     
   Toast.Left = NewLeft

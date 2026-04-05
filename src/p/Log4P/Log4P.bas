@@ -119,11 +119,6 @@ Private flushInterval As Long
 Private logBuffer As String
 Private isBufferingEnabled As Boolean
 
-'Allow user to apply nested analysis code to the log ouptput
-Private LogNestedAnalysisCodeLevel As Integer
-Private LogNestedAnalysisCodes(10) As String
-Private LogFixedAnalysisCodes() As String
-
 Private Sub Class_Initialize()
   
   Dim rootFolder As String
@@ -137,8 +132,8 @@ Private Sub Class_Initialize()
   'This must run AFTER the create folder method
   If VBA.Strings.Right(rootFolder, 1) <> "\" Then rootFolder = rootFolder & "\"
     
-  currentLogLevel = EXTERNAL_INFO
-  previousLogLevel = EXTERNAL_INFO
+  currentLogLevel = LogLevel.Info
+  previousLogLevel = LogLevel.Info
   writeCount = 0
   flushInterval = DEFAULT_FLUSH_INTERVAL
   logBuffer = ""
@@ -177,7 +172,7 @@ Private Sub Class_Initialize()
   ' Open file with CreateFileW for Unicode path
   hFile = CreateFileW(StrPtr(logFilePath), GENERIC_WRITE, FILE_SHARE_READ, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0)
   If hFile = -1 Then
-    LogMessage "Failed to open log file: " & logFilePath, INTERNAL_ERROR
+    LogMessage "Failed to open log file: " & logFilePath, LogLevel.Error, Internal
     Err.Raise vbObjectError + 1, "Logger", "Failed to open log file"
   End If
     
@@ -189,23 +184,19 @@ Private Sub Class_Initialize()
   Dim BytesWritten As Long
   If WriteFile(hFile, bom(0), 3, BytesWritten, 0) = 0 Then
     CloseHandle hFile
-    LogMessage "Failed to write UTF-8 BOM", INTERNAL_ERROR
+    LogMessage "Failed to write UTF-8 BOM", LogLevel.Error, Internal
     Err.Raise vbObjectError + 1, "Logger", "Failed to initialize log file"
   End If
     
-  InternalInfo "Logger initialized with file: " & logFilePath
+  Info "Logger initialized with file: " & logFilePath, Internal
 
   'Always log file opened & closed messages - these can be filtered out in the log reader
   Dim strHeaderLine As String
   strHeaderLine = "Timestamp" & VBA.Constants.vbTab
-  For LogNestedAnalysisCodeLevel = 1 To UBound(LogNestedAnalysisCodes)
-    strHeaderLine = strHeaderLine & "LogAnalysisCode" & LogNestedAnalysisCodeLevel & VBA.Constants.vbTab
-  Next LogNestedAnalysisCodeLevel
-  LogNestedAnalysisCodeLevel = 0
   strHeaderLine = strHeaderLine & "LogEntryType" & VBA.Constants.vbTab & "LogLevel" & VBA.Constants.vbTab & "Delta" & VBA.Constants.vbTab & "Message"
     
-  LogMessage strHeaderLine, EXTERNAL_FATAL
-  LogMessage "Log file opened", EXTERNAL_FATAL, True
+  LogMessage strHeaderLine, LogLevel.Fatal, Internal
+  LogMessage "Log file opened", LogLevel.Fatal, Internal, True
     
 End Sub
 
@@ -224,7 +215,7 @@ Private Sub CreateFolder(folderPath As String)
       On Error Resume Next
       MkDir currentPath
       If Err.Number <> 0 Then
-        LogMessage "Failed to create folder: " & currentPath & " (Error " & Err.Number & ")", INTERNAL_ERROR
+        LogMessage "Failed to create folder: " & currentPath & " (Error " & Err.Number & ")", LogLevel.Error, Internal
         Err.Raise vbObjectError + 1, "Logger", "Failed to create folder"
       End If
       On Error GoTo 0
@@ -235,7 +226,7 @@ End Sub
 
 Private Sub Class_Terminate()
   'Always log file closed message - these can be filtered out in the log reader
-  LogMessage "Log file closed", EXTERNAL_FATAL
+  LogMessage "Log file closed", LogLevel.Fatal, Internal
   If VBA.Strings.Len(logBuffer) > 0 Then WriteBuffer
   If hFile <> 0 Then
     FlushFileBuffers hFile
@@ -253,28 +244,14 @@ Public Property Get level() As Long
 End Property
 
 Public Sub SetTempLevel(newLevel As LogLevel)
-  Logger.ExternalInfo "Log level set to " & Log4PStatic.GetLevelName(newLevel)
+  Logger.Info "Log level set to " & Log4PStatic.GetLevelName(newLevel), Internal
   previousLogLevel = currentLogLevel
   currentLogLevel = newLevel
 End Sub
 
 Public Sub RestoreLevel()
-  Logger.ExternalInfo "Log level reset to " & Log4PStatic.GetLevelName(previousLogLevel)
+  Logger.Info "Log level reset to " & Log4PStatic.GetLevelName(previousLogLevel), Internal
   currentLogLevel = previousLogLevel
-End Sub
-
-Public Sub NextAnalysisCodeLevel(strNestedAnalysisCodeValue As String)
-  If Not LogNestedAnalysisCodeLevel = UBound(LogNestedAnalysisCodes) Then
-    LogNestedAnalysisCodeLevel = LogNestedAnalysisCodeLevel + 1
-    LogNestedAnalysisCodes(LogNestedAnalysisCodeLevel) = strNestedAnalysisCodeValue
-  End If
-End Sub
-
-Public Sub PreviousAnalysisCodeLevel()
-  If Not LogNestedAnalysisCodeLevel = 0 Then
-    LogNestedAnalysisCodes(LogNestedAnalysisCodeLevel) = ""
-    LogNestedAnalysisCodeLevel = LogNestedAnalysisCodeLevel - 1
-  End If
 End Sub
 
 Private Sub WriteBuffer()
@@ -283,7 +260,7 @@ Private Sub WriteBuffer()
     bytes = StringToUtf8Bytes(logBuffer)
     Dim BytesWritten As Long
     If WriteFile(hFile, bytes(0), UBound(bytes) + 1, BytesWritten, 0) = 0 Then
-      LogMessage "Failed to write buffer to log file", INTERNAL_ERROR
+      LogMessage "Failed to write buffer to log file", LogLevel.Error, Internal
       Err.Raise vbObjectError + 1, "Logger", "Failed to write buffer to log file"
     End If
     logBuffer = ""
@@ -312,7 +289,7 @@ Private Function StringToUtf8Bytes(ByVal str As String) As Byte()
 
 End Function
 
-Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush As Boolean = False)
+Private Sub LogMessage(message As String, level As LogLevel, Cat As LogCategory, Optional forceFlush As Boolean = False)
     
   If level < currentLogLevel Then Exit Sub
     
@@ -351,39 +328,18 @@ Private Sub LogMessage(message As String, level As LogLevel, Optional forceFlush
       
     'Build up the log entry
     logEntry = timestamp & VBA.Constants.vbTab
-    
-    'Output the actual analysis codes - fixed entries override the nested analysis code
-    Dim intCountOfFixedAnalysisCodes As Integer
-    intCountOfFixedAnalysisCodes = 0
-    On Error Resume Next
-    intCountOfFixedAnalysisCodes = UBound(LogFixedAnalysisCodes)
-    On Error GoTo 0
-    Dim i As Integer
-    Dim strLogEntryType As String
-    If intCountOfFixedAnalysisCodes > 0 Then
-      strLogEntryType = "Fixed"
-      For i = 1 To UBound(LogFixedAnalysisCodes)
-        logEntry = logEntry & LogFixedAnalysisCodes(i) & VBA.Constants.vbTab
-      Next i
-    Else
-      strLogEntryType = "Nested"
-      For i = 1 To UBound(LogNestedAnalysisCodes)
-        logEntry = logEntry & LogNestedAnalysisCodes(i) & VBA.Constants.vbTab
-      Next i
-    End If
+        
     'Add the log level string
-    logEntry = logEntry & strLogEntryType & VBA.Constants.vbTab & levelStr & VBA.Constants.vbTab
+    logEntry = logEntry & VBA.Constants.vbTab & levelStr & VBA.Constants.vbTab
        
     'The accurary of the delta varies
     #If VBA7 Then
-       logEntry = logEntry & _
-         VBA.Strings.ChrW(916) & VBA.Strings.Format(timeDiff, "0.000") & "ms" & VBA.Constants.vbTab
+       logEntry = logEntry & VBA.Strings.ChrW(916) & VBA.Strings.Format(timeDiff, "0.000") & "ms" & VBA.Constants.vbTab
     #Else
-       logEntry = logEntry & _
-         VBA.Strings.ChrW(916) & VBA.Strings.Format(timeDiff, "0.00") & "ms | "
+       logEntry = logEntry & VBA.Strings.ChrW(916) & VBA.Strings.Format(timeDiff, "0.00") & "ms | "
     #End If
    
-    ' Add the messabe
+    ' Add the message
     logEntry = logEntry & message & vbCrLf
     
   End If
@@ -433,83 +389,28 @@ End Sub
 
 ' Public logging methods for each log level
 
-Public Sub InternalTrace(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, INTERNAL_TRACE, forceFlush
+Public Sub Trace(message As String, Optional Cat As LogCategory = External, Optional forceFlush As Boolean = False)
+  LogMessage message, LogLevel.Trace, Cat, forceFlush
 End Sub
 
-Public Sub InternalDebug(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, INTERNAL_DEBUG, forceFlush
+Public Sub Debugging(message As String, Optional Cat As LogCategory = External, Optional forceFlush As Boolean = False)
+  LogMessage message, LogLevel.Debugging, Cat, forceFlush
 End Sub
 
-Public Sub InternalInfo(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, INTERNAL_INFO, forceFlush
+Public Sub Info(message As String, Optional Cat As LogCategory = External, Optional forceFlush As Boolean = False)
+  LogMessage message, LogLevel.Info, Cat, forceFlush
 End Sub
 
-Public Sub InternalWarning(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, INTERNAL_WARNING, forceFlush
+Public Sub Warning(message As String, Optional Cat As LogCategory = External, Optional forceFlush As Boolean = False)
+  LogMessage message, LogLevel.Warning, Cat, forceFlush
 End Sub
 
-Public Sub InternalError(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, INTERNAL_ERROR, forceFlush
+Public Sub Error(message As String, Optional Cat As LogCategory = External, Optional forceFlush As Boolean = False)
+  LogMessage message, LogLevel.Error, Cat, forceFlush
 End Sub
 
-Public Sub InternalFatal(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, INTERNAL_FATAL, forceFlush
-End Sub
-
-Public Sub ExternalTrace(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, EXTERNAL_TRACE, forceFlush
-End Sub
-
-Public Sub ExternalDebug(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, EXTERNAL_DEBUG, forceFlush
-End Sub
-
-Public Sub ExternalInfo(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, EXTERNAL_INFO, forceFlush
-End Sub
-
-Public Sub ExternalWarning(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, EXTERNAL_WARNING, forceFlush
-End Sub
-
-Public Sub ExternalError(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, EXTERNAL_ERROR, forceFlush
-End Sub
-
-Public Sub ExternalFatal(message As String, Optional forceFlush As Boolean = False)
-  LogMessage message, EXTERNAL_FATAL, forceFlush
-End Sub
-
-Public Sub LogFixedLevelMessage( _
-  message As String, _
-  level As LogLevel, _
-  Optional AnalysisCode1 As String, _
-  Optional AnalysisCode2 As String, _
-  Optional AnalysisCode3 As String, _
-  Optional AnalysisCode4 As String, _
-  Optional AnalysisCode5 As String, _
-  Optional AnalysisCode6 As String, _
-  Optional AnalysisCode7 As String, _
-  Optional AnalysisCode8 As String, _
-  Optional AnalysisCode9 As String, _
-  Optional AnalysisCode10 As String, _
-  Optional forceFlush As Boolean = False)
-  
-  ReDim LogFixedAnalysisCodes(UBound(LogNestedAnalysisCodes))
-  LogFixedAnalysisCodes(1) = AnalysisCode1
-  LogFixedAnalysisCodes(2) = AnalysisCode2
-  LogFixedAnalysisCodes(3) = AnalysisCode3
-  LogFixedAnalysisCodes(4) = AnalysisCode4
-  LogFixedAnalysisCodes(5) = AnalysisCode5
-  LogFixedAnalysisCodes(6) = AnalysisCode6
-  LogFixedAnalysisCodes(7) = AnalysisCode7
-  LogFixedAnalysisCodes(8) = AnalysisCode8
-  LogFixedAnalysisCodes(9) = AnalysisCode9
-  LogFixedAnalysisCodes(10) = AnalysisCode10
-  LogMessage message, level, forceFlush
-  
-  Erase LogFixedAnalysisCodes
+Public Sub Fatal(message As String, Optional Cat As LogCategory = External, Optional forceFlush As Boolean = False)
+  LogMessage message, LogLevel.Fatal, Cat, forceFlush
 End Sub
 
 Public Sub Flush()

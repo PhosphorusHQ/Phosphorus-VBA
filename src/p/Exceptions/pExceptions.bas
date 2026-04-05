@@ -193,7 +193,7 @@ Public Sub Raise(exception As Phosphorus.Exceptions, Optional parameter1 As Vari
   
   'Log the exception
   Phosphorus.Log4PStatic.GetLogger 'Ensure we have a logger!
-  Logger.ExternalFatal ErrorDescription
+  Logger.Fatal ErrorDescription, Internal
   
   'Now raise a VBA error
   Err.Raise ErrorNumber, "pExceptions", ErrorDescription

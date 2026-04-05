@@ -93,14 +93,14 @@ Public Function Evaluate( _
   Optional InitialpPath As String, _
   Optional UnitTestingMode As Boolean) As pPath.ReturnClass
 
-  Logger.InternalInfo "Evaluating PPath: " & FullLocationPathExpression
+  Logger.Info "Evaluating PPath: " & FullLocationPathExpression, Internal
 
-  Logger.InternalTrace "Checking for Context Node"
+  Logger.Trace "Checking for Context Node", Internal
   If Not ContextNode Is Nothing Then 'An InitialPPath should also be provided
-    Logger.InternalDebug "Adding first context node: " & InitialpPath
+    Logger.Debugging "Adding first context node: " & InitialpPath, Internal
     AddContextNode ContextNode, InitialpPath, True
   Else
-    Logger.InternalDebug "Initial pPath: " & VBA.Interaction.IIf(InitialpPath = "", "{null}", InitialpPath)
+    Logger.Debugging "Initial pPath: " & VBA.Interaction.IIf(InitialpPath = "", "{null}", InitialpPath), Internal
   End If
 
   This.UnitTestingMode = UnitTestingMode

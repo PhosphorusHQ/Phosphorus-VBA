@@ -1,3 +1,4 @@
+@*.*
 *.xlam
 *.xlsx
 *.ini
@@ -7,4 +8,3 @@
 /Logs
 /LogReader.xlsx
 /pPathWebBrowserTracker.xlsx
-src/pEssence/Toaster/frmToaster.frx

@@ -18,3 +18,15 @@ Public Function CountOccurrences(Text As String, SearchTerm As String) As Intege
   End If
 End Function
 
+Public Function IsArrayEmpty(arrInput As Variant) As Boolean
+  
+  Dim lngTemp As Long
+  On Error GoTo HandleError
+  lngTemp = UBound(arrInput)
+  IsArrayEmpty = False
+  Exit Function
+
+HandleError:
+  IsArrayEmpty = True
+
+End Function

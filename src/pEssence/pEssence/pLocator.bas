@@ -152,7 +152,7 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
   While Not (SomeElementsFound Or PassedEndTime)
     FoundElements = Findlements(True)
     CountOfFoundElements = 0
-    If Not UIACommon.IsArrayEmpty(FoundElements) Then
+    If Not pEssence.Utils.IsArrayEmpty(FoundElements) Then
       CountOfFoundElements = UBound(FoundElements) + 1
     End If
     SomeElementsFound = (CountOfFoundElements > 0)
@@ -269,7 +269,7 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
     End If
   Next i
 
-  If UIACommon.IsArrayEmpty(ReturnElements) Then
+  If pEssence.Utils.IsArrayEmpty(ReturnElements) Then
     If AcceptNoElements Then
       'Find elements is nothing?
     Else

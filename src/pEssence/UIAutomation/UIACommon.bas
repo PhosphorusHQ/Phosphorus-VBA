@@ -71,15 +71,3 @@ Public Function GetUIAPropertyComparisonsName(Comparison As UIAPropertyCompariso
   GetUIAPropertyComparisonsName = r
 End Function
 
-Public Function IsArrayEmpty(arrInput As Variant) As Boolean
-  
-  Dim lngTemp As Long
-  On Error GoTo HandleError
-  lngTemp = UBound(arrInput)
-  IsArrayEmpty = False
-  Exit Function
-
-HandleError:
-  IsArrayEmpty = True
-
-End Function

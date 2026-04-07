@@ -34,8 +34,6 @@ End Type
 
 Private This As PageAttributes
 
-Private PrivateElements As New Scripting.Dictionary
-
 Private Sub Class_Initialize()
   Set WebBrowser = Factory.GetNewEdgeWebBrowser
 End Sub

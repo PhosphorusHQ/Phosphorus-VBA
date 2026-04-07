@@ -19,10 +19,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Const WEB_APP_NAME = "The-Internet"
-'Const TARGET_PAGE_URL = "https://the-internet.herokuapp.com/"
 Const TARGET_PAGE_URL = "https://the-internet.herokuapp.com"
 Const TARGET_PAGE_TITLE = "The Internet"
-'Const TARGET_PAGE_LINK = "https://iana.org/domains/example"
 
 Private WebBrowser As EdgeWebBrowser
 
@@ -35,8 +33,6 @@ Private Type PageAttributes
 End Type
 
 Private This As PageAttributes
-
-Private PrivateElements As New Scripting.Dictionary
 
 Private Sub Class_Initialize()
   Set WebBrowser = Factory.GetNewEdgeWebBrowser

@@ -31,9 +31,18 @@ Public Function GetNewLocator() As pLocator
   Set GetNewLocator = Element
 End Function
 
+Public Function GetNewElement(GivenName As String, UIAElement As IUIAutomationElement) As pElement
+  Dim Element As pElement
+  Set Element = New pElement
+  Element.GivenName = GivenName
+  Set Element.UIAElement = UIAElement
+  Set GetNewElement = Element
+End Function
+
 Public Function GetNewEdgeWebBrowser() As EdgeWebBrowser
   Dim Edge As EdgeWebBrowser
   Set Edge = New EdgeWebBrowser
   Set GetNewEdgeWebBrowser = Edge
 End Function
+
 

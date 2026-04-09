@@ -148,7 +148,6 @@ Const SELFLAG_VALID = &H1F 'Bitmask of all valid flags (0x10)
 'Extend selection (range): SELFLAG_TAKEFOCUS Or SELFLAG_EXTENDSELECTION
 'Select only this item, no focus change: SELFLAG_TAKESELECTION
 
-
 '**********
 '* Clicks *
 '**********

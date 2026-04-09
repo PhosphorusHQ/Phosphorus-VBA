@@ -1,0 +1,291 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "LetCodeDotInPageRadio"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+'@Folder LetCodeDotIn
+' =======================================================================
+'  Phosphorus Test & Automation Suite
+'  Copyright (c) 2025 Peter Jeffrey Gale
+'
+'  Licensed under the GNU GENERAL PUBLIC License
+'  Full licence: see LICENCE in the distribution folder & main module
+'  https://www.gnu.org/licenses/gpl-3.0.html#license-text
+' =======================================================================
+Option Explicit
+
+Const WEB_APP_NAME = "Letcode"
+Const TARGET_PAGE_URL = "https://letcode.in/radio"
+Const TARGET_PAGE_TITLE = "Radio Buttons | LetCode with Koushik"
+
+Private Type PageAttributes
+  WebBrowser As EdgeWebBrowser
+  RootWebArea As pLocator
+  GroupControl As pLocator
+  AllControls As pLocator
+  RadioAndCheckboxHeader As pElement
+  SelectAnyOneSubHeader As pElement
+  SelectAnyOneYes As pElement
+  SelectAnyOneNo As pElement
+  ConfirmYouCanSelectOnlyOneRadioButton As pElement
+  ConfirmYouCanSelectOnlyOneRadioButtonYes As pElement
+  ConfirmYouCanSelectOnlyOneRadioButtonNo As pElement
+  FindTheBug As pElement
+  FindTheBugYes As pElement
+  FindTheBugNo As pElement
+  FindWhichOneIsSelected As pElement
+  FindWhichOneIsSelectedFoo As pElement
+  FindWhichOneIsSelectedBar As pElement
+  ConfirmLastFieldIsDisabled As pElement
+  ConfirmLastFieldIsDisabledGoing As pElement
+  ConfirmLastFieldIsDisabledNotGoing As pElement
+  ConfirmLastFieldIsDisabledMaybe As pElement
+  FindIfTheCheckboxIsSelected As pElement
+  FindIfTheCheckboxIsSelectedRememberMe As pElement
+  AcceptTheTermsAndConditions As pElement
+  IAgreeToTheFAKETermsAndConditions As pElement
+End Type
+
+Private This As PageAttributes
+
+Private Sub Class_Initialize()
+  Set This.WebBrowser = Factory.GetNewEdgeWebBrowser
+  Set This.GroupControl = Factory.GetNewLocator
+  Set This.AllControls = Factory.GetNewLocator
+End Sub
+
+Private Sub Class_Terminate()
+  Set This.WebBrowser = Nothing
+  Set This.RootWebArea = Nothing
+  Set This.GroupControl = Nothing
+  Set This.AllControls = Nothing
+  Set This.RadioAndCheckboxHeader = Nothing
+  Set This.SelectAnyOneSubHeader = Nothing
+  Set This.SelectAnyOneYes = Nothing
+  Set This.SelectAnyOneNo = Nothing
+  Set This.ConfirmYouCanSelectOnlyOneRadioButton = Nothing
+  Set This.ConfirmYouCanSelectOnlyOneRadioButtonYes = Nothing
+  Set This.ConfirmYouCanSelectOnlyOneRadioButtonNo = Nothing
+  Set This.FindTheBug = Nothing
+  Set This.FindTheBugYes = Nothing
+  Set This.FindTheBugNo = Nothing
+  Set This.FindWhichOneIsSelected = Nothing
+  Set This.FindWhichOneIsSelectedFoo = Nothing
+  Set This.FindWhichOneIsSelectedBar = Nothing
+  Set This.ConfirmLastFieldIsDisabled = Nothing
+  Set This.ConfirmLastFieldIsDisabledGoing = Nothing
+  Set This.ConfirmLastFieldIsDisabledNotGoing = Nothing
+  Set This.ConfirmLastFieldIsDisabledMaybe = Nothing
+  Set This.FindIfTheCheckboxIsSelected = Nothing
+  Set This.FindIfTheCheckboxIsSelectedRememberMe = Nothing
+  Set This.AcceptTheTermsAndConditions = Nothing
+  Set This.IAgreeToTheFAKETermsAndConditions = Nothing
+End Sub
+
+Public Sub Initialize()
+  
+  With This.WebBrowser
+    .StartNormal WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
+    Set This.RootWebArea = .GetRootWebArea
+  End With
+  
+  With This.GroupControl
+    .Initialise "GroupControl", This.RootWebArea, Children, pConditions, "AND(AriaRole, ControlType, NameIs)"
+    .Condition "AriaRole", AriaRole, IsTheString, "group"
+    .Condition "ControlType", ControlType, EqualsNumber, Group
+    .Condition "NameIs", Name, IsTheString, ""
+    .Find
+  End With
+  
+  Dim AllControls() As IUIAutomationElement
+  With This.AllControls
+    .Initialise "AllControls", This.GroupControl, Children, pConditions, "OR(ControlTypeText, ControlTypeRadioButton, ControlTypeCheckBox)"
+    .Condition "ControlTypeText", ControlType, EqualsNumber, Text
+    .Condition "ControlTypeRadioButton", ControlType, EqualsNumber, RadioButton
+    .Condition "ControlTypeCheckBox", ControlType, EqualsNumber, CheckBox
+    .FindAll False
+    AllControls = .FoundUIAElements
+  End With
+
+  If Not pEssence.Utils.IsArrayEmpty(AllControls) Then
+    Dim i As Integer
+    Dim CurrentUIAElement As IUIAutomationElement
+    For i = 0 To UBound(AllControls)
+      Set CurrentUIAElement = AllControls(i)
+      With CurrentUIAElement
+        Select Case i + 1
+          Case 1
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentName = "Radio & Checkbox"
+            Set This.RadioAndCheckboxHeader = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          Case 2
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentName = "Select any one"
+            Set This.SelectAnyOneSubHeader = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          Case 3
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentName = "Yes"
+            Set This.SelectAnyOneYes = Factory.GetNewElement(This.SelectAnyOneSubHeader.GivenName & " - Yes", CurrentUIAElement)
+          Case 4
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentName = "No"
+            Set This.SelectAnyOneNo = Factory.GetNewElement(This.SelectAnyOneSubHeader.GivenName & " - No", CurrentUIAElement)
+          Case 5
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentName = "Cofirm you can select only one radio button"
+            Set This.ConfirmYouCanSelectOnlyOneRadioButton = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          Case 6
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentName = "Yes"
+            Set This.ConfirmYouCanSelectOnlyOneRadioButtonYes = Factory.GetNewElement(This.ConfirmYouCanSelectOnlyOneRadioButton.GivenName & " - Yes", CurrentUIAElement)
+          Case 7
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentName = "No"
+            Set This.ConfirmYouCanSelectOnlyOneRadioButtonNo = Factory.GetNewElement(This.ConfirmYouCanSelectOnlyOneRadioButton.GivenName & " - No", CurrentUIAElement)
+          Case 8
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentName = "Find the bug"
+            Set This.FindTheBug = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          Case 9
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentName = "Yes"
+            Set This.FindTheBugYes = Factory.GetNewElement(This.FindTheBug.GivenName & " - Yes", CurrentUIAElement)
+          Case 10
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentName = "No"
+            Set This.FindTheBugNo = Factory.GetNewElement(This.FindTheBug.GivenName & " - No", CurrentUIAElement)
+          Case 11
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentName = "Find which one is selected"
+            Set This.FindWhichOneIsSelected = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          Case 12
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentName = "Foo"
+            Set This.FindWhichOneIsSelectedFoo = Factory.GetNewElement(This.FindWhichOneIsSelected.GivenName & " - Foo", CurrentUIAElement)
+          Case 13
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentName = "Bar"
+            Set This.FindWhichOneIsSelectedBar = Factory.GetNewElement(This.FindWhichOneIsSelected.GivenName & " - Bar", CurrentUIAElement)
+          Case 14
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentName = "Confirm last field is disabled"
+            Set This.ConfirmLastFieldIsDisabled = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          Case 15
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentName = "Going"
+            Set This.ConfirmLastFieldIsDisabledGoing = Factory.GetNewElement(This.ConfirmLastFieldIsDisabled.GivenName & " - Going", CurrentUIAElement)
+          Case 16
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentName = "Not going"
+            Set This.ConfirmLastFieldIsDisabledNotGoing = Factory.GetNewElement(This.ConfirmLastFieldIsDisabled.GivenName & " - Not going", CurrentUIAElement)
+          Case 17
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentName = "Maybe"
+            Set This.ConfirmLastFieldIsDisabledMaybe = Factory.GetNewElement(This.ConfirmLastFieldIsDisabled.GivenName & " - Maybe", CurrentUIAElement)
+          Case 18
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentName = "Find if the checkbox is selected?"
+            Set This.FindIfTheCheckboxIsSelected = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          Case 19
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.CheckBox
+            Debug.Assert CurrentUIAElement.CurrentName = "Remember me"
+            Set This.FindIfTheCheckboxIsSelectedRememberMe = Factory.GetNewElement(This.FindIfTheCheckboxIsSelected.GivenName & " - Remember me", CurrentUIAElement)
+          Case 20
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentName = "Accept the T&C"
+            Set This.AcceptTheTermsAndConditions = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          Case 21
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.CheckBox
+            Debug.Assert CurrentUIAElement.CurrentName = "I agree to the FAKE terms and conditions"
+            Set This.IAgreeToTheFAKETermsAndConditions = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          Case 22
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentName = " I agree to the "
+          Case 23
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentName = "FAKE terms and conditions"
+          Case 24
+            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentName = "On completion of this exercise, you can learn the following concepts."
+          Case Else
+             MsgBox "Error - button not handed!? #" & i & ": '" & CurrentUIAElement.CurrentName & "'"
+        End Select
+      End With
+    Next i
+  End If
+
+End Sub
+
+Public Sub Automate()
+ 
+  'SelectAnyOne
+  Debug.Assert This.SelectAnyOneYes.IsEnabled
+  Debug.Assert Not This.SelectAnyOneYes.IsSelected()
+  Debug.Assert This.SelectAnyOneNo.IsEnabled
+  Debug.Assert Not This.SelectAnyOneNo.IsSelected()
+  
+  Actions.Click This.SelectAnyOneYes.GivenName, This.SelectAnyOneYes.UIAElement
+  Debug.Assert This.SelectAnyOneYes.IsSelected()
+  Debug.Assert Not This.SelectAnyOneNo.IsSelected()
+  
+  Actions.Click This.SelectAnyOneNo.GivenName, This.SelectAnyOneNo.UIAElement
+  Debug.Assert This.SelectAnyOneNo.IsSelected()
+  Debug.Assert Not This.SelectAnyOneYes.IsSelected()
+  
+  'CofirmYouCanSelectOnlyOneRadioButton
+  Debug.Assert This.ConfirmYouCanSelectOnlyOneRadioButtonYes.IsEnabled
+  Debug.Assert Not This.ConfirmYouCanSelectOnlyOneRadioButtonYes.IsSelected()
+  Debug.Assert This.ConfirmYouCanSelectOnlyOneRadioButtonNo.IsEnabled
+  Debug.Assert Not This.ConfirmYouCanSelectOnlyOneRadioButtonNo.IsSelected()
+  
+  Actions.Click This.ConfirmYouCanSelectOnlyOneRadioButtonYes.GivenName, This.ConfirmYouCanSelectOnlyOneRadioButtonYes.UIAElement
+  Debug.Assert This.ConfirmYouCanSelectOnlyOneRadioButtonYes.IsSelected()
+  Debug.Assert Not This.ConfirmYouCanSelectOnlyOneRadioButtonNo.IsSelected()
+  
+  Actions.Click This.ConfirmYouCanSelectOnlyOneRadioButtonNo.GivenName, This.ConfirmYouCanSelectOnlyOneRadioButtonNo.UIAElement
+  Debug.Assert This.ConfirmYouCanSelectOnlyOneRadioButtonNo.IsSelected()
+  Debug.Assert Not This.ConfirmYouCanSelectOnlyOneRadioButtonYes.IsSelected()
+
+  'FindTheBug
+  Debug.Assert This.FindTheBugYes.IsEnabled
+  Debug.Assert Not This.FindTheBugYes.IsSelected()
+  Debug.Assert This.FindTheBugNo.IsEnabled
+  Debug.Assert Not This.FindTheBugNo.IsSelected()
+  
+  Actions.Click This.FindTheBugYes.GivenName, This.FindTheBugYes.UIAElement
+  Debug.Assert This.FindTheBugYes.IsSelected()
+  Debug.Assert Not This.FindTheBugNo.IsSelected()
+  
+  Actions.Click This.FindTheBugNo.GivenName, This.FindTheBugNo.UIAElement
+  Debug.Assert This.FindTheBugNo.IsSelected()
+  Debug.Assert This.FindTheBugYes.IsSelected() 'BUG: The Yes radio button should NOT still be selected!
+
+  'FindWhichOneIsSelected
+  If This.FindWhichOneIsSelectedFoo.IsSelected() Then
+    Debug.Assert This.FindWhichOneIsSelectedFoo.IsSelected()
+    Debug.Assert Not This.FindWhichOneIsSelectedBar.IsSelected()
+  ElseIf This.FindWhichOneIsSelectedBar.IsSelected() Then
+    Debug.Assert This.FindWhichOneIsSelectedBar.IsSelected()
+    Debug.Assert Not This.FindWhichOneIsSelectedFoo.IsSelected()
+  End If
+  
+  'ConfirmLastFieldIsDisabled
+  Debug.Assert This.ConfirmLastFieldIsDisabledGoing.IsEnabled
+  Debug.Assert This.ConfirmLastFieldIsDisabledNotGoing.IsEnabled
+  Debug.Assert Not This.ConfirmLastFieldIsDisabledMaybe.IsEnabled
+  
+  'FindIfTheCheckboxIsSelected
+  Debug.Assert This.FindIfTheCheckboxIsSelectedRememberMe.IsSelected
+  Actions.Click This.FindIfTheCheckboxIsSelectedRememberMe.GivenName, This.FindIfTheCheckboxIsSelectedRememberMe.UIAElement
+  Debug.Assert Not This.FindIfTheCheckboxIsSelectedRememberMe.IsSelected
+  
+  'AcceptTheTermsAndConditions
+  Debug.Assert Not This.IAgreeToTheFAKETermsAndConditions.IsSelected
+  Actions.Click This.IAgreeToTheFAKETermsAndConditions.GivenName, This.IAgreeToTheFAKETermsAndConditions.UIAElement
+  Debug.Assert This.IAgreeToTheFAKETermsAndConditions.IsSelected
+
+End Sub

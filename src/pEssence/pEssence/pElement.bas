@@ -22,7 +22,7 @@ Public GivenName As String
 Public UIAElement As IUIAutomationElement
 
 Private Sub Class_Terminate()
- Set UIAElement = Nothing
+  Set UIAElement = Nothing
 End Sub
 
 Public Function GetProperty(PropertyId As Long) As Variant

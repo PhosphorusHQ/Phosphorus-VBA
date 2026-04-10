@@ -23,6 +23,37 @@ Private Type PageAttributes
   DisplaySearch As pLocator
   DisplayTextControl As String
   Elements As New Scripting.Dictionary
+  OpenHistoryFlyout As pElement
+  ClearAllMemory As pElement
+  MemoryRecall As pElement
+  MemoryAdd As pElement
+  MemorySubtract As pElement
+  MemoryStore As pElement
+  OpenMemoryFlyout As pElement
+  Percent As pElement
+  ClearEntry As pElement
+  Clear As pElement
+  Backspace As pElement
+  Reciprocal As pElement
+  Square As pElement
+  SquareRoot As pElement
+  DivideBy As pElement
+  MultiplyBy As pElement
+  Minus As pElement
+  Plus As pElement
+  PositiveNegative As pElement
+  Equals As pElement
+  Zero As pElement
+  One As pElement
+  Two As pElement
+  Three As pElement
+  Four As pElement
+  Five As pElement
+  Six As pElement
+  Seven As pElement
+  Eight As pElement
+  Nine As pElement
+  DecimalSeparator As pElement
 End Type
 
 Private This As PageAttributes
@@ -38,6 +69,37 @@ End Sub
 
 Private Sub Class_Terminate()
   Set This.CalculatorControls = Nothing
+  Set This.OpenHistoryFlyout = Nothing
+  Set This.ClearAllMemory = Nothing
+  Set This.MemoryRecall = Nothing
+  Set This.MemoryAdd = Nothing
+  Set This.MemorySubtract = Nothing
+  Set This.MemoryStore = Nothing
+  Set This.OpenMemoryFlyout = Nothing
+  Set This.Percent = Nothing
+  Set This.ClearEntry = Nothing
+  Set This.Clear = Nothing
+  Set This.Backspace = Nothing
+  Set This.Reciprocal = Nothing
+  Set This.Square = Nothing
+  Set This.SquareRoot = Nothing
+  Set This.DivideBy = Nothing
+  Set This.MultiplyBy = Nothing
+  Set This.Minus = Nothing
+  Set This.Plus = Nothing
+  Set This.PositiveNegative = Nothing
+  Set This.Equals = Nothing
+  Set This.Zero = Nothing
+  Set This.One = Nothing
+  Set This.Two = Nothing
+  Set This.Three = Nothing
+  Set This.Four = Nothing
+  Set This.Five = Nothing
+  Set This.Six = Nothing
+  Set This.Seven = Nothing
+  Set This.Eight = Nothing
+  Set This.Nine = Nothing
+  Set This.DecimalSeparator = Nothing
   Set This.Elements = Nothing
 End Sub
 
@@ -63,67 +125,98 @@ Public Sub FindAllControls(HomePage As CalculatorHomePage)
       Set CurrentUIAElement = CalculatorControls(i)
       Select Case CurrentUIAElement.CurrentName
         Case "Open history flyout"
-          .Add "OpenHistory", CurrentUIAElement
+          Set This.OpenHistoryFlyout = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "OpenHistory", This.OpenHistoryFlyout
         Case "Clear all memory"
-          .Add "MC", CurrentUIAElement
+          Set This.ClearAllMemory = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "MC", This.ClearAllMemory
         Case "Memory recall"
-          .Add "MR", CurrentUIAElement
+          Set This.MemoryRecall = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "MR", This.MemoryRecall
         Case "Memory add"
-          .Add "M+", CurrentUIAElement
+          Set This.MemoryAdd = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "M+", This.MemoryAdd
         Case "Memory subtract"
-          .Add "M-", CurrentUIAElement
+          Set This.MemorySubtract = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "M-", This.MemorySubtract
         Case "Memory store"
-          .Add "MS", CurrentUIAElement
+          Set This.MemoryStore = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "MS", This.MemoryStore
         Case "Open memory flyout"
-          .Add "OpenMemory", CurrentUIAElement
+          Set This.OpenMemoryFlyout = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "OpenMemory", This.OpenMemoryFlyout
         Case "Percent"
-          .Add "%", CurrentUIAElement
+          Set This.Percent = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "%", This.Percent
         Case "Clear entry"
-          .Add "CE", CurrentUIAElement
+          Set This.ClearEntry = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "CE", This.ClearEntry
         Case "Clear"
-          .Add "C", CurrentUIAElement
+          Set This.Clear = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "C", This.Clear
         Case "Backspace"
-          .Add "BS", CurrentUIAElement
+          Set This.Backspace = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "BS", This.Backspace
         Case "Reciprocal"
-          .Add "1/x", CurrentUIAElement
+          Set This.Reciprocal = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "1/x", This.Reciprocal
         Case "Square"
-          .Add "Sqr", CurrentUIAElement
+          Set This.Square = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "Sqr", This.Square
         Case "Square root"
-          .Add "SqrRt", CurrentUIAElement
+          Set This.SquareRoot = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "SqrRt", This.SquareRoot
         Case "Divide by"
-          .Add "/", CurrentUIAElement
+          Set This.DivideBy = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "/", This.DivideBy
         Case "Multiply by"
-          .Add "x", CurrentUIAElement
+          Set This.MultiplyBy = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "x", This.MultiplyBy
         Case "Minus"
-          .Add "-", CurrentUIAElement
+          Set This.Minus = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "-", This.Minus
         Case "Plus"
-          .Add "+", CurrentUIAElement
+          Set This.Plus = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "+", This.Plus
         Case "Positive negative"
-          .Add "Negate", CurrentUIAElement
+          Set This.PositiveNegative = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "Negate", This.PositiveNegative
         Case "Equals"
-          .Add "=", CurrentUIAElement
+          Set This.Equals = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "=", This.Equals
         Case "Zero"
-          .Add "0", CurrentUIAElement
+          Set This.Zero = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "0", This.Zero
         Case "One"
-          .Add "1", CurrentUIAElement
+          Set This.One = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "1", This.One
         Case "Two"
-          .Add "2", CurrentUIAElement
+          Set This.Two = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "2", This.Two
         Case "Three"
-          .Add "3", CurrentUIAElement
+          Set This.Three = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "3", This.Three
         Case "Four"
-          .Add "4", CurrentUIAElement
+          Set This.Four = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "4", This.Four
         Case "Five"
-          .Add "5", CurrentUIAElement
+          Set This.Five = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "5", This.Five
         Case "Six"
-          .Add "6", CurrentUIAElement
+          Set This.Six = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "6", This.Six
         Case "Seven"
-          .Add "7", CurrentUIAElement
+          Set This.Seven = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "7", This.Seven
         Case "Eight"
-          .Add "8", CurrentUIAElement
+          Set This.Eight = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "8", This.Eight
         Case "Nine"
-          .Add "9", CurrentUIAElement
+          Set This.Nine = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add "9", This.Nine
         Case "Decimal separator"
-          .Add ".", CurrentUIAElement
+          Set This.DecimalSeparator = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
+          .Add ".", This.DecimalSeparator
         Case Else
           MsgBox "Error - button not handed!? '" & CurrentUIAElement.CurrentName & "'"
     End Select
@@ -163,7 +256,9 @@ Public Sub Calculate(Keystrokes As String, Answer As String)
     Dim NextButtonName As String
     NextButtonName = GetNextButtonName(Keystrokes)
     If NextButtonName <> "" Then
-      Actions.Click NextButtonName, This.Elements(NextButtonName)
+      Dim NextButton As pElement
+      Set NextButton = This.Elements(NextButtonName)
+      Actions.Click NextButtonName, NextButton.UIAElement
     Else
       Continue = False
     End If

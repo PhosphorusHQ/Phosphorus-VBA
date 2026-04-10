@@ -20,7 +20,8 @@ Option Explicit
 'Requires a reference Windows Scripting Runtime for Scripting.Dictionary
 
 Private Type Properties
-  ElementName As String
+  Initialised As Boolean
+  Element As pElement
   RootUIAElement As IUIAutomationElement
   RootUIAElementLocator As pLocator
   RootUIAElementIsDesktop As Boolean
@@ -29,7 +30,6 @@ Private Type Properties
   FindFirst As Boolean
   AllSearchConditions As Scripting.Dictionary
   EvaluationLogic As String
-  FoundUIAElement As IUIAutomationElement
   FoundUIAElements() As IUIAutomationElement
 End Type
 
@@ -37,6 +37,10 @@ Private This As Properties
 
 Private Sub Class_Initialize()
   Set This.AllSearchConditions = New Scripting.Dictionary
+End Sub
+
+Private Sub Class_Terminate()
+  Set This.Element = Nothing
 End Sub
 
 Public Sub Initialise( _
@@ -47,13 +51,15 @@ Public Sub Initialise( _
   EvaluationLogic As String, _
   Optional FindFirst As Boolean)
   
-  This.ElementName = ElementName
+  Set This.Element = New pElement
+  This.Element.GivenName = ElementName
+  
   If RootUIAElementLocator Is Nothing Then
     Set This.RootUIAElement = Factory.GetRootDesktopElement
     This.RootUIAElementIsDesktop = True
   Else
     Set This.RootUIAElementLocator = RootUIAElementLocator
-    Set This.RootUIAElement = This.RootUIAElementLocator.FoundUIAElement
+    Set This.RootUIAElement = This.RootUIAElementLocator.Element.UIAElement
   End If
   This.TreeScope = TreeScope
   Select Case FindBy
@@ -69,6 +75,8 @@ Public Sub Initialise( _
       Exit Sub
   End Select
   This.FindFirst = FindFirst
+  
+  This.Initialised = True
   
 End Sub
 
@@ -101,12 +109,12 @@ Public Sub ListAllConditions()
   Next k
 End Sub
 
-Public Function ElementName() As String
-  ElementName = This.ElementName
+Public Function Initialised() As Boolean
+  Initialised = This.Initialised
 End Function
 
-Public Function FoundUIAElement() As IUIAutomationElement
-  Set FoundUIAElement = This.FoundUIAElement
+Public Function Element() As pElement
+  Set Element = This.Element
 End Function
 
 Public Function FoundUIAElements() As IUIAutomationElement()
@@ -116,7 +124,7 @@ End Function
 Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = True)
 'Find a single element with a timeout
 
-  If Not This.FoundUIAElement Is Nothing And Actions.IsElementAlive(This.ElementName, This.FoundUIAElement) And Not FindElementAgain Then
+  If Not This.Element.UIAElement Is Nothing And Actions.IsElementAlive(This.Element.GivenName, This.Element.UIAElement) And Not FindElementAgain Then
     'The element has already been found, no need to find it again
     Exit Sub
   End If
@@ -124,16 +132,16 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
   'Make sure we have the root element before finding the current element
   If This.RootUIAElementIsDesktop Then
     If This.RootUIAElementLocator Is Nothing Then
-      Set This.FoundUIAElement = Factory.GetRootDesktopElement
+      Set This.Element.UIAElement = Factory.GetRootDesktopElement
 '      Exit Sub
     End If
   Else
     'Find/Re-Find the Root Element
     This.RootUIAElementLocator.Find TimeoutInSeconds
-    Set This.RootUIAElement = This.RootUIAElementLocator.FoundUIAElement
+    Set This.RootUIAElement = This.RootUIAElementLocator.Element.UIAElement
   End If
 
-  Toaster.Message "Finding " & This.ElementName, Finding
+  Toaster.Message "Finding " & This.Element.GivenName, Finding
 
   Dim FoundElements() As IUIAutomationElement
   Dim CountOfFoundElements As Integer
@@ -171,16 +179,16 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
     ErrorLogging.LogError _
       Errors.FindElementsExpectedOneElementFoundNone, _
       "Expected to find one element but found none." & vbCrLf & vbCrLf & _
-      "Looking for '" & This.ElementName & "' element, evaluation logic: '" & This.EvaluationLogic & "', timeout (" & TimeoutInSeconds & " seconds)"
+      "Looking for '" & This.Element.GivenName & "' element, evaluation logic: '" & This.EvaluationLogic & "', timeout (" & TimeoutInSeconds & " seconds)"
     Exit Sub
   End If
   
   Dim FoundElement As IUIAutomationElement
   If CountOfFoundElements = 1 Then
-    Set This.FoundUIAElement = FoundElements(0)
+    Set This.Element.UIAElement = FoundElements(0)
     If FindElementAgain Then
-      If UIAProps.HasProperty(This.ElementName, This.FoundUIAElement, UIAProperties.IsScrollItemPatternAvailable) Then
-        Actions.TryToScrollItemIntoView This.ElementName, This.FoundUIAElement
+      If UIAProps.HasProperty(This.Element.GivenName, This.Element.UIAElement, UIAProperties.IsScrollItemPatternAvailable) Then
+        Actions.TryToScrollItemIntoView This.Element.GivenName, This.Element.UIAElement
         Find TimeoutInSeconds, AcceptNoElements, FindElementAgain:=False
       End If
     End If
@@ -192,7 +200,7 @@ End Sub
 
 Public Sub FindAll(Optional AcceptNoElements As Boolean)
 'Find more than 1 elements with no timeout
-  Toaster.Message "Finding all elements " & This.ElementName, Finding
+  Toaster.Message "Finding all elements " & This.Element.GivenName, Finding
   This.FoundUIAElements = Findlements(AcceptNoElements)
 End Sub
 
@@ -207,7 +215,7 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
   ' Find the child/descendant elements of the root element
   Dim AllElements As IUIAutomationElementArray
   If This.RootUIAElement Is Nothing Then
-    ErrorLogging.LogError Errors.FindElementsRootElementIsNothing, "The root element is nothing for element '" & This.ElementName & "'!"
+    ErrorLogging.LogError Errors.FindElementsRootElementIsNothing, "The root element is nothing for element '" & This.Element.GivenName & "'!"
     Exit Function
   Else
     Set AllElements = This.RootUIAElement.FindAll(This.TreeScope, UIA.CreateTrueCondition)
@@ -334,9 +342,9 @@ Private Function EvaluationLogicIsOk() As Boolean
 End Function
 
 Public Function ElementExists(Optional TimeoutInSeconds As Long)
-  Set This.FoundUIAElement = Nothing
+  Set This.Element.UIAElement = Nothing
   Find TimeoutInSeconds, AcceptNoElements:=True, FindElementAgain:=True
-  ElementExists = Not (This.FoundUIAElement Is Nothing)
+  ElementExists = Not (This.Element.UIAElement Is Nothing)
 End Function
 
 Public Function ElementDoesntExist(Optional TimeoutInSeconds As Long)

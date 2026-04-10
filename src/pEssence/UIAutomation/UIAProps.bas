@@ -246,11 +246,11 @@ End Function
 
 Public Function HasProperty(ElementName As String, Element As IUIAutomationElement, PropertyId As Long, Optional RaiseError As Boolean) As Boolean
   On Error Resume Next
-  Dim property As Variant
+  Dim Property As Variant
   On Error Resume Next
-  property = Element.GetCurrentPropertyValue(PropertyId)
+  Property = Element.GetCurrentPropertyValue(PropertyId)
   On Error GoTo 0
-  HasProperty = Not IsEmpty(property)
+  HasProperty = Not IsEmpty(Property)
 End Function
 
 Public Function GetWindowInteractionStateName(WindowInteractionState As Long) As String

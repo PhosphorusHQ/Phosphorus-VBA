@@ -173,8 +173,6 @@ Public Sub Click(Name As String, Ele As IUIAutomationElement)
   If TryMouseClicksByEvent(LeftClick) Then GoTo Cleanup
   If TryMouseClickByMessage(LeftClickSynchronous) Then GoTo Cleanup
 
-  Exit Sub
-
 Cleanup:
   Window.ReleaseHighlighting
   This.Name = ""
@@ -475,33 +473,80 @@ Public Sub WaitForPropertyValue( _
   UIAProperty As UIAProperties, _
   UIAPropertyValue As Variant, _
   Optional TimeoutInSeconds As Integer)
+  WaitForPropertyValueOrPatternState ElementName, CurrentElement, UIAProperty:=UIAProperty, UIAPropertyValue:=UIAPropertyValue, TimeoutInSeconds:=TimeoutInSeconds
+End Sub
+  
+Public Sub WaitForPatternState( _
+  ElementName As String, _
+  CurrentElement As IUIAutomationElement, _
+  UIAPatternID As UIAPatterns, _
+  PatternState As Variant, _
+  Optional TimeoutInSeconds As Integer)
+  WaitForPropertyValueOrPatternState ElementName, CurrentElement, UIAPatternID:=UIAPatternID, PatternState:=PatternState, TimeoutInSeconds:=TimeoutInSeconds
+End Sub
+  
+Private Sub WaitForPropertyValueOrPatternState( _
+  ElementName As String, _
+  CurrentElement As IUIAutomationElement, _
+  Optional UIAProperty As UIAProperties, _
+  Optional UIAPropertyValue As Variant, _
+  Optional UIAPatternID As UIAPatterns, _
+  Optional PatternState As Variant, _
+  Optional TimeoutInSeconds As Integer)
+
+'TODO: Allow a wait for milliseconds?
+'NOTE: Temp code until we move this methor to pElement
+
+  Dim Element As pElement
+  Set Element = Factory.GetNewElement(ElementName, CurrentElement)
   
   'Calculate the end time
   Dim EndTime As Date
   EndTime = DateAdd("s", TimeoutInSeconds, Now)
   
   'Loop until element(s) found or timed out
-  Dim PropertyValueFound As Boolean
-  PropertyValueFound = False
+  Dim PropertyValuePatternStateFound As Boolean
+  PropertyValuePatternStateFound = False
   
   Dim PassedEndTime As Boolean
   PassedEndTime = False
   
   Dim CurrentPropertyValue As Variant
-  While Not (PropertyValueFound Or PassedEndTime)
-    CurrentPropertyValue = GetProperty(CurrentElement, UIAProperty)
-    PropertyValueFound = (CurrentPropertyValue = UIAPropertyValue)
-    If Not PropertyValueFound Then
+  While Not (PropertyValuePatternStateFound Or PassedEndTime)
+  
+    If UIAProperty <> 0 Then
+      CurrentPropertyValue = GetProperty(CurrentElement, UIAProperty)
+      PropertyValuePatternStateFound = (CurrentPropertyValue = UIAPropertyValue)
+    Else
+      Select Case UIAPatternID
+        Case UIAPatterns.SelectionItemPattern
+          Dim SelectionItemPattern As IUIAutomationSelectionItemPattern
+          Set SelectionItemPattern = Element.GetPattern(UIA_PatternIds.UIA_SelectionItemPatternId)
+          Select Case PatternState
+            Case "CurrentIsSelected"
+              PropertyValuePatternStateFound = (SelectionItemPattern.CurrentIsSelected = 1)
+            Case "CurrentIsNotSelected"
+              PropertyValuePatternStateFound = (SelectionItemPattern.CurrentIsSelected = 0)
+          End Select
+        Case UIA_TogglePatternId
+          Dim TogglePattern As IUIAutomationTogglePattern
+          Set TogglePattern = Element.GetPattern(UIA_PatternIds.UIA_TogglePatternId)
+          Select Case PatternState
+            Case "CurrentToggleStateOn"
+              PropertyValuePatternStateFound = (TogglePattern.CurrentToggleState = 1)
+            Case "CurrentToggleStateOff"
+              PropertyValuePatternStateFound = (TogglePattern.CurrentToggleState = 0)
+          End Select
+        End Select
+    End If
+    
+    If Not PropertyValuePatternStateFound Then
       PassedEndTime = (Now > EndTime)
       If Not PassedEndTime Then
         WindowsProcesses.Snooze 10
       End If
     End If
   Wend
-
-  If Not PropertyValueFound Then
-    Debug.Assert PropertyValueFound
-  End If
 
 End Sub
 
@@ -547,6 +592,9 @@ Public Sub TryToScrollItemIntoView(Name As String, Ele As IUIAutomationElement)
   End If
 End Sub
 
+'NOTE - move these to the pElement class
+'HIghlight only when setting the element state - this is an action, but not for gets, which may be part of another action!?
+
 Public Function GetValue(Name As String, Ele As IUIAutomationElement) As String
   If UIAPatts.HasPattern(Name, Ele, UIA_PatternIds.UIA_ValuePatternId) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
@@ -556,11 +604,13 @@ Public Function GetValue(Name As String, Ele As IUIAutomationElement) As String
 End Function
 
 Public Sub SetValue(Name As String, Ele As IUIAutomationElement, Value As String)
+  Window.HighlightElement Ele
   If UIAPatts.HasPattern(Name, Ele, UIA_PatternIds.UIA_ValuePatternId) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
     Set CurrentElementValuePattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_ValuePatternId, RaiseError:=True)
     CurrentElementValuePattern.SetValue Value
   End If
+  Window.ReleaseHighlighting
 End Sub
 
 Public Function GetToggleState(Name As String, Ele As IUIAutomationElement) As Integer

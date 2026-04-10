@@ -10,9 +10,21 @@ Attribute VB_Name = "AllExamples"
 ' =======================================================================
 Option Explicit
 
+Public RunningAllExamples As Boolean
+
 Public Sub AllExamples()
+  
+  RunningAllExamples = True
+  Window.HighlightElements = False
+
   Calculator.Calculator
   ExampleDomainDotCom.ExampleDomainDotCom
+  LetCodeDotIn.RadioButtonsAndCheckboxes
   TheInternet.TheInternet
-MsgBox "What next? Select Interaction speeds - slow, medium, fast, no delay? More pages ..."
+  
+  Window.HighlightElements = False
+  RunningAllExamples = False
+
+  MsgBox "What next? Select Interaction speeds - slow, medium, fast, no delay? More pages ..."
+
 End Sub

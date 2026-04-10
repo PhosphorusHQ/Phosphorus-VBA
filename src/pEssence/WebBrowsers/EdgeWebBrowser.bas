@@ -57,7 +57,7 @@ End Sub
 
 Private Sub Class_Terminate()
   On Error Resume Next
-  Window.CloseWindow This.MasterWindow.ElementName, This.MasterWindow.FoundUIAElement
+  Window.CloseWindow This.MasterWindow.Element.GivenName, This.MasterWindow.Element.UIAElement
   On Error GoTo 0
   Set This.MasterWindow = Nothing
   Set This.BrowserRootView = Nothing
@@ -69,15 +69,12 @@ Private Sub Class_Terminate()
   Set This.BackButton = Nothing
   Set This.LocationBarView = Nothing
   Set This.AddressAndSearchBar = Nothing
-  
   Set This.SidebarContentsSplitView = Nothing
   Set This.RootWebArea = Nothing
 End Sub
 
 Public Sub StartNormal(WebAppName As String, URL As String, WebAppPageTitle As String)
-  
   Toaster.Message "Starting " & WebAppName
-  
   This.WebAppName = WebAppName
   This.URL = URL
   This.WebAppPageTitle = WebAppPageTitle
@@ -167,14 +164,14 @@ End Function
 Public Function GetCurrentURL() As String
   With This.AddressAndSearchBar
     .Find 10
-    GetCurrentURL = Actions.GetValue(.ElementName, .FoundUIAElement)
+    GetCurrentURL = Actions.GetValue(.Element.GivenName, .Element.UIAElement)
   End With
 End Function
 
 Public Sub NavigateBack()
   With This.BackButton
     .Find 10
-    Actions.Click .ElementName, This.BackButton.FoundUIAElement
+    Actions.Click .Element.GivenName, This.BackButton.Element.UIAElement
     This.RootWebArea.Find 10, FindElementAgain:=True
   End With
 End Sub

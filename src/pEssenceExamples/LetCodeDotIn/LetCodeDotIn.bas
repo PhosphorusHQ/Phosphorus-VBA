@@ -10,11 +10,13 @@ Attribute VB_Name = "LetCodeDotIn"
 ' =======================================================================
 Option Explicit
 
-Sub LetCode_RadioButtonsAndCheckboxes()
+Sub RadioButtonsAndCheckboxes()
 
   On Error GoTo ErrorHandler
 
-  Window.HighlightElements = True
+  If Not RunningAllExamples Then
+    Window.HighlightElements = True
+  End If
   
   Dim LetCodeDotIn As LetCodeDotInPageRadio
   Set LetCodeDotIn = New LetCodeDotInPageRadio
@@ -30,7 +32,9 @@ ErrorHandler:
   
 ExitSub:
   Set LetCodeDotIn = Nothing
-  Window.HighlightElements = False
-
+  If Not RunningAllExamples Then
+    Window.HighlightElements = False
+  End If
+  
 End Sub
 

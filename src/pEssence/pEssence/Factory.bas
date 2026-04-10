@@ -31,11 +31,16 @@ Public Function GetNewLocator() As pLocator
   Set GetNewLocator = Element
 End Function
 
-Public Function GetNewElement(GivenName As String, UIAElement As IUIAutomationElement) As pElement
+Public Function GetNewElement(GivenName As String, Optional UIAElement As IUIAutomationElement) As pElement
   Dim Element As pElement
   Set Element = New pElement
   Element.GivenName = GivenName
-  Set Element.UIAElement = UIAElement
+'  If IsMissing(UIAElement) Then
+  If UIAElement Is Nothing Then
+Stop
+  Else
+    Set Element.UIAElement = UIAElement
+  End If
   Set GetNewElement = Element
 End Function
 

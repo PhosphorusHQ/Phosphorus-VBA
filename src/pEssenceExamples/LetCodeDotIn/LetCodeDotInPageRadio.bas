@@ -222,6 +222,8 @@ End Sub
 
 Public Sub Automate()
  
+  'Snoozing between clicks to allwo time for the click to complete ... at soem poitn we will implement a wait for state!
+ 
   'SelectAnyOne
   Debug.Assert This.SelectAnyOneYes.IsEnabled
   Debug.Assert Not This.SelectAnyOneYes.IsSelected()
@@ -229,10 +231,14 @@ Public Sub Automate()
   Debug.Assert Not This.SelectAnyOneNo.IsSelected()
   
   Actions.Click This.SelectAnyOneYes.GivenName, This.SelectAnyOneYes.UIAElement
+  Actions.WaitForPatternState This.SelectAnyOneYes.GivenName, This.SelectAnyOneYes.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
+  Actions.WaitForPatternState This.SelectAnyOneNo.GivenName, This.SelectAnyOneNo.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
   Debug.Assert This.SelectAnyOneYes.IsSelected()
   Debug.Assert Not This.SelectAnyOneNo.IsSelected()
   
   Actions.Click This.SelectAnyOneNo.GivenName, This.SelectAnyOneNo.UIAElement
+  Actions.WaitForPatternState This.SelectAnyOneNo.GivenName, This.SelectAnyOneNo.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
+  Actions.WaitForPatternState This.SelectAnyOneYes.GivenName, This.SelectAnyOneYes.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
   Debug.Assert This.SelectAnyOneNo.IsSelected()
   Debug.Assert Not This.SelectAnyOneYes.IsSelected()
   
@@ -243,10 +249,14 @@ Public Sub Automate()
   Debug.Assert Not This.ConfirmYouCanSelectOnlyOneRadioButtonNo.IsSelected()
   
   Actions.Click This.ConfirmYouCanSelectOnlyOneRadioButtonYes.GivenName, This.ConfirmYouCanSelectOnlyOneRadioButtonYes.UIAElement
+  Actions.WaitForPatternState This.ConfirmYouCanSelectOnlyOneRadioButtonYes.GivenName, This.ConfirmYouCanSelectOnlyOneRadioButtonYes.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
+  Actions.WaitForPatternState This.ConfirmYouCanSelectOnlyOneRadioButtonNo.GivenName, This.ConfirmYouCanSelectOnlyOneRadioButtonNo.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
   Debug.Assert This.ConfirmYouCanSelectOnlyOneRadioButtonYes.IsSelected()
   Debug.Assert Not This.ConfirmYouCanSelectOnlyOneRadioButtonNo.IsSelected()
   
   Actions.Click This.ConfirmYouCanSelectOnlyOneRadioButtonNo.GivenName, This.ConfirmYouCanSelectOnlyOneRadioButtonNo.UIAElement
+  Actions.WaitForPatternState This.ConfirmYouCanSelectOnlyOneRadioButtonNo.GivenName, This.ConfirmYouCanSelectOnlyOneRadioButtonNo.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
+  Actions.WaitForPatternState This.ConfirmYouCanSelectOnlyOneRadioButtonYes.GivenName, This.ConfirmYouCanSelectOnlyOneRadioButtonYes.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
   Debug.Assert This.ConfirmYouCanSelectOnlyOneRadioButtonNo.IsSelected()
   Debug.Assert Not This.ConfirmYouCanSelectOnlyOneRadioButtonYes.IsSelected()
 
@@ -257,10 +267,14 @@ Public Sub Automate()
   Debug.Assert Not This.FindTheBugNo.IsSelected()
   
   Actions.Click This.FindTheBugYes.GivenName, This.FindTheBugYes.UIAElement
+  Actions.WaitForPatternState This.FindTheBugYes.GivenName, This.FindTheBugYes.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
+  Actions.WaitForPatternState This.FindTheBugNo.GivenName, This.FindTheBugNo.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
   Debug.Assert This.FindTheBugYes.IsSelected()
   Debug.Assert Not This.FindTheBugNo.IsSelected()
   
   Actions.Click This.FindTheBugNo.GivenName, This.FindTheBugNo.UIAElement
+  Actions.WaitForPatternState This.FindTheBugYes.GivenName, This.FindTheBugYes.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 0
+  Actions.WaitForPatternState This.FindTheBugNo.GivenName, This.FindTheBugNo.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 1
   Debug.Assert This.FindTheBugNo.IsSelected()
   Debug.Assert This.FindTheBugYes.IsSelected() 'BUG: The Yes radio button should NOT still be selected!
 
@@ -281,11 +295,13 @@ Public Sub Automate()
   'FindIfTheCheckboxIsSelected
   Debug.Assert This.FindIfTheCheckboxIsSelectedRememberMe.IsSelected
   Actions.Click This.FindIfTheCheckboxIsSelectedRememberMe.GivenName, This.FindIfTheCheckboxIsSelectedRememberMe.UIAElement
+  Actions.WaitForPatternState This.FindIfTheCheckboxIsSelectedRememberMe.GivenName, This.FindIfTheCheckboxIsSelectedRememberMe.UIAElement, UIAPatterns.TogglePattern, "CurrentToggleStateOff", 1
   Debug.Assert Not This.FindIfTheCheckboxIsSelectedRememberMe.IsSelected
   
   'AcceptTheTermsAndConditions
   Debug.Assert Not This.IAgreeToTheFAKETermsAndConditions.IsSelected
   Actions.Click This.IAgreeToTheFAKETermsAndConditions.GivenName, This.IAgreeToTheFAKETermsAndConditions.UIAElement
+  Actions.WaitForPatternState This.IAgreeToTheFAKETermsAndConditions.GivenName, This.IAgreeToTheFAKETermsAndConditions.UIAElement, UIAPatterns.TogglePattern, "CurrentToggleStateOn", 1
   Debug.Assert This.IAgreeToTheFAKETermsAndConditions.IsSelected
 
 End Sub

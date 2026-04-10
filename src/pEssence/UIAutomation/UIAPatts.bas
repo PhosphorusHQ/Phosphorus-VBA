@@ -10,6 +10,12 @@ Attribute VB_Name = "UIAPatts"
 ' =======================================================================
 Option Explicit
 
+
+Public Enum UIAPatterns
+  SelectionItemPattern = UIA_PatternIds.UIA_SelectionItemPatternId
+  TogglePattern = UIA_PatternIds.UIA_TogglePatternId
+End Enum
+
 'Tools > References > OLE Automation needed for IUnknown type
 Public Function GetPattern(ElementName As String, Element As IUIAutomationElement, PatternId As Long, Optional RaiseError As Boolean) As IUnknown
   On Error Resume Next

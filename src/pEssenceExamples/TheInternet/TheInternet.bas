@@ -16,7 +16,9 @@ Sub TheInternet()
 
   On Error GoTo ErrorHandler
 
-  Window.HighlightElements = True
+  If Not RunningAllExamples Then
+    Window.HighlightElements = True
+  End If
   
   Set The_Internet = New TheInternetPage
   
@@ -35,6 +37,8 @@ ErrorHandler:
   
 ExitSub:
   Set The_Internet = Nothing
-  Window.HighlightElements = False
-
+  If Not RunningAllExamples Then
+    Window.HighlightElements = False
+  End If
+  
 End Sub

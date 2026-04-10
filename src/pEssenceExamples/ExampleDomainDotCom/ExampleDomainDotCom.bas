@@ -16,7 +16,9 @@ Sub ExampleDomainDotCom()
 
   On Error GoTo ErrorHandler
 
-  Window.HighlightElements = True
+  If Not RunningAllExamples Then
+    Window.HighlightElements = True
+  End If
   
   Set ExampleDomain = New ExampleDomainDotComPage
   
@@ -30,6 +32,8 @@ ErrorHandler:
   
 ExitSub:
   Set ExampleDomain = Nothing
-  Window.HighlightElements = False
+  If Not RunningAllExamples Then
+    Window.HighlightElements = False
+  End If
   
 End Sub

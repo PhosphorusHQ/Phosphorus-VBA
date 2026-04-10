@@ -283,7 +283,7 @@ End Function
 
 Private Function GetDisplay() As String
   This.DisplaySearch.Find
-  Set This.Elements(This.DisplayTextControl) = This.DisplaySearch.FoundUIAElement
+  Set This.Elements(This.DisplayTextControl) = This.DisplaySearch.Element.UIAElement
   Dim Display As IUIAutomationElement
   Set Display = This.Elements(This.DisplayTextControl)
   GetDisplay = VBA.Strings.Replace(Display.CurrentName, "Display is ", "")

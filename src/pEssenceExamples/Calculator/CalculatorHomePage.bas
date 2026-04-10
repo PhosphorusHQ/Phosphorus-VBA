@@ -35,7 +35,7 @@ Private Sub Class_Initialize()
 End Sub
 
 Private Sub Class_Terminate()
-  Window.CloseWindow This.MasterWindow.ElementName, This.MasterWindow.FoundUIAElement
+  Window.CloseWindow This.MasterWindow.Element.GivenName, This.MasterWindow.Element.UIAElement
   Set This.MasterWindow = Nothing
   Set This.MainCalculatorSubWindow = Nothing
   Set This.NavigationViewRootCustomControl = Nothing
@@ -97,7 +97,7 @@ End Sub
 Private Sub OpenNavigationMenu()
   'Always find the element before we take action on it!
   This.OpenCloseNavigationMenuButton.Find 10
-  Actions.Click This.OpenCloseNavigationMenuButton.ElementName, This.OpenCloseNavigationMenuButton.FoundUIAElement
+  Actions.Click This.OpenCloseNavigationMenuButton.Element.GivenName, This.OpenCloseNavigationMenuButton.Element.UIAElement
 End Sub
 
 Private Function GetMenuElement(CalculatorType As String) As IUIAutomationElement
@@ -105,8 +105,8 @@ Private Function GetMenuElement(CalculatorType As String) As IUIAutomationElemen
   'We need to find this element each time the menu is opened
   With This.NavigationMenuRootPaneWindow
      'Has it been initialised yet?
-     If This.NavigationMenuRootPaneWindow.ElementName = "" Then
-      .Initialise "NavigationMenuRootPaneWindow", This.NavigationViewRootCustomControl, Children, By.AutomationId, "PaneRoot"
+     If Not This.NavigationMenuRootPaneWindow.Initialised Then
+       .Initialise "NavigationMenuRootPaneWindow", This.NavigationViewRootCustomControl, Children, By.AutomationId, "PaneRoot"
      End If
   End With
 
@@ -117,7 +117,7 @@ Private Function GetMenuElement(CalculatorType As String) As IUIAutomationElemen
     .Condition "Name", Name, IsTheString, CalculatorType
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.ListItem
     .Find (10) 'We need to find this before the next action on it!
-    Set GetMenuElement = CurrentNavigationMenuItemElementSearch.FoundUIAElement
+    Set GetMenuElement = CurrentNavigationMenuItemElementSearch.Element.UIAElement
   End With
   Set CurrentNavigationMenuItemElementSearch = Nothing
 

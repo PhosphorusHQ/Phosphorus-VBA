@@ -274,7 +274,7 @@ Public Sub Automate()
   
   Actions.Click This.FindTheBugNo.GivenName, This.FindTheBugNo.UIAElement
   Actions.WaitForPatternState This.FindTheBugYes.GivenName, This.FindTheBugYes.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 0
-  Actions.WaitForPatternState This.FindTheBugNo.GivenName, This.FindTheBugNo.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 1
+  Actions.WaitForPatternState This.FindTheBugNo.GivenName, This.FindTheBugNo.UIAElement, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
   Debug.Assert This.FindTheBugNo.IsSelected()
   Debug.Assert This.FindTheBugYes.IsSelected() 'BUG: The Yes radio button should NOT still be selected!
 

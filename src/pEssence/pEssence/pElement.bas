@@ -31,15 +31,7 @@ Public Function GetProperty(PropertyId As Long) As Variant
   On Error GoTo 0
 End Function
 
-Public Function HasPattern(PatternId As Long, Optional RaiseError As Boolean) As Boolean
-  On Error Resume Next
-  Dim Pattern As IUnknown
-  On Error Resume Next
-  Set Pattern = UIAElement.GetCurrentPattern(PatternId)
-  On Error GoTo 0
-  HasPattern = Not Pattern Is Nothing
-End Function
-
+'Tools > References > OLE Automation needed for IUnknown type
 Public Function GetPattern(PatternId As Long, Optional RaiseError As Boolean) As IUnknown
   On Error Resume Next
   Set GetPattern = UIAElement.GetCurrentPattern(PatternId)
@@ -50,6 +42,15 @@ Public Function GetPattern(PatternId As Long, Optional RaiseError As Boolean) As
       Exit Function
     End If
   End If
+End Function
+
+Public Function HasPattern(PatternId As Long, Optional RaiseError As Boolean) As Boolean
+  On Error Resume Next
+  Dim Pattern As IUnknown
+  On Error Resume Next
+  Set Pattern = UIAElement.GetCurrentPattern(PatternId)
+  On Error GoTo 0
+  HasPattern = Not Pattern Is Nothing
 End Function
 
 Public Function IsEnabled() As Boolean

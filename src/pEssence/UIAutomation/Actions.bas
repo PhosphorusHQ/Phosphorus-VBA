@@ -175,7 +175,7 @@ Private Function TryInvokePattern(Element As pElement) As Boolean
     If UIAProps.HasProperty(Element, UIAProperties.IsInvokePatternAvailable) Then
       If UIAProps.GetProperty(Element, UIAProperties.IsInvokePatternAvailable) Then
         Dim Pattern As IUIAutomationInvokePattern
-        Set Pattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_InvokePatternId)
+        Set Pattern = Element.GetPattern(UIAPatterns.InvokePattern)
         Pattern.Invoke
         TryInvokePattern = True
       End If
@@ -192,7 +192,7 @@ Private Function TrySelectionItemPatternSelect(Element As pElement) As Boolean
     If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
       If UIAProps.HasProperty(Element, UIAProperties.IsSelectionItemPatternAvailable) Then
         Dim Pattern As IUIAutomationSelectionItemPattern
-        Set Pattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_SelectionItemPatternId)
+        Set Pattern = Element.GetPattern(UIAPatterns.SelectionItemPattern)
         Pattern.Select
         TrySelectionItemPatternSelect = True
       End If
@@ -211,7 +211,7 @@ Private Function TryTogglePattern(Element As pElement) As Boolean
         Dim InitialToggleState As Integer
         InitialToggleState = Actions.GetToggleState(Element)
         Dim Pattern As IUIAutomationTogglePattern
-        Set Pattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_TogglePatternId)
+        Set Pattern = Element.GetPattern(UIAPatterns.TogglePattern)
         Pattern.Toggle
         If InitialToggleState = 0 Then
           Actions.WaitForPropertyValue Element, UIAProperties.ToggleToggleState, 1
@@ -233,7 +233,7 @@ Private Function TryLegacyIAccessibleDefaultAction(Element As pElement) As Boole
     If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
       If UIAProps.HasProperty(Element, UIAProperties.IsLegacyIAccessiblePatternAvailable) Then
         Dim Pattern As IUIAutomationLegacyIAccessiblePattern
-        Set Pattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_LegacyIAccessiblePatternId)
+        Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessiblePattern)
         Pattern.DoDefaultAction
         TryLegacyIAccessibleDefaultAction = True
       End If
@@ -250,7 +250,7 @@ Private Function TryLegacyIAccessiblePatternSelect(Element As pElement, Flags As
     If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
       If UIAProps.HasProperty(Element, UIAProperties.IsLegacyIAccessiblePatternAvailable) Then
         Dim Pattern As IUIAutomationLegacyIAccessiblePattern
-        Set Pattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_LegacyIAccessiblePatternId)
+        Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessiblePattern)
         Pattern.Select Flags
         TryLegacyIAccessiblePatternSelect = True
       End If
@@ -507,7 +507,7 @@ Private Sub WaitForPropertyValueOrPatternState( _
           End Select
         Case UIA_TogglePatternId
           Dim TogglePattern As IUIAutomationTogglePattern
-          Set TogglePattern = Element.GetPattern(UIA_PatternIds.UIA_TogglePatternId)
+          Set TogglePattern = Element.GetPattern(UIAPatterns.TogglePattern)
           Select Case PatternState
             Case "CurrentToggleStateOn"
               PropertyValuePatternStateFound = (TogglePattern.CurrentToggleState = 1)
@@ -562,7 +562,7 @@ Public Sub TryToScrollItemIntoView(Element As pElement)
     If UIAProps.HasProperty(Element, UIAProperties.IsOffscreen) Then
       If UIAProps.GetProperty(Element, UIAProperties.IsOffscreen) Then
         Dim patt As IUIAutomationScrollItemPattern
-        Set patt = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_ScrollItemPatternId, RaiseError:=True)
+        Set patt = Element.GetPattern(UIAPatterns.ScrollItemPattern, RaiseError:=True)
         patt.ScrollIntoView
       End If
     End If
@@ -573,27 +573,27 @@ End Sub
 'HIghlight only when setting the element state - this is an action, but not for gets, which may be part of another action!?
 
 Public Function GetValue(Element As pElement) As String
-  If UIAPatts.HasPattern(Element, UIA_PatternIds.UIA_ValuePatternId) Then
+  If Element.HasPattern(UIAPatterns.ValuePattern) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
-    Set CurrentElementValuePattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_ValuePatternId, RaiseError:=True)
+    Set CurrentElementValuePattern = Element.GetPattern(UIAPatterns.ValuePattern, RaiseError:=True)
     GetValue = CurrentElementValuePattern.CurrentValue
   End If
 End Function
 
 Public Sub SetValue(Element As pElement, Value As String)
   Window.HighlightElement Element.UIAElement
-  If UIAPatts.HasPattern(Element, UIA_PatternIds.UIA_ValuePatternId) Then
+  If Element.HasPattern(UIAPatterns.ValuePattern) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
-    Set CurrentElementValuePattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_ValuePatternId, RaiseError:=True)
+    Set CurrentElementValuePattern = Element.GetPattern(UIAPatterns.ValuePattern, RaiseError:=True)
     CurrentElementValuePattern.SetValue Value
   End If
   Window.ReleaseHighlighting
 End Sub
 
 Public Function GetToggleState(Element As pElement) As Integer
-  If UIAPatts.HasPattern(Element, UIA_PatternIds.UIA_TogglePatternId) Then
+  If Element.HasPattern(UIAPatterns.TogglePattern) Then
     Dim CurrentElementTogglePattern As IUIAutomationTogglePattern
-    Set CurrentElementTogglePattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_TogglePatternId, RaiseError:=True)
+    Set CurrentElementTogglePattern = Element.GetPattern(UIAPatterns.TogglePattern, RaiseError:=True)
     GetToggleState = CurrentElementTogglePattern.CurrentToggleState
   End If
 End Function

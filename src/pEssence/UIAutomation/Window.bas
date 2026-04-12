@@ -139,7 +139,7 @@ Public Sub CloseWindow(Element As pElement)
   If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
     If UIAProps.HasProperty(Element, UIAProperties.IsWindowPatternAvailable) Then
       Dim patt As IUIAutomationWindowPattern
-      Set patt = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_WindowPatternId, RaiseError:=True)
+      Set patt = Element.GetPattern(UIA_PatternIds.UIA_WindowPatternId, RaiseError:=True)
       patt.Close
       Exit Sub
     End If

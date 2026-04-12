@@ -17,23 +17,23 @@ Public Enum UIAPatterns
 End Enum
 
 'Tools > References > OLE Automation needed for IUnknown type
-Public Function GetPattern(ElementName As String, Element As IUIAutomationElement, PatternId As Long, Optional RaiseError As Boolean) As IUnknown
+Public Function GetPattern(Element As pElement, PatternId As Long, Optional RaiseError As Boolean) As IUnknown
   On Error Resume Next
-  Set GetPattern = Element.GetCurrentPattern(PatternId)
+  Set GetPattern = Element.UIAElement.GetCurrentPattern(PatternId)
   On Error GoTo 0
   If RaiseError Then
     If GetPattern Is Nothing Then
-      ErrorLogging.LogError Errors.PatternFailedForElement, "Pattern failed for element: " & ElementName
+      ErrorLogging.LogError Errors.PatternFailedForElement, "Pattern failed for element: " & Element.GivenName
       Exit Function
     End If
   End If
 End Function
 
-Public Function HasPattern(ElementName As String, Element As IUIAutomationElement, PatternId As Long, Optional RaiseError As Boolean) As Boolean
+Public Function HasPattern(Element As pElement, PatternId As Long, Optional RaiseError As Boolean) As Boolean
   On Error Resume Next
   Dim Pattern As IUnknown
   On Error Resume Next
-  Set Pattern = Element.GetCurrentPattern(PatternId)
+  Set Pattern = Element.UIAElement.GetCurrentPattern(PatternId)
   On Error GoTo 0
   HasPattern = Not Pattern Is Nothing
 End Function

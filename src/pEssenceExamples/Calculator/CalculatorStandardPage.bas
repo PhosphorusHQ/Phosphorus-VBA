@@ -109,20 +109,20 @@ Public Sub FindAllControls(HomePage As CalculatorHomePage)
   Set CurrentCalculatorLandmarkGroupControl = HomePage.GetCurrentCalculatorLandmarkGroupControl
   CurrentCalculatorLandmarkGroupControl.Find
   
-  Dim CalculatorControls() As IUIAutomationElement
+  Dim CalculatorControls() As pElement
   With This.CalculatorControls
     .Initialise "CalculatorControls", CurrentCalculatorLandmarkGroupControl, Descendants, pConditions, "AND(ControlType, ClassName)"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
     .Condition "ClassName", ClassName, IsTheString, "Button"
     .FindAll
   End With
-  CalculatorControls = This.CalculatorControls.FoundUIAElements
+  CalculatorControls = This.CalculatorControls.Elements
 
   Dim i As Integer
   Dim CurrentUIAElement As IUIAutomationElement
   With This.Elements
     For i = 0 To UBound(CalculatorControls)
-      Set CurrentUIAElement = CalculatorControls(i)
+      Set CurrentUIAElement = CalculatorControls(i).UIAElement
       Select Case CurrentUIAElement.CurrentName
         Case "Open history flyout"
           Set This.OpenHistoryFlyout = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
@@ -258,7 +258,7 @@ Public Sub Calculate(Keystrokes As String, Answer As String)
     If NextButtonName <> "" Then
       Dim NextButton As pElement
       Set NextButton = This.Elements(NextButtonName)
-      Actions.Click NextButtonName, NextButton.UIAElement
+      Actions.Click NextButton
     Else
       Continue = False
     End If

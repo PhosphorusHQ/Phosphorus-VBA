@@ -23,7 +23,7 @@ Public UIAProperty As UIAProperties
 Public UIAPropertyComparison As UIAPropertyComparisons
 Public UIAPropertyValue As Variant
 
-Public Function Evaluate(Element As IUIAutomationElement) As Boolean
+Public Function Evaluate(Element As pElement) As Boolean
   Dim ReturnValue As Boolean
   'Cast from IUnknown type
   Dim CurrentValue As Variant

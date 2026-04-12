@@ -57,7 +57,7 @@ End Sub
 
 Private Sub Class_Terminate()
   On Error Resume Next
-  Window.CloseWindow This.MasterWindow.Element.GivenName, This.MasterWindow.Element.UIAElement
+  Window.CloseWindow This.MasterWindow.Element
   On Error GoTo 0
   Set This.MasterWindow = Nothing
   Set This.BrowserRootView = Nothing
@@ -164,14 +164,14 @@ End Function
 Public Function GetCurrentURL() As String
   With This.AddressAndSearchBar
     .Find 10
-    GetCurrentURL = Actions.GetValue(.Element.GivenName, .Element.UIAElement)
+    GetCurrentURL = Actions.GetValue(.Element)
   End With
 End Function
 
 Public Sub NavigateBack()
   With This.BackButton
     .Find 10
-    Actions.Click .Element.GivenName, This.BackButton.Element.UIAElement
+    Actions.Click .Element
     This.RootWebArea.Find 10, FindElementAgain:=True
   End With
 End Sub

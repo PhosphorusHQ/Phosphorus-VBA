@@ -35,7 +35,7 @@ Private Sub Class_Initialize()
 End Sub
 
 Private Sub Class_Terminate()
-  Window.CloseWindow This.MasterWindow.Element.GivenName, This.MasterWindow.Element.UIAElement
+  Window.CloseWindow This.MasterWindow.Element
   Set This.MasterWindow = Nothing
   Set This.MainCalculatorSubWindow = Nothing
   Set This.NavigationViewRootCustomControl = Nothing
@@ -91,16 +91,16 @@ End Sub
 Public Sub SelectCalculatorType(CalculatorType As String)
   Toaster.Message "Selecting " & CalculatorType
   OpenNavigationMenu
-  Actions.Click CalculatorType, GetMenuElement(CalculatorType)
+  Actions.Click GetMenuElement(CalculatorType)
 End Sub
 
 Private Sub OpenNavigationMenu()
   'Always find the element before we take action on it!
   This.OpenCloseNavigationMenuButton.Find 10
-  Actions.Click This.OpenCloseNavigationMenuButton.Element.GivenName, This.OpenCloseNavigationMenuButton.Element.UIAElement
+  Actions.Click This.OpenCloseNavigationMenuButton.Element
 End Sub
 
-Private Function GetMenuElement(CalculatorType As String) As IUIAutomationElement
+Private Function GetMenuElement(CalculatorType As String) As pElement
   
   'We need to find this element each time the menu is opened
   With This.NavigationMenuRootPaneWindow
@@ -117,7 +117,7 @@ Private Function GetMenuElement(CalculatorType As String) As IUIAutomationElemen
     .Condition "Name", Name, IsTheString, CalculatorType
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.ListItem
     .Find (10) 'We need to find this before the next action on it!
-    Set GetMenuElement = CurrentNavigationMenuItemElementSearch.Element.UIAElement
+    Set GetMenuElement = CurrentNavigationMenuItemElementSearch.Element
   End With
   Set CurrentNavigationMenuItemElementSearch = Nothing
 

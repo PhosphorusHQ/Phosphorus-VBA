@@ -89,13 +89,13 @@ End Sub
 
 Public Sub RunHomePageChecks()
   Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL
-  Debug.Assert UIAProps.GetProperty(This.RootWebArea.Element.UIAElement, Name) = TARGET_PAGE_TITLE
+  Debug.Assert UIAProps.GetProperty(This.RootWebArea.Element, Name) = TARGET_PAGE_TITLE
   Debug.Assert This.HomePageHeading1.ElementExists(10)
-  Debug.Assert UIAProps.GetProperty(This.HomePageHeading1.Element.UIAElement, Level) = 1
+  Debug.Assert UIAProps.GetProperty(This.HomePageHeading1.Element, Level) = 1
   Debug.Assert This.HomePageHeading2.ElementExists(10)
-  Debug.Assert UIAProps.GetProperty(This.HomePageHeading2.Element.UIAElement, Level) = 2
+  Debug.Assert UIAProps.GetProperty(This.HomePageHeading2.Element, Level) = 2
   Debug.Assert This.ListOfExamples.ElementExists(10) = True
-  Debug.Assert UIAProps.GetProperty(This.ListOfExamples.Element.UIAElement, SizeOfSet) = 44
+  Debug.Assert UIAProps.GetProperty(This.ListOfExamples.Element, SizeOfSet) = 44
 End Sub
 
 Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText)
@@ -118,7 +118,7 @@ Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText)
     .Find 10
   End With
   
-  Actions.Click ListItemHyperlink.Element.GivenName, ListItemHyperlink.Element.UIAElement
+  Actions.Click ListItemHyperlink.Element
   
   Set ListItem = Nothing
   Set ListItemHyperlink = Nothing
@@ -193,16 +193,16 @@ Public Sub Checkboxes()
   End With
   
   'The second checkbox is already checked!
-  Debug.Assert Actions.GetToggleState(SecondCheckbox.Element.GivenName, SecondCheckbox.Element.UIAElement)
+  Debug.Assert Actions.GetToggleState(SecondCheckbox.Element)
   
-  Actions.Click FirstCheckbox.Element.GivenName, FirstCheckbox.Element.UIAElement
-  Debug.Assert Actions.GetToggleState(FirstCheckbox.Element.GivenName, FirstCheckbox.Element.UIAElement)
+  Actions.Click FirstCheckbox.Element
+  Debug.Assert Actions.GetToggleState(FirstCheckbox.Element)
   
-  Actions.Click SecondCheckbox.Element.GivenName, SecondCheckbox.Element.UIAElement
-  Debug.Assert Not Actions.GetToggleState(SecondCheckbox.Element.GivenName, SecondCheckbox.Element.UIAElement)
+  Actions.Click SecondCheckbox.Element
+  Debug.Assert Not Actions.GetToggleState(SecondCheckbox.Element)
   
-  Actions.Click FirstCheckbox.Element.GivenName, FirstCheckbox.Element.UIAElement
-  Debug.Assert Not Actions.GetToggleState(FirstCheckbox.Element.GivenName, FirstCheckbox.Element.UIAElement)
+  Actions.Click FirstCheckbox.Element
+  Debug.Assert Not Actions.GetToggleState(FirstCheckbox.Element)
   
   WebBrowser.NavigateBack
   Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL
@@ -236,15 +236,16 @@ Public Sub DragAndDrop()
       .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 4
       .Find 10
     End With
+        
     Select Case i
       Case 1 'A->B
-        Actions.DragAndDrop FirstItem.Element.GivenName, FirstItem.Element.UIAElement, SecondItem.Element.GivenName, SecondItem.Element.UIAElement
+        Actions.DragAndDrop FirstItem.Element, SecondItem.Element
       Case 2 'B<-A
-        Actions.DragAndDrop SecondItem.Element.GivenName, SecondItem.Element.UIAElement, FirstItem.Element.GivenName, FirstItem.Element.UIAElement
+        Actions.DragAndDrop SecondItem.Element, FirstItem.Element
       Case 3 'B<-A
-        Actions.DragAndDrop SecondItem.Element.GivenName, SecondItem.Element.UIAElement, FirstItem.Element.GivenName, FirstItem.Element.UIAElement
+        Actions.DragAndDrop SecondItem.Element, FirstItem.Element
       Case 4 'B->A
-        Actions.DragAndDrop FirstItem.Element.GivenName, FirstItem.Element.UIAElement, "SecondItem", SecondItem.Element.UIAElement
+        Actions.DragAndDrop FirstItem.Element, SecondItem.Element
     End Select
     
     Set FirstItem = Nothing
@@ -343,9 +344,9 @@ Private Sub FormAuthentication_Login()
     Debug.Assert .ElementExists(0)
   End With
 
-  Actions.SetValue UsernameTextBox.Element.GivenName, UsernameTextBox.Element.UIAElement, "tomsmith"
-  Actions.SetValue PasswordTextBox.Element.GivenName, PasswordTextBox.Element.UIAElement, "SuperSecretPassword!"
-  Actions.Click LoginButton.Element.GivenName, LoginButton.Element.UIAElement
+  Actions.SetValue UsernameTextBox.Element, "tomsmith"
+  Actions.SetValue PasswordTextBox.Element, "SuperSecretPassword!"
+  Actions.Click LoginButton.Element
   
   Set SubHeader = Nothing
   Set UsernameLabel = Nothing
@@ -386,7 +387,7 @@ Debug.Assert This.RootWebArea.ElementExists
   End With
 
   'Click on it then verify the element doesn't exist! Wait?
-  Actions.Click SecureMesssageHyperlink.Element.GivenName, SecureMesssageHyperlink.Element.UIAElement
+  Actions.Click SecureMesssageHyperlink.Element
   Snooze 500
   Debug.Assert SecureMesssage.ElementDoesntExist(0)
   Debug.Assert SecureMesssageHyperlink.ElementDoesntExist(0)
@@ -426,7 +427,7 @@ Debug.Assert This.RootWebArea.ElementExists
   End With
 
 'Click logout takes us back!
-  Actions.Click Logout.Element.GivenName, Logout.Element.UIAElement
+  Actions.Click Logout.Element
   Snooze 500
   Debug.Assert Heading.ElementDoesntExist(2)
 

@@ -122,28 +122,24 @@ Private HwndOverlay As LongPtr
 Public HighlightElements As Boolean
 
 Public Sub WaitForInteractionState( _
-  ElementName As String, _
-  CurrentElement As IUIAutomationElement, _
+  Element As pElement, _
   UIAPropertyValue As UIAWindowInteractionStates, _
   Optional TimeoutInMilliseconds As Long)
   
   Actions.WaitForPropertyValue _
-    ElementName, _
-    CurrentElement, _
+    Element, _
     UIAProperties.WindowWindowInteractionState, _
     UIAPropertyValue
   
 End Sub
 
-Public Sub CloseWindow(Name As String, Ele As IUIAutomationElement)
-
+Public Sub CloseWindow(Element As pElement)
   Toaster.Message "Close Window " & Name, Action
-
-  Actions.IsElementReady Name, Ele
-  If UIAProps.GetProperty(Ele, UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
-    If UIAProps.HasProperty(Name, Ele, UIAProperties.IsWindowPatternAvailable) Then
+  Actions.IsElementReady Element
+  If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
+    If UIAProps.HasProperty(Element, UIAProperties.IsWindowPatternAvailable) Then
       Dim patt As IUIAutomationWindowPattern
-      Set patt = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_WindowPatternId, RaiseError:=True)
+      Set patt = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_WindowPatternId, RaiseError:=True)
       patt.Close
       Exit Sub
     End If

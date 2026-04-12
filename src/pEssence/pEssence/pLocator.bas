@@ -22,6 +22,7 @@ Option Explicit
 Private Type Properties
   Initialised As Boolean
   Element As pElement
+  Elements() As pElement 'IUIAutomationElement
   RootUIAElement As IUIAutomationElement
   RootUIAElementLocator As pLocator
   RootUIAElementIsDesktop As Boolean
@@ -30,7 +31,6 @@ Private Type Properties
   FindFirst As Boolean
   AllSearchConditions As Scripting.Dictionary
   EvaluationLogic As String
-  FoundUIAElements() As IUIAutomationElement
 End Type
 
 Private This As Properties
@@ -117,14 +117,14 @@ Public Function Element() As pElement
   Set Element = This.Element
 End Function
 
-Public Function FoundUIAElements() As IUIAutomationElement()
-  FoundUIAElements = This.FoundUIAElements
+Public Function Elements() As pElement()
+  Elements = This.Elements
 End Function
 
 Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = True)
 'Find a single element with a timeout
 
-  If Not This.Element.UIAElement Is Nothing And Actions.IsElementAlive(This.Element.GivenName, This.Element.UIAElement) And Not FindElementAgain Then
+  If Not This.Element.UIAElement Is Nothing And Actions.IsElementAlive(This.Element) And Not FindElementAgain Then
     'The element has already been found, no need to find it again
     Exit Sub
   End If
@@ -133,7 +133,6 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
   If This.RootUIAElementIsDesktop Then
     If This.RootUIAElementLocator Is Nothing Then
       Set This.Element.UIAElement = Factory.GetRootDesktopElement
-'      Exit Sub
     End If
   Else
     'Find/Re-Find the Root Element
@@ -143,7 +142,8 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
 
   Toaster.Message "Finding " & This.Element.GivenName, Finding
 
-  Dim FoundElements() As IUIAutomationElement
+'  Dim FoundElements() As IUIAutomationElement
+  Dim FoundElements() As pElement
   Dim CountOfFoundElements As Integer
   
   'Calculate the end time
@@ -185,14 +185,14 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
   
   Dim FoundElement As IUIAutomationElement
   If CountOfFoundElements = 1 Then
-    Set This.Element.UIAElement = FoundElements(0)
+    Set This.Element = FoundElements(0)
     If FindElementAgain Then
-      If UIAProps.HasProperty(This.Element.GivenName, This.Element.UIAElement, UIAProperties.IsScrollItemPatternAvailable) Then
-        Actions.TryToScrollItemIntoView This.Element.GivenName, This.Element.UIAElement
+      If UIAProps.HasProperty(This.Element, UIAProperties.IsScrollItemPatternAvailable) Then
+        Actions.TryToScrollItemIntoView This.Element
         Find TimeoutInSeconds, AcceptNoElements, FindElementAgain:=False
       End If
     End If
-    Window.HighlightElement FoundElements(0), BorderColor:=&H808000 'Cyan
+    Window.HighlightElement FoundElements(0).UIAElement, BorderColor:=&H808000 'Cyan
     Window.ReleaseHighlighting
   End If
 
@@ -201,10 +201,10 @@ End Sub
 Public Sub FindAll(Optional AcceptNoElements As Boolean)
 'Find more than 1 elements with no timeout
   Toaster.Message "Finding all elements " & This.Element.GivenName, Finding
-  This.FoundUIAElements = Findlements(AcceptNoElements)
+  This.Elements = Findlements(AcceptNoElements)
 End Sub
 
-Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElement()
+Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAutomationElement()
 'Find 1 or more elements with no timeout
 
   If Not EvaluationLogicIsOk Then
@@ -225,15 +225,16 @@ Private Function Findlements(AcceptNoElements As Boolean) As IUIAutomationElemen
     Exit Function
   End If
 
-  Dim ReturnElements() As IUIAutomationElement
+  Dim ReturnElements() As pElement
   Dim CountOfMatchingElements As Integer
   CountOfMatchingElements = 0
 
   Dim i As Long
-  Dim CurrentElement As IUIAutomationElement
+  Dim CurrentElement As pElement
   For i = 0 To AllElements.Length - 1
-    Set CurrentElement = AllElements.GetElement(i)
- 
+    
+    Set CurrentElement = Factory.GetNewElement("Found Element #" & (i + 1), AllElements.GetElement(i))
+
     Dim CurrentEvaluationLogic  As String
     CurrentEvaluationLogic = This.EvaluationLogic
     

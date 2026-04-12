@@ -125,13 +125,6 @@ Private Enum MouseClickType
   LeftClickSynchronous
 End Enum
 
-Private Type ElementAttributes
- Name As String
- Ele As IUIAutomationElement
-End Type
-
-Dim This As ElementAttributes
-
 'LegacyIAccessiblePattern Select action flags
 Const SELFLAG_NONE = &H0 'No change (sometimes used as "clear selection")
 Const SELFLAG_TAKEFOCUS = &H1 'Give keyboard focus to this item, almost always combined with others
@@ -151,43 +144,38 @@ Const SELFLAG_VALID = &H1F 'Bitmask of all valid flags (0x10)
 '**********
 '* Clicks *
 '**********
-Public Sub Click(Name As String, Ele As IUIAutomationElement)
+Public Sub Click(Element As pElement)
     
   Toaster.Message "Clicking " & Name, Action
-  
-  This.Name = Name
-  Set This.Ele = Ele
-  
-  IsElementReady Name, Ele
-  Window.HighlightElement Ele
-  MoveMouseToElement
+    
+  IsElementReady Element
+  Window.HighlightElement Element.UIAElement
+  MoveMouseToElement Element
 
-  If TryInvokePattern Then GoTo Cleanup
-  If TrySelectionItemPatternSelect Then GoTo Cleanup
-  If TryTogglePattern Then GoTo Cleanup
-  If TryLegacyIAccessibleDefaultAction Then GoTo Cleanup
-  If TryLegacyIAccessiblePatternSelect(SELFLAG_TAKEFOCUS + SELFLAG_TAKESELECTION) Then GoTo Cleanup
+  If TryInvokePattern(Element) Then GoTo Cleanup
+  If TrySelectionItemPatternSelect(Element) Then GoTo Cleanup
+  If TryTogglePattern(Element) Then GoTo Cleanup
+  If TryLegacyIAccessibleDefaultAction(Element) Then GoTo Cleanup
+  If TryLegacyIAccessiblePatternSelect(Element, SELFLAG_TAKEFOCUS + SELFLAG_TAKESELECTION) Then GoTo Cleanup
   ' Try this las as we don't know if it worked!
-  If TryMouseClickByMessage(LeftClick) Then GoTo Cleanup
+  If TryMouseClickByMessage(Element, LeftClick) Then GoTo Cleanup
 'This works?
-  If TryMouseClicksByEvent(LeftClick) Then GoTo Cleanup
-  If TryMouseClickByMessage(LeftClickSynchronous) Then GoTo Cleanup
+  If TryMouseClicksByEvent(Element, LeftClick) Then GoTo Cleanup
+  If TryMouseClickByMessage(Element, LeftClickSynchronous) Then GoTo Cleanup
 
 Cleanup:
   Window.ReleaseHighlighting
-  This.Name = ""
-  Set This.Ele = Nothing
 
 End Sub
 
-Private Function TryInvokePattern() As Boolean
+Private Function TryInvokePattern(Element As pElement) As Boolean
   On Error GoTo Finish
   TryInvokePattern = False
-  If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.ControlType) Then
-    If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.IsInvokePatternAvailable) Then
-      If UIAProps.GetProperty(This.Ele, UIAProperties.IsInvokePatternAvailable) Then
+  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
+    If UIAProps.HasProperty(Element, UIAProperties.IsInvokePatternAvailable) Then
+      If UIAProps.GetProperty(Element, UIAProperties.IsInvokePatternAvailable) Then
         Dim Pattern As IUIAutomationInvokePattern
-        Set Pattern = UIAPatts.GetPattern(This.Name, This.Ele, UIA_PatternIds.UIA_InvokePatternId)
+        Set Pattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_InvokePatternId)
         Pattern.Invoke
         TryInvokePattern = True
       End If
@@ -197,14 +185,14 @@ Finish:
   On Error Resume Next
 End Function
 
-Private Function TrySelectionItemPatternSelect() As Boolean
+Private Function TrySelectionItemPatternSelect(Element As pElement) As Boolean
   On Error GoTo Finish
   TrySelectionItemPatternSelect = False
-  If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.ControlType) Then
-    If UIAProps.GetProperty(This.Ele, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
-      If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.IsSelectionItemPatternAvailable) Then
+  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
+    If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
+      If UIAProps.HasProperty(Element, UIAProperties.IsSelectionItemPatternAvailable) Then
         Dim Pattern As IUIAutomationSelectionItemPattern
-        Set Pattern = UIAPatts.GetPattern(This.Name, This.Ele, UIA_PatternIds.UIA_SelectionItemPatternId)
+        Set Pattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_SelectionItemPatternId)
         Pattern.Select
         TrySelectionItemPatternSelect = True
       End If
@@ -214,21 +202,21 @@ Finish:
   On Error Resume Next
 End Function
 
-Private Function TryTogglePattern() As Boolean
+Private Function TryTogglePattern(Element As pElement) As Boolean
   On Error GoTo Finish
   TryTogglePattern = False
-  If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.ControlType) Then
-    If UIAProps.GetProperty(This.Ele, UIAProperties.ControlType) = UIAControlTypeIDs.CheckBox Then 'Note: Applies to other control types too?
-      If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.IsTogglePatternAvailable) Then
+  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
+    If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.CheckBox Then 'Note: Applies to other control types too?
+      If UIAProps.HasProperty(Element, UIAProperties.IsTogglePatternAvailable) Then
         Dim InitialToggleState As Integer
-        InitialToggleState = Actions.GetToggleState(This.Name, This.Ele)
+        InitialToggleState = Actions.GetToggleState(Element)
         Dim Pattern As IUIAutomationTogglePattern
-        Set Pattern = UIAPatts.GetPattern(This.Name, This.Ele, UIA_PatternIds.UIA_TogglePatternId)
+        Set Pattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_TogglePatternId)
         Pattern.Toggle
         If InitialToggleState = 0 Then
-          Actions.WaitForPropertyValue This.Name, This.Ele, UIAProperties.ToggleToggleState, 1
+          Actions.WaitForPropertyValue Element, UIAProperties.ToggleToggleState, 1
         Else
-          Actions.WaitForPropertyValue This.Name, This.Ele, UIAProperties.ToggleToggleState, 0
+          Actions.WaitForPropertyValue Element, UIAProperties.ToggleToggleState, 0
         End If
         TryTogglePattern = True
       End If
@@ -238,14 +226,14 @@ Finish:
   On Error Resume Next
 End Function
 
-Private Function TryLegacyIAccessibleDefaultAction() As Boolean
+Private Function TryLegacyIAccessibleDefaultAction(Element As pElement) As Boolean
   On Error GoTo Finish
   TryLegacyIAccessibleDefaultAction = False
-  If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.ControlType) Then
-    If UIAProps.GetProperty(This.Ele, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
-      If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.IsLegacyIAccessiblePatternAvailable) Then
+  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
+    If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
+      If UIAProps.HasProperty(Element, UIAProperties.IsLegacyIAccessiblePatternAvailable) Then
         Dim Pattern As IUIAutomationLegacyIAccessiblePattern
-        Set Pattern = UIAPatts.GetPattern(This.Name, This.Ele, UIA_PatternIds.UIA_LegacyIAccessiblePatternId)
+        Set Pattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_LegacyIAccessiblePatternId)
         Pattern.DoDefaultAction
         TryLegacyIAccessibleDefaultAction = True
       End If
@@ -255,14 +243,14 @@ Finish:
   On Error Resume Next
 End Function
 
-Private Function TryLegacyIAccessiblePatternSelect(Flags As Integer)
+Private Function TryLegacyIAccessiblePatternSelect(Element As pElement, Flags As Integer)
   On Error GoTo Finish
   TryLegacyIAccessiblePatternSelect = False
-  If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.ControlType) Then
-    If UIAProps.GetProperty(This.Ele, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
-      If UIAProps.HasProperty(This.Name, This.Ele, UIAProperties.IsLegacyIAccessiblePatternAvailable) Then
+  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
+    If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
+      If UIAProps.HasProperty(Element, UIAProperties.IsLegacyIAccessiblePatternAvailable) Then
         Dim Pattern As IUIAutomationLegacyIAccessiblePattern
-        Set Pattern = UIAPatts.GetPattern(This.Name, This.Ele, UIA_PatternIds.UIA_LegacyIAccessiblePatternId)
+        Set Pattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_LegacyIAccessiblePatternId)
         Pattern.Select Flags
         TryLegacyIAccessiblePatternSelect = True
       End If
@@ -272,22 +260,22 @@ Finish:
   On Error Resume Next
 End Function
 
-Private Function TryMouseClickByMessage(ClickType As MouseClickType) As Boolean
+Private Function TryMouseClickByMessage(Element As pElement, ClickType As MouseClickType) As Boolean
   On Error GoTo Finish
   TryMouseClickByMessage = False
-  MouseClickByMessage ClickType
+  MouseClickByMessage Element, ClickType
   TryMouseClickByMessage = True
 Finish:
   On Error Resume Next
 End Function
 
-Private Sub MouseClickByMessage(ClickType As MouseClickType)
+Private Sub MouseClickByMessage(Element As pElement, ClickType As MouseClickType)
 'PostMessage is asynchronous, SendMessage is synchronous (for special synchronous cases)
 
-  If This.Ele Is Nothing Then Exit Sub
+  If Element.UIAElement Is Nothing Then Exit Sub
     
   Dim rect As Variant
-  rect = This.Ele.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
+  rect = Element.UIAElement.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
   
   If Not IsArray(rect) Or UBound(rect) < 3 Then Exit Sub
     
@@ -295,7 +283,7 @@ Private Sub MouseClickByMessage(ClickType As MouseClickType)
   Dim centerY As Long: centerY = CLng(rect(1) + rect(3) \ 2)
     
   Dim hWnd As LongPtr
-  hWnd = This.Ele.GetCurrentPropertyValue(UIA_NativeWindowHandlePropertyId)
+  hWnd = Element.UIAElement.GetCurrentPropertyValue(UIA_NativeWindowHandlePropertyId)
     
   Dim pt As POINTAPI
   pt.x = centerX
@@ -328,26 +316,26 @@ Private Sub MouseClickByMessage(ClickType As MouseClickType)
   
 End Sub
 
-Private Function TryMouseClicksByEvent(ClickType As MouseClickType) As Boolean
-  This.Ele.SetFocus
+Private Function TryMouseClicksByEvent(Element As pElement, ClickType As MouseClickType) As Boolean
+  Element.UIAElement.SetFocus
   On Error GoTo Finish
   TryMouseClicksByEvent = False
   Select Case ClickType
     Case MouseClickType.LeftClick
-      MouseClicksByEvent MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP
+      MouseClicksByEvent Element, MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP
     Case MouseClickType.RightClick
-      MouseClicksByEvent MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP
+      MouseClicksByEvent Element, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP
   End Select
   TryMouseClicksByEvent = True
 Finish:
   On Error Resume Next
 End Function
 
-Private Sub MouseClicksByEvent(Event1 As Long, Event2 As Long)
+Private Sub MouseClicksByEvent(Element As pElement, Event1 As Long, Event2 As Long)
 
   Dim clickablePoint As tagPOINT
   Dim hasPoint As Boolean
-  hasPoint = This.Ele.GetClickablePoint(clickablePoint)
+  hasPoint = Element.UIAElement.GetClickablePoint(clickablePoint)
 
   Dim pt As POINTAPI
   If hasPoint Then
@@ -356,7 +344,7 @@ Private Sub MouseClicksByEvent(Event1 As Long, Event2 As Long)
   Else
     'Fallback: center of bounding rectangle
     Dim rect As tagRECT
-    rect = This.Ele.CurrentBoundingRectangle
+    rect = Element.UIAElement.CurrentBoundingRectangle
     pt.x = rect.Left + (rect.Right - rect.Left) \ 2
     pt.y = rect.Top + (rect.Bottom - rect.Top) \ 2
   End If
@@ -373,10 +361,8 @@ End Sub
 '* Drag & Drop *
 '***************
 Public Sub DragAndDrop( _
-  SourceElementName As String, _
-  SourceElement As IUIAutomationElement, _
-  TargetElementName As String, _
-  TargetElement As IUIAutomationElement, _
+  SourceElement As pElement, _
+  TargetElement As pElement, _
   Optional holdTimeMs As Long = 400, _
   Optional speed As Long = 500, _
   Optional ctrlKey As Boolean = False, _
@@ -385,23 +371,20 @@ Public Sub DragAndDrop( _
 'DragAndDropWithVisualFeedback
 'ctrlKey:=True makes a copy
 
-  Toaster.Message "Drag And Drop " & SourceElementName, Action
+  Toaster.Message "Drag And Drop " & SourceElement.GivenName, Action
   
-  If SourceElement Is Nothing Or TargetElement Is Nothing Then Exit Sub
-    
-  This.Name = SourceElementName
-  Set This.Ele = SourceElement
-  
-  IsElementReady SourceElementName, SourceElement
-  IsElementReady TargetElementName, TargetElement
+  If SourceElement.UIAElement Is Nothing Or TargetElement.UIAElement Is Nothing Then Exit Sub
+      
+  IsElementReady SourceElement
+  IsElementReady TargetElement
 
   ' Highlight source briefly
 '  Window.HighlightElement SourceElement, 5, &HFF00, 300      ' Green highlight on source
-  Window.HighlightElement SourceElement
+  Window.HighlightElement SourceElement.UIAElement
   Window.ReleaseHighlighting
     
   ' Move mouse to source
-  MoveMouseToElement
+  MoveMouseToElement SourceElement
   WindowsProcesses.Snooze 250
     
   ' Press modifier keys if requested
@@ -415,13 +398,13 @@ Public Sub DragAndDrop( _
     
   ' Get target center
   Dim tgtRect As Variant
-  tgtRect = TargetElement.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
+  tgtRect = TargetElement.UIAElement.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
   Dim tgtX As Long: tgtX = CLng(tgtRect(0) + tgtRect(2) \ 2)
   Dim tgtY As Long: tgtY = CLng(tgtRect(1) + tgtRect(3) \ 2)
 
   ' Get source center for smooth movement
   Dim srcRect As Variant
-  srcRect = SourceElement.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
+  srcRect = SourceElement.UIAElement.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
   Dim srcX As Long: srcX = CLng(srcRect(0) + srcRect(2) \ 2)
   Dim srcY As Long: srcY = CLng(srcRect(1) + srcRect(3) \ 2)
     
@@ -431,7 +414,7 @@ Public Sub DragAndDrop( _
     
   ' Create moving highlight
   Dim HighlightHwnd As LongPtr
-  HighlightHwnd = Window.CreateDragHighlight(SourceElement, srcX, srcY, 80, 80)
+  HighlightHwnd = Window.CreateDragHighlight(SourceElement.UIAElement, srcX, srcY, 80, 80)
     
   ' Smooth drag with moving highlight
   Dim i As Long
@@ -468,26 +451,23 @@ End Sub
 '***********
 
 Public Sub WaitForPropertyValue( _
-  ElementName As String, _
-  CurrentElement As IUIAutomationElement, _
+  Element As pElement, _
   UIAProperty As UIAProperties, _
   UIAPropertyValue As Variant, _
   Optional TimeoutInSeconds As Integer)
-  WaitForPropertyValueOrPatternState ElementName, CurrentElement, UIAProperty:=UIAProperty, UIAPropertyValue:=UIAPropertyValue, TimeoutInSeconds:=TimeoutInSeconds
+  WaitForPropertyValueOrPatternState Element, UIAProperty:=UIAProperty, UIAPropertyValue:=UIAPropertyValue, TimeoutInSeconds:=TimeoutInSeconds
 End Sub
   
 Public Sub WaitForPatternState( _
-  ElementName As String, _
-  CurrentElement As IUIAutomationElement, _
+  Element As pElement, _
   UIAPatternID As UIAPatterns, _
   PatternState As Variant, _
   Optional TimeoutInSeconds As Integer)
-  WaitForPropertyValueOrPatternState ElementName, CurrentElement, UIAPatternID:=UIAPatternID, PatternState:=PatternState, TimeoutInSeconds:=TimeoutInSeconds
+  WaitForPropertyValueOrPatternState Element, UIAPatternID:=UIAPatternID, PatternState:=PatternState, TimeoutInSeconds:=TimeoutInSeconds
 End Sub
   
 Private Sub WaitForPropertyValueOrPatternState( _
-  ElementName As String, _
-  CurrentElement As IUIAutomationElement, _
+  Element As pElement, _
   Optional UIAProperty As UIAProperties, _
   Optional UIAPropertyValue As Variant, _
   Optional UIAPatternID As UIAPatterns, _
@@ -496,9 +476,6 @@ Private Sub WaitForPropertyValueOrPatternState( _
 
 'TODO: Allow a wait for milliseconds?
 'NOTE: Temp code until we move this methor to pElement
-
-  Dim Element As pElement
-  Set Element = Factory.GetNewElement(ElementName, CurrentElement)
   
   'Calculate the end time
   Dim EndTime As Date
@@ -515,7 +492,7 @@ Private Sub WaitForPropertyValueOrPatternState( _
   While Not (PropertyValuePatternStateFound Or PassedEndTime)
   
     If UIAProperty <> 0 Then
-      CurrentPropertyValue = GetProperty(CurrentElement, UIAProperty)
+      CurrentPropertyValue = GetProperty(Element, UIAProperty)
       PropertyValuePatternStateFound = (CurrentPropertyValue = UIAPropertyValue)
     Else
       Select Case UIAPatternID
@@ -550,42 +527,42 @@ Private Sub WaitForPropertyValueOrPatternState( _
 
 End Sub
 
-Public Function IsElementReady(Name As String, Ele As IUIAutomationElement) As Boolean
+Public Function IsElementReady(Element As pElement) As Boolean
   Dim ret As Boolean
   ret = True
-  ret = ret And IsElementAlive(Name, Ele)
+  ret = ret And IsElementAlive(Element)
   If ret Then
-    TryToScrollItemIntoView Name, Ele
+    TryToScrollItemIntoView Element
   Else
-    ErrorLogging.LogError Errors.ElementIsNotAlive, "Element '" & Name & "' is not alive!"
+    ErrorLogging.LogError Errors.ElementIsNotAlive, "Element '" & Element.GivenName & "' is not alive!"
   End If
   IsElementReady = ret
 End Function
 
-Public Function IsElementAlive(Name As String, Ele As IUIAutomationElement) As Boolean
+Public Function IsElementAlive(Element As pElement) As Boolean
   On Error Resume Next
   Dim pid As Long
-  pid = Ele.CurrentProcessId  'any property access will fail if stale
+  pid = Element.UIAElement.CurrentProcessId  'any property access will fail if stale
   IsElementAlive = (Err.Number = 0) And (pid > 0)
   On Error GoTo 0
 End Function
 
-Private Sub MoveMouseToElement()
-  If This.Ele Is Nothing Then Exit Sub
+Private Sub MoveMouseToElement(Element As pElement)
+  If Element.UIAElement Is Nothing Then Exit Sub
   Dim rect As Variant
-  rect = This.Ele.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
+  rect = Element.UIAElement.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
   If Not IsArray(rect) Or UBound(rect) < 3 Then Exit Sub
   Dim cx As Long: cx = CLng(rect(0) + rect(2) \ 2)
   Dim cy As Long: cy = CLng(rect(1) + rect(3) \ 2)
   SetCursorPos cx, cy
 End Sub
 
-Public Sub TryToScrollItemIntoView(Name As String, Ele As IUIAutomationElement)
-  If UIAProps.HasProperty(Name, Ele, UIAProperties.IsScrollItemPatternAvailable) Then
-    If UIAProps.HasProperty(Name, Ele, UIAProperties.IsOffscreen) Then
-      If UIAProps.GetProperty(Ele, UIAProperties.IsOffscreen) Then
+Public Sub TryToScrollItemIntoView(Element As pElement)
+  If UIAProps.HasProperty(Element, UIAProperties.IsScrollItemPatternAvailable) Then
+    If UIAProps.HasProperty(Element, UIAProperties.IsOffscreen) Then
+      If UIAProps.GetProperty(Element, UIAProperties.IsOffscreen) Then
         Dim patt As IUIAutomationScrollItemPattern
-        Set patt = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_ScrollItemPatternId, RaiseError:=True)
+        Set patt = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_ScrollItemPatternId, RaiseError:=True)
         patt.ScrollIntoView
       End If
     End If
@@ -595,28 +572,28 @@ End Sub
 'NOTE - move these to the pElement class
 'HIghlight only when setting the element state - this is an action, but not for gets, which may be part of another action!?
 
-Public Function GetValue(Name As String, Ele As IUIAutomationElement) As String
-  If UIAPatts.HasPattern(Name, Ele, UIA_PatternIds.UIA_ValuePatternId) Then
+Public Function GetValue(Element As pElement) As String
+  If UIAPatts.HasPattern(Element, UIA_PatternIds.UIA_ValuePatternId) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
-    Set CurrentElementValuePattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_ValuePatternId, RaiseError:=True)
+    Set CurrentElementValuePattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_ValuePatternId, RaiseError:=True)
     GetValue = CurrentElementValuePattern.CurrentValue
   End If
 End Function
 
-Public Sub SetValue(Name As String, Ele As IUIAutomationElement, Value As String)
-  Window.HighlightElement Ele
-  If UIAPatts.HasPattern(Name, Ele, UIA_PatternIds.UIA_ValuePatternId) Then
+Public Sub SetValue(Element As pElement, Value As String)
+  Window.HighlightElement Element.UIAElement
+  If UIAPatts.HasPattern(Element, UIA_PatternIds.UIA_ValuePatternId) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
-    Set CurrentElementValuePattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_ValuePatternId, RaiseError:=True)
+    Set CurrentElementValuePattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_ValuePatternId, RaiseError:=True)
     CurrentElementValuePattern.SetValue Value
   End If
   Window.ReleaseHighlighting
 End Sub
 
-Public Function GetToggleState(Name As String, Ele As IUIAutomationElement) As Integer
-  If UIAPatts.HasPattern(Name, Ele, UIA_PatternIds.UIA_TogglePatternId) Then
+Public Function GetToggleState(Element As pElement) As Integer
+  If UIAPatts.HasPattern(Element, UIA_PatternIds.UIA_TogglePatternId) Then
     Dim CurrentElementTogglePattern As IUIAutomationTogglePattern
-    Set CurrentElementTogglePattern = UIAPatts.GetPattern(Name, Ele, UIA_PatternIds.UIA_TogglePatternId, RaiseError:=True)
+    Set CurrentElementTogglePattern = UIAPatts.GetPattern(Element, UIA_PatternIds.UIA_TogglePatternId, RaiseError:=True)
     GetToggleState = CurrentElementTogglePattern.CurrentToggleState
   End If
 End Function

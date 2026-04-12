@@ -164,7 +164,7 @@ End Function
 Public Function GetCurrentURL() As String
   With This.AddressAndSearchBar
     .Find 10
-    GetCurrentURL = Actions.GetValue(.Element)
+    GetCurrentURL = .Element.GetValue()
   End With
 End Function
 

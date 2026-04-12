@@ -52,6 +52,22 @@ Public Function GetPattern(PatternId As Long, Optional RaiseError As Boolean) As
   End If
 End Function
 
+Public Function GetToggleState() As Integer
+  If HasPattern(UIAPatterns.TogglePattern) Then
+    Dim CurrentElementTogglePattern As IUIAutomationTogglePattern
+    Set CurrentElementTogglePattern = GetPattern(UIAPatterns.TogglePattern, RaiseError:=True)
+    GetToggleState = CurrentElementTogglePattern.CurrentToggleState
+  End If
+End Function
+
+Public Function GetValue() As String
+  If HasPattern(UIAPatterns.ValuePattern) Then
+    Dim CurrentElementValuePattern As IUIAutomationValuePattern
+    Set CurrentElementValuePattern = GetPattern(UIAPatterns.ValuePattern, RaiseError:=True)
+    GetValue = CurrentElementValuePattern.CurrentValue
+  End If
+End Function
+
 Public Function HasPattern(PatternId As Long, Optional RaiseError As Boolean) As Boolean
   On Error Resume Next
   Dim Pattern As IUnknown
@@ -101,3 +117,14 @@ Cleanup:
   Window.ReleaseHighlighting
     
 End Function
+
+'Highlight only when setting the element state - this is an action, but not for gets, which may be part of another action!?
+Public Sub SetValue(Value As String)
+  Window.HighlightElement UIAElement
+  If HasPattern(UIAPatterns.ValuePattern) Then
+    Dim CurrentElementValuePattern As IUIAutomationValuePattern
+    Set CurrentElementValuePattern = GetPattern(UIAPatterns.ValuePattern, RaiseError:=True)
+    CurrentElementValuePattern.SetValue Value
+  End If
+  Window.ReleaseHighlighting
+End Sub

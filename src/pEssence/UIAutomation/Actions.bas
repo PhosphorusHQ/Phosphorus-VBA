@@ -209,7 +209,7 @@ Private Function TryTogglePattern(Element As pElement) As Boolean
     If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.CheckBox Then 'Note: Applies to other control types too?
       If UIAProps.HasProperty(Element, UIAProperties.IsTogglePatternAvailable) Then
         Dim InitialToggleState As Integer
-        InitialToggleState = Actions.GetToggleState(Element)
+        InitialToggleState = Element.GetToggleState()
         Dim Pattern As IUIAutomationTogglePattern
         Set Pattern = Element.GetPattern(UIAPatterns.TogglePattern)
         Pattern.Toggle
@@ -427,7 +427,6 @@ Public Sub DragAndDrop( _
   Next i
     
   SetCursorPos tgtX, tgtY
-'  WindowsProcesses.Snooze 100
   WindowsProcesses.Snooze 50
     
   ' Drop
@@ -442,7 +441,6 @@ Public Sub DragAndDrop( _
   If HighlightHwnd <> 0 Then Window.Destroy (HighlightHwnd)
     
   WindowsProcesses.Snooze 300   ' Allow drop to process
-
 
 End Sub
 
@@ -560,33 +558,4 @@ Public Sub TryToScrollItemIntoView(Element As pElement)
     End If
   End If
 End Sub
-
-'NOTE - move these to the pElement class
-'HIghlight only when setting the element state - this is an action, but not for gets, which may be part of another action!?
-
-Public Function GetValue(Element As pElement) As String
-  If Element.HasPattern(UIAPatterns.ValuePattern) Then
-    Dim CurrentElementValuePattern As IUIAutomationValuePattern
-    Set CurrentElementValuePattern = Element.GetPattern(UIAPatterns.ValuePattern, RaiseError:=True)
-    GetValue = CurrentElementValuePattern.CurrentValue
-  End If
-End Function
-
-Public Sub SetValue(Element As pElement, Value As String)
-  Window.HighlightElement Element.UIAElement
-  If Element.HasPattern(UIAPatterns.ValuePattern) Then
-    Dim CurrentElementValuePattern As IUIAutomationValuePattern
-    Set CurrentElementValuePattern = Element.GetPattern(UIAPatterns.ValuePattern, RaiseError:=True)
-    CurrentElementValuePattern.SetValue Value
-  End If
-  Window.ReleaseHighlighting
-End Sub
-
-Public Function GetToggleState(Element As pElement) As Integer
-  If Element.HasPattern(UIAPatterns.TogglePattern) Then
-    Dim CurrentElementTogglePattern As IUIAutomationTogglePattern
-    Set CurrentElementTogglePattern = Element.GetPattern(UIAPatterns.TogglePattern, RaiseError:=True)
-    GetToggleState = CurrentElementTogglePattern.CurrentToggleState
-  End If
-End Function
 

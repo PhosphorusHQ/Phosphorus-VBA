@@ -193,16 +193,16 @@ Public Sub Checkboxes()
   End With
   
   'The second checkbox is already checked!
-  Debug.Assert Actions.GetToggleState(SecondCheckbox.Element)
+  Debug.Assert SecondCheckbox.Element.GetToggleState()
   
   Actions.Click FirstCheckbox.Element
-  Debug.Assert Actions.GetToggleState(FirstCheckbox.Element)
+  Debug.Assert FirstCheckbox.Element.GetToggleState()
   
   Actions.Click SecondCheckbox.Element
-  Debug.Assert Not Actions.GetToggleState(SecondCheckbox.Element)
+  Debug.Assert Not SecondCheckbox.Element.GetToggleState()
   
   Actions.Click FirstCheckbox.Element
-  Debug.Assert Not Actions.GetToggleState(FirstCheckbox.Element)
+  Debug.Assert Not FirstCheckbox.Element.GetToggleState()
   
   WebBrowser.NavigateBack
   Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL
@@ -344,8 +344,8 @@ Private Sub FormAuthentication_Login()
     Debug.Assert .ElementExists(0)
   End With
 
-  Actions.SetValue UsernameTextBox.Element, "tomsmith"
-  Actions.SetValue PasswordTextBox.Element, "SuperSecretPassword!"
+  UsernameTextBox.Element.SetValue "tomsmith"
+  PasswordTextBox.Element.SetValue "SuperSecretPassword!"
   Actions.Click LoginButton.Element
   
   Set SubHeader = Nothing

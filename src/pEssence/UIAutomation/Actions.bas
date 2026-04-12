@@ -530,21 +530,13 @@ End Sub
 Public Function IsElementReady(Element As pElement) As Boolean
   Dim ret As Boolean
   ret = True
-  ret = ret And IsElementAlive(Element)
+  ret = ret And Element.IsAlive()
   If ret Then
     TryToScrollItemIntoView Element
   Else
     ErrorLogging.LogError Errors.ElementIsNotAlive, "Element '" & Element.GivenName & "' is not alive!"
   End If
   IsElementReady = ret
-End Function
-
-Public Function IsElementAlive(Element As pElement) As Boolean
-  On Error Resume Next
-  Dim pid As Long
-  pid = Element.UIAElement.CurrentProcessId  'any property access will fail if stale
-  IsElementAlive = (Err.Number = 0) And (pid > 0)
-  On Error GoTo 0
 End Function
 
 Private Sub MoveMouseToElement(Element As pElement)

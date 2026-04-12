@@ -25,6 +25,14 @@ Private Sub Class_Terminate()
   Set UIAElement = Nothing
 End Sub
 
+Public Function IsAlive() As Boolean
+  On Error Resume Next
+  Dim pid As Long
+  pid = UIAElement.CurrentProcessId  'any property access will fail if stale
+  IsAlive = (Err.Number = 0) And (pid > 0)
+  On Error GoTo 0
+End Function
+
 Public Function GetProperty(PropertyId As Long) As Variant
   On Error Resume Next
   GetProperty = UIAElement.GetCurrentPropertyValue(PropertyId)

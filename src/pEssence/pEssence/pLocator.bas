@@ -124,7 +124,7 @@ End Function
 Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = True)
 'Find a single element with a timeout
 
-  If Not This.Element.UIAElement Is Nothing And Actions.IsElementAlive(This.Element) And Not FindElementAgain Then
+  If Not This.Element.UIAElement Is Nothing And This.Element.IsAlive() And Not FindElementAgain Then
     'The element has already been found, no need to find it again
     Exit Sub
   End If

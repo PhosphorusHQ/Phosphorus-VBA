@@ -60,9 +60,9 @@ Public Sub TestExpectedAndActualAllElementsPPath(strExpectedPPaths As String, Ev
   For intXPathLoopCounter = 1 To intLeastNumberOfXPaths
 '    If intXPathLoopCounter = 999 Then
       If strExpectedXPathsArray(intXPathLoopCounter - 1) <> strActualXPathsArray(intXPathLoopCounter) Then
-        Phosphorus.Log4PStatic.Logger.ExternalInfo "Number: " & intXPathLoopCounter
-        Phosphorus.Log4PStatic.Logger.ExternalInfo "Expected: " & strExpectedXPathsArray(intXPathLoopCounter - 1), VBA.Strings.Len(strExpectedXPathsArray(intXPathLoopCounter - 1))
-        Phosphorus.Log4PStatic.Logger.ExternalInfo "Actual  : " & strActualXPathsArray(intXPathLoopCounter), VBA.Strings.Len(strActualXPathsArray(intXPathLoopCounter))
+        Phosphorus.Log4PStatic.Logger.Info "Number: " & intXPathLoopCounter
+        Phosphorus.Log4PStatic.Logger.Info "Expected: " & strExpectedXPathsArray(intXPathLoopCounter - 1), VBA.Strings.Len(strExpectedXPathsArray(intXPathLoopCounter - 1))
+        Phosphorus.Log4PStatic.Logger.Info "Actual  : " & strActualXPathsArray(intXPathLoopCounter), VBA.Strings.Len(strActualXPathsArray(intXPathLoopCounter))
         Dim i As Integer
         For i = 1 To VBA.Strings.Len(strExpectedXPathsArray(intXPathLoopCounter - 1))
           If VBA.Strings.Mid(strExpectedXPathsArray(intXPathLoopCounter - 1), i, 1) <> VBA.Strings.Mid(strActualXPathsArray(intXPathLoopCounter), i, 1) Then
@@ -80,7 +80,7 @@ Public Sub TestExpectedAndActualAllElementsPPath(strExpectedPPaths As String, Ev
             End If
             'lngActualUnicode = Application.WorksheetFunction.Unicode(strActualCharacter)
             'lngActualUnicode = VBA.Strings.AscW(strActualCharacter)
-            Phosphorus.Log4PStatic.Logger.ExternalInfo "Error Character #" & i & " (" & strExpectedCharacter & ")" & "(" & strActualCharacter & ")" & " Expected Unicode: " & lngExpectedUnicode & " Actual Unicode: " & lngActualUnicode
+            Phosphorus.Log4PStatic.Logger.Info "Error Character #" & i & " (" & strExpectedCharacter & ")" & "(" & strActualCharacter & ")" & " Expected Unicode: " & lngExpectedUnicode & " Actual Unicode: " & lngActualUnicode
           End If
         Next i
       End If

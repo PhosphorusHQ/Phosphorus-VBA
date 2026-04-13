@@ -674,7 +674,7 @@ End Sub
 Private Sub Test06Excel104()
   On Error GoTo ErrorHandler
  
-  Logger.ExternalInfo "Running PPath Evaluation Excel - Test06Excel104"
+  Logger.Info "Running PPath Evaluation Excel - Test06Excel104"
 Arrange:
 '  PPath.SetDebugMode = True
   strTestPPath = "(//Pane[@Name=""Sheet Sheet1""]//DataItem[@Name=""A2""])[translate(text(),""en"",""fr"")=""Chat""]"

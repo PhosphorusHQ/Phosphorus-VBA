@@ -231,14 +231,14 @@ Public Sub Automate()
   Debug.Assert Not This.SelectAnyOneNo.IsSelected()
   
   Actions.Click This.SelectAnyOneYes
-  Actions.WaitForPatternState This.SelectAnyOneYes, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
-  Actions.WaitForPatternState This.SelectAnyOneNo, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
+  This.SelectAnyOneYes.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
+  This.SelectAnyOneNo.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
   Debug.Assert This.SelectAnyOneYes.IsSelected()
   Debug.Assert Not This.SelectAnyOneNo.IsSelected()
   
   Actions.Click This.SelectAnyOneNo
-  Actions.WaitForPatternState This.SelectAnyOneNo, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
-  Actions.WaitForPatternState This.SelectAnyOneYes, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
+  This.SelectAnyOneNo.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
+  This.SelectAnyOneYes.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
   Debug.Assert This.SelectAnyOneNo.IsSelected()
   Debug.Assert Not This.SelectAnyOneYes.IsSelected()
   
@@ -249,14 +249,14 @@ Public Sub Automate()
   Debug.Assert Not This.ConfirmYouCanSelectOnlyOneRadioButtonNo.IsSelected()
   
   Actions.Click This.ConfirmYouCanSelectOnlyOneRadioButtonYes
-  Actions.WaitForPatternState This.ConfirmYouCanSelectOnlyOneRadioButtonYes, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
-  Actions.WaitForPatternState This.ConfirmYouCanSelectOnlyOneRadioButtonNo, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
+  This.ConfirmYouCanSelectOnlyOneRadioButtonYes.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
+  This.ConfirmYouCanSelectOnlyOneRadioButtonNo.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
   Debug.Assert This.ConfirmYouCanSelectOnlyOneRadioButtonYes.IsSelected()
   Debug.Assert Not This.ConfirmYouCanSelectOnlyOneRadioButtonNo.IsSelected()
   
   Actions.Click This.ConfirmYouCanSelectOnlyOneRadioButtonNo
-  Actions.WaitForPatternState This.ConfirmYouCanSelectOnlyOneRadioButtonNo, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
-  Actions.WaitForPatternState This.ConfirmYouCanSelectOnlyOneRadioButtonYes, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
+  This.ConfirmYouCanSelectOnlyOneRadioButtonNo.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
+  This.ConfirmYouCanSelectOnlyOneRadioButtonYes.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
   Debug.Assert This.ConfirmYouCanSelectOnlyOneRadioButtonNo.IsSelected()
   Debug.Assert Not This.ConfirmYouCanSelectOnlyOneRadioButtonYes.IsSelected()
 
@@ -267,14 +267,14 @@ Public Sub Automate()
   Debug.Assert Not This.FindTheBugNo.IsSelected()
   
   Actions.Click This.FindTheBugYes
-  Actions.WaitForPatternState This.FindTheBugYes, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
-  Actions.WaitForPatternState This.FindTheBugNo, UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
+  This.FindTheBugYes.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
+  This.FindTheBugNo.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsNotSelected", 0
   Debug.Assert This.FindTheBugYes.IsSelected()
   Debug.Assert Not This.FindTheBugNo.IsSelected()
   
   Actions.Click This.FindTheBugNo
-  Actions.WaitForPatternState This.FindTheBugYes, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 0
-  Actions.WaitForPatternState This.FindTheBugNo, UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
+  This.FindTheBugYes.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 0
+  This.FindTheBugNo.WaitForPatternState UIAPatterns.SelectionItemPattern, "CurrentIsSelected", 1
   Debug.Assert This.FindTheBugNo.IsSelected()
   Debug.Assert This.FindTheBugYes.IsSelected() 'BUG: The Yes radio button should NOT still be selected!
 
@@ -295,13 +295,13 @@ Public Sub Automate()
   'FindIfTheCheckboxIsSelected
   Debug.Assert This.FindIfTheCheckboxIsSelectedRememberMe.IsSelected
   Actions.Click This.FindIfTheCheckboxIsSelectedRememberMe
-  Actions.WaitForPatternState This.FindIfTheCheckboxIsSelectedRememberMe, UIAPatterns.TogglePattern, "CurrentToggleStateOff", 1
+  This.FindIfTheCheckboxIsSelectedRememberMe.WaitForPatternState UIAPatterns.TogglePattern, "CurrentToggleStateOff", 1
   Debug.Assert Not This.FindIfTheCheckboxIsSelectedRememberMe.IsSelected
   
   'AcceptTheTermsAndConditions
   Debug.Assert Not This.IAgreeToTheFAKETermsAndConditions.IsSelected
   Actions.Click This.IAgreeToTheFAKETermsAndConditions
-  Actions.WaitForPatternState This.IAgreeToTheFAKETermsAndConditions, UIAPatterns.TogglePattern, "CurrentToggleStateOn", 1
+  This.IAgreeToTheFAKETermsAndConditions.WaitForPatternState UIAPatterns.TogglePattern, "CurrentToggleStateOn", 1
   Debug.Assert This.IAgreeToTheFAKETermsAndConditions.IsSelected
 
 End Sub

@@ -214,9 +214,9 @@ Private Function TryTogglePattern(Element As pElement) As Boolean
         Set Pattern = Element.GetPattern(UIAPatterns.TogglePattern)
         Pattern.Toggle
         If InitialToggleState = 0 Then
-          Actions.WaitForPropertyValue Element, UIAProperties.ToggleToggleState, 1
+          Element.WaitForPropertyValue UIAProperties.ToggleToggleState, 1
         Else
-          Actions.WaitForPropertyValue Element, UIAProperties.ToggleToggleState, 0
+          Element.WaitForPropertyValue UIAProperties.ToggleToggleState, 0
         End If
         TryTogglePattern = True
       End If
@@ -441,87 +441,6 @@ Public Sub DragAndDrop( _
   If HighlightHwnd <> 0 Then Window.Destroy (HighlightHwnd)
     
   WindowsProcesses.Snooze 300   ' Allow drop to process
-
-End Sub
-
-'***********
-'* Helpers *
-'***********
-
-Public Sub WaitForPropertyValue( _
-  Element As pElement, _
-  UIAProperty As UIAProperties, _
-  UIAPropertyValue As Variant, _
-  Optional TimeoutInSeconds As Integer)
-  WaitForPropertyValueOrPatternState Element, UIAProperty:=UIAProperty, UIAPropertyValue:=UIAPropertyValue, TimeoutInSeconds:=TimeoutInSeconds
-End Sub
-  
-Public Sub WaitForPatternState( _
-  Element As pElement, _
-  UIAPatternID As UIAPatterns, _
-  PatternState As Variant, _
-  Optional TimeoutInSeconds As Integer)
-  WaitForPropertyValueOrPatternState Element, UIAPatternID:=UIAPatternID, PatternState:=PatternState, TimeoutInSeconds:=TimeoutInSeconds
-End Sub
-  
-Private Sub WaitForPropertyValueOrPatternState( _
-  Element As pElement, _
-  Optional UIAProperty As UIAProperties, _
-  Optional UIAPropertyValue As Variant, _
-  Optional UIAPatternID As UIAPatterns, _
-  Optional PatternState As Variant, _
-  Optional TimeoutInSeconds As Integer)
-
-'TODO: Allow a wait for milliseconds?
-'NOTE: Temp code until we move this methor to pElement
-  
-  'Calculate the end time
-  Dim EndTime As Date
-  EndTime = DateAdd("s", TimeoutInSeconds, Now)
-  
-  'Loop until element(s) found or timed out
-  Dim PropertyValuePatternStateFound As Boolean
-  PropertyValuePatternStateFound = False
-  
-  Dim PassedEndTime As Boolean
-  PassedEndTime = False
-  
-  Dim CurrentPropertyValue As Variant
-  While Not (PropertyValuePatternStateFound Or PassedEndTime)
-  
-    If UIAProperty <> 0 Then
-      CurrentPropertyValue = GetProperty(Element, UIAProperty)
-      PropertyValuePatternStateFound = (CurrentPropertyValue = UIAPropertyValue)
-    Else
-      Select Case UIAPatternID
-        Case UIAPatterns.SelectionItemPattern
-          Dim SelectionItemPattern As IUIAutomationSelectionItemPattern
-          Set SelectionItemPattern = Element.GetPattern(UIA_PatternIds.UIA_SelectionItemPatternId)
-          Select Case PatternState
-            Case "CurrentIsSelected"
-              PropertyValuePatternStateFound = (SelectionItemPattern.CurrentIsSelected = 1)
-            Case "CurrentIsNotSelected"
-              PropertyValuePatternStateFound = (SelectionItemPattern.CurrentIsSelected = 0)
-          End Select
-        Case UIA_TogglePatternId
-          Dim TogglePattern As IUIAutomationTogglePattern
-          Set TogglePattern = Element.GetPattern(UIAPatterns.TogglePattern)
-          Select Case PatternState
-            Case "CurrentToggleStateOn"
-              PropertyValuePatternStateFound = (TogglePattern.CurrentToggleState = 1)
-            Case "CurrentToggleStateOff"
-              PropertyValuePatternStateFound = (TogglePattern.CurrentToggleState = 0)
-          End Select
-        End Select
-    End If
-    
-    If Not PropertyValuePatternStateFound Then
-      PassedEndTime = (Now > EndTime)
-      If Not PassedEndTime Then
-        WindowsProcesses.Snooze 10
-      End If
-    End If
-  Wend
 
 End Sub
 

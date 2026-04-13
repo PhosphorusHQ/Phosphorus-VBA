@@ -125,12 +125,7 @@ Public Sub WaitForInteractionState( _
   Element As pElement, _
   UIAPropertyValue As UIAWindowInteractionStates, _
   Optional TimeoutInMilliseconds As Long)
-  
-  Actions.WaitForPropertyValue _
-    Element, _
-    UIAProperties.WindowWindowInteractionState, _
-    UIAPropertyValue
-  
+  Element.WaitForPropertyValue UIAProperties.WindowWindowInteractionState, UIAPropertyValue
 End Sub
 
 Public Sub CloseWindow(Element As pElement)

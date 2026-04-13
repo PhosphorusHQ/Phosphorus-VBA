@@ -120,8 +120,8 @@ Private Const LWA_ALPHA = &H2                     'Only needed if you want to fa
 'Highlight element overlay
 Private HwndOverlay As LongPtr
 Public HighlightElements As Boolean
-
-Public Sub WaitForInteractionState( _
+    
+Public Sub WaitForWindowInteractionState( _
   Element As pElement, _
   UIAPropertyValue As UIAWindowInteractionStates, _
   Optional TimeoutInMilliseconds As Long)
@@ -140,7 +140,6 @@ Public Sub CloseWindow(Element As pElement)
     End If
   End If
 End Sub
-
 Public Sub Destroy(hWnd As LongPtr)
   DestroyWindow hWnd
 End Sub

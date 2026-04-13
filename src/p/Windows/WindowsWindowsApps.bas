@@ -51,4 +51,18 @@ Public Function GetAppID(AppName As String) As String
     
 End Function
 
+Public Function DuckDuckGo() As Phosphorus.WindowsApp
+  Dim myWindowsApp As Phosphorus.WindowsApp
+  myWindowsApp.FriendlyName = "DuckDuckGo"
+  myWindowsApp.OfficialName = "DuckDuckGo.DesktopBrowser"
+  DuckDuckGo = myWindowsApp
+End Function
+
+Public Function MicrosoftEdge() As Phosphorus.WindowsApp
+  Dim myWindowsApp As Phosphorus.WindowsApp
+  myWindowsApp.FriendlyName = "Microsoft Edge"
+  myWindowsApp.OfficialName = "Microsoft.MicrosoftEdge.Stable"
+  MicrosoftEdge = myWindowsApp
+End Function
+
 'Code removed due to triggering false Malware alert in OneDrive

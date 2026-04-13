@@ -157,7 +157,7 @@ Public Sub Click(Element As pElement)
   If TryTogglePattern(Element) Then GoTo Cleanup
   If TryLegacyIAccessibleDefaultAction(Element) Then GoTo Cleanup
   If TryLegacyIAccessiblePatternSelect(Element, SELFLAG_TAKEFOCUS + SELFLAG_TAKESELECTION) Then GoTo Cleanup
-  ' Try this las as we don't know if it worked!
+  ' Try this last as we don't know if it worked!
   If TryMouseClickByMessage(Element, LeftClick) Then GoTo Cleanup
 'This works?
   If TryMouseClicksByEvent(Element, LeftClick) Then GoTo Cleanup
@@ -171,32 +171,36 @@ End Sub
 Private Function TryInvokePattern(Element As pElement) As Boolean
   On Error GoTo Finish
   TryInvokePattern = False
-  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
-    If UIAProps.HasProperty(Element, UIAProperties.IsInvokePatternAvailable) Then
-      If UIAProps.GetProperty(Element, UIAProperties.IsInvokePatternAvailable) Then
-        Dim Pattern As IUIAutomationInvokePattern
-        Set Pattern = Element.GetPattern(UIAPatterns.InvokePattern)
-        Pattern.Invoke
-        TryInvokePattern = True
-      End If
-    End If
+  If GetPatternPreChecks(Element, IsInvokePatternAvailable) Then
+    Dim Pattern As IUIAutomationInvokePattern
+    Set Pattern = Element.GetPattern(UIAPatterns.InvokePattern)
+    Pattern.Invoke
+    TryInvokePattern = True
   End If
 Finish:
   On Error Resume Next
 End Function
 
+Private Function GetPatternPreChecks(Element As pElement, IsPatternAvailableProperty As UIAProperties) As Boolean
+  GetPatternPreChecks = False
+  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
+    If UIAProps.HasProperty(Element, IsPatternAvailableProperty) Then
+      If UIAProps.GetProperty(Element, IsPatternAvailableProperty) Then
+        GetPatternPreChecks = True
+        Exit Function
+      End If
+    End If
+  End If
+End Function
+
 Private Function TrySelectionItemPatternSelect(Element As pElement) As Boolean
   On Error GoTo Finish
   TrySelectionItemPatternSelect = False
-  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
-    If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
-      If UIAProps.HasProperty(Element, UIAProperties.IsSelectionItemPatternAvailable) Then
-        Dim Pattern As IUIAutomationSelectionItemPattern
-        Set Pattern = Element.GetPattern(UIAPatterns.SelectionItemPattern)
-        Pattern.Select
-        TrySelectionItemPatternSelect = True
-      End If
-    End If
+  If GetPatternPreChecks2(Element, ListItem, IsSelectionItemPatternAvailable) Then
+    Dim Pattern As IUIAutomationSelectionItemPattern
+    Set Pattern = Element.GetPattern(UIAPatterns.SelectionItemPattern)
+    Pattern.Select
+    TrySelectionItemPatternSelect = True
   End If
 Finish:
   On Error Resume Next
@@ -205,22 +209,18 @@ End Function
 Private Function TryTogglePattern(Element As pElement) As Boolean
   On Error GoTo Finish
   TryTogglePattern = False
-  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
-    If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.CheckBox Then 'Note: Applies to other control types too?
-      If UIAProps.HasProperty(Element, UIAProperties.IsTogglePatternAvailable) Then
-        Dim InitialToggleState As Integer
-        InitialToggleState = Element.GetToggleState()
-        Dim Pattern As IUIAutomationTogglePattern
-        Set Pattern = Element.GetPattern(UIAPatterns.TogglePattern)
-        Pattern.Toggle
-        If InitialToggleState = 0 Then
-          Element.WaitForPropertyValue UIAProperties.ToggleToggleState, 1
-        Else
-          Element.WaitForPropertyValue UIAProperties.ToggleToggleState, 0
-        End If
-        TryTogglePattern = True
-      End If
+  If GetPatternPreChecks2(Element, CheckBox, IsTogglePatternAvailable) Then
+    Dim InitialToggleState As Integer
+    InitialToggleState = Element.GetToggleState()
+    Dim Pattern As IUIAutomationTogglePattern
+    Set Pattern = Element.GetPattern(UIAPatterns.TogglePattern)
+    Pattern.Toggle
+    If InitialToggleState = 0 Then
+      Element.WaitForPropertyValue UIAProperties.ToggleToggleState, 1
+    Else
+      Element.WaitForPropertyValue UIAProperties.ToggleToggleState, 0
     End If
+    TryTogglePattern = True
   End If
 Finish:
   On Error Resume Next
@@ -229,15 +229,11 @@ End Function
 Private Function TryLegacyIAccessibleDefaultAction(Element As pElement) As Boolean
   On Error GoTo Finish
   TryLegacyIAccessibleDefaultAction = False
-  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
-    If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
-      If UIAProps.HasProperty(Element, UIAProperties.IsLegacyIAccessiblePatternAvailable) Then
-        Dim Pattern As IUIAutomationLegacyIAccessiblePattern
-        Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessiblePattern)
-        Pattern.DoDefaultAction
-        TryLegacyIAccessibleDefaultAction = True
-      End If
-    End If
+  If GetPatternPreChecks2(Element, ListItem, IsLegacyIAccessiblePatternAvailable) Then
+    Dim Pattern As IUIAutomationLegacyIAccessiblePattern
+    Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessiblePattern)
+    Pattern.DoDefaultAction
+    TryLegacyIAccessibleDefaultAction = True
   End If
 Finish:
   On Error Resume Next
@@ -246,18 +242,26 @@ End Function
 Private Function TryLegacyIAccessiblePatternSelect(Element As pElement, Flags As Integer)
   On Error GoTo Finish
   TryLegacyIAccessiblePatternSelect = False
-  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
-    If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.ListItem Then
-      If UIAProps.HasProperty(Element, UIAProperties.IsLegacyIAccessiblePatternAvailable) Then
-        Dim Pattern As IUIAutomationLegacyIAccessiblePattern
-        Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessiblePattern)
-        Pattern.Select Flags
-        TryLegacyIAccessiblePatternSelect = True
-      End If
-    End If
+  If GetPatternPreChecks2(Element, ListItem, IsLegacyIAccessiblePatternAvailable) Then
+    Dim Pattern As IUIAutomationLegacyIAccessiblePattern
+    Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessiblePattern)
+    Pattern.Select Flags
+    TryLegacyIAccessiblePatternSelect = True
   End If
 Finish:
   On Error Resume Next
+End Function
+
+Private Function GetPatternPreChecks2(Element As pElement, ControlType As UIAControlTypeIDs, IsPatternAvailableProperty As UIAProperties) As Boolean
+  GetPatternPreChecks2 = False
+  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
+    If UIAProps.GetProperty(Element, UIAProperties.ControlType) = ControlType Then
+      If UIAProps.HasProperty(Element, IsPatternAvailableProperty) Then
+        GetPatternPreChecks2 = True
+        Exit Function
+      End If
+    End If
+  End If
 End Function
 
 Private Function TryMouseClickByMessage(Element As pElement, ClickType As MouseClickType) As Boolean

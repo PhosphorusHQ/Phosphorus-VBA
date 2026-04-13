@@ -27,7 +27,7 @@ Public Function Evaluate(Element As pElement) As Boolean
   Dim ReturnValue As Boolean
   'Cast from IUnknown type
   Dim CurrentValue As Variant
-  CurrentValue = VBA.Conversion.CVar(UIAProps.GetProperty(Element, UIAProperty))
+  CurrentValue = VBA.Conversion.CVar(Element.GetProperty(UIAProperty))
   Select Case UIAPropertyComparison
     Case UIAPropertyComparisons.IsTheString
        ReturnValue = (CurrentValue = UIAPropertyValue)

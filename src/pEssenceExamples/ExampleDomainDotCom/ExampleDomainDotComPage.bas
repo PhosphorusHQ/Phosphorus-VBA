@@ -73,7 +73,7 @@ Public Sub Initialize()
 End Sub
 
 Public Sub RunChecks()
-  Debug.Assert UIAProps.GetProperty(This.RootWebArea.Element, Name) = TARGET_PAGE_TITLE
+  Debug.Assert This.RootWebArea.Element.GetProperty(Name) = TARGET_PAGE_TITLE
   Debug.Assert This.Heading.ElementExists(10) = True
   Debug.Assert This.Description.ElementExists(10) = True
   Debug.Assert This.Link.ElementExists(10) = True

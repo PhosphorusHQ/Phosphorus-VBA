@@ -238,21 +238,6 @@ Public Enum UIAWindowInteractionStates 'UIAutomationClient.WindowInteractionStat
   Running = WindowInteractionState_Running
 End Enum
 
-Public Function GetProperty(Element As pElement, PropertyId As Long) As Variant
-  On Error Resume Next
-  GetProperty = Element.UIAElement.GetCurrentPropertyValue(PropertyId)
-  On Error GoTo 0
-End Function
-
-Public Function HasProperty(Element As pElement, PropertyId As Long, Optional RaiseError As Boolean) As Boolean
-  On Error Resume Next
-  Dim Property As Variant
-  On Error Resume Next
-  Property = Element.UIAElement.GetCurrentPropertyValue(PropertyId)
-  On Error GoTo 0
-  HasProperty = Not IsEmpty(Property)
-End Function
-
 Public Function GetWindowInteractionStateName(WindowInteractionState As Long) As String
   Dim r As String
   Select Case WindowInteractionState 'UIAutomationClient.WindowInteractionState

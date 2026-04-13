@@ -183,9 +183,9 @@ End Function
 
 Private Function GetPatternPreChecks(Element As pElement, IsPatternAvailableProperty As UIAProperties) As Boolean
   GetPatternPreChecks = False
-  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
-    If UIAProps.HasProperty(Element, IsPatternAvailableProperty) Then
-      If UIAProps.GetProperty(Element, IsPatternAvailableProperty) Then
+  If Element.HasProperty(UIAProperties.ControlType) Then
+    If Element.HasProperty(IsPatternAvailableProperty) Then
+      If Element.GetProperty(IsPatternAvailableProperty) Then
         GetPatternPreChecks = True
         Exit Function
       End If
@@ -254,9 +254,9 @@ End Function
 
 Private Function GetPatternPreChecks2(Element As pElement, ControlType As UIAControlTypeIDs, IsPatternAvailableProperty As UIAProperties) As Boolean
   GetPatternPreChecks2 = False
-  If UIAProps.HasProperty(Element, UIAProperties.ControlType) Then
-    If UIAProps.GetProperty(Element, UIAProperties.ControlType) = ControlType Then
-      If UIAProps.HasProperty(Element, IsPatternAvailableProperty) Then
+  If Element.HasProperty(UIAProperties.ControlType) Then
+    If Element.GetProperty(UIAProperties.ControlType) = ControlType Then
+      If Element.HasProperty(IsPatternAvailableProperty) Then
         GetPatternPreChecks2 = True
         Exit Function
       End If
@@ -471,9 +471,9 @@ Private Sub MoveMouseToElement(Element As pElement)
 End Sub
 
 Public Sub TryToScrollItemIntoView(Element As pElement)
-  If UIAProps.HasProperty(Element, UIAProperties.IsScrollItemPatternAvailable) Then
-    If UIAProps.HasProperty(Element, UIAProperties.IsOffscreen) Then
-      If UIAProps.GetProperty(Element, UIAProperties.IsOffscreen) Then
+  If Element.HasProperty(UIAProperties.IsScrollItemPatternAvailable) Then
+    If Element.HasProperty(UIAProperties.IsOffscreen) Then
+      If Element.GetProperty(UIAProperties.IsOffscreen) Then
         Dim patt As IUIAutomationScrollItemPattern
         Set patt = Element.GetPattern(UIAPatterns.ScrollItemPattern, RaiseError:=True)
         patt.ScrollIntoView

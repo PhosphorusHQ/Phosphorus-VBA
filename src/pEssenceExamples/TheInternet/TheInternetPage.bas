@@ -89,13 +89,13 @@ End Sub
 
 Public Sub RunHomePageChecks()
   Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL
-  Debug.Assert UIAProps.GetProperty(This.RootWebArea.Element, Name) = TARGET_PAGE_TITLE
+  Debug.Assert This.RootWebArea.Element.GetProperty(Name) = TARGET_PAGE_TITLE
   Debug.Assert This.HomePageHeading1.ElementExists(10)
-  Debug.Assert UIAProps.GetProperty(This.HomePageHeading1.Element, Level) = 1
+  Debug.Assert This.HomePageHeading1.Element.GetProperty(Level) = 1
   Debug.Assert This.HomePageHeading2.ElementExists(10)
-  Debug.Assert UIAProps.GetProperty(This.HomePageHeading2.Element, Level) = 2
+  Debug.Assert This.HomePageHeading2.Element.GetProperty(Level) = 2
   Debug.Assert This.ListOfExamples.ElementExists(10) = True
-  Debug.Assert UIAProps.GetProperty(This.ListOfExamples.Element, SizeOfSet) = 44
+  Debug.Assert This.ListOfExamples.Element.GetProperty(SizeOfSet) = 44
 End Sub
 
 Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText)

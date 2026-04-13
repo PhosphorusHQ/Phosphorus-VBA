@@ -39,6 +39,15 @@ Public Function GetProperty(PropertyId As Long) As Variant
   On Error GoTo 0
 End Function
 
+Public Function HasProperty(PropertyId As Long, Optional RaiseError As Boolean) As Boolean
+  On Error Resume Next
+  Dim Property As Variant
+  On Error Resume Next
+  Property = UIAElement.GetCurrentPropertyValue(PropertyId)
+  On Error GoTo 0
+  HasProperty = Not IsEmpty(Property)
+End Function
+
 'Tools > References > OLE Automation needed for IUnknown type
 Public Function GetPattern(PatternId As Long, Optional RaiseError As Boolean) As IUnknown
   On Error Resume Next

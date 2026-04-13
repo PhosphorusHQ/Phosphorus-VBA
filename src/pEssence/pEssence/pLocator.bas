@@ -187,7 +187,7 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
   If CountOfFoundElements = 1 Then
     Set This.Element = FoundElements(0)
     If FindElementAgain Then
-      If UIAProps.HasProperty(This.Element, UIAProperties.IsScrollItemPatternAvailable) Then
+      If This.Element.HasProperty(UIAProperties.IsScrollItemPatternAvailable) Then
         Actions.TryToScrollItemIntoView This.Element
         Find TimeoutInSeconds, AcceptNoElements, FindElementAgain:=False
       End If

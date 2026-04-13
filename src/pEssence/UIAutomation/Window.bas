@@ -131,8 +131,8 @@ End Sub
 Public Sub CloseWindow(Element As pElement)
   Toaster.Message "Close Window " & Name, Action
   Actions.IsElementReady Element
-  If UIAProps.GetProperty(Element, UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
-    If UIAProps.HasProperty(Element, UIAProperties.IsWindowPatternAvailable) Then
+  If Element.GetProperty(UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
+    If Element.HasProperty(UIAProperties.IsWindowPatternAvailable) Then
       Dim patt As IUIAutomationWindowPattern
       Set patt = Element.GetPattern(UIA_PatternIds.UIA_WindowPatternId, RaiseError:=True)
       patt.Close

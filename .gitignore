@@ -1,6 +1,7 @@
 @*.*
 *.xlam
 *.xlsx
+*.xlsm
 *.ini
 *.ps1
 *.lnk

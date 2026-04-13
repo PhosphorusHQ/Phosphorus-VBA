@@ -65,4 +65,12 @@ Public Function MicrosoftEdge() As Phosphorus.WindowsApp
   MicrosoftEdge = myWindowsApp
 End Function
 
+Public Function MicrosoftWindowsCalculator() As Phosphorus.WindowsApp
+  Dim myWindowsApp As Phosphorus.WindowsApp
+  myWindowsApp.FriendlyName = "Microsoft Windows Calculator"
+  myWindowsApp.OfficialName = "Microsoft.WindowsCalculator"
+  myWindowsApp.PageLoadedElementPPath = "/Window[xp:starts-with(@Name,""Calculator"")]"
+  MicrosoftWindowsCalculator = myWindowsApp
+End Function
+
 'Code removed due to triggering false Malware alert in OneDrive

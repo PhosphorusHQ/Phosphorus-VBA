@@ -16,7 +16,7 @@ Sub RunAllAssertionTests()
   Log4PStatic.LogFileNameDynamicPart2 = "RunAssertionTests"
 
   Phosphorus.Log4PStatic.GetLogger
-  Logger.level = LogLevel.EXTERNAL_TRACE 'Log everything
+  Logger.level = LogLevel.Trace 'Log everything
       
   RunAssertionTests1
   RunAssertionTests2
@@ -33,79 +33,33 @@ Sub RunAssertionTests1()
   ' Test examples
   
   Phosphorus.AssertionsStatic.GetAssert
-  
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests1", _
-    AnalysisCode2:="AssertEqual", _
-    AnalysisCode3:="Numbers", _
-    message:="Numbers should be equal"
+  Logger.Info "Numbers should be equal", External
   pAssert.Equal 5, 5, "Numbers should be equal", isCritical:=True
   
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests1", _
-    AnalysisCode2:="AssertEqual", _
-    AnalysisCode3:="Strings", _
-    message:="Strings should be equal"
+  Logger.Info "Strings should be equal", External
   pAssert.Equal "test", "test", "Strings should be equal", isCritical:=True
   
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests1", _
-    AnalysisCode2:="AssertNotEqual", _
-    AnalysisCode3:="Numbers", _
-    message:="Numbers should not be equal"
+  Logger.Info "Numbers should not be equal", External
   pAssert.NotEqual 5, 6, "Numbers should not be equal", isCritical:=True
   
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests1", _
-    AnalysisCode2:="AssertTrue", _
-    AnalysisCode3:="Basic math", _
-    message:="Basic math should be true"
+  Logger.Info "Basic math should be true", External
   pAssert.IsTrue (2 + 2 = 4), "Basic math should be true", isCritical:=True
   
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests1", _
-    AnalysisCode2:="AssertFalse", _
-    AnalysisCode3:="Comparison", _
-    message:="Comparison should be false"
+  Logger.Info "Comparison should be false", External
   pAssert.IsFalse (1 > 2), "Comparison should be false", isCritical:=True
   
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests1", _
-    AnalysisCode2:="AssertNull", _
-    AnalysisCode3:="Comparison", _
-    message:="Value should be null"
+  Logger.Info "Value should be null", External
   pAssert.ThisIsNull Null, "Value should be null", isCritical:=True
-  
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests1", _
-    AnalysisCode2:="AssertNotNull", _
-    AnalysisCode3:="Comparison", _
-    message:="Value should not be null"
+
+  Logger.Info "Value should not be null", External
   pAssert.ThisIsNotNull "hello", "Value should not be null", isCritical:=True
 
   ' Intentionally failing tests for demonstration
   
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests1", _
-    AnalysisCode2:="AssertEqual", _
-    AnalysisCode3:="Comparison", _
-    message:="Numbers should not be equal - This should fail"
+  Logger.Info "Numbers should not be equal - This should fail", External
   pAssert.Equal 5, 6, "This should fail", isCritical:=True
   
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests1", _
-    AnalysisCode2:="AssertTrue", _
-    AnalysisCode3:="False", _
-    message:="True is not False - This should fail too"
+  Logger.Info "True is not False - This should fail too", External
   pAssert.IsTrue False, "This should fail too", isCritical:=True
 
   ' Print results
@@ -120,91 +74,41 @@ Sub RunAssertionTests2()
   Phosphorus.AssertionsStatic.GetAssert
   
   ' Test Step 1
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests2", _
-    AnalysisCode2:="Test Step 1", _
-    message:="Test Step 1"
+  Logger.Info "Test Step 1", External
     
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests2", _
-    AnalysisCode2:="Test Step 1", _
-    AnalysisCode3:="Numbers should be equal", _
-    message:="Assert 5 = 5"
+  Logger.Info "Assert 5 = 5", External
   pAssert.Equal 5, 5, "Numbers should be equal", isCritical:=True
 
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests2", _
-    AnalysisCode2:="Test Step 1", _
-    AnalysisCode3:="Basic math should be true", _
-    message:="Assert 2 + 2 = 4"
+  Logger.Info "Assert 2 + 2 = 4", External
   pAssert.IsTrue (2 + 2 = 4), "Basic math should be true", isCritical:=True
     
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests2", _
-    AnalysisCode2:="Test Step 1", _
-    AnalysisCode3:="Comparison should be false", _
-    message:="Assert 2 + 2 = 4"
+  Logger.Info "Assert 1>3", External
   pAssert.IsFalse (1 > 2), "Comparison should be false", isCritical:=True
   
   'No Critical Failures
   If pAssert.HasCriticalFailure Then
-    Logger.LogFixedLevelMessage _
-      level:=LogLevel.EXTERNAL_INFO, _
-      AnalysisCode1:="AssertionTests2", _
-      AnalysisCode2:="Check for Has Critical Failure", _
-      message:="RunAssertionTests2 Step 1 has critical failures"
+    Logger.Info "RunAssertionTests2 Step 1 has critical failures", External
     Exit Sub
   End If
     
   ' Test Step 2
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests2", _
-    AnalysisCode2:="Test Step 2", _
-    message:="Test Step 2"
-    
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests2", _
-    AnalysisCode2:="Test Step 2", _
-    AnalysisCode3:="Numbers should not be equal - this should fail - critical", _
-    message:="Assert 5 = 5"
+  Logger.Info "Test Step 2", External
+
+  Logger.Info "Numbers should not be equal - this should fail - critical", External
   pAssert.Equal 5, 6, "This should fail", isCritical:=True ' Critical assertion that will fail
     
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests2", _
-    AnalysisCode2:="Test Step 2", _
-    AnalysisCode3:="The same string is not not equal - this should fail too", _
-    message:="Assert 5 = 5"
+  Logger.Info "The same string is not not equal - this should fail too", External
   pAssert.NotEqual "test", "test", "This should fail too", isCritical:=True
-    
+
   If pAssert.HasCriticalFailure Then
-    Logger.LogFixedLevelMessage _
-      level:=LogLevel.EXTERNAL_INFO, _
-      AnalysisCode1:="AssertionTests2", _
-      AnalysisCode2:="Check for Has Critical Failure", _
-      message:="RunAssertionTests2 Step 2 aborted due to critical failure"
+    Logger.Info "RunAssertionTests2 Step 2 aborted due to critical failure", External
     GoTo PrintSummary
   End If
     
   ' Test Step 3 (won't run if critical failure occurred)
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests2", _
-    AnalysisCode2:="Test Step 3", _
-    message:="Test Step 3"
-  
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests2", _
-    AnalysisCode2:="Test Step 3", _
-    AnalysisCode3:="A string is not null - this should not run", _
-    message:="Assert 'hello' is not "
+  Logger.Info "Test Step 3 (won't run if critical failure occurred)", External
+ 
+  Logger.Info "A string is not null - this should not run", External
   pAssert.ThisIsNotNull "hello", "Value should not be null", isCritical:=True
 
 PrintSummary:
@@ -225,42 +129,18 @@ Sub RunAssertionTests3()
     testArray(3) = 3
     
   ' Test Step 1
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests3", _
-    AnalysisCode2:="Test Step 1", _
-    message:="Test Step 1"
-    
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests3", _
-    AnalysisCode2:="Test Step 1", _
-    AnalysisCode3:="Value should be in range", _
-    message:="Assert 5 is between 1 and 10"
+  Logger.Info "Test Step 1", External
+ 
+  Logger.Info "Assert 5 is between 1 and 10", External
   pAssert.InRange 5, 1, 10, "Value should be in range", isCritical:=True
 
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests3", _
-    AnalysisCode2:="Test Step 1", _
-    AnalysisCode3:="Array should contain", _
-    message:="Array should contain 2"
+  Logger.Info "Array should contain 2", External
   pAssert.Contains testArray, 2, "Array should contain 2", isCritical:=True
 
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests3", _
-    AnalysisCode2:="Test Step 1", _
-    AnalysisCode3:="String should contain numbers", _
-    message:="'Hello123' contain '*[0-9]*'"
+  Logger.Info "'Hello123' contain '*[0-9]*'", External
   pAssert.StringMatchesSimplePattern "Hello123", "*[0-9]*", "String should contain numbers", isCritical:=True
-    
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests3", _
-    AnalysisCode2:="Test Step 1", _
-    AnalysisCode3:="Values should be approximately equal", _
-    message:="'Hello123' contain '*[0-9]*'"
+
+  Logger.Info "Values should be approximately equal", External
   pAssert.ApproximatelyEqual 10#, 10.1, 0.2, "Values should be approximately equal", isCritical:=True
     
   pAssert.ObjectExists Application, "Application object should exist"
@@ -282,55 +162,25 @@ Sub RunAssertionTests4()
   Phosphorus.AssertionsStatic.GetAssert
   
   pAssert.Throws "AssertionThrowsErrTest", 5, "Should raise error 5"
-    
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests4", _
-    AnalysisCode2:="AssertEmpty", _
-    AnalysisCode3:="Collection", _
-    message:="Collection should be empty"
+
+  Logger.Info "Collection should be empty", External
   Dim testCollection As New collection
   pAssert.IsEmpty testCollection, "Collection should be empty", isCritical:=True
-  
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests4", _
-    AnalysisCode2:="AssertEmpty", _
-    AnalysisCode3:="Array", _
-    message:="Array should be empty"
+
+  Logger.Info "Array should be empty", External
   Dim emptyArray() As Integer
   pAssert.IsEmpty emptyArray(), "Array should be empty", isCritical:=True
     
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests4", _
-    AnalysisCode2:="AssertType", _
-    AnalysisCode3:="String", _
-    message:="Should be string type"
+  Logger.Info "Should be string type", External
   pAssert.IsType "Hello", "String", "Should be string type", isCritical:=True
-  
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests4", _
-    AnalysisCode2:="AssertGreaterThan", _
-    AnalysisCode3:="Numbers 10, 5", _
-    message:="10 should be greater than 5"
+
+  Logger.Info "10 should be greater than 5", External
   pAssert.GreaterThan 10, 5, "10 should be greater than 5", isCritical:=True
   
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests4", _
-    AnalysisCode2:="AssertLessThan", _
-    AnalysisCode3:="Numbers 3, 7", _
-    message:="3 should be less than 7"
+  Logger.Info "3 should be less than 7", External
   pAssert.LessThan 3, 7, "3 should be less than 7", isCritical:=True
   
-  Logger.LogFixedLevelMessage _
-    level:=LogLevel.EXTERNAL_INFO, _
-    AnalysisCode1:="AssertionTests4", _
-    AnalysisCode2:="AssertFileExists", _
-    AnalysisCode3:="C:\Windows\explorer.exe", _
-    message:="Windows Explorer should exist"
+  Logger.Info "Windows Explorer should exist", External
   pAssert.FileExists "C:\Windows\explorer.exe", "Windows Explorer should exist", isCritical:=True
     
   ' Check for critical failure

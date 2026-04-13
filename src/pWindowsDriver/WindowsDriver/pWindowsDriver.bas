@@ -197,7 +197,7 @@ Public Sub Launch( _
       Set This.MasterWindowsDriverElement = FindElement("PageLoadedElement", This.PageLoadedElementPPath, TimeoutInSeconds)
       'Store this as the Master Window element so that we can easily close the current driver window when it is finished with
       This.MasterWindowsDriverElement.Name = "MasterWindowsDriverElement"
-      Logger.InternalInfo "MasterWindowsDriverElement:=" & This.MasterWindowsDriverElement.FoundBypPath
+      Logger.Info "MasterWindowsDriverElement:=" & This.MasterWindowsDriverElement.FoundBypPath, Internal
 
       'Set the default element PPath which indicate the driver has been unloaded/closed
       Me.SetPageUnloadedElementPPath GetPageLoadedElementPPath
@@ -261,25 +261,25 @@ Private Sub CheckForBrowserRootElements()
   If BrowserRootViewpPath <> "" Then
     Set This.BrowserRootViewElement = RefreshPageUntilBrowserRootElementExists("BrowserRootWebAreaPPath", CurrentpPath, RootElement:=This.MasterWindowsDriverElement)
     If This.BrowserRootViewElement Is Nothing Then
-      Logger.ExternalFatal "Browser Root View Element not found!"
+      Logger.Fatal "Browser Root View Element not found!"
       Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverWebBrowserRootViewElementNotFound, CurrentpPath
     End If
   End If
-  Logger.InternalInfo "BrowserRootViewpPath:=" & BrowserRootViewpPath
+  Logger.Info "BrowserRootViewpPath:=" & BrowserRootViewpPath, Internal
 
   BrowserRootWebAreapPath = GetWebBrowserRootWebAreapPath
   CurrentpPath = BrowserRootWebAreapPath
   If BrowserRootWebAreapPath <> "" Then
     Set This.BrowserRootWebAreaElement = RefreshPageUntilBrowserRootElementExists("BrowserRootWebAreaPPath", CurrentpPath, RootElement:=This.BrowserRootViewElement)
       If This.BrowserRootWebAreaElement Is Nothing Then
-        Logger.ExternalFatal "Browser Root Web Area not found!"
+        Logger.Fatal "Browser Root Web Area not found!"
         Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverWebBrowserRootWebAreaElementNotFound, CurrentpPath
       End If
   Else
-    Logger.InternalTrace "Opera uses the same element for these two, so don't waste time searching for it again"
+    Logger.Trace "Opera uses the same element for these two, so don't waste time searching for it again", Internal
     Set This.BrowserRootWebAreaElement = This.BrowserRootViewElement
   End If
-  Logger.InternalInfo "BrowserRootWebAreapPath:=" & BrowserRootWebAreapPath
+  Logger.Info "BrowserRootWebAreapPath:=" & BrowserRootWebAreapPath, Internal
 
 End Sub
 
@@ -328,7 +328,7 @@ Private Function GetWebBrowserRootViewpPath()
     GetWebBrowserRootViewpPath = "//" & BrowserRootViewControlType
     If BrowserRootViewClassName <> "" Then
       'NB: Opera needs the Name attribute here!
-      Logger.InternalTrace "Opera needs the Name attribute here!"
+      Logger.Trace "Opera needs the Name attribute here!", Internal
       If BrowserRootViewUseWebAppTitleAsName Then
         GetWebBrowserRootViewpPath = GetWebBrowserRootViewpPath & _
           "[And(@ClassName=""" & BrowserRootViewClassName & """,@Name=""" & This.WebAppTitle & """)]"
@@ -341,7 +341,7 @@ Private Function GetWebBrowserRootViewpPath()
       End If
     End If
   End If
-  Logger.InternalTrace "Got Web Browser Root View pPath as: " & GetWebBrowserRootViewpPath
+  Logger.Trace "Got Web Browser Root View pPath as: " & GetWebBrowserRootViewpPath, Internal
 End Function
 
 Private Function GetWebBrowserRootWebAreapPath()
@@ -358,7 +358,7 @@ Private Function GetWebBrowserRootWebAreapPath()
       GetWebBrowserRootWebAreapPath = GetWebBrowserRootWebAreapPath & "[@Name=""" & This.WebAppTitle & """]"
     End If
   End If
-  Logger.InternalTrace "Got Web Browser Root Area pPath as: " & GetWebBrowserRootWebAreapPath
+  Logger.Trace "Got Web Browser Root Area pPath as: " & GetWebBrowserRootWebAreapPath, Internal
 End Function
 
 Public Function GetWebBrowserpPathConfigurationItem(ItemType As pWinDriver.pWebBrowserPPathConfigurationItems, Optional Parameter1 As Variant) As Variant
@@ -443,7 +443,7 @@ Public Function FindElement( _
     InitialpPath = "{Desktop}"
     CurrentpPath.SetApplicationRootElement pWinDriver.pWindowsDriverStatic.gUIADesktopUIElement
   End If
-  Logger.InternalDebug "Root Element pPath: " & InitialpPath
+  Logger.Debugging "Root Element pPath: " & InitialpPath, Internal
 
   'Get default timeout if none set (it might be 0!)
   If IsMissing(TimeoutInSeconds) Then
@@ -467,13 +467,13 @@ Public Function FindElement( _
     If Not boolElementFound Then
       boolPassedEndTime = (Now > dtEndTime)
       i = i + 1
-      Logger.ExternalDebug "Sleeping " & i & ": " & DEFAULT_IMPLICIT_DELAY_BETWEEN_POLLS_IN_MILLISECOND
+      Logger.Debugging "Sleeping " & i & ": " & DEFAULT_IMPLICIT_DELAY_BETWEEN_POLLS_IN_MILLISECOND
       Phosphorus.WindowsProcesses.Snooze DEFAULT_IMPLICIT_DELAY_BETWEEN_POLLS_IN_MILLISECOND
     End If
   Wend
 
   If Not boolElementFound And Not CheckExistenceOnly Then
-    Logger.ExternalFatal "Element named '" & Name & "' not found by pPath: " & pPathString
+    Logger.Fatal "Element named '" & Name & "' not found by pPath: " & pPathString
     Phosphorus.pExceptions.Raise _
       Phosphorus.Exceptions.WindowsDriverUIElementNotFoundBeforeTimeout, _
       Name, _
@@ -483,7 +483,7 @@ Public Function FindElement( _
     
   If boolElementFound Then
     
-    Logger.InternalDebug "Element has been found"
+    Logger.Debugging "Element has been found", Internal
     
     'TODO: Check for only 1 matching element!
     

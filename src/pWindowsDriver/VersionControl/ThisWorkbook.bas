@@ -51,7 +51,7 @@ Private Sub Workbook_Open()
   pWinDriver.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
 
   Dim strPEssenceWBFullName As String
-  strPEssenceWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pEssence.xlam")
+  strPEssenceWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "PhosphorEssence.xlam")
   pWinDriver.References.AddReferenceToWorkbookOrLibrary strPEssenceWBFullName
 
 End Sub

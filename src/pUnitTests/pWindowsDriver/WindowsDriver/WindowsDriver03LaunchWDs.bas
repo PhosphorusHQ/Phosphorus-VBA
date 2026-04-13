@@ -202,7 +202,7 @@ Act:
     HeaderNodeText = "Example Domain"
   End If
   HeaderNodePPath = pWindowsDriver.GetWebBrowserpPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HeaderNodePPath, HeaderNodeText)
-  Logger.InternalInfo "HeaderNodePPath:=" & HeaderNodePPath
+  Logger.Info "HeaderNodePPath:=" & HeaderNodePPath, Internal
   If HeaderNodePPath <> "" Then
     Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Header", HeaderNodePPath), "Check for 'Example Domain' Header Element", isCritical:=True
   End If
@@ -211,7 +211,7 @@ Act:
   Dim TextNodePPath As String
   TextNodeText = "This domain is for use in documentation examples without needing permission. Avoid use in operations."
   TextNodePPath = pWindowsDriver.GetWebBrowserpPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.TextNodePPath, TextNodeText)
-  Logger.InternalInfo "TextNodePPath:=" & TextNodePPath
+  Logger.Info "TextNodePPath:=" & TextNodePPath, Internal
   If TextNodePPath <> "" Then
     Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Text", TextNodePPath), "Check for 'Example Domain' Text Element", isCritical:=True
   End If
@@ -220,7 +220,7 @@ Act:
   Dim HyperlinkNodePPath As String
   HyperlinkNodeText = "Learn more"
   HyperlinkNodePPath = pWindowsDriver.GetWebBrowserpPathConfigurationItem(pWinDriver.pWebBrowserPPathConfigurationItems.HyperlinkNodePPath, HyperlinkNodeText)
-  Logger.InternalInfo "HyperlinkNodePPath:=" & HyperlinkNodePPath
+  Logger.Info "HyperlinkNodePPath:=" & HyperlinkNodePPath, Internal
   If HyperlinkNodePPath <> "" Then
     Phosphorus.AssertionsStatic.pAssert.IsTrue pWindowsDriver.ElementExists("Hyperlink", HyperlinkNodePPath), "Check for 'Example Domain' Hypelink Element", isCritical:=True
   End If

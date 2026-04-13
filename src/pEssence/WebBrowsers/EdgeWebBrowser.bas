@@ -57,7 +57,7 @@ End Sub
 
 Private Sub Class_Terminate()
   On Error Resume Next
-  Window.CloseWindow This.MasterWindow.Element
+  This.MasterWindow.Element.CloseWindow
   On Error GoTo 0
   Set This.MasterWindow = Nothing
   Set This.BrowserRootView = Nothing

@@ -128,18 +128,6 @@ Public Sub WaitForWindowInteractionState( _
   Element.WaitForPropertyValue UIAProperties.WindowWindowInteractionState, UIAPropertyValue
 End Sub
 
-Public Sub CloseWindow(Element As pElement)
-  Toaster.Message "Close Window " & Name, Action
-  Actions.IsElementReady Element
-  If Element.GetProperty(UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
-    If Element.HasProperty(UIAProperties.IsWindowPatternAvailable) Then
-      Dim patt As IUIAutomationWindowPattern
-      Set patt = Element.GetPattern(UIAPatterns.WindowPattern, RaiseError:=True)
-      patt.Close
-      Exit Sub
-    End If
-  End If
-End Sub
 Public Sub Destroy(hWnd As LongPtr)
   DestroyWindow hWnd
 End Sub

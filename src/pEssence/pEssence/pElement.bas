@@ -25,28 +25,18 @@ Private Sub Class_Terminate()
   Set UIAElement = Nothing
 End Sub
 
-Public Function IsAlive() As Boolean
-  On Error Resume Next
-  Dim pid As Long
-  pid = UIAElement.CurrentProcessId  'any property access will fail if stale
-  IsAlive = (Err.Number = 0) And (pid > 0)
-  On Error GoTo 0
-End Function
-
-Public Function GetProperty(PropertyId As Long) As Variant
-  On Error Resume Next
-  GetProperty = UIAElement.GetCurrentPropertyValue(PropertyId)
-  On Error GoTo 0
-End Function
-
-Public Function HasProperty(PropertyId As Long, Optional RaiseError As Boolean) As Boolean
-  On Error Resume Next
-  Dim Property As Variant
-  On Error Resume Next
-  Property = UIAElement.GetCurrentPropertyValue(PropertyId)
-  On Error GoTo 0
-  HasProperty = Not IsEmpty(Property)
-End Function
+Public Sub CloseWindow()
+  Toaster.Message "Close Window " & Name, Action
+  Actions.IsElementReady Me
+  If GetProperty(UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
+    If HasProperty(UIAProperties.IsWindowPatternAvailable) Then
+      Dim patt As IUIAutomationWindowPattern
+      Set patt = GetPattern(UIAPatterns.WindowPattern, RaiseError:=True)
+      patt.Close
+      Exit Sub
+    End If
+  End If
+End Sub
 
 'Tools > References > OLE Automation needed for IUnknown type
 Public Function GetPattern(PatternId As Long, Optional RaiseError As Boolean) As IUnknown
@@ -59,6 +49,12 @@ Public Function GetPattern(PatternId As Long, Optional RaiseError As Boolean) As
       Exit Function
     End If
   End If
+End Function
+
+Public Function GetProperty(PropertyId As Long) As Variant
+  On Error Resume Next
+  GetProperty = UIAElement.GetCurrentPropertyValue(PropertyId)
+  On Error GoTo 0
 End Function
 
 Public Function GetToggleState() As Integer
@@ -84,6 +80,23 @@ Public Function HasPattern(PatternId As Long, Optional RaiseError As Boolean) As
   Set Pattern = UIAElement.GetCurrentPattern(PatternId)
   On Error GoTo 0
   HasPattern = Not Pattern Is Nothing
+End Function
+
+Public Function HasProperty(PropertyId As Long, Optional RaiseError As Boolean) As Boolean
+  On Error Resume Next
+  Dim Property As Variant
+  On Error Resume Next
+  Property = UIAElement.GetCurrentPropertyValue(PropertyId)
+  On Error GoTo 0
+  HasProperty = Not IsEmpty(Property)
+End Function
+
+Public Function IsAlive() As Boolean
+  On Error Resume Next
+  Dim pid As Long
+  pid = UIAElement.CurrentProcessId  'any property access will fail if stale
+  IsAlive = (Err.Number = 0) And (pid > 0)
+  On Error GoTo 0
 End Function
 
 Public Function IsEnabled() As Boolean
@@ -211,6 +224,4 @@ Private Sub WaitForPropertyValueOrPatternState( _
   Wend
 
 End Sub
-
-
 

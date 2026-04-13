@@ -35,7 +35,7 @@ Private Sub Class_Initialize()
 End Sub
 
 Private Sub Class_Terminate()
-  Window.CloseWindow This.MasterWindow.Element
+  This.MasterWindow.Element.CloseWindow
   Set This.MasterWindow = Nothing
   Set This.MainCalculatorSubWindow = Nothing
   Set This.NavigationViewRootCustomControl = Nothing

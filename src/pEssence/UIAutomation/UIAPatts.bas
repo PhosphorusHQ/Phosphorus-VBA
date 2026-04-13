@@ -12,10 +12,11 @@ Option Explicit
 
 Public Enum UIAPatterns
   InvokePattern = UIA_PatternIds.UIA_InvokePatternId
-  LegacyIAccessiblePattern = UIA_LegacyIAccessiblePatternId
+  LegacyIAccessiblePattern = UIA_PatternIds.UIA_LegacyIAccessiblePatternId
   ScrollItemPattern = UIA_PatternIds.UIA_ScrollItemPatternId
   SelectionItemPattern = UIA_PatternIds.UIA_SelectionItemPatternId
   TogglePattern = UIA_PatternIds.UIA_TogglePatternId
   ValuePattern = UIA_PatternIds.UIA_ValuePatternId
+  WindowPattern = UIA_PatternIds.UIA_WindowPatternId
 End Enum
 

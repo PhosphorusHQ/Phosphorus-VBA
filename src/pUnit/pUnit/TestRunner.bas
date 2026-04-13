@@ -98,23 +98,23 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
   'Check we got a project name
   On Error GoTo 0
   If Len(projectName) = 0 Then
-    Phosphorus.Log4PStatic.Logger.ExternalError "Could not determine the calling project name and no referencedProjectName provided."
+    Phosphorus.Log4PStatic.Logger.Error "Could not determine the calling project name and no referencedProjectName provided."
     GoTo ExitSub
   End If
-  Phosphorus.Log4PStatic.Logger.ExternalInfo "Target project name is: " & projectName
+  Phosphorus.Log4PStatic.Logger.Info "Target project name is: " & projectName
 
   'Set project reference
   On Error Resume Next
   Set vbProj = Application.VBE.VBProjects(projectName)
   On Error GoTo 0
   If vbProj Is Nothing Then
-    Phosphorus.Log4PStatic.Logger.ExternalError "Project '" & projectName & "' not found."
+    Phosphorus.Log4PStatic.Logger.Error "Project '" & projectName & "' not found."
     GoTo ExitSub
   End If
 
-  Phosphorus.Log4PStatic.Logger.ExternalInfo "Starting unit test execution"
-  Phosphorus.Log4PStatic.Logger.ExternalInfo "Module filter: " & IIf(Len(moduleNameFilter) > 0, moduleNameFilter, "All modules")
-  Phosphorus.Log4PStatic.Logger.ExternalInfo "Annotation filter: " & IIf(Len(annotationFilter) > 0, annotationFilter, "All tests")
+  Phosphorus.Log4PStatic.Logger.Info "Starting unit test execution"
+  Phosphorus.Log4PStatic.Logger.Info "Module filter: " & IIf(Len(moduleNameFilter) > 0, moduleNameFilter, "All modules")
+  Phosphorus.Log4PStatic.Logger.Info "Annotation filter: " & IIf(Len(annotationFilter) > 0, annotationFilter, "All tests")
 
   'Make a collection of all test module names
   Dim allTestModuleNames As Collection
@@ -147,7 +147,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
       If HasTestsToRun(projectName, vbTestModule, annotationFilter, executableTests) Then
         
         'Process the module setup
-        Phosphorus.Log4PStatic.Logger.ExternalInfo "Processing module: " & projectName & "." & vbTestModule.Name
+        Phosphorus.Log4PStatic.Logger.Info "Processing module: " & projectName & "." & vbTestModule.Name
         moduleSetupDuration = 0
         moduleTeardownDuration = 0
         QueryPerformanceCounter moduleStartCount
@@ -212,7 +212,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
                         TestResult.ErrorMessage = "Type mismatch in parameters"
                         TestResult.duration = 0
                         TestResults.Add TestResult
-                        Phosphorus.Log4PStatic.Logger.ExternalInfo "Test skipped due to type mismatch: " & TestResult.TestName
+                        Phosphorus.Log4PStatic.Logger.Info "Test skipped due to type mismatch: " & TestResult.TestName
                       End If
                     Else
                       Set TestResult = New pUnit.TestResult
@@ -223,7 +223,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
                       TestResult.ErrorMessage = "Parameter count mismatch: expected " & paramCount & ", got " & (UBound(dataSet) + 1)
                       TestResult.duration = 0
                       TestResults.Add TestResult
-                      Phosphorus.Log4PStatic.Logger.ExternalInfo "Test skipped due to parameter count mismatch: " & TestResult.TestName
+                      Phosphorus.Log4PStatic.Logger.Info "Test skipped due to parameter count mismatch: " & TestResult.TestName
                     End If
                   Else
                     Set TestResult = New pUnit.TestResult
@@ -232,7 +232,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
                     TestResult.ErrorMessage = "Invalid test data set: " & typeName(dataSet)
                     TestResult.duration = 0
                     TestResults.Add TestResult
-                    Phosphorus.Log4PStatic.Logger.ExternalInfo "Test skipped due to invalid test data: " & TestResult.TestName
+                    Phosphorus.Log4PStatic.Logger.Info "Test skipped due to invalid test data: " & TestResult.TestName
                   End If
                 Next dataSet
                 If validDataSets = 0 Then
@@ -242,7 +242,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
                   TestResult.ErrorMessage = "No valid test data sets found"
                   TestResult.duration = 0
                   TestResults.Add TestResult
-                  Phosphorus.Log4PStatic.Logger.ExternalInfo "Test skipped due to no valid test data: " & TestResult.TestName
+                  Phosphorus.Log4PStatic.Logger.Info "Test skipped due to no valid test data: " & TestResult.TestName
                 End If
               Else
                 'No Test Data found
@@ -260,7 +260,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
                   TestResult.ErrorMessage = "No test data provided for parameterized test expecting " & paramCount & " parameters"
                   TestResult.duration = 0
                   TestResults.Add TestResult
-                  Phosphorus.Log4PStatic.Logger.ExternalInfo "Test skipped due to missing test data: " & TestResult.TestName
+                  Phosphorus.Log4PStatic.Logger.Info "Test skipped due to missing test data: " & TestResult.TestName
                 End If
               End If
             Else
@@ -270,7 +270,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
               TestResult.ErrorMessage = "Skipped due to BeforeTest failure"
               TestResult.duration = 0
               TestResults.Add TestResult
-              Phosphorus.Log4PStatic.Logger.ExternalInfo "Test skipped due to BeforeTest failure: " & TestResult.TestName & " (Annotations: " & GetTestAnnotations(vbTestModule, VBA.Conversion.CStr(TestName)) & ")"
+              Phosphorus.Log4PStatic.Logger.Info "Test skipped due to BeforeTest failure: " & TestResult.TestName & " (Annotations: " & GetTestAnnotations(vbTestModule, VBA.Conversion.CStr(TestName)) & ")"
             End If
             
             'Run the test teardown
@@ -279,7 +279,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
           Next TestName
           
         Else
-          Phosphorus.Log4PStatic.Logger.ExternalError "Skipping tests in module " & projectName & "." & vbTestModule.Name & " due to BeforeModule failure"
+          Phosphorus.Log4PStatic.Logger.Error "Skipping tests in module " & projectName & "." & vbTestModule.Name & " due to BeforeModule failure"
           For Each TestName In executableTests
             Set TestResult = New pUnit.TestResult
             TestResult.TestName = projectName & "." & vbTestModule.Name & "." & TestName
@@ -287,7 +287,7 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
             TestResult.ErrorMessage = "Skipped due to BeforeModule failure"
             TestResult.duration = 0
             TestResults.Add TestResult
-            Phosphorus.Log4PStatic.Logger.ExternalInfo "Test skipped due to BeforeModule failure: " & TestResult.TestName & " (Annotations: " & GetTestAnnotations(vbTestModule, VBA.Conversion.CStr(TestName)) & ")"
+            Phosphorus.Log4PStatic.Logger.Info "Test skipped due to BeforeModule failure: " & TestResult.TestName & " (Annotations: " & GetTestAnnotations(vbTestModule, VBA.Conversion.CStr(TestName)) & ")"
           Next TestName
         End If
         
@@ -299,18 +299,18 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
         moduleDuration = GetMilliseconds(moduleStartCount, moduleEndCount)
         
         'Log module completion stats
-        Phosphorus.Log4PStatic.Logger.ExternalInfo "Module " & projectName & "." & vbTestModule.Name & ": Setup Duration: " & Format(moduleSetupDuration, "0.000") & " ms, Teardown Duration: " & Format(moduleTeardownDuration, "0.000") & " ms"
-        Phosphorus.Log4PStatic.Logger.ExternalInfo "Module " & projectName & "." & vbTestModule.Name & " completed (Total Duration: " & Format(moduleDuration, "0.000") & " ms)"
+        Phosphorus.Log4PStatic.Logger.Info "Module " & projectName & "." & vbTestModule.Name & ": Setup Duration: " & Format(moduleSetupDuration, "0.000") & " ms, Teardown Duration: " & Format(moduleTeardownDuration, "0.000") & " ms"
+        Phosphorus.Log4PStatic.Logger.Info "Module " & projectName & "." & vbTestModule.Name & " completed (Total Duration: " & Format(moduleDuration, "0.000") & " ms)"
       
       Else
-        Phosphorus.Log4PStatic.Logger.ExternalInfo "Module " & projectName & "." & vbTestModule.Name & " has no tests to run after filtering."
+        Phosphorus.Log4PStatic.Logger.Info "Module " & projectName & "." & vbTestModule.Name & " has no tests to run after filtering."
       End If
 
     End If
   Next testModuleName
   
   'Log detailed test results
-  Phosphorus.Log4PStatic.Logger.ExternalInfo "Detailed Test Results:"
+  Phosphorus.Log4PStatic.Logger.Info "Detailed Test Results:"
   For Each TestResult In TestResults
     Dim statusText As String
     Select Case TestResult.Status
@@ -319,29 +319,29 @@ Public Sub RunAllTests(moduleNameFilter As String, annotationFilter As String, O
       Case skipped: statusText = "Skipped"
     End Select
     If TestResult.Status = Passed Then
-      Phosphorus.Log4PStatic.Logger.ExternalInfo "Test: " & TestResult.TestName & IIf(Len(TestResult.parameters) > 0, " (Parameters: " & TestResult.parameters & ")", "") & ", Status: " & statusText & ", Duration: " & Format(TestResult.duration, "0.000") & " ms"
+      Phosphorus.Log4PStatic.Logger.Info "Test: " & TestResult.TestName & IIf(Len(TestResult.parameters) > 0, " (Parameters: " & TestResult.parameters & ")", "") & ", Status: " & statusText & ", Duration: " & Format(TestResult.duration, "0.000") & " ms"
     Else
-      Phosphorus.Log4PStatic.Logger.ExternalInfo "Test: " & TestResult.TestName & IIf(Len(TestResult.parameters) > 0, " (Parameters: " & TestResult.parameters & ")", "") & ", Status: " & statusText & ", Message: " & TestResult.ErrorMessage & ", Duration: " & Format(TestResult.duration, "0.000") & " ms"
+      Phosphorus.Log4PStatic.Logger.Info "Test: " & TestResult.TestName & IIf(Len(TestResult.parameters) > 0, " (Parameters: " & TestResult.parameters & ")", "") & ", Status: " & statusText & ", Message: " & TestResult.ErrorMessage & ", Duration: " & Format(TestResult.duration, "0.000") & " ms"
     End If
   Next TestResult
     
   'Log detailed duration stats
-  Phosphorus.Log4PStatic.Logger.ExternalInfo "Total Test Method Duration (excluding setup/teardown): " & Format(TotalTestMethodDuration, "0.000") & " ms"
-  Phosphorus.Log4PStatic.Logger.ExternalInfo "Total Setup Duration: " & Format(TotalSetupDuration, "0.000") & " ms"
-  Phosphorus.Log4PStatic.Logger.ExternalInfo "Total Teardown Duration: " & Format(TotalTeardownDuration, "0.000") & " ms"
+  Phosphorus.Log4PStatic.Logger.Info "Total Test Method Duration (excluding setup/teardown): " & Format(TotalTestMethodDuration, "0.000") & " ms"
+  Phosphorus.Log4PStatic.Logger.Info "Total Setup Duration: " & Format(TotalSetupDuration, "0.000") & " ms"
+  Phosphorus.Log4PStatic.Logger.Info "Total Teardown Duration: " & Format(TotalTeardownDuration, "0.000") & " ms"
   QueryPerformanceCounter runEndCount
   runDuration = GetMilliseconds(runStartCount, runEndCount)
-  Phosphorus.Log4PStatic.Logger.ExternalInfo "Total Run Duration: " & Format(runDuration, "0.000") & " ms"
+  Phosphorus.Log4PStatic.Logger.Info "Total Run Duration: " & Format(runDuration, "0.000") & " ms"
   
   'Log test success counts
   Dim testCount As Long
   testCount = TestResults.count
   passCount = CountPassedTests
   skipCount = CountSkippedTests
-  Phosphorus.Log4PStatic.Logger.ExternalInfo "Test execution completed."
+  Phosphorus.Log4PStatic.Logger.Info "Test execution completed."
   Dim intCountOfFailedTests As Integer
   intCountOfFailedTests = testCount - passCount - skipCount
-  Phosphorus.Log4PStatic.Logger.ExternalInfo "Total Tests: " & testCount & ", Passed: " & passCount & ", Failed: " & intCountOfFailedTests & ", Skipped: " & skipCount
+  Phosphorus.Log4PStatic.Logger.Info "Total Tests: " & testCount & ", Passed: " & passCount & ", Failed: " & intCountOfFailedTests & ", Skipped: " & skipCount
 
 ExitSub:
   
@@ -441,7 +441,7 @@ Private Function ValidateFilterSyntax(filter As String, filterType As String) As
 
 'Log any evaluation errors and return false
 EvalError:
-  Phosphorus.Log4PStatic.Logger.ExternalError "Invalid " & filterType & " filter syntax: " & filter & " (Error: " & Err.Description & ")"
+  Phosphorus.Log4PStatic.Logger.Error "Invalid " & filterType & " filter syntax: " & filter & " (Error: " & Err.Description & ")"
   ValidateFilterSyntax = False
 
 End Function
@@ -594,7 +594,7 @@ Private Function ParseAnnotationTags(annotation As String) As Variant
               Next nestedTag
               currentTag = ""
             ElseIf inBraces < 0 Then
-              Phosphorus.Log4PStatic.Logger.ExternalWarning "Malformed annotation (unmatched brace): " & annotation
+              Phosphorus.Log4PStatic.Logger.Warning "Malformed annotation (unmatched brace): " & annotation
               ParseAnnotationTags = CollectionToArray(tags)
               Exit Function
             End If
@@ -612,7 +612,7 @@ Private Function ParseAnnotationTags(annotation As String) As Variant
           If Not inQuotes Then
             inParens = inParens - 1
             If inParens < 0 Then
-              Phosphorus.Log4PStatic.Logger.ExternalWarning "Malformed annotation (unmatched parenthesis): " & annotation
+              Phosphorus.Log4PStatic.Logger.Warning "Malformed annotation (unmatched parenthesis): " & annotation
               ParseAnnotationTags = CollectionToArray(tags)
               Exit Function
             End If
@@ -654,20 +654,20 @@ Private Function ParseAnnotationTags(annotation As String) As Variant
     End If
         
     If inQuotes Then
-      Phosphorus.Log4PStatic.Logger.ExternalWarning "Malformed annotation (unclosed quote): " & annotation
+      Phosphorus.Log4PStatic.Logger.Warning "Malformed annotation (unclosed quote): " & annotation
     End If
     
     If inBraces > 0 Then
-      Phosphorus.Log4PStatic.Logger.ExternalWarning "Malformed annotation (unclosed brace): " & annotation
+      Phosphorus.Log4PStatic.Logger.Warning "Malformed annotation (unclosed brace): " & annotation
     End If
     
     If inParens > 0 Then
-      Phosphorus.Log4PStatic.Logger.ExternalWarning "Malformed annotation (unclosed parenthesis): " & annotation
+      Phosphorus.Log4PStatic.Logger.Warning "Malformed annotation (unclosed parenthesis): " & annotation
     End If
   
   Else
       
-    Phosphorus.Log4PStatic.Logger.ExternalWarning "Invalid annotation format: " & annotation
+    Phosphorus.Log4PStatic.Logger.Warning "Invalid annotation format: " & annotation
       
   End If
     
@@ -703,7 +703,7 @@ Private Function SplitNestedTags(nestedTagString As String) As Variant
                 If Not inQuotes Then
                     inBraces = inBraces - 1
                     If inBraces < 0 Then
-                        Phosphorus.Log4PStatic.Logger.ExternalWarning "Malformed nested tag (unmatched brace): " & nestedTagString
+                        Phosphorus.Log4PStatic.Logger.Warning "Malformed nested tag (unmatched brace): " & nestedTagString
                         SplitNestedTags = CollectionToArray(tags)
                         Exit Function
                     End If
@@ -787,7 +787,7 @@ Private Function ShouldIncludeTestModule(vbComp As VBComponent, moduleNameFilter
   Exit Function
     
 EvalError:
-  Phosphorus.Log4PStatic.Logger.ExternalError "Invalid module filter expression: " & moduleNameFilter & " (Evaluated as: " & evalString & ")"
+  Phosphorus.Log4PStatic.Logger.Error "Invalid module filter expression: " & moduleNameFilter & " (Evaluated as: " & evalString & ")"
   ShouldIncludeTestModule = False
     
 End Function
@@ -881,7 +881,7 @@ Private Function HasTestsToRun(projectName As String, vbTestModule As VBComponen
           If strJoinedAnnotations <> "" Then
             strJoinedAnnotations = " " & strJoinedAnnotations
           End If
-          Phosphorus.Log4PStatic.Logger.ExternalInfo "Test skipped due to annotations at line " & currentLineNum & ": " & projectName & "." & testModuleCode.Name & "." & procedureName & " (Annotations:" & strJoinedAnnotations & " or Procedure Name: " & procedureName & ")"
+          Phosphorus.Log4PStatic.Logger.Info "Test skipped due to annotations at line " & currentLineNum & ": " & projectName & "." & testModuleCode.Name & "." & procedureName & " (Annotations:" & strJoinedAnnotations & " or Procedure Name: " & procedureName & ")"
         
         End If
       
@@ -965,7 +965,7 @@ Private Function ShouldIncludeTest(testMethodAnnotations As Collection, testAnno
 
 'Trap any errors in the evaulation
 EvalError:
-  Phosphorus.Log4PStatic.Logger.ExternalError "Invalid annotation filter expression: " & testAnnotationsFilter & " (Evaluated as: " & evalString & ")"
+  Phosphorus.Log4PStatic.Logger.Error "Invalid annotation filter expression: " & testAnnotationsFilter & " (Evaluated as: " & evalString & ")"
   ShouldIncludeTest = False
 
 End Function
@@ -1024,7 +1024,7 @@ Private Function ExecuteModuleSetup(projectName As String, vbProj As VBProject, 
     'Run the BeforeModule method
     Dim strProcedureName As String
     strProcedureName = vbProj.Name & "." & vbComp.Name & ".BeforeModule"
-    Phosphorus.Log4PStatic.Logger.ExternalInfo "Running " & strProcedureName
+    Phosphorus.Log4PStatic.Logger.Info "Running " & strProcedureName
     Application.Run strProcedureName
     
     'Check for errors and raise if necessary
@@ -1047,9 +1047,9 @@ Private Function ExecuteModuleSetup(projectName As String, vbProj As VBProject, 
 SetupError:
    'Log the failure
     If Err.Number <> 0 Then
-      Phosphorus.Log4PStatic.Logger.ExternalError "BeforeModule failed in module " & projectName & "." & vbComp.Name & ": Error #" & Err.Number & ": " & Err.Description
+      Phosphorus.Log4PStatic.Logger.Error "BeforeModule failed in module " & projectName & "." & vbComp.Name & ": Error #" & Err.Number & ": " & Err.Description
     Else
-      Phosphorus.Log4PStatic.Logger.ExternalError "BeforeModule failed in module " & projectName & "." & vbComp.Name & ": Error #" & gpUnitError.Number & ": " & gpUnitError.Description
+      Phosphorus.Log4PStatic.Logger.Error "BeforeModule failed in module " & projectName & "." & vbComp.Name & ": Error #" & gpUnitError.Number & ": " & gpUnitError.Description
     End If
     
     'Stop the counter
@@ -1090,7 +1090,7 @@ Private Sub ExecuteModuleTeardown(vbProj As VBProject, vbComp As VBComponent, By
     'Run the AfterModule method
     Dim strProcedureName As String
     strProcedureName = vbProj.Name & "." & vbComp.Name & ".AfterModule"
-    Phosphorus.Log4PStatic.Logger.ExternalInfo "Running " & strProcedureName
+    Phosphorus.Log4PStatic.Logger.Info "Running " & strProcedureName
     Application.Run strProcedureName
     
     'Check for errors and raise if necessary
@@ -1112,9 +1112,9 @@ TeardownError:
     
     'Log that Module teardown didn't execute successfully - doesn't cause test failure or skip
     If Err.Number <> 0 Then
-      Phosphorus.Log4PStatic.Logger.ExternalError "AfterModule failed in module " & vbProj.Name & "." & vbComp.Name & ": Error #" & Err.Number & ": " & Err.Description
+      Phosphorus.Log4PStatic.Logger.Error "AfterModule failed in module " & vbProj.Name & "." & vbComp.Name & ": Error #" & Err.Number & ": " & Err.Description
     Else
-      Phosphorus.Log4PStatic.Logger.ExternalError "AfterModule failed in module " & vbProj.Name & "." & vbComp.Name & ": Error #" & gpUnitError.Number & ": " & gpUnitError.Description
+      Phosphorus.Log4PStatic.Logger.Error "AfterModule failed in module " & vbProj.Name & "." & vbComp.Name & ": Error #" & gpUnitError.Number & ": " & gpUnitError.Description
     End If
     
     'End counter
@@ -1149,7 +1149,7 @@ Private Function ExecuteTestSetup(TestName As String, vbProj As VBProject, vbCom
     'Run the BeforeTest method
     Dim strProcedureName As String
     strProcedureName = vbProj.Name & "." & vbComp.Name & ".BeforeTest"
-    Phosphorus.Log4PStatic.Logger.ExternalInfo "Running " & strProcedureName & "(" & TestName & ")"
+    Phosphorus.Log4PStatic.Logger.Info "Running " & strProcedureName & "(" & TestName & ")"
     Application.Run strProcedureName
     
     'Check for errors and raise if necessary
@@ -1172,9 +1172,9 @@ Private Function ExecuteTestSetup(TestName As String, vbProj As VBProject, vbCom
 SetupError:
     'Log the failure
     If Err.Number <> 0 Then
-      Phosphorus.Log4PStatic.Logger.ExternalError "BeforeTest(" & TestName & ") failed in module " & vbProj.Name & "." & vbComp.Name & ": Error #" & Err.Number & ": " & Err.Description
+      Phosphorus.Log4PStatic.Logger.Error "BeforeTest(" & TestName & ") failed in module " & vbProj.Name & "." & vbComp.Name & ": Error #" & Err.Number & ": " & Err.Description
     Else
-      Phosphorus.Log4PStatic.Logger.ExternalError "BeforeTest(" & TestName & ") failed in module " & vbProj.Name & "." & vbComp.Name & ": Error #" & gpUnitError.Number & ": " & gpUnitError.Description
+      Phosphorus.Log4PStatic.Logger.Error "BeforeTest(" & TestName & ") failed in module " & vbProj.Name & "." & vbComp.Name & ": Error #" & gpUnitError.Number & ": " & gpUnitError.Description
     End If
     
     'Stop the counter
@@ -1214,7 +1214,7 @@ Private Sub ExecuteTestTeardown(TestName As String, vbProj As VBProject, vbComp 
     'Run the AfterTest method
     Dim strProcedureName As String
     strProcedureName = vbProj.Name & "." & vbComp.Name & ".AfterTest"
-    Phosphorus.Log4PStatic.Logger.ExternalInfo "Running " & strProcedureName & "(" & TestName & ")"
+    Phosphorus.Log4PStatic.Logger.Info "Running " & strProcedureName & "(" & TestName & ")"
     Application.Run strProcedureName
     
     'Check for errors and raise if necessary
@@ -1236,9 +1236,9 @@ Private Sub ExecuteTestTeardown(TestName As String, vbProj As VBProject, vbComp 
 TeardownError:
     'Log the failure
     If Err.Number <> 0 Then
-      Phosphorus.Log4PStatic.Logger.ExternalError "AfterTest(" & TestName & ") failed in module " & vbComp.Name & ": Error #" & Err.Number & ": " & Err.Description
+      Phosphorus.Log4PStatic.Logger.Error "AfterTest(" & TestName & ") failed in module " & vbComp.Name & ": Error #" & Err.Number & ": " & Err.Description
     Else
-      Phosphorus.Log4PStatic.Logger.ExternalError "AfterTest(" & TestName & ") failed in module " & vbComp.Name & ": Error #" & gpUnitError.Number & ": " & gpUnitError.Description
+      Phosphorus.Log4PStatic.Logger.Error "AfterTest(" & TestName & ") failed in module " & vbComp.Name & ": Error #" & gpUnitError.Number & ": " & gpUnitError.Description
     End If
     
     'End counter
@@ -1299,7 +1299,7 @@ Private Function ExecuteTest(vbProj As VBProject, vbComp As VBComponent, TestNam
   If IsMissing(parameters) Then
     
     'Run test with no parameters
-    Phosphorus.Log4PStatic.Logger.ExternalInfo "Running " & strProcedureName
+    Phosphorus.Log4PStatic.Logger.Info "Running " & strProcedureName
     Application.Run strProcedureName
   
   Else
@@ -1308,7 +1308,7 @@ Private Function ExecuteTest(vbProj As VBProject, vbComp As VBComponent, TestNam
     
     'Check for too many parameter passed
     If UBound(parameters) + 1 > 30 Then
-      Phosphorus.Log4PStatic.Logger.ExternalError "Too many parameters for test: " & TestResult.TestName & " (Max supported: 30)"
+      Phosphorus.Log4PStatic.Logger.Error "Too many parameters for test: " & TestResult.TestName & " (Max supported: 30)"
       TestResult.Status = skipped
       TestResult.ErrorMessage = "Too many parameters (Max supported: 30)"
       GoTo TestCleanup
@@ -1325,7 +1325,7 @@ Private Function ExecuteTest(vbProj As VBProject, vbComp As VBComponent, TestNam
       strProcedureName = strProcedureName & parameters(i)
     Next i
     strProcedureName = strProcedureName & ")"
-    Phosphorus.Log4PStatic.Logger.ExternalInfo "Running " & strProcedureName
+    Phosphorus.Log4PStatic.Logger.Info "Running " & strProcedureName
     
     Select Case UBound(parameters) + 1
       Case 1
@@ -1460,12 +1460,12 @@ Private Function ExecuteTest(vbProj As VBProject, vbComp As VBComponent, TestNam
     TestResult.Status = FAILED
 '    TestResult.ErrorMessage = Phosphorus.AssertionsStatic.pAssert.FailedTests & "Failed Assertions, including at least 1 critical"
 '    TestResults.Add TestResult
-    Phosphorus.Log4PStatic.Logger.ExternalInfo "Test failed due to assertion failures, including at least 1 critical: " & TestResult.TestName
+    Phosphorus.Log4PStatic.Logger.Info "Test failed due to assertion failures, including at least 1 critical: " & TestResult.TestName
     TestResult.ErrorMessage = "Test failed due to assertion failures, including at least 1 critical: " & TestResult.TestName
   Else
   
     If Phosphorus.AssertionsStatic.pAssert.FailedTests > 0 Then
-      Phosphorus.Log4PStatic.Logger.ExternalInfo "Test passed but there were assertion failures: " & TestResult.TestName
+      Phosphorus.Log4PStatic.Logger.Info "Test passed but there were assertion failures: " & TestResult.TestName
     End If
     
     'Test executed successfully if we reach here
@@ -1496,7 +1496,7 @@ TestError:
   Else
     TestResult.ErrorMessage = "Error #" & gpUnitError.Number & ": " & gpUnitError.Description
   End If
-  Phosphorus.Log4PStatic.Logger.ExternalError "Test failed: " & TestResult.TestName & " - " & TestResult.ErrorMessage
+  Phosphorus.Log4PStatic.Logger.Error "Test failed: " & TestResult.TestName & " - " & TestResult.ErrorMessage
   Set ExecuteTest = TestResult
 
 End Function
@@ -1606,20 +1606,20 @@ Private Function ParseTestData(annotation As String, TestName As String) As Vari
   endPos = InStrRev(annotation, ")")
 
   If Not annotation Like "@TestData?*" Then
-    Phosphorus.Log4PStatic.Logger.ExternalWarning "Invalid @TestData format for test " & TestName & ": " & annotation & " (Expected '@TestData(...)')"
+    Phosphorus.Log4PStatic.Logger.Warning "Invalid @TestData format for test " & TestName & ": " & annotation & " (Expected '@TestData(...)')"
     ParseTestData = Empty
     Exit Function
   End If
 
   If startPos = 0 Or endPos = 0 Or endPos <= startPos Then
-    Phosphorus.Log4PStatic.Logger.ExternalWarning "Malformed @TestData for test " & TestName & ": missing or unbalanced parentheses in " & annotation
+    Phosphorus.Log4PStatic.Logger.Warning "Malformed @TestData for test " & TestName & ": missing or unbalanced parentheses in " & annotation
     ParseTestData = Empty
     Exit Function
   End If
     
   dataString.Append VBA.Strings.Mid$(annotation, startPos + 1, endPos - startPos - 1)
   If dataString.Length = 0 Then
-    Phosphorus.Log4PStatic.Logger.ExternalWarning "Empty @TestData for test " & TestName & ": " & annotation
+    Phosphorus.Log4PStatic.Logger.Warning "Empty @TestData for test " & TestName & ": " & annotation
     ParseTestData = Empty
     Exit Function
   End If
@@ -1673,14 +1673,14 @@ Private Function ParseTestData(annotation As String, TestName As String) As Vari
               If dataSet.count > 0 Then
                 testData.Add CollectionToArray(dataSet)
               Else
-                Phosphorus.Log4PStatic.Logger.ExternalWarning "Empty data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
+                Phosphorus.Log4PStatic.Logger.Warning "Empty data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
               End If
             Else
-              Phosphorus.Log4PStatic.Logger.ExternalWarning "Invalid data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
+              Phosphorus.Log4PStatic.Logger.Warning "Invalid data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
             End If
             Set currentData = New StringBuilder
           ElseIf inBraces < 0 Then
-            Phosphorus.Log4PStatic.Logger.ExternalWarning "Unmatched closing brace in @TestData for test " & TestName & ": " & annotation
+            Phosphorus.Log4PStatic.Logger.Warning "Unmatched closing brace in @TestData for test " & TestName & ": " & annotation
             isValid = False
             Exit For
           End If
@@ -1698,7 +1698,7 @@ Private Function ParseTestData(annotation As String, TestName As String) As Vari
         If Not inQuotes Then
           inParens = inParens - 1
           If inParens < 0 Then
-            Phosphorus.Log4PStatic.Logger.ExternalWarning "Unmatched closing parenthesis in @TestData for test " & TestName & ": " & annotation
+            Phosphorus.Log4PStatic.Logger.Warning "Unmatched closing parenthesis in @TestData for test " & TestName & ": " & annotation
             isValid = False
             Exit For
           End If
@@ -1723,10 +1723,10 @@ Private Function ParseTestData(annotation As String, TestName As String) As Vari
               If dataSet.count > 0 Then
                 testData.Add CollectionToArray(dataSet)
               Else
-                Phosphorus.Log4PStatic.Logger.ExternalWarning "Empty data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
+                Phosphorus.Log4PStatic.Logger.Warning "Empty data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
               End If
             Else
-              Phosphorus.Log4PStatic.Logger.ExternalWarning "Invalid data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
+              Phosphorus.Log4PStatic.Logger.Warning "Invalid data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
             End If
           End If
           Set currentData = New StringBuilder
@@ -1740,17 +1740,17 @@ Private Function ParseTestData(annotation As String, TestName As String) As Vari
   Next i
     
   If inQuotes Then
-    Phosphorus.Log4PStatic.Logger.ExternalWarning "Unclosed quote in @TestData for test " & TestName & ": " & annotation
+    Phosphorus.Log4PStatic.Logger.Warning "Unclosed quote in @TestData for test " & TestName & ": " & annotation
     isValid = False
   End If
     
   If inBraces > 0 Then
-    Phosphorus.Log4PStatic.Logger.ExternalWarning "Unclosed brace in @TestData for test " & TestName & ": " & annotation
+    Phosphorus.Log4PStatic.Logger.Warning "Unclosed brace in @TestData for test " & TestName & ": " & annotation
     isValid = False
   End If
     
   If inParens > 0 Then
-    Phosphorus.Log4PStatic.Logger.ExternalWarning "Unclosed parenthesis in @TestData for test " & TestName & ": " & annotation
+    Phosphorus.Log4PStatic.Logger.Warning "Unclosed parenthesis in @TestData for test " & TestName & ": " & annotation
     isValid = False
   End If
     
@@ -1768,15 +1768,15 @@ Private Function ParseTestData(annotation As String, TestName As String) As Vari
       If dataSet.count > 0 Then
         testData.Add CollectionToArray(dataSet)
       Else
-        Phosphorus.Log4PStatic.Logger.ExternalWarning "Empty final data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
+        Phosphorus.Log4PStatic.Logger.Warning "Empty final data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
       End If
     Else
-      Phosphorus.Log4PStatic.Logger.ExternalWarning "Invalid final data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
+      Phosphorus.Log4PStatic.Logger.Warning "Invalid final data set skipped for test " & TestName & ": {" & currentData.ToString & "}"
     End If
   End If
     
   If Not isValid Or testData.count = 0 Then
-    Phosphorus.Log4PStatic.Logger.ExternalWarning "No valid test data parsed for test " & TestName & ": " & annotation
+    Phosphorus.Log4PStatic.Logger.Warning "No valid test data parsed for test " & TestName & ": " & annotation
     ParseTestData = Empty
     Exit Function
   End If
@@ -1953,7 +1953,7 @@ Private Function ValidateParameterTypes(dataSet As Variant, paramTypes As Varian
     
   'Check that the number of data items match the number of parameters
   If UBound(dataSet) <> UBound(paramTypes) Then
-    Phosphorus.Log4PStatic.Logger.ExternalWarning "Parameter count mismatch in ValidateParameterTypes for test " & TestName
+    Phosphorus.Log4PStatic.Logger.Warning "Parameter count mismatch in ValidateParameterTypes for test " & TestName
     ValidateParameterTypes = False
     Exit Function
   End If
@@ -1978,42 +1978,42 @@ Private Function ValidateParameterTypes(dataSet As Variant, paramTypes As Varian
         ' Variant accepts any type
       Case "STRING"
         If actualType <> "String" Then
-           Phosphorus.Log4PStatic.Logger.ExternalWarning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected String, got " & actualType
+           Phosphorus.Log4PStatic.Logger.Warning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected String, got " & actualType
            isValid = False
          End If
       Case "INTEGER", "LONG" 'These should accept Integer or Long but NOT Double
          'If Not (actualType = "Integer" Or actualType = "Long" Or actualType = "Double") Then
          If Not (actualType = "Integer" Or actualType = "Long") Then
-           Phosphorus.Log4PStatic.Logger.ExternalWarning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Integer/Long, got " & actualType
+           Phosphorus.Log4PStatic.Logger.Warning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Integer/Long, got " & actualType
            isValid = False
          End If
       Case "DOUBLE"
          If Not (actualType = "Double" Or actualType = "Integer" Or actualType = "Long") Then
-           Phosphorus.Log4PStatic.Logger.ExternalWarning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Double, got " & actualType
+           Phosphorus.Log4PStatic.Logger.Warning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Double, got " & actualType
            isValid = False
          End If
       Case "BOOLEAN"
          If actualType <> "Boolean" Then
-           Phosphorus.Log4PStatic.Logger.ExternalWarning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Boolean, got " & actualType
+           Phosphorus.Log4PStatic.Logger.Warning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Boolean, got " & actualType
            isValid = False
          End If
       Case "COLLECTION"
          If actualType <> "Collection" Then
-           Phosphorus.Log4PStatic.Logger.ExternalWarning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Collection, got " & actualType
+           Phosphorus.Log4PStatic.Logger.Warning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Collection, got " & actualType
            isValid = False
          End If
       Case "DICTIONARY"
          If actualType <> "Dictionary" Then
-           Phosphorus.Log4PStatic.Logger.ExternalWarning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Dictionary, got " & actualType
+           Phosphorus.Log4PStatic.Logger.Warning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Dictionary, got " & actualType
            isValid = False
          End If
       Case "ARRAY"
          If Not IsArray(param) Then
-           Phosphorus.Log4PStatic.Logger.ExternalWarning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Array, got " & actualType
+           Phosphorus.Log4PStatic.Logger.Warning "Type mismatch for parameter " & (i + 1) & " in test " & TestName & ": expected Array, got " & actualType
            isValid = False
          End If
       Case Else
-        Phosphorus.Log4PStatic.Logger.ExternalWarning "Unsupported parameter type for parameter " & (i + 1) & " in test " & TestName & ": " & expectedType
+        Phosphorus.Log4PStatic.Logger.Warning "Unsupported parameter type for parameter " & (i + 1) & " in test " & TestName & ": " & expectedType
         isValid = False
     End Select
   Next i
@@ -2091,7 +2091,7 @@ Private Function ParseComplexParameters(paramString As String, TestName As Strin
     
   paramString = Trim(paramString)
   If Len(paramString) = 0 Then
-    Phosphorus.Log4PStatic.Logger.ExternalWarning "Empty parameter string in @TestData for test " & TestName & ": {}"
+    Phosphorus.Log4PStatic.Logger.Warning "Empty parameter string in @TestData for test " & TestName & ": {}"
     ParseComplexParameters = Empty
     Exit Function
   End If
@@ -2116,7 +2116,7 @@ Private Function ParseComplexParameters(paramString As String, TestName As Strin
                 If Not inQuotes Then
                     inBraces = inBraces - 1
                     If inBraces < 0 Then
-                        Phosphorus.Log4PStatic.Logger.ExternalWarning "Unmatched closing brace in parameter for test " & TestName & ": " & paramString
+                        Phosphorus.Log4PStatic.Logger.Warning "Unmatched closing brace in parameter for test " & TestName & ": " & paramString
                         isValid = False
                         Exit For
                     End If
@@ -2135,7 +2135,7 @@ Private Function ParseComplexParameters(paramString As String, TestName As Strin
                             If Not IsEmpty(paramValue) Then
                               params.Add paramValue
                             Else
-                              Phosphorus.Log4PStatic.Logger.ExternalWarning "Invalid parameter skipped for test " & TestName & ": " & currentParam.ToString
+                              Phosphorus.Log4PStatic.Logger.Warning "Invalid parameter skipped for test " & TestName & ": " & currentParam.ToString
                             End If
                         End If
                         Set currentParam = New StringBuilder
@@ -2147,7 +2147,7 @@ Private Function ParseComplexParameters(paramString As String, TestName As Strin
             Case "="
                 If Not inQuotes And inBraces = 0 Then
                     If currentParam.Length = 0 Then
-                        Phosphorus.Log4PStatic.Logger.ExternalWarning "Empty key in dictionary parameter for test " & TestName & ": " & paramString
+                        Phosphorus.Log4PStatic.Logger.Warning "Empty key in dictionary parameter for test " & TestName & ": " & paramString
                         isValid = False
                         Exit For
                     End If
@@ -2163,19 +2163,19 @@ Private Function ParseComplexParameters(paramString As String, TestName As Strin
     Next i
     
     If inQuotes Then
-        Phosphorus.Log4PStatic.Logger.ExternalWarning "Unclosed quote in parameter for test " & TestName & ": " & paramString
+        Phosphorus.Log4PStatic.Logger.Warning "Unclosed quote in parameter for test " & TestName & ": " & paramString
         isValid = False
     End If
     
     If inBraces > 0 Then
-        Phosphorus.Log4PStatic.Logger.ExternalWarning "Unclosed brace in parameter for test " & TestName & ": " & paramString
+        Phosphorus.Log4PStatic.Logger.Warning "Unclosed brace in parameter for test " & TestName & ": " & paramString
         isValid = False
     End If
     
     If currentParam.Length > 0 And isValid Then
         If isKey Then
             If Len(Trim(keyString)) = 0 Then
-                Phosphorus.Log4PStatic.Logger.ExternalWarning "Empty key in dictionary parameter for test " & TestName & ": " & paramString
+                Phosphorus.Log4PStatic.Logger.Warning "Empty key in dictionary parameter for test " & TestName & ": " & paramString
                 isValid = False
             Else
                 Set dict = New Scripting.dictionary
@@ -2187,7 +2187,7 @@ Private Function ParseComplexParameters(paramString As String, TestName As Strin
                     dict.Add keyString, dictValue
                     params.Add dict
                 Else
-                    Phosphorus.Log4PStatic.Logger.ExternalWarning "Invalid dictionary value skipped for test " & TestName & ": " & keyString & "=" & currentParam.ToString
+                    Phosphorus.Log4PStatic.Logger.Warning "Invalid dictionary value skipped for test " & TestName & ": " & keyString & "=" & currentParam.ToString
                 End If
             End If
         Else
@@ -2198,13 +2198,13 @@ Private Function ParseComplexParameters(paramString As String, TestName As Strin
             If Not IsEmpty(finalValue) Then
                 params.Add finalValue
             Else
-                Phosphorus.Log4PStatic.Logger.ExternalWarning "Invalid final parameter skipped for test " & TestName & ": " & currentParam.ToString
+                Phosphorus.Log4PStatic.Logger.Warning "Invalid final parameter skipped for test " & TestName & ": " & currentParam.ToString
             End If
         End If
     End If
     
     If Not isValid Or params.count = 0 Then
-        Phosphorus.Log4PStatic.Logger.ExternalWarning "No valid parameters parsed for test " & TestName & ": " & paramString
+        Phosphorus.Log4PStatic.Logger.Warning "No valid parameters parsed for test " & TestName & ": " & paramString
         ParseComplexParameters = Empty
         Exit Function
     End If
@@ -2218,7 +2218,7 @@ Private Function ParseParameterValue(paramString As String, TestName As String) 
   paramString = Trim(paramString)
     
   If Len(paramString) = 0 Then
-    Phosphorus.Log4PStatic.Logger.ExternalWarning "Empty parameter value in @TestData for test " & TestName
+    Phosphorus.Log4PStatic.Logger.Warning "Empty parameter value in @TestData for test " & TestName
     ParseParameterValue = Empty
     Exit Function
   End If
@@ -2227,7 +2227,7 @@ Private Function ParseParameterValue(paramString As String, TestName As String) 
     Dim innerContent As String
     innerContent = Mid$(paramString, 2, Len(paramString) - 2)
     If Len(Trim(innerContent)) = 0 Then
-      Phosphorus.Log4PStatic.Logger.ExternalWarning "Empty nested structure in @TestData for test " & TestName & ": {}"
+      Phosphorus.Log4PStatic.Logger.Warning "Empty nested structure in @TestData for test " & TestName & ": {}"
       ParseParameterValue = Array()
       Exit Function
     End If
@@ -2238,7 +2238,7 @@ Private Function ParseParameterValue(paramString As String, TestName As String) 
     If Not IsEmpty(innerParams) Then
       ParseParameterValue = innerParams
     Else
-      Phosphorus.Log4PStatic.Logger.ExternalWarning "Invalid nested structure in @TestData for test " & TestName & ": {" & innerContent & "}"
+      Phosphorus.Log4PStatic.Logger.Warning "Invalid nested structure in @TestData for test " & TestName & ": {" & innerContent & "}"
       ParseParameterValue = Empty
     End If
   ElseIf InStr(paramString, "=") > 0 And Not (paramString Like """*""") Then
@@ -2264,11 +2264,11 @@ Private Function ParseParameterValue(paramString As String, TestName As String) 
       If validPairs Then
         Set ParseParameterValue = dict
       Else
-        Phosphorus.Log4PStatic.Logger.ExternalWarning "Invalid dictionary structure in @TestData for test " & TestName & ": " & paramString
+        Phosphorus.Log4PStatic.Logger.Warning "Invalid dictionary structure in @TestData for test " & TestName & ": " & paramString
         ParseParameterValue = Empty
       End If
     Else
-      Phosphorus.Log4PStatic.Logger.ExternalWarning "Invalid dictionary structure in @TestData for test " & TestName & ": " & paramString
+      Phosphorus.Log4PStatic.Logger.Warning "Invalid dictionary structure in @TestData for test " & TestName & ": " & paramString
       ParseParameterValue = Empty
     End If
   Else
@@ -2289,7 +2289,7 @@ Private Function ParseParameterValue(paramString As String, TestName As String) 
     ElseIf UCase(paramString) = "FALSE" Then
       ParseParameterValue = False
     Else
-      Phosphorus.Log4PStatic.Logger.ExternalWarning "Unrecognized parameter value in @TestData for test " & TestName & ": " & paramString
+      Phosphorus.Log4PStatic.Logger.Warning "Unrecognized parameter value in @TestData for test " & TestName & ": " & paramString
       ParseParameterValue = Empty
     End If
   End If

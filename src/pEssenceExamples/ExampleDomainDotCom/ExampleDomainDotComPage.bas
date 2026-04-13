@@ -45,8 +45,8 @@ End Sub
 Public Sub Initialize()
   
   With WebBrowser
-    .StartNormal WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
-    Set This.RootWebArea = .GetRootWebArea
+    .pWB_StartNormal WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
+    Set This.RootWebArea = .pWB_GetRootWebArea
   End With
   
   Set This.Heading = Factory.GetNewLocator

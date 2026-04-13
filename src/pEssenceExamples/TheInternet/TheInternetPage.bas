@@ -54,8 +54,8 @@ End Sub
 Public Sub Initialize()
   
   With WebBrowser
-    .StartNormal WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
-    Set This.RootWebArea = .GetRootWebArea
+    .pWB_StartNormal WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
+    Set This.RootWebArea = .pWB_GetRootWebArea
   End With
   
   With This.ForkMe
@@ -88,7 +88,7 @@ Public Sub Initialize()
 End Sub
 
 Public Sub RunHomePageChecks()
-  Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL
+  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL
   Debug.Assert This.RootWebArea.Element.GetProperty(Name) = TARGET_PAGE_TITLE
   Debug.Assert This.HomePageHeading1.ElementExists(10)
   Debug.Assert This.HomePageHeading1.Element.GetProperty(Level) = 1
@@ -148,7 +148,7 @@ End Sub
 Public Sub Checkboxes()
   
   SelectListItem "Checkboxes"
-  Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL & "/checkboxes"
+  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/checkboxes"
 
   Dim FirstCheckbox As pLocator
   Set FirstCheckbox = Factory.GetNewLocator
@@ -204,15 +204,15 @@ Public Sub Checkboxes()
   Actions.Click FirstCheckbox.Element
   Debug.Assert Not FirstCheckbox.Element.GetToggleState()
   
-  WebBrowser.NavigateBack
-  Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL
+  WebBrowser.pWB_NavigateBack
+  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL
 
 End Sub
 
 Public Sub DragAndDrop()
   
   SelectListItem "Drag and Drop"
-  Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL & "/drag_and_drop"
+  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/drag_and_drop"
   
   Dim i As Integer
   For i = 1 To 4
@@ -253,8 +253,8 @@ Public Sub DragAndDrop()
   
   Next i
   
-  WebBrowser.NavigateBack
-  Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL
+  WebBrowser.pWB_NavigateBack
+  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL
    
 End Sub
 
@@ -262,15 +262,15 @@ Public Sub FormAuthentication()
   SelectListItem "Form Authentication", "Login Page"
   FormAuthentication_Login
   FormAuthentication_Secure
-  WebBrowser.NavigateBack 'Takes us back to the secure page
-  WebBrowser.NavigateBack 'Takes us back to the login page
-  WebBrowser.NavigateBack 'Finally takes us back to the homepage!
-  Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL
+  WebBrowser.pWB_NavigateBack 'Takes us back to the secure page
+  WebBrowser.pWB_NavigateBack 'Takes us back to the login page
+  WebBrowser.pWB_NavigateBack 'Finally takes us back to the homepage!
+  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL
 End Sub
   
 Private Sub FormAuthentication_Login()
 
-  Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL & "/login"
+  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/login"
 
   Dim SubHeader As pLocator
   Set SubHeader = Factory.GetNewLocator
@@ -362,7 +362,7 @@ Private Sub FormAuthentication_Secure()
 'We need to a FindElement here!
   Snooze 1000
 Debug.Assert This.RootWebArea.ElementExists
-  Debug.Assert WebBrowser.GetCurrentURL = TARGET_PAGE_URL & "/secure"
+  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/secure"
 
   Dim SecureMesssage As pLocator
   Set SecureMesssage = Factory.GetNewLocator

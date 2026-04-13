@@ -89,8 +89,8 @@ End Sub
 Public Sub Initialize()
   
   With This.WebBrowser
-    .StartNormal WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
-    Set This.RootWebArea = .GetRootWebArea
+    .pWB_StartNormal WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
+    Set This.RootWebArea = .pWB_GetRootWebArea
   End With
   
   With This.GroupControl

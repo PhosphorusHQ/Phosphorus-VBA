@@ -24,6 +24,10 @@ Private Sub Workbook_Open()
   'Microsoft Scripting Runtime - needed for Scripting.dictionary/File System Object
   pEssenceExamples.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\scrrun.dll"
 
+  Dim strPhosphorusWBFullName As String
+  strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
+  pEssenceExamples.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
+
 End Sub
 
 Private Sub ExportPhosphorusSourceCode()

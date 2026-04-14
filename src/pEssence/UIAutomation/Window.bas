@@ -218,7 +218,7 @@ Public Sub HighlightElement(Ele As IUIAutomationElement, _
   DeleteObject HWhiteBrush
   ReleaseDC HwndOverlay, hdc
     
-  WindowsProcesses.Snooze DurationMs
+  Snooze DurationMs
     
 Cleanup:
   Exit Sub
@@ -236,7 +236,7 @@ Public Sub ReleaseHighlighting(Optional DurationMs As Long = 50)
   End If
 
   'Slight delay for better user experience
-  WindowsProcesses.Snooze DurationMs
+  Snooze DurationMs
   If HwndOverlay <> 0 Then DestroyWindow HwndOverlay
   
 End Sub

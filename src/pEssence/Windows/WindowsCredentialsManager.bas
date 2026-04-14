@@ -418,11 +418,11 @@ Private Function PtrToString(ByVal lpwstr As LongPtr) As String
 End Function
 
 Public Sub OpenCredentialManager()
-  WindowsProcesses.RunShellExecuteToStartNewProcess _
+  Phosphorus.WindowsProcesses.RunShellExecuteToStartNewProcess _
     "Credential Manager", _
     "open", _
     "control.exe", _
     "/name Microsoft.CredentialManager", _
     vbNullString, _
-    WindowStyle.Normal
+    Phosphorus.WindowShowStates.Normal
 End Sub

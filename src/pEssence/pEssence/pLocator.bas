@@ -167,7 +167,7 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
     If Not SomeElementsFound Then
       PassedEndTime = (Now > EndTime)
       If Not PassedEndTime Then
-        WindowsProcesses.Snooze 100
+        Snooze 100
       End If
     End If
   Wend

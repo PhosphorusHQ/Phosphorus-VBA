@@ -218,7 +218,7 @@ Private Sub WaitForPropertyValueOrPatternState( _
     If Not PropertyValuePatternStateFound Then
       PassedEndTime = (Now > EndTime)
       If Not PassedEndTime Then
-        WindowsProcesses.Snooze 10
+        Snooze 10
       End If
     End If
   Wend

@@ -25,6 +25,10 @@ Private Sub Workbook_Open()
   'UIAutomationClient
   pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\UIAutomationCore.dll"
 
+  Dim strPhosphorusWBFullName As String
+  strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
+  pEssence.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
+
 End Sub
 
 Private Sub ExportPhosphorusSourceCode()

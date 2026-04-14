@@ -80,7 +80,7 @@ Public Sub pWB_StartNormal(WebAppName As String, URL As String, WebAppPageTitle 
   This.WebAppName = WebAppName
   This.URL = URL
   This.WebAppPageTitle = WebAppPageTitle
-  LaunchCommandByProtocol This.WebAppName, "microsoft-edge:", This.URL, WindowStyle.Maximized
+  LaunchCommandByProtocol This.WebAppName, "microsoft-edge:", This.URL, WindowShowStates.Maximized
   InitialiseAllLocators
   This.AddressAndSearchBar.Find 10
   This.RootWebArea.Find 10

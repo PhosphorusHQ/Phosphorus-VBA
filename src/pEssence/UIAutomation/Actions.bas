@@ -302,19 +302,19 @@ Private Sub MouseClickByMessage(Element As pElement, ClickType As MouseClickType
   Select Case ClickType
     Case MouseClickType.LeftClick
       PostMessage hWnd, WM_LBUTTONDOWN, 1, MakeLParam
-      WindowsProcesses.Snooze 35
+      Snooze 35
       PostMessage hWnd, WM_LBUTTONUP, 0, MakeLParam
     Case MouseClickType.RightClick
       PostMessage hWnd, WM_RBUTTONDOWN, 0, MakeLParam
-      WindowsProcesses.Snooze 40
+      Snooze 40
       PostMessage hWnd, WM_RBUTTONUP, 0, MakeLParam
     Case MouseClickType.DoubleClick
       PostMessage hWnd, WM_LBUTTONDBLCLK, 1, MakeLParam
-      WindowsProcesses.Snooze 50
+      Snooze 50
       PostMessage hWnd, WM_LBUTTONUP, 0, MakeLParam
     Case MouseClickType.LeftClickSynchronous
       SendMessage hWnd, WM_LBUTTONDOWN, 1, MakeLParam
-      WindowsProcesses.Snooze 500
+      Snooze 500
       SendMessage hWnd, WM_LBUTTONUP, 0, MakeLParam
   End Select
   
@@ -354,9 +354,9 @@ Private Sub MouseClicksByEvent(Element As pElement, Event1 As Long, Event2 As Lo
   End If
 
   SetCursorPos pt.x, pt.y
-  WindowsProcesses.Snooze 50
+  Snooze 50
   mouse_event Event1, 0, 0, 0, 0
-  WindowsProcesses.Snooze 80
+  Snooze 80
   mouse_event Event2, 0, 0, 0, 0
 
 End Sub
@@ -389,7 +389,7 @@ Public Sub DragAndDrop( _
     
   ' Move mouse to source
   MoveMouseToElement SourceElement
-  WindowsProcesses.Snooze 250
+  Snooze 250
     
   ' Press modifier keys if requested
   If ctrlKey Then keybd_event VK_CONTROL, 0, 0, 0
@@ -398,7 +398,7 @@ Public Sub DragAndDrop( _
     
   ' Start drag
   mouse_event MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0
-  WindowsProcesses.Snooze holdTimeMs
+  Snooze holdTimeMs
     
   ' Get target center
   Dim tgtRect As Variant
@@ -427,11 +427,11 @@ Public Sub DragAndDrop( _
     Dim currY As Long: currY = srcY + CLng(dy * i / steps)
     SetCursorPos currX, currY
     Window.UpdateDragHighlight HighlightHwnd, currX - 40, currY - 40   ' Center highlight on cursor
-    WindowsProcesses.Snooze 12
+    Snooze 12
   Next i
     
   SetCursorPos tgtX, tgtY
-  WindowsProcesses.Snooze 50
+  Snooze 50
     
   ' Drop
   mouse_event MOUSEEVENTF_LEFTUP, 0, 0, 0, 0
@@ -444,7 +444,7 @@ Public Sub DragAndDrop( _
   ' Clean up highlight
   If HighlightHwnd <> 0 Then Window.Destroy (HighlightHwnd)
     
-  WindowsProcesses.Snooze 300   ' Allow drop to process
+  Snooze 300   ' Allow drop to process
 
 End Sub
 

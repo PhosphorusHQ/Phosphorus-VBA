@@ -39,10 +39,11 @@ Public Const DEFAULT_CAPPED_SLEEP_TIME_IN_SECONDS = 30
 
 'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
 Public Enum WindowShowStates
-  SW_HIDE = 0
-  SW_SHOWNORMAL = 1
-  SW_SHOWMINIMIZED = 2
-  SW_SHOWMAXIMIZED = 3
+  Hide = 0 'SW_HIDE
+  Normal = 1 'SW_SHOWNORMAL
+   Minimized = 2 'SW_SHOWMINIMIZED
+   Maximized = 3 'SW_SHOWMAXIMIZED
+   NoActivate = 4 'SW_SHOWNOACTIVATE
 End Enum
 
 #If VBA7 Then
@@ -85,7 +86,7 @@ Public Sub Test_LaunchExecutable()
 ' WINDOWS SYSTEM TOOLS
 '  LaunchExecutable Phosphorus.WindowsExecutables.WindowsTaskManager, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
 '  LaunchExecutable Phosphorus.WindowsExecutables.WindowsCharacterMap, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
-  LaunchExecutable Phosphorus.WindowsExecutables.WindowsDiskCleanUp, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
+  LaunchExecutable Phosphorus.WindowsExecutables.WindowsDiskCleanUp, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.Minimized
 
 End Sub
 
@@ -147,7 +148,7 @@ Public Sub LaunchShellFolder(myShellFolder As Phosphorus.ShellFolder)
   Else
     Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverMisconfiguredWindowShellFolder, myShellFolder.Name
   End If
-  RunShellExecuteToStartNewProcess myShellFolder.Name, "open", Protocol & URI, VBA.Constants.vbNullString, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+  RunShellExecuteToStartNewProcess myShellFolder.Name, "open", Protocol & URI, VBA.Constants.vbNullString, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.Maximized
 End Sub
 
 Public Sub Test_LaunchWindowsServiceConsole()
@@ -159,7 +160,7 @@ Public Sub Test_LaunchWindowsServiceConsole()
 End Sub
 
 Public Sub LaunchWindowsServiceConsole(myMMC As Phosphorus.WindowsMMCSnapIn)
-  RunShellExecuteToStartNewProcess myMMC.Name, "open", myMMC.FileName, VBA.Constants.vbNullString, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+  RunShellExecuteToStartNewProcess myMMC.Name, "open", myMMC.FileName, VBA.Constants.vbNullString, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.Maximized
 End Sub
 
 Public Sub Test_LaunchWindowsSettings()
@@ -176,13 +177,13 @@ End Sub
 
 Public Sub LaunchWindowsSetting(myWindowsSetting As Phosphorus.WindowsSetting, Optional parameter As String)
   If myWindowsSetting.SettingsPage = "App features" Then
-    RunShellExecuteToStartNewProcess myWindowsSetting.SettingsPage, "open", "ms-settings:" & myWindowsSetting.URISuffix & "?" & parameter, VBA.Constants.vbNullString, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+    RunShellExecuteToStartNewProcess myWindowsSetting.SettingsPage, "open", "ms-settings:" & myWindowsSetting.URISuffix & "?" & parameter, VBA.Constants.vbNullString, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.Maximized
   Else
-    RunShellExecuteToStartNewProcess myWindowsSetting.SettingsPage, "open", "ms-settings:" & myWindowsSetting.URISuffix, VBA.Constants.vbNullString, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+    RunShellExecuteToStartNewProcess myWindowsSetting.SettingsPage, "open", "ms-settings:" & myWindowsSetting.URISuffix, VBA.Constants.vbNullString, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.Maximized
   End If
 End Sub
 
-Private Sub RunShellExecuteToStartNewProcess( _
+Public Sub RunShellExecuteToStartNewProcess( _
   ByVal ApplicationName, _
   ByVal Operation As String, _
   ByVal CommandString As String, _

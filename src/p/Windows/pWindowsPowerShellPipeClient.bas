@@ -158,11 +158,11 @@ Private Sub Class_Initialize()
   ' Start the PowerShell server
   Set myWshShell = New wshShell 'CreateObject("WScript.Shell")
   
-  Dim windowStyle As Integer
-  windowStyle = VBA.Interaction.IIf(Phosphorus.WindowsPowerShell.PSSERVER_VISIBLE, 1, 0) ' 1 = visible, 0 = hidden
+  Dim WindowStyle As Integer
+  WindowStyle = VBA.Interaction.IIf(Phosphorus.WindowsPowerShell.PSSERVER_VISIBLE, 1, 0) ' 1 = visible, 0 = hidden
   commandLine = "powershell -NoExit -ExecutionPolicy Bypass -File """ & ScriptPath & """"
   'Use .Run rather than .Exec as .Exec does not let us set the window style
-  myWshShell.Run commandLine, windowStyle, False
+  myWshShell.Run commandLine, WindowStyle, False
   
   ' Get the process ID using WMI
   ' .Run does not give us the PID lile .Exec does

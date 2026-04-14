@@ -27,7 +27,7 @@ Private Type BrowserAttributes
   MasterWindow As pLocator
   BrowserRootView As pLocator
   NonClientView As pLocator
-  BrowserFrameViewWin As pLocator
+  EdgeBrowserFrameViewWin As pLocator
   BrowserView As pLocator
   TopContainerView As pLocator
   EdgeToolbarView As pLocator
@@ -46,7 +46,7 @@ Private Sub Class_Initialize()
   Set This.BrowserRootView = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
   Set This.NonClientView = Factory.GetNewLocator
-  Set This.BrowserFrameViewWin = Factory.GetNewLocator
+  Set This.EdgeBrowserFrameViewWin = Factory.GetNewLocator
   Set This.BrowserView = Factory.GetNewLocator
   Set This.TopContainerView = Factory.GetNewLocator
   Set This.EdgeToolbarView = Factory.GetNewLocator
@@ -64,7 +64,7 @@ Private Sub Class_Terminate()
   Set This.MasterWindow = Nothing
   Set This.BrowserRootView = Nothing
   Set This.NonClientView = Nothing
-  Set This.BrowserFrameViewWin = Nothing
+  Set This.EdgeBrowserFrameViewWin = Nothing
   Set This.BrowserView = Nothing
   Set This.TopContainerView = Nothing
   Set This.EdgeToolbarView = Nothing
@@ -107,13 +107,13 @@ Private Sub InitialiseAllLocators()
     .Condition "ClassName", ClassName, IsTheString, "NonClientView"
   End With
 
-  With This.BrowserFrameViewWin
-    .Initialise "BrowserFrameViewWin", This.NonClientView, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "BrowserFrameViewWin"
+  With This.EdgeBrowserFrameViewWin
+    .Initialise "EdgeBrowserFrameViewWin", This.NonClientView, Children, pConditions, "ClassName"
+    .Condition "ClassName", ClassName, IsTheString, "EdgeBrowserFrameViewWin"
   End With
 
   With This.BrowserView
-    .Initialise "BrowserView", This.BrowserFrameViewWin, Children, pConditions, "ClassName"
+    .Initialise "BrowserView", This.EdgeBrowserFrameViewWin, Children, pConditions, "ClassName"
     .Condition "ClassName", ClassName, IsTheString, "BrowserView"
   End With
 

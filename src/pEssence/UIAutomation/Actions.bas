@@ -196,7 +196,7 @@ End Function
 Private Function TrySelectionItemPatternSelect(Element As pElement) As Boolean
   On Error GoTo Finish
   TrySelectionItemPatternSelect = False
-  If GetPatternPreChecks2(Element, ListItem, IsSelectionItemPatternAvailable) Then
+  If GetPatternPreChecks2(Element, UIAControlTypeIDs.ListItem, IsSelectionItemPatternAvailable) Then
     Dim Pattern As IUIAutomationSelectionItemPattern
     Set Pattern = Element.GetPattern(UIAPatterns.SelectionItemPattern)
     Pattern.Select
@@ -209,7 +209,7 @@ End Function
 Private Function TryTogglePattern(Element As pElement) As Boolean
   On Error GoTo Finish
   TryTogglePattern = False
-  If GetPatternPreChecks2(Element, CheckBox, IsTogglePatternAvailable) Then
+  If GetPatternPreChecks2(Element, UIAControlTypeIDs.CheckBox, IsTogglePatternAvailable) Then
     Dim InitialToggleState As Integer
     InitialToggleState = Element.GetToggleState()
     Dim Pattern As IUIAutomationTogglePattern

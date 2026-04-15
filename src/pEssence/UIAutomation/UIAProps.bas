@@ -199,7 +199,7 @@ Public Enum UIAControlTypeIDs
   Document = UIA_ControlTypeIds.UIA_DocumentControlTypeId
   Edit = UIA_ControlTypeIds.UIA_EditControlTypeId
   Group = UIA_ControlTypeIds.UIA_GroupControlTypeId
-  Header = UIA_ControlTypeIds.UIA_HeaderControlTypeId
+  header = UIA_ControlTypeIds.UIA_HeaderControlTypeId
   HeaderItem = UIA_ControlTypeIds.UIA_HeaderItemControlTypeId
   Hyperlink = UIA_ControlTypeIds.UIA_HyperlinkControlTypeId
   Image = UIA_ControlTypeIds.UIA_ImageControlTypeId

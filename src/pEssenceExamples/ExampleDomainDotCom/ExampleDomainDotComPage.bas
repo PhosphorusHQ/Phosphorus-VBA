@@ -52,21 +52,21 @@ Public Sub Initialize()
   Set This.Heading = Factory.GetNewLocator
   With This.Heading
     .Initialise "Heading", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs)"
-    .Condition "AriaRole", AriaRole, IsTheString, "heading"
+    .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Heading
     .Condition "NameIs", Name, IsTheString, "Example Domain"
   End With
   
   Set This.Description = Factory.GetNewLocator
   With This.Description
     .Initialise "Heading", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs)"
-    .Condition "AriaRole", AriaRole, IsTheString, "description"
+    .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Description
     .Condition "NameIs", Name, IsTheString, "This domain is for use in documentation examples without needing permission. Avoid use in operations."
   End With
     
   Set This.Link = Factory.GetNewLocator
   With This.Link
     .Initialise "Link", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs)"
-    .Condition "AriaRole", AriaRole, IsTheString, "link"
+    .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Link
     .Condition "NameIs", Name, IsTheString, "Learn more"
   End With
   

@@ -135,97 +135,97 @@ Public Sub Initialize()
       With CurrentUIAElement
         Select Case i + 1
           Case 1
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "heading"
             Debug.Assert CurrentUIAElement.CurrentName = "Radio & Checkbox"
             Set This.RadioAndCheckboxHeader = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 2
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "description"
             Debug.Assert CurrentUIAElement.CurrentName = "Select any one"
             Set This.SelectAnyOneSubHeader = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 3
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "radio"
             Debug.Assert CurrentUIAElement.CurrentName = "Yes"
             Set This.SelectAnyOneYes = Factory.GetNewElement(This.SelectAnyOneSubHeader.GivenName & " - Yes", CurrentUIAElement)
           Case 4
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "radio"
             Debug.Assert CurrentUIAElement.CurrentName = "No"
             Set This.SelectAnyOneNo = Factory.GetNewElement(This.SelectAnyOneSubHeader.GivenName & " - No", CurrentUIAElement)
           Case 5
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "description"
             Debug.Assert CurrentUIAElement.CurrentName = "Cofirm you can select only one radio button"
             Set This.ConfirmYouCanSelectOnlyOneRadioButton = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 6
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "radio"
             Debug.Assert CurrentUIAElement.CurrentName = "Yes"
             Set This.ConfirmYouCanSelectOnlyOneRadioButtonYes = Factory.GetNewElement(This.ConfirmYouCanSelectOnlyOneRadioButton.GivenName & " - Yes", CurrentUIAElement)
           Case 7
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "radio"
             Debug.Assert CurrentUIAElement.CurrentName = "No"
             Set This.ConfirmYouCanSelectOnlyOneRadioButtonNo = Factory.GetNewElement(This.ConfirmYouCanSelectOnlyOneRadioButton.GivenName & " - No", CurrentUIAElement)
           Case 8
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "description"
             Debug.Assert CurrentUIAElement.CurrentName = "Find the bug"
             Set This.FindTheBug = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 9
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "radio"
             Debug.Assert CurrentUIAElement.CurrentName = "Yes"
             Set This.FindTheBugYes = Factory.GetNewElement(This.FindTheBug.GivenName & " - Yes", CurrentUIAElement)
           Case 10
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "radio"
             Debug.Assert CurrentUIAElement.CurrentName = "No"
             Set This.FindTheBugNo = Factory.GetNewElement(This.FindTheBug.GivenName & " - No", CurrentUIAElement)
           Case 11
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "description"
             Debug.Assert CurrentUIAElement.CurrentName = "Find which one is selected"
             Set This.FindWhichOneIsSelected = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 12
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "radio"
             Debug.Assert CurrentUIAElement.CurrentName = "Foo"
             Set This.FindWhichOneIsSelectedFoo = Factory.GetNewElement(This.FindWhichOneIsSelected.GivenName & " - Foo", CurrentUIAElement)
           Case 13
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "radio"
             Debug.Assert CurrentUIAElement.CurrentName = "Bar"
             Set This.FindWhichOneIsSelectedBar = Factory.GetNewElement(This.FindWhichOneIsSelected.GivenName & " - Bar", CurrentUIAElement)
           Case 14
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "description"
             Debug.Assert CurrentUIAElement.CurrentName = "Confirm last field is disabled"
             Set This.ConfirmLastFieldIsDisabled = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 15
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "radio"
             Debug.Assert CurrentUIAElement.CurrentName = "Going"
             Set This.ConfirmLastFieldIsDisabledGoing = Factory.GetNewElement(This.ConfirmLastFieldIsDisabled.GivenName & " - Going", CurrentUIAElement)
           Case 16
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "radio"
             Debug.Assert CurrentUIAElement.CurrentName = "Not going"
             Set This.ConfirmLastFieldIsDisabledNotGoing = Factory.GetNewElement(This.ConfirmLastFieldIsDisabled.GivenName & " - Not going", CurrentUIAElement)
           Case 17
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.RadioButton
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "radio"
             Debug.Assert CurrentUIAElement.CurrentName = "Maybe"
             Set This.ConfirmLastFieldIsDisabledMaybe = Factory.GetNewElement(This.ConfirmLastFieldIsDisabled.GivenName & " - Maybe", CurrentUIAElement)
           Case 18
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "description"
             Debug.Assert CurrentUIAElement.CurrentName = "Find if the checkbox is selected?"
             Set This.FindIfTheCheckboxIsSelected = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 19
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.CheckBox
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "checkbox"
             Debug.Assert CurrentUIAElement.CurrentName = "Remember me"
             Set This.FindIfTheCheckboxIsSelectedRememberMe = Factory.GetNewElement(This.FindIfTheCheckboxIsSelected.GivenName & " - Remember me", CurrentUIAElement)
           Case 20
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "description"
             Debug.Assert CurrentUIAElement.CurrentName = "Accept the T&C"
             Set This.AcceptTheTermsAndConditions = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 21
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.CheckBox
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "checkbox"
             Debug.Assert CurrentUIAElement.CurrentName = "I agree to the FAKE terms and conditions"
             Set This.IAgreeToTheFAKETermsAndConditions = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 22
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "description"
             Debug.Assert CurrentUIAElement.CurrentName = " I agree to the "
           Case 23
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "description"
             Debug.Assert CurrentUIAElement.CurrentName = "FAKE terms and conditions"
           Case 24
-            Debug.Assert CurrentUIAElement.CurrentControlType = UIAControlTypeIDs.Text
+            Debug.Assert CurrentUIAElement.CurrentAriaRole = "description"
             Debug.Assert CurrentUIAElement.CurrentName = "On completion of this exercise, you can learn the following concepts."
           Case Else
              MsgBox "Error - button not handed!? #" & i & ": '" & CurrentUIAElement.CurrentName & "'"

@@ -23,7 +23,7 @@ Const TARGET_PAGE_URL = "https://www.example.com/"
 Const TARGET_PAGE_TITLE = "Example Domain"
 Const TARGET_PAGE_LINK = "https://iana.org/domains/example"
 
-Private WebBrowser As EdgeWebBrowser
+Private WebBrowser As Object
 
 Private Type PageAttributes
   RootWebArea As pLocator
@@ -35,7 +35,7 @@ End Type
 Private This As PageAttributes
 
 Private Sub Class_Initialize()
-  Set WebBrowser = Factory.GetNewEdgeWebBrowser
+  Set WebBrowser = Factory.GetNewWebBrowser
 End Sub
 
 Private Sub Class_Terminate()
@@ -45,7 +45,7 @@ End Sub
 Public Sub Initialize()
   
   With WebBrowser
-    .pWB_StartNormal WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
+    .pWB_Start WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
     Set This.RootWebArea = .pWB_GetRootWebArea
   End With
   

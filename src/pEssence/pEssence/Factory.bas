@@ -18,11 +18,20 @@ Attribute VB_Exposed = True
 ' =======================================================================
 Option Explicit
 
+Public Enum WebBrowserType
+  [_First]
+  Chrome
+  Edge
+  [_Last]
+End Enum
+
+Public CurrentWebBrowserType As WebBrowserType
+
 Public Function GetRootDesktopElement() As IUIAutomationElement
   If RootDesktopUIAElement Is Nothing Then
     Set RootDesktopUIAElement = UIA.GetRootElement
   End If
-  Set GetRootDesktopElement = RootDesktopUIAElement
+   Set GetRootDesktopElement = RootDesktopUIAElement
 End Function
 
 Public Function GetNewLocator() As pLocator
@@ -39,10 +48,13 @@ Public Function GetNewElement(GivenName As String, UIAElement As IUIAutomationEl
   Set GetNewElement = Element
 End Function
 
-Public Function GetNewEdgeWebBrowser() As EdgeWebBrowser
-  Dim Edge As EdgeWebBrowser
-  Set Edge = New EdgeWebBrowser
-  Set GetNewEdgeWebBrowser = Edge
+Public Function GetNewWebBrowser() As Object
+  Select Case CurrentWebBrowserType
+    Case WebBrowserType.Chrome
+      Set GetNewWebBrowser = New ChromeWebBrowser
+    Case WebBrowserType.Edge
+      Set GetNewWebBrowser = New EdgeWebBrowser
+    Case Else
+      pExceptions.Raise pEssenceUnhandledWebBrowserType
+  End Select
 End Function
-
-

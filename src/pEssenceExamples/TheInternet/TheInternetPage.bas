@@ -22,9 +22,8 @@ Const WEB_APP_NAME = "The-Internet"
 Const TARGET_PAGE_URL = "https://the-internet.herokuapp.com"
 Const TARGET_PAGE_TITLE = "The Internet"
 
-Private WebBrowser As EdgeWebBrowser
-
 Private Type PageAttributes
+  WebBrowser As Object
   RootWebArea As pLocator
   ForkMe As pLocator
   HomePageHeading1 As pLocator
@@ -35,7 +34,7 @@ End Type
 Private This As PageAttributes
 
 Private Sub Class_Initialize()
-  Set WebBrowser = Factory.GetNewEdgeWebBrowser
+  Set This.WebBrowser = Factory.GetNewWebBrowser
   Set This.ForkMe = Factory.GetNewLocator
   Set This.HomePageHeading1 = Factory.GetNewLocator
   Set This.HomePageHeading2 = Factory.GetNewLocator
@@ -43,7 +42,7 @@ Private Sub Class_Initialize()
 End Sub
 
 Private Sub Class_Terminate()
-  Set WebBrowser = Nothing
+  Set This.WebBrowser = Nothing
   Set This.RootWebArea = Nothing
   Set This.ForkMe = Nothing
   Set This.HomePageHeading1 = Nothing
@@ -53,8 +52,8 @@ End Sub
 
 Public Sub Initialize()
   
-  With WebBrowser
-    .pWB_StartNormal WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
+  With This.WebBrowser
+    .pWB_Start WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
     Set This.RootWebArea = .pWB_GetRootWebArea
   End With
   
@@ -88,7 +87,7 @@ Public Sub Initialize()
 End Sub
 
 Public Sub RunHomePageChecks()
-  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL
+  Debug.Assert (This.WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL) Or (This.WebBrowser.pWB_GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", ""))
   Debug.Assert This.RootWebArea.Element.GetProperty(Name) = TARGET_PAGE_TITLE
   Debug.Assert This.HomePageHeading1.ElementExists(10)
   Debug.Assert This.HomePageHeading1.Element.GetProperty(Level) = 1
@@ -148,7 +147,7 @@ End Sub
 Public Sub Checkboxes()
   
   SelectListItem "Checkboxes"
-  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/checkboxes"
+  Debug.Assert (This.WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/checkboxes") Or (This.WebBrowser.pWB_GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", "") & "/checkboxes")
 
   Dim FirstCheckbox As pLocator
   Set FirstCheckbox = Factory.GetNewLocator
@@ -204,15 +203,15 @@ Public Sub Checkboxes()
   Actions.Click FirstCheckbox.Element
   Debug.Assert Not FirstCheckbox.Element.GetToggleState()
   
-  WebBrowser.pWB_NavigateBack
-  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL
+  This.WebBrowser.pWB_NavigateBack
+  Debug.Assert (This.WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL) Or (This.WebBrowser.pWB_GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", ""))
 
 End Sub
 
 Public Sub DragAndDrop()
   
   SelectListItem "Drag and Drop"
-  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/drag_and_drop"
+  Debug.Assert (This.WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/drag_and_drop") Or (This.WebBrowser.pWB_GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", "") & "/drag_and_drop")
   
   Dim i As Integer
   For i = 1 To 4
@@ -253,24 +252,24 @@ Public Sub DragAndDrop()
   
   Next i
   
-  WebBrowser.pWB_NavigateBack
-  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL
-   
+  This.WebBrowser.pWB_NavigateBack
+  Debug.Assert (This.WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL) Or (This.WebBrowser.pWB_GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", ""))
+
 End Sub
 
 Public Sub FormAuthentication()
   SelectListItem "Form Authentication", "Login Page"
   FormAuthentication_Login
   FormAuthentication_Secure
-  WebBrowser.pWB_NavigateBack 'Takes us back to the secure page
-  WebBrowser.pWB_NavigateBack 'Takes us back to the login page
-  WebBrowser.pWB_NavigateBack 'Finally takes us back to the homepage!
-  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL
+  This.WebBrowser.pWB_NavigateBack 'Takes us back to the secure page
+  This.WebBrowser.pWB_NavigateBack 'Takes us back to the login page
+  This.WebBrowser.pWB_NavigateBack 'Finally takes us back to the homepage!
+  Debug.Assert (This.WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL) Or (This.WebBrowser.pWB_GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", ""))
 End Sub
   
 Private Sub FormAuthentication_Login()
 
-  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/login"
+  Debug.Assert (This.WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/login") Or (This.WebBrowser.pWB_GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", "") & "/login")
 
   Dim SubHeader As pLocator
   Set SubHeader = Factory.GetNewLocator
@@ -347,7 +346,11 @@ Private Sub FormAuthentication_Login()
   UsernameTextBox.Element.SetValue "tomsmith"
   PasswordTextBox.Element.SetValue "SuperSecretPassword!"
   Actions.Click LoginButton.Element
-  
+
+If Factory.CurrentWebBrowserType = Chrome Then
+  This.WebBrowser.AcknowledgeChangeYourPasswordAlert
+End If
+
   Set SubHeader = Nothing
   Set UsernameLabel = Nothing
   Set UsernameTextBox = Nothing
@@ -359,10 +362,10 @@ End Sub
 
 Private Sub FormAuthentication_Secure()
 
-'We need to a FindElement here!
+  'We need to a FindElement here!
   Snooze 1000
-Debug.Assert This.RootWebArea.ElementExists
-  Debug.Assert WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/secure"
+  Debug.Assert This.RootWebArea.ElementExists
+  Debug.Assert (This.WebBrowser.pWB_GetCurrentURL = TARGET_PAGE_URL & "/secure") Or (This.WebBrowser.pWB_GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", "") & "/secure")
 
   Dim SecureMesssage As pLocator
   Set SecureMesssage = Factory.GetNewLocator

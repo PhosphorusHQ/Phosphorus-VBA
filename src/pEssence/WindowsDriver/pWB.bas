@@ -21,7 +21,7 @@ Option Explicit
 'https://bettersolutions.com/vba/class-modules/implements.htm
 'An interface contains only method & function signatures, not any properties
 
-Public Sub StartNormal(WebAppName As String, URL As String, WebAppPageTitle As String)
+Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
 End Sub
 
 Public Function GetRootWebArea() As pLocator

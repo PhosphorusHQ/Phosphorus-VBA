@@ -23,7 +23,7 @@ Const TARGET_PAGE_URL = "https://letcode.in/radio"
 Const TARGET_PAGE_TITLE = "Radio Buttons | LetCode with Koushik"
 
 Private Type PageAttributes
-  WebBrowser As EdgeWebBrowser
+  WebBrowser As Object
   RootWebArea As pLocator
   GroupControl As pLocator
   AllControls As pLocator
@@ -53,7 +53,7 @@ End Type
 Private This As PageAttributes
 
 Private Sub Class_Initialize()
-  Set This.WebBrowser = Factory.GetNewEdgeWebBrowser
+  Set This.WebBrowser = Factory.GetNewWebBrowser
   Set This.GroupControl = Factory.GetNewLocator
   Set This.AllControls = Factory.GetNewLocator
 End Sub
@@ -89,7 +89,7 @@ End Sub
 Public Sub Initialize()
   
   With This.WebBrowser
-    .pWB_StartNormal WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
+    .pWB_Start WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
     Set This.RootWebArea = .pWB_GetRootWebArea
   End With
   
@@ -103,10 +103,26 @@ Public Sub Initialize()
   
   Dim AllControls() As pElement
   With This.AllControls
-    .Initialise "AllControls", This.GroupControl, Children, pConditions, "OR(ControlTypeText, ControlTypeRadioButton, ControlTypeCheckBox)"
-    .Condition "ControlTypeText", ControlType, EqualsNumber, Text
-    .Condition "ControlTypeRadioButton", ControlType, EqualsNumber, RadioButton
-    .Condition "ControlTypeCheckBox", ControlType, EqualsNumber, CheckBox
+    .Initialise "AllControls", This.GroupControl, Children, pConditions, _
+      "AND" & _
+        "(" & _
+          "OR(AriaRoleHeading, AriaRoleDescription, AriaRoleRadio, AriaRoleCheckBox)," & _
+          "NOT(AND(AriaRoleDescription, OR(NameIsYes, NameIsNo!, NameIsFoo, NameIsBar, NameIsGoing, NameIsNotGoing, NameIsMaybe, NameIsRememberMe)))," & _
+          "NOT(AND(AriaRoleHeading, NameIsTopics))" & _
+         ")"
+    .Condition "AriaRoleHeading", AriaRole, IsTheString, "heading"
+    .Condition "AriaRoleDescription", AriaRole, IsTheString, "description"
+    .Condition "AriaRoleRadio", AriaRole, IsTheString, "radio"
+    .Condition "AriaRoleCheckBox", AriaRole, IsTheString, "checkbox"
+    .Condition "NameIsYes", Name, IsTheString, " Yes" 'NB: The text boxes start with a space!
+    .Condition "NameIsNo!", Name, IsTheString, " No" 'NB: We have to be careful that no condition name contains any other!?
+    .Condition "NameIsFoo", Name, IsTheString, " Foo"
+    .Condition "NameIsBar", Name, IsTheString, " Bar"
+    .Condition "NameIsGoing", Name, IsTheString, " Going"
+    .Condition "NameIsNotGoing", Name, IsTheString, " Not going"
+    .Condition "NameIsMaybe", Name, IsTheString, " Maybe"
+    .Condition "NameIsRememberMe", Name, IsTheString, " Remember me"
+    .Condition "NameIsTopics", Name, IsTheString, "These are topics related to the article that might interest you"
     .FindAll False
     AllControls = .Elements
   End With

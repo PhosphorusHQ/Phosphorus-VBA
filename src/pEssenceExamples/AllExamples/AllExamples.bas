@@ -18,10 +18,15 @@ Public Sub AllExamples()
   Window.HighlightElements = False
 
   Calculator.Calculator
-  ExampleDomainDotCom.ExampleDomainDotCom
-  LetCodeDotIn.RadioButtonsAndCheckboxes
-  TheInternet.TheInternet
   
+  Dim WBT As WebBrowserType
+  For WBT = WebBrowserType.[_First] + 1 To WebBrowserType.[_Last] - 1
+    Factory.CurrentWebBrowserType = WBT
+    ExampleDomainDotCom.ExampleDomainDotCom
+    LetCodeDotIn.RadioButtonsAndCheckboxes
+    TheInternet.TheInternet
+  Next WBT
+
   Window.HighlightElements = False
   RunningAllExamples = False
 

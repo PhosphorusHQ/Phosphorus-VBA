@@ -28,7 +28,7 @@ Public Enum Exceptions
   PowerShellPipeClientPowerShellError = 100099
   
 'Windows Driver Launch Errors 20,000+
-  WindowsDriverUnhandledDriverType = 20001
+  pEssenceUnhandledWebBrowserType = 20001
   WindowsDriverUnhandledWebBrowserType = 20002
   WindowsDriverFailedToStartProgram = 20003
   WindowsDriverWindowsAppNotFound = 20004
@@ -116,7 +116,7 @@ Public Sub Raise(exception As Phosphorus.Exceptions, Optional parameter1 As Vari
    
     'Windows Driver Launch Errors
    
-    Case Exceptions.WindowsDriverUnhandledDriverType
+    Case Exceptions.pEssenceUnhandledWebBrowserType
       ExceptionName = "WindowsDriverUnhandledDriverType"
       ErrorDescription = "Unhandled Driver Type: " & parameter1
    

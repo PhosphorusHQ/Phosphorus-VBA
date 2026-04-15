@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "EdgeWebBrowser"
+Attribute VB_Name = "ChromeWebBrowser"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -27,31 +27,31 @@ Private Type BrowserAttributes
   MasterWindow As pLocator
   BrowserRootView As pLocator
   NonClientView As pLocator
-  EdgeBrowserFrameViewWin As pLocator
+  BrowserFrameViewWin As pLocator
   BrowserView As pLocator
   TopContainerView As pLocator
-  EdgeToolbarView As pLocator
+  ToolbarView As pLocator
   BackButton As pLocator
   LocationBarView As pLocator
   AddressAndSearchBar As pLocator
-  SidebarContentsSplitView As pLocator
+  BrowserViewSubView1 As pLocator
   RootWebArea As pLocator
 End Type
 
 Private This As BrowserAttributes
-  
+
 Private Sub Class_Initialize()
   Set This.MasterWindow = Factory.GetNewLocator
   Set This.BrowserRootView = Factory.GetNewLocator
   Set This.NonClientView = Factory.GetNewLocator
-  Set This.EdgeBrowserFrameViewWin = Factory.GetNewLocator
+  Set This.BrowserFrameViewWin = Factory.GetNewLocator
   Set This.BrowserView = Factory.GetNewLocator
   Set This.TopContainerView = Factory.GetNewLocator
-  Set This.EdgeToolbarView = Factory.GetNewLocator
+  Set This.ToolbarView = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
   Set This.LocationBarView = Factory.GetNewLocator
   Set This.AddressAndSearchBar = Factory.GetNewLocator
-  Set This.SidebarContentsSplitView = Factory.GetNewLocator
+  Set This.BrowserViewSubView1 = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
 End Sub
 
@@ -62,14 +62,14 @@ Private Sub Class_Terminate()
   Set This.MasterWindow = Nothing
   Set This.BrowserRootView = Nothing
   Set This.NonClientView = Nothing
-  Set This.EdgeBrowserFrameViewWin = Nothing
+  Set This.BrowserFrameViewWin = Nothing
   Set This.BrowserView = Nothing
   Set This.TopContainerView = Nothing
-  Set This.EdgeToolbarView = Nothing
+  Set This.ToolbarView = Nothing
   Set This.BackButton = Nothing
   Set This.LocationBarView = Nothing
   Set This.AddressAndSearchBar = Nothing
-  Set This.SidebarContentsSplitView = Nothing
+  Set This.BrowserViewSubView1 = Nothing
   Set This.RootWebArea = Nothing
 End Sub
 
@@ -78,7 +78,7 @@ Public Sub pWB_Start(WebAppName As String, URL As String, WebAppPageTitle As Str
   This.WebAppName = WebAppName
   This.URL = URL
   This.WebAppPageTitle = WebAppPageTitle
-  LaunchCommandByProtocol This.WebAppName, "microsoft-edge:", This.URL, WindowShowStates.Maximized
+  LaunchExecutable Phosphorus.WindowsExecutables.Chrome, "--force-renderer-accessibility " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
   This.AddressAndSearchBar.Find 10
   This.RootWebArea.Find 10
@@ -88,8 +88,8 @@ Private Sub InitialiseAllLocators()
 
   'Use: AscW & ChrW to determine embedded Unicode characters
   With This.MasterWindow
-    .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameLike, ControlType, ClassName, WindowInteractionState  )"
-    .Condition "NameLike", Name, IsLikeTheString, This.WebAppPageTitle & " - " & "*" & " - Microsoft" & ChrW(8203) & " Edge"
+    .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState  )"
+    .Condition "NameIs", Name, IsTheString, This.WebAppPageTitle & " - Google Chrome"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
     .Condition "ClassName", ClassName, IsTheString, "Chrome_WidgetWin_1"
     .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
@@ -105,13 +105,13 @@ Private Sub InitialiseAllLocators()
     .Condition "ClassName", ClassName, IsTheString, "NonClientView"
   End With
 
-  With This.EdgeBrowserFrameViewWin
-    .Initialise "EdgeBrowserFrameViewWin", This.NonClientView, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "EdgeBrowserFrameViewWin"
+  With This.BrowserFrameViewWin
+    .Initialise "BrowserFrameViewWin", This.NonClientView, Children, pConditions, "ClassName"
+    .Condition "ClassName", ClassName, IsTheString, "BrowserFrameViewWin"
   End With
 
   With This.BrowserView
-    .Initialise "BrowserView", This.EdgeBrowserFrameViewWin, Children, pConditions, "ClassName"
+    .Initialise "BrowserView", This.BrowserFrameViewWin, Children, pConditions, "ClassName"
     .Condition "ClassName", ClassName, IsTheString, "BrowserView"
   End With
 
@@ -121,19 +121,19 @@ Private Sub InitialiseAllLocators()
       .Condition "ClassName", ClassName, IsTheString, "TopContainerView"
     End With
   
-      With This.EdgeToolbarView
-        .Initialise "EdgeToolbarView", This.TopContainerView, Children, pConditions, "ClassName"
-        .Condition "ClassName", ClassName, IsTheString, "EdgeToolbarView"
+      With This.ToolbarView
+        .Initialise "ToolbarView", This.TopContainerView, Children, pConditions, "ClassName"
+        .Condition "ClassName", ClassName, IsTheString, "ToolbarView"
       End With
   
         With This.BackButton
-          .Initialise "BackButton", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, NameIs)"
+          .Initialise "BackButton", This.ToolbarView, Children, pConditions, "AND(ControlType, NameIs)"
           .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
           .Condition "NameIs", Name, IsTheString, "Back"
         End With
-  
+
         With This.LocationBarView
-          .Initialise "LocationBarView", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, ClassName)"
+          .Initialise "LocationBarView", This.ToolbarView, Children, pConditions, "AND(ControlType, ClassName)"
           .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Group
           .Condition "ClassName", ClassName, IsTheString, "LocationBarView"
         End With
@@ -145,13 +145,14 @@ Private Sub InitialiseAllLocators()
           End With
   
     'Second Pane Below Browser View
-    With This.SidebarContentsSplitView
-      .Initialise "SidebarContentsSplitView", This.BrowserView, Children, pConditions, "ClassName"
-      .Condition "ClassName", ClassName, IsTheString, "SidebarContentsSplitView"
+    With This.BrowserViewSubView1
+      .Initialise "BrowserViewSubView1", This.BrowserView, Children, pConditions, "AND(ClassName, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
+      .Condition "ClassName", ClassName, IsTheString, "View"
+      .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
     End With
 
       With This.RootWebArea
-        .Initialise "RootWebArea", This.SidebarContentsSplitView, Descendants, pConditions, "AutomationId", FindFirst:=True
+        .Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, pConditions, "AutomationId", FindFirst:=True
         .Condition "AutomationId", UIAProperties.AutomationId, IsTheString, "RootWebArea"
       End With
 
@@ -176,3 +177,29 @@ Public Sub pWB_NavigateBack()
   End With
 End Sub
 
+Public Sub AcknowledgeChangeYourPasswordAlert()
+  
+  Dim RootView As pLocator
+  Set RootView = Factory.GetNewLocator
+  With RootView
+    .Initialise "RootView", This.BrowserRootView, Children, pConditions, "ClassName"
+    .Condition "ClassName", ClassName, IsTheString, "RootView"
+    .ElementExists 10
+    .Find 10
+  End With
+  
+  Dim PasswordAlertOkButton As pLocator
+  Set PasswordAlertOkButton = Factory.GetNewLocator
+  With PasswordAlertOkButton
+    .Initialise "RootView", RootView, Descendants, pConditions, "AriaRole"
+    .Condition "AriaRole", AriaRole, IsTheString, "button"
+    .ElementExists 10
+    .Find 10
+    Actions.Click .Element
+    This.RootWebArea.Find 10, FindElementAgain:=True
+  End With
+  
+  Set RootView = Nothing
+  Set PasswordAlertOkButton = Nothing
+  
+End Sub

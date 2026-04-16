@@ -152,8 +152,7 @@ Private Sub InitialiseAllLocators()
     End With
 
       With This.RootWebArea
-        .Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, pConditions, "AutomationId", FindFirst:=True
-        .Condition "AutomationId", UIAProperties.AutomationId, IsTheString, "RootWebArea"
+        .Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
       End With
 
 End Sub

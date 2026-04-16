@@ -70,6 +70,10 @@ Public Sub Initialise( _
       This.FindBy = By.pConditions
       This.EvaluationLogic = "AutomationId"
       Condition This.EvaluationLogic, UIAProperties.AutomationId, UIAPropertyComparisons.IsTheString, EvaluationLogic
+    Case By.ClassName
+      This.FindBy = By.pConditions
+      This.EvaluationLogic = "ClassName"
+      Condition This.EvaluationLogic, UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, EvaluationLogic
     Case Else
       ErrorLogging.LogError Errors.FindElementUnhandledByInLocator, "Unhanded By Locator: " & UIACommon.GetByName(FindBy)
       Exit Sub
@@ -106,6 +110,10 @@ End Sub
 
 Public Sub NameIs(Name As String)
   Condition "NameIs", UIAProperties.Name, UIAPropertyComparisons.IsTheString, Name
+End Sub
+
+Public Sub ClassName(Name As String)
+  Condition "ClassName", UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, Name
 End Sub
 
 Public Sub ListAllConditions()
@@ -361,3 +369,19 @@ Public Function ElementDoesntExist(Optional TimeoutInSeconds As Long)
   ElementDoesntExist = Not ElementExists(TimeoutInSeconds)
 End Function
 
+Public Sub WaitForElementExists(TimeoutInSeconds As Long)
+
+  Dim EndTime As Date
+  EndTime = DateAdd("s", TimeoutInSeconds, Now)
+   
+  Dim PassedEndTime As Boolean
+  PassedEndTime = False
+  
+  While Not (ElementExists Or PassedEndTime)
+    PassedEndTime = (Now > EndTime)
+    If Not PassedEndTime Then
+      Snooze 100
+    End If
+  Wend
+
+End Sub

@@ -88,44 +88,22 @@ Private Sub InitialiseAllLocators()
 
   'Use: AscW & ChrW to determine embedded Unicode characters
   With This.MasterWindow
-    .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameLike, ControlType, ClassName, WindowInteractionState  )"
+    .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameLike, ControlType, ClassName, WindowInteractionState)"
     .Condition "NameLike", Name, IsLikeTheString, This.WebAppPageTitle & " - " & "*" & " - Microsoft" & ChrW(8203) & " Edge"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
-    .Condition "ClassName", ClassName, IsTheString, "Chrome_WidgetWin_1"
+    .ClassName "Chrome_WidgetWin_1"
     .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
   End With
 
-  With This.BrowserRootView
-    .Initialise "BrowserRootView", This.MasterWindow, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "BrowserRootView"
-  End With
-
-  With This.NonClientView
-    .Initialise "NonClientView", This.BrowserRootView, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "NonClientView"
-  End With
-
-  With This.EdgeBrowserFrameViewWin
-    .Initialise "EdgeBrowserFrameViewWin", This.NonClientView, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "EdgeBrowserFrameViewWin"
-  End With
-
-  With This.BrowserView
-    .Initialise "BrowserView", This.EdgeBrowserFrameViewWin, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "BrowserView"
-  End With
+  This.BrowserRootView.Initialise "BrowserRootView", This.MasterWindow, Children, By.ClassName, "BrowserRootView"
+  This.NonClientView.Initialise "NonClientView", This.BrowserRootView, Children, By.ClassName, "NonClientView"
+  This.EdgeBrowserFrameViewWin.Initialise "EdgeBrowserFrameViewWin", This.NonClientView, Children, By.ClassName, "EdgeBrowserFrameViewWin"
+  This.BrowserView.Initialise "BrowserView", This.EdgeBrowserFrameViewWin, Children, By.ClassName, "BrowserView"
 
     'First Pane Below Browser View
-    With This.TopContainerView
-      .Initialise "TopContainerView", This.BrowserView, Children, pConditions, "ClassName"
-      .Condition "ClassName", ClassName, IsTheString, "TopContainerView"
-    End With
-  
-      With This.EdgeToolbarView
-        .Initialise "EdgeToolbarView", This.TopContainerView, Children, pConditions, "ClassName"
-        .Condition "ClassName", ClassName, IsTheString, "EdgeToolbarView"
-      End With
-  
+    This.TopContainerView.Initialise "TopContainerView", This.BrowserView, Children, By.ClassName, "TopContainerView"
+      This.EdgeToolbarView.Initialise "EdgeToolbarView", This.TopContainerView, Children, By.ClassName, "EdgeToolbarView"
+
         With This.BackButton
           .Initialise "BackButton", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, NameIs)"
           .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
@@ -135,7 +113,7 @@ Private Sub InitialiseAllLocators()
         With This.LocationBarView
           .Initialise "LocationBarView", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, ClassName)"
           .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Group
-          .Condition "ClassName", ClassName, IsTheString, "LocationBarView"
+          .ClassName "LocationBarView"
         End With
   
           With This.AddressAndSearchBar
@@ -146,8 +124,7 @@ Private Sub InitialiseAllLocators()
   
     'Second Pane Below Browser View
     With This.SidebarContentsSplitView
-      .Initialise "SidebarContentsSplitView", This.BrowserView, Children, pConditions, "ClassName"
-      .Condition "ClassName", ClassName, IsTheString, "SidebarContentsSplitView"
+      .Initialise "SidebarContentsSplitView", This.BrowserView, Children, By.ClassName, "SidebarContentsSplitView"
     End With
 
       With This.RootWebArea

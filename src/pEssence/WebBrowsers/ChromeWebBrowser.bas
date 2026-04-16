@@ -88,43 +88,25 @@ Private Sub InitialiseAllLocators()
 
   'Use: AscW & ChrW to determine embedded Unicode characters
   With This.MasterWindow
-    .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState  )"
+    .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState)"
     .NameIs This.WebAppPageTitle & " - Google Chrome"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
-    .Condition "ClassName", ClassName, IsTheString, "Chrome_WidgetWin_1"
+    .ClassName "Chrome_WidgetWin_1"
     .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
   End With
 
   With This.BrowserRootView
-    .Initialise "BrowserRootView", This.MasterWindow, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "BrowserRootView"
+    .Initialise "BrowserRootView", This.MasterWindow, Children, By.ClassName, "BrowserRootView"
   End With
 
-  With This.NonClientView
-    .Initialise "NonClientView", This.BrowserRootView, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "NonClientView"
-  End With
-
-  With This.BrowserFrameViewWin
-    .Initialise "BrowserFrameViewWin", This.NonClientView, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "BrowserFrameViewWin"
-  End With
-
-  With This.BrowserView
-    .Initialise "BrowserView", This.BrowserFrameViewWin, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "BrowserView"
-  End With
+  This.NonClientView.Initialise "NonClientView", This.BrowserRootView, Children, By.ClassName, "NonClientView"
+  This.BrowserFrameViewWin.Initialise "BrowserFrameViewWin", This.NonClientView, Children, By.ClassName, "BrowserFrameViewWin"
+  This.BrowserView.Initialise "BrowserView", This.BrowserFrameViewWin, Children, By.ClassName, "BrowserView"
 
     'First Pane Below Browser View
-    With This.TopContainerView
-      .Initialise "TopContainerView", This.BrowserView, Children, pConditions, "ClassName"
-      .Condition "ClassName", ClassName, IsTheString, "TopContainerView"
-    End With
+    This.TopContainerView.Initialise "TopContainerView", This.BrowserView, Children, By.ClassName, "TopContainerView"
   
-      With This.ToolbarView
-        .Initialise "ToolbarView", This.TopContainerView, Children, pConditions, "ClassName"
-        .Condition "ClassName", ClassName, IsTheString, "ToolbarView"
-      End With
+    This.ToolbarView.Initialise "ToolbarView", This.TopContainerView, Children, By.ClassName, "ToolbarView"
   
         With This.BackButton
           .Initialise "BackButton", This.ToolbarView, Children, pConditions, "AND(ControlType, NameIs)"
@@ -135,7 +117,7 @@ Private Sub InitialiseAllLocators()
         With This.LocationBarView
           .Initialise "LocationBarView", This.ToolbarView, Children, pConditions, "AND(ControlType, ClassName)"
           .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Group
-          .Condition "ClassName", ClassName, IsTheString, "LocationBarView"
+          .ClassName "LocationBarView"
         End With
   
           With This.AddressAndSearchBar
@@ -147,13 +129,11 @@ Private Sub InitialiseAllLocators()
     'Second Pane Below Browser View
     With This.BrowserViewSubView1
       .Initialise "BrowserViewSubView1", This.BrowserView, Children, pConditions, "AND(ClassName, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-      .Condition "ClassName", ClassName, IsTheString, "View"
+      .ClassName "View"
       .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
     End With
 
-      With This.RootWebArea
-        .Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
-      End With
+      This.RootWebArea.Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
 
 End Sub
 
@@ -177,16 +157,15 @@ Public Sub pWB_NavigateBack()
 End Sub
 
 Public Sub AcknowledgeChangeYourPasswordAlert()
-  
+    
   Dim RootView As pLocator
   Set RootView = Factory.GetNewLocator
   With RootView
-    .Initialise "RootView", This.BrowserRootView, Children, pConditions, "ClassName"
-    .Condition "ClassName", ClassName, IsTheString, "RootView"
-    .ElementExists 10
+    .Initialise "RootView", This.BrowserRootView, Children, By.ClassName, "RootView"
+    .WaitForElementExists 10
     .Find 10
   End With
-  
+   
   Dim PasswordAlertOkButton As pLocator
   Set PasswordAlertOkButton = Factory.GetNewLocator
   With PasswordAlertOkButton

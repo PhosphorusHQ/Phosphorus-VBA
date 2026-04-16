@@ -270,7 +270,7 @@ Private Sub FormAuthentication_Login()
   With SubHeader
     .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRole, ClassName, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Heading
-    .Condition "ClassName", ClassName, IsTheString, "subheader"
+    .ClassName "subheader"
     .NameIs "This is where you can log into the secure area. Enter tomsmith for the username and SuperSecretPassword! for the password. If the information is wrong you should see error messages."
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
     Debug.Assert .ElementExists(5)
@@ -394,7 +394,7 @@ Private Sub FormAuthentication_Secure()
   With SubHeader
     .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRole, ClassName, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Heading
-    .Condition "ClassName", ClassName, IsTheString, "subheader"
+    .ClassName "subheader"
     .NameIs "Welcome to the Secure Area. When you are done click logout below."
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
     Debug.Assert .ElementExists(0)

@@ -17,6 +17,7 @@ Public RootDesktopUIAElement As IUIAutomationElement
 Public Enum By
   pConditions
   AutomationId
+  ClassName
 End Enum
 
 Public Enum UIAPropertyComparisons

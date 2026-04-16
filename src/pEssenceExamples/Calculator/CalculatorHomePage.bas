@@ -62,7 +62,7 @@ Private Sub InitialiseAllLocators()
     'We can't use just 'Name' as this appears in 'ClassName'!
     .NameIs "Calculator"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
-    .Condition "ClassName", ClassName, IsTheString, "ApplicationFrameWindow"
+    .ClassName "ApplicationFrameWindow"
     .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
   End With
         
@@ -70,7 +70,7 @@ Private Sub InitialiseAllLocators()
     .Initialise "MainCalculatorSubWindow", This.MasterWindow, Children, pConditions, "AND(NameIs, ControlType, ClassName)"
     .NameIs "Calculator"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
-    .Condition "ClassName", ClassName, IsTheString, "Windows.UI.Core.CoreWindow"
+    .ClassName "Windows.UI.Core.CoreWindow"
   End With
 
   With This.NavigationViewRootCustomControl
@@ -83,7 +83,7 @@ Private Sub InitialiseAllLocators()
     .Condition "NameIsOpen", Name, IsTheString, "Open Navigation"
     .Condition "NameIsClose", Name, IsTheString, "Close Navigation"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
-    .Condition "ClassName", ClassName, IsTheString, "Button"
+    .ClassName "Button"
   End With
         
 End Sub
@@ -132,7 +132,7 @@ Public Function GetCurrentCalculatorLandmarkGroupControl() As pLocator
     .Initialise "CurrentCalculatorLandmarkGroupControl", This.NavigationViewRootCustomControl, Children, pConditions, _
       "AND(ControlType, ClassName)"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Group
-    .Condition "ClassName", ClassName, IsTheString, "LandmarkTarget"
+    .ClassName "LandmarkTarget"
   End With
   
   Set GetCurrentCalculatorLandmarkGroupControl = This.CurrentCalculatorLandmarkGroupControl

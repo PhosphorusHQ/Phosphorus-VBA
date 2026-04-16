@@ -18,7 +18,7 @@ Sub ExampleDomainDotCom()
 
   If Not RunningAllExamples Then
     Window.HighlightElements = True
-    Factory.CurrentWebBrowserType = Edge
+    Factory.CurrentWebBrowserType = 1
   End If
   
   Set ExampleDomain = New ExampleDomainDotComPage

@@ -18,7 +18,7 @@ Sub TheInternet()
 
   If Not RunningAllExamples Then
     Window.HighlightElements = True
-    Factory.CurrentWebBrowserType = Chrome
+    Factory.CurrentWebBrowserType = 1
   End If
   
   Set The_Internet = New TheInternetPage

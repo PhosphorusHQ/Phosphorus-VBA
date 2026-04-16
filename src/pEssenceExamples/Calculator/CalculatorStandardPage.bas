@@ -227,7 +227,7 @@ Public Sub FindAllControls(HomePage As CalculatorHomePage)
   With This.DisplaySearch
     .Initialise This.DisplayTextControl, CurrentCalculatorLandmarkGroupControl, Descendants, pConditions, "AND(ControlType, AutomationId)"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Text
-    .Condition "AutomationId", UIAProperties.AutomationId, IsTheString, "CalculatorResults"
+    .AutomationId "CalculatorResults"
   End With
 
 End Sub

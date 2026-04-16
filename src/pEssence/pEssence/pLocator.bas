@@ -100,6 +100,10 @@ Public Sub Condition( _
   
 End Sub
 
+Public Sub AutomationId(ID As String)
+  Condition "AutomationId", UIAProperties.AutomationId, UIAPropertyComparisons.IsTheString, ID
+End Sub
+
 Public Sub ListAllConditions()
   Dim k As Variant
   For Each k In This.AllSearchConditions.Keys

@@ -229,7 +229,7 @@ End Function
 Private Function TryLegacyIAccessibleDefaultAction(Element As pElement) As Boolean
   On Error GoTo Finish
   TryLegacyIAccessibleDefaultAction = False
-  If GetPatternPreChecks2(Element, ListItem, IsLegacyIAccessiblePatternAvailable) Then
+  If GetPatternPreChecks2(Element, UIAControlTypeIDs.ListItem, IsLegacyIAccessiblePatternAvailable) Then
     Dim Pattern As IUIAutomationLegacyIAccessiblePattern
     Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessiblePattern)
     Pattern.DoDefaultAction
@@ -242,7 +242,7 @@ End Function
 Private Function TryLegacyIAccessiblePatternSelect(Element As pElement, Flags As Integer)
   On Error GoTo Finish
   TryLegacyIAccessiblePatternSelect = False
-  If GetPatternPreChecks2(Element, ListItem, IsLegacyIAccessiblePatternAvailable) Then
+  If GetPatternPreChecks2(Element, UIAControlTypeIDs.ListItem, IsLegacyIAccessiblePatternAvailable) Then
     Dim Pattern As IUIAutomationLegacyIAccessiblePattern
     Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessiblePattern)
     Pattern.Select Flags

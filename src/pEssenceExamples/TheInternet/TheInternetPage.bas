@@ -289,8 +289,7 @@ Private Sub FormAuthentication_Login()
   Dim UsernameTextBox As pLocator
   Set UsernameTextBox = Factory.GetNewLocator
   With UsernameTextBox
-    .Initialise "UsernameTextBox", This.RootWebArea, Children, pConditions, "AND(AutomationId, AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .Condition "AutomationId", UIAProperties.AutomationId, IsTheString, "username"
+    .Initialise "UsernameTextBox", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.TextBox
     .Condition "NameIs", Name, IsTheString, "Username"
     '.Condition "LabeledBy", LabeledBy, IsTheString, "Username" ' This returns an element!

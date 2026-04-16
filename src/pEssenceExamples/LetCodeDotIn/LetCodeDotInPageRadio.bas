@@ -94,8 +94,8 @@ Public Sub Initialize()
   End With
   
   With This.GroupControl
-    .Initialise "GroupControl", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs)"
-    .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Group
+    .Initialise "GroupControl", This.RootWebArea, Children, pConditions, "AND(AriaRoleGroup, NameIs)"
+    .AriaRoleGroup
     .NameIs ""
     .Find
   End With
@@ -109,19 +109,13 @@ Public Sub Initialize()
           "NOT(AND(AriaRoleDescription, OR(NameIsYes, NameIsNo!, NameIsFoo, NameIsBar, NameIsGoing, NameIsNotGoing, NameIsMaybe, NameIsRememberMe)))," & _
           "NOT(AND(AriaRoleHeading, NameIsTopics))" & _
          ")"
-    .Condition "AriaRoleHeading", AriaRole, IsTheString, AriaRoles.Heading
-    .Condition "AriaRoleDescription", AriaRole, IsTheString, AriaRoles.Description
-    .Condition "AriaRoleRadio", AriaRole, IsTheString, AriaRoles.Radio
-    .Condition "AriaRoleCheckBox", AriaRole, IsTheString, AriaRoles.CheckBox
-    .Condition "NameIsYes", Name, IsTheString, " Yes" 'NB: The text boxes start with a space!
-    .Condition "NameIsNo!", Name, IsTheString, " No" 'NB: We have to be careful that no condition name contains any other!?
-    .Condition "NameIsFoo", Name, IsTheString, " Foo"
-    .Condition "NameIsBar", Name, IsTheString, " Bar"
-    .Condition "NameIsGoing", Name, IsTheString, " Going"
-    .Condition "NameIsNotGoing", Name, IsTheString, " Not going"
-    .Condition "NameIsMaybe", Name, IsTheString, " Maybe"
-    .Condition "NameIsRememberMe", Name, IsTheString, " Remember me"
-    .Condition "NameIsTopics", Name, IsTheString, "These are topics related to the article that might interest you"
+    .AriaRoleHeading: .AriaRoleDescription: .AriaRoleRadio: .AriaRoleCheckBox
+    .NameIs_ " Yes" 'NB: The text boxes start with a space!
+    .NameIs_ " No", "No!" 'NB: We have to be careful that no condition name contains any other!?
+    .NameIs_ " Foo": .NameIs_ " Bar"
+    .NameIs_ " Going": .NameIs_ " Not going", "NotGoing": .NameIs_ " Maybe"
+    .NameIs_ " Remember me", "RememberMe"
+    .NameIs_ "These are topics related to the article that might interest you", "Topics"
     .FindAll False
     AllControls = .Elements
   End With

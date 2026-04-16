@@ -109,28 +109,21 @@ Private Sub InitialiseAllLocators()
     This.ToolbarView.Initialise "ToolbarView", This.TopContainerView, Children, By.ClassName, "ToolbarView"
   
         With This.BackButton
-          .Initialise "BackButton", This.ToolbarView, Children, pConditions, "AND(ControlType, NameIs)"
-          .ControlType UIAControlTypeIDs.Button
-          .NameIs "Back"
+          .Initialise "BackButton", This.ToolbarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
         End With
 
         With This.LocationBarView
-          .Initialise "LocationBarView", This.ToolbarView, Children, pConditions, "AND(ControlType, ClassName)"
-          .ControlType UIAControlTypeIDs.Group
-          .ClassName "LocationBarView"
+          .Initialise "LocationBarView", This.ToolbarView, Children, pConditions, "AND(ControlType, ClassName)": .ControlType UIAControlTypeIDs.Group: .ClassName "LocationBarView"
         End With
   
           With This.AddressAndSearchBar
-            .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)"
-            .ControlType UIAControlTypeIDs.Edit
-            .NameIs "Address and search bar"
+            .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
           End With
   
     'Second Pane Below Browser View
     With This.BrowserViewSubView1
       .Initialise "BrowserViewSubView1", This.BrowserView, Children, pConditions, "AND(ClassName, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-      .ClassName "View"
-      .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
+      .ClassName "View": .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
     End With
 
       This.RootWebArea.Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
@@ -157,20 +150,20 @@ Public Sub pWB_NavigateBack()
 End Sub
 
 Public Sub AcknowledgeChangeYourPasswordAlert()
-    
+
+  Snooze 1000
+  
   Dim RootView As pLocator
   Set RootView = Factory.GetNewLocator
   With RootView
     .Initialise "RootView", This.BrowserRootView, Children, By.ClassName, "RootView"
-    .WaitForElementExists 10
-    .Find 10
+    .WaitForElementExists 10:  .Find 10
   End With
    
   Dim PasswordAlertOkButton As pLocator
   Set PasswordAlertOkButton = Factory.GetNewLocator
   With PasswordAlertOkButton
-    .Initialise "RootView", RootView, Descendants, pConditions, "AriaRole"
-    .Condition "AriaRole", AriaRole, IsTheString, "button"
+    .Initialise "RootView", RootView, Descendants, By.AriaRole, AriaRoles.Button
     .ElementExists 10
     .Find 10
     Actions.Click .Element

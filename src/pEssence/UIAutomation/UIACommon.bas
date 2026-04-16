@@ -16,6 +16,7 @@ Public RootDesktopUIAElement As IUIAutomationElement
 
 Public Enum By
   pConditions
+  AriaRole
   AutomationId
   ClassName
   ControlType

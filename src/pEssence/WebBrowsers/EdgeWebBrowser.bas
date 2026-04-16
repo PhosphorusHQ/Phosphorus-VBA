@@ -105,21 +105,15 @@ Private Sub InitialiseAllLocators()
       This.EdgeToolbarView.Initialise "EdgeToolbarView", This.TopContainerView, Children, By.ClassName, "EdgeToolbarView"
 
         With This.BackButton
-          .Initialise "BackButton", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, NameIs)"
-          .ControlType UIAControlTypeIDs.Button
-          .NameIs "Back"
+          .Initialise "BackButton", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
         End With
   
         With This.LocationBarView
-          .Initialise "LocationBarView", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, ClassName)"
-          .ControlType UIAControlTypeIDs.Group
-          .ClassName "LocationBarView"
+          .Initialise "LocationBarView", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, ClassName)": .ControlType UIAControlTypeIDs.Group: .ClassName "LocationBarView"
         End With
   
           With This.AddressAndSearchBar
-            .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)"
-            .ControlType UIAControlTypeIDs.Edit
-            .NameIs "Address and search bar"
+            .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
           End With
   
     'Second Pane Below Browser View

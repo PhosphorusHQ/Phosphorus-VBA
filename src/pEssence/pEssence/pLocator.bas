@@ -66,6 +66,10 @@ Public Sub Initialise( _
     Case By.pConditions
       This.FindBy = FindBy
       This.EvaluationLogic = EvaluationLogic
+    Case By.AriaRole
+      This.FindBy = By.pConditions
+      This.EvaluationLogic = "AriaRole"
+      Condition This.EvaluationLogic, UIAProperties.AriaRole, UIAPropertyComparisons.IsTheString, EvaluationLogic
     Case By.AutomationId
       This.FindBy = By.pConditions
       This.EvaluationLogic = "AutomationId"
@@ -108,6 +112,55 @@ Public Sub Condition( _
   
 End Sub
 
+Public Sub AriaRole(Role As String, Optional ConditionName As String)
+  If ConditionName = "" Then: ConditionName = "AriaRole"
+  Condition ConditionName, UIAProperties.AriaRole, UIAPropertyComparisons.IsTheString, Role
+End Sub
+
+Public Sub AriaRoleBanner()
+  AriaRole AriaRoles.Banner, "AriaRoleBanner"
+End Sub
+
+Public Sub AriaRoleButton()
+  AriaRole AriaRoles.Button, "AriaRoleButton"
+End Sub
+
+Public Sub AriaRoleCheckBox()
+  AriaRole AriaRoles.CheckBox, "AriaRoleCheckBox"
+End Sub
+
+Public Sub AriaRoleDescription()
+  AriaRole AriaRoles.Description, "AriaRoleDescription"
+End Sub
+
+Public Sub AriaRoleGroup()
+  AriaRole AriaRoles.Group, "AriaRoleGroup"
+End Sub
+
+Public Sub AriaRoleHeading()
+  AriaRole AriaRoles.Heading, "AriaRoleHeading"
+End Sub
+
+Public Sub AriaRoleLink()
+  AriaRole AriaRoles.Link, "AriaRoleLink"
+End Sub
+
+Public Sub AriaRoleList()
+  AriaRole AriaRoles.List, "AriaRoleList"
+End Sub
+
+Public Sub AriaRoleListItem()
+  AriaRole AriaRoles.ListItem, "AriaRoleListItem"
+End Sub
+
+Public Sub AriaRoleRadio()
+  AriaRole AriaRoles.Radio, "AriaRoleRadio"
+End Sub
+
+Public Sub AriaRoleTextBox()
+  AriaRole AriaRoles.TextBox, "AriaRoleTextBox"
+End Sub
+
 Public Sub AutomationId(ID As String)
   Condition "AutomationId", UIAProperties.AutomationId, UIAPropertyComparisons.IsTheString, ID
 End Sub
@@ -122,6 +175,12 @@ End Sub
 
 Public Sub NameIs(Name As String)
   Condition "NameIs", UIAProperties.Name, UIAPropertyComparisons.IsTheString, Name
+End Sub
+
+Public Sub NameIs_(Name As String, Optional ConditionNameSuffix As String)
+  Dim ConditionName As String
+  If ConditionNameSuffix = "" Then: ConditionName = "NameIs" & VBA.Replace(Name, " ", ""): Else: ConditionName = "NameIs" & ConditionNameSuffix
+  Condition ConditionName, UIAProperties.Name, UIAPropertyComparisons.IsTheString, Name
 End Sub
 
 Public Sub ListAllConditions()

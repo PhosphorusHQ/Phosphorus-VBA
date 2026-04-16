@@ -96,7 +96,7 @@ Public Sub Initialize()
   With This.GroupControl
     .Initialise "GroupControl", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs)"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Group
-    .Condition "NameIs", Name, IsTheString, ""
+    .NameIs ""
     .Find
   End With
   

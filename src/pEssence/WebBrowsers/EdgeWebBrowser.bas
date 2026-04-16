@@ -129,7 +129,7 @@ Private Sub InitialiseAllLocators()
         With This.BackButton
           .Initialise "BackButton", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, NameIs)"
           .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
-          .Condition "NameIs", Name, IsTheString, "Back"
+          .NameIs "Back"
         End With
   
         With This.LocationBarView
@@ -141,7 +141,7 @@ Private Sub InitialiseAllLocators()
           With This.AddressAndSearchBar
             .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)"
             .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Edit
-            .Condition "NameIs", Name, IsTheString, "Address and search bar"
+            .NameIs "Address and search bar"
           End With
   
     'Second Pane Below Browser View

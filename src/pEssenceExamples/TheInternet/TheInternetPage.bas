@@ -60,21 +60,21 @@ Public Sub Initialize()
   With This.ForkMe
     .Initialise "ForkMe", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Link
-    .Condition "NameIs", Name, IsTheString, "Fork me on GitHub"
+    .NameIs "Fork me on GitHub"
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 1
   End With
   
   With This.HomePageHeading1
     .Initialise "Heading1", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Heading
-    .Condition "NameIs", Name, IsTheString, "Welcome to the-internet"
+    .NameIs "Welcome to the-internet"
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
   End With
 
   With This.HomePageHeading2
     .Initialise "Heading1", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Heading
-    .Condition "NameIs", Name, IsTheString, "Available Examples"
+    .NameIs "Available Examples"
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
   End With
 
@@ -97,14 +97,14 @@ Public Sub RunHomePageChecks()
   Debug.Assert This.ListOfExamples.Element.GetProperty(SizeOfSet) = 44
 End Sub
 
-Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText)
+Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText As String)
     
   Dim ListItem As pLocator
   Set ListItem = Factory.GetNewLocator
   With ListItem
     .Initialise "ListItem", This.ListOfExamples, Children, pConditions, "AND(AriaRole, NameIs)"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.ListItem
-    .Condition "NameIs", Name, IsTheString, ItemName
+    .NameIs ItemName
     .Find 10
   End With
   
@@ -113,7 +113,7 @@ Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText)
   With ListItemHyperlink
     .Initialise "ListItemHyperlink", ListItem, Children, pConditions, "AND(AriaRole, NameIs)"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Link
-    .Condition "NameIs", Name, IsTheString, ItemName
+    .NameIs ItemName
     .Find 10
   End With
   
@@ -128,7 +128,7 @@ Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText)
   Debug.Assert This.HomePageHeading2.ElementDoesntExist(0)
   Debug.Assert This.ListOfExamples.ElementDoesntExist(0)
       
-  If IsMissing(SubPageHeadingText) Then
+  If SubPageHeadingText = "" Then
     SubPageHeadingText = ItemName
   End If
   
@@ -137,7 +137,7 @@ Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText)
   With SubPageHeading
     .Initialise "SubPageHeading", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Heading
-    .Condition "NameIs", Name, IsTheString, SubPageHeadingText
+    .NameIs SubPageHeadingText
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
     Debug.Assert .ElementExists(2)
   End With
@@ -163,7 +163,7 @@ Public Sub Checkboxes()
   With FirstCheckboxDescription
     .Initialise "FirstCheckboxDescription", This.RootWebArea, Children, pConditions, "AND(AriaRole, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ", NameIs)"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Description
-    .Condition "NameIs", Name, IsTheString, " checkbox 1"
+    .NameIs " checkbox 1"
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 4
     .Find 10
   End With
@@ -182,7 +182,7 @@ Public Sub Checkboxes()
   With SecondCheckboxDescription
     .Initialise "FirstCheckboxDescription", This.RootWebArea, Children, pConditions, "AND(AriaRole, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ", NameIs)"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Description
-    .Condition "NameIs", Name, IsTheString, " checkbox 2"
+    .NameIs " checkbox 2"
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 7
     .Find 10
   End With
@@ -271,7 +271,7 @@ Private Sub FormAuthentication_Login()
     .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRole, ClassName, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Heading
     .Condition "ClassName", ClassName, IsTheString, "subheader"
-    .Condition "NameIs", Name, IsTheString, "This is where you can log into the secure area. Enter tomsmith for the username and SuperSecretPassword! for the password. If the information is wrong you should see error messages."
+    .NameIs "This is where you can log into the secure area. Enter tomsmith for the username and SuperSecretPassword! for the password. If the information is wrong you should see error messages."
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
     Debug.Assert .ElementExists(5)
   End With
@@ -281,7 +281,7 @@ Private Sub FormAuthentication_Login()
   With UsernameLabel
     .Initialise "UsernameLabel", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Description
-    .Condition "NameIs", Name, IsTheString, "Username"
+    .NameIs "Username"
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 4
     Debug.Assert .ElementExists(0)
   End With
@@ -291,7 +291,7 @@ Private Sub FormAuthentication_Login()
   With UsernameTextBox
     .Initialise "UsernameTextBox", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.TextBox
-    .Condition "NameIs", Name, IsTheString, "Username"
+    .NameIs "Username"
     '.Condition "LabeledBy", LabeledBy, IsTheString, "Username" ' This returns an element!
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 5
     Debug.Assert .ElementExists(0)
@@ -302,7 +302,7 @@ Private Sub FormAuthentication_Login()
   With PasswordLabel
     .Initialise "PasswordLabel", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Description
-    .Condition "NameIs", Name, IsTheString, "Password"
+    .NameIs "Password"
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 6
     Debug.Assert .ElementExists(0)
   End With
@@ -312,7 +312,7 @@ Private Sub FormAuthentication_Login()
   With PasswordTextBox
     .Initialise "FirstItem", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.TextBox
-    .Condition "NameIs", Name, IsTheString, "Password"
+    .NameIs "Password"
     '.Condition "LabeledBy", LabeledBy, IsTheString, "Password" ' This returns an element!
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 7
     Debug.Assert .ElementExists(0)
@@ -358,7 +358,7 @@ Private Sub FormAuthentication_Secure()
   With SecureMesssage
     .Initialise "SecureMesssage", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Description
-    .Condition "NameIs", Name, IsTheString, " You logged into a secure area!"
+    .NameIs " You logged into a secure area!"
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
     Debug.Assert .ElementExists(5)
   End With
@@ -368,7 +368,7 @@ Private Sub FormAuthentication_Secure()
   With SecureMesssageHyperlink
     .Initialise "SecureMesssageHyperlink", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Link
-    .Condition "NameIs", Name, IsTheString, "×"
+    .NameIs "×"
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
     Debug.Assert .ElementExists(0)
   End With
@@ -384,7 +384,7 @@ Private Sub FormAuthentication_Secure()
   With Heading
     .Initialise "Heading", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Heading
-    .Condition "NameIs", Name, IsTheString, "Secure Area"
+    .NameIs "Secure Area"
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
     Debug.Assert .ElementExists(5)
   End With
@@ -395,7 +395,7 @@ Private Sub FormAuthentication_Secure()
     .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRole, ClassName, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Heading
     .Condition "ClassName", ClassName, IsTheString, "subheader"
-    .Condition "NameIs", Name, IsTheString, "Welcome to the Secure Area. When you are done click logout below."
+    .NameIs "Welcome to the Secure Area. When you are done click logout below."
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
     Debug.Assert .ElementExists(0)
   End With
@@ -405,7 +405,7 @@ Private Sub FormAuthentication_Secure()
   With Logout
     .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRole, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
     .Condition "AriaRole", AriaRole, IsTheString, AriaRoles.Link
-    .Condition "NameIs", Name, IsTheString, "Logout"
+    .NameIs "Logout"
     .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 4
     Debug.Assert .ElementExists(0)
   End With

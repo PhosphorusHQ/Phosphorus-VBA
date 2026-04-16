@@ -60,7 +60,7 @@ Private Sub InitialiseAllLocators()
   With This.MasterWindow
     .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState)"
     'We can't use just 'Name' as this appears in 'ClassName'!
-    .Condition "NameIs", Name, IsTheString, "Calculator"
+    .NameIs "Calculator"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
     .Condition "ClassName", ClassName, IsTheString, "ApplicationFrameWindow"
     .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
@@ -68,7 +68,7 @@ Private Sub InitialiseAllLocators()
         
   With This.MainCalculatorSubWindow
     .Initialise "MainCalculatorSubWindow", This.MasterWindow, Children, pConditions, "AND(NameIs, ControlType, ClassName)"
-    .Condition "NameIs", Name, IsTheString, "Calculator"
+    .NameIs "Calculator"
     .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
     .Condition "ClassName", ClassName, IsTheString, "Windows.UI.Core.CoreWindow"
   End With

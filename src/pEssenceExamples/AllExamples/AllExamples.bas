@@ -17,7 +17,7 @@ Public Sub AllExamples()
   RunningAllExamples = True
   Window.HighlightElements = False
 
-'  Calculator.Calculator
+  Calculator.Calculator
 
   Dim WBT As WebBrowserType
   For WBT = WebBrowserType.[_First] + 1 To WebBrowserType.[_Last] - 1

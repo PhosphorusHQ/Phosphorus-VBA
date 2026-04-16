@@ -18,6 +18,7 @@ Public Enum By
   pConditions
   AutomationId
   ClassName
+  ControlType
 End Enum
 
 Public Enum UIAPropertyComparisons

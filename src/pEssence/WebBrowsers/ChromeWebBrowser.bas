@@ -90,7 +90,7 @@ Private Sub InitialiseAllLocators()
   With This.MasterWindow
     .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState)"
     .NameIs This.WebAppPageTitle & " - Google Chrome"
-    .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
+    .ControlType UIAControlTypeIDs.Window
     .ClassName "Chrome_WidgetWin_1"
     .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
   End With
@@ -110,19 +110,19 @@ Private Sub InitialiseAllLocators()
   
         With This.BackButton
           .Initialise "BackButton", This.ToolbarView, Children, pConditions, "AND(ControlType, NameIs)"
-          .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
+          .ControlType UIAControlTypeIDs.Button
           .NameIs "Back"
         End With
 
         With This.LocationBarView
           .Initialise "LocationBarView", This.ToolbarView, Children, pConditions, "AND(ControlType, ClassName)"
-          .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Group
+          .ControlType UIAControlTypeIDs.Group
           .ClassName "LocationBarView"
         End With
   
           With This.AddressAndSearchBar
             .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)"
-            .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Edit
+            .ControlType UIAControlTypeIDs.Edit
             .NameIs "Address and search bar"
           End With
   

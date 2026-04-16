@@ -112,7 +112,7 @@ Public Sub FindAllControls(HomePage As CalculatorHomePage)
   Dim CalculatorControls() As pElement
   With This.CalculatorControls
     .Initialise "CalculatorControls", CurrentCalculatorLandmarkGroupControl, Descendants, pConditions, "AND(ControlType, ClassName)"
-    .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
+    .ControlType UIAControlTypeIDs.Button
     .ClassName "Button"
     .FindAll
   End With
@@ -226,7 +226,7 @@ Public Sub FindAllControls(HomePage As CalculatorHomePage)
   This.Elements.Add This.DisplayTextControl, Nothing
   With This.DisplaySearch
     .Initialise This.DisplayTextControl, CurrentCalculatorLandmarkGroupControl, Descendants, pConditions, "AND(ControlType, AutomationId)"
-    .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Text
+    .ControlType UIAControlTypeIDs.Text
     .AutomationId "CalculatorResults"
   End With
 

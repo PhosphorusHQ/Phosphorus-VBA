@@ -61,7 +61,7 @@ Private Sub InitialiseAllLocators()
     .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState)"
     'We can't use just 'Name' as this appears in 'ClassName'!
     .NameIs "Calculator"
-    .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
+    .ControlType UIAControlTypeIDs.Window
     .ClassName "ApplicationFrameWindow"
     .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
   End With
@@ -69,7 +69,7 @@ Private Sub InitialiseAllLocators()
   With This.MainCalculatorSubWindow
     .Initialise "MainCalculatorSubWindow", This.MasterWindow, Children, pConditions, "AND(NameIs, ControlType, ClassName)"
     .NameIs "Calculator"
-    .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Window
+    .ControlType UIAControlTypeIDs.Window
     .ClassName "Windows.UI.Core.CoreWindow"
   End With
 
@@ -82,7 +82,7 @@ Private Sub InitialiseAllLocators()
       "AND(OR(NameIsOpen,NameIsClose), ControlType, ClassName)"
     .Condition "NameIsOpen", Name, IsTheString, "Open Navigation"
     .Condition "NameIsClose", Name, IsTheString, "Close Navigation"
-    .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Button
+    .ControlType UIAControlTypeIDs.Button
     .ClassName "Button"
   End With
         
@@ -113,9 +113,9 @@ Private Function GetMenuElement(CalculatorType As String) As pElement
   Dim CurrentNavigationMenuItemElementSearch As pLocator
   Set CurrentNavigationMenuItemElementSearch = Factory.GetNewLocator
   With CurrentNavigationMenuItemElementSearch
-    .Initialise CalculatorType, This.NavigationMenuRootPaneWindow, Descendants, pConditions, "AND(Name, ControlType)"
-    .Condition "Name", Name, IsTheString, CalculatorType
-    .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.ListItem
+    .Initialise CalculatorType, This.NavigationMenuRootPaneWindow, Descendants, pConditions, "AND(NameIs, ControlType)"
+    .NameIs CalculatorType
+    .ControlType UIAControlTypeIDs.ListItem
     .Find (10) 'We need to find this before the next action on it!
     Set GetMenuElement = CurrentNavigationMenuItemElementSearch.Element
   End With
@@ -131,7 +131,7 @@ Public Function GetCurrentCalculatorLandmarkGroupControl() As pLocator
   With This.CurrentCalculatorLandmarkGroupControl
     .Initialise "CurrentCalculatorLandmarkGroupControl", This.NavigationViewRootCustomControl, Children, pConditions, _
       "AND(ControlType, ClassName)"
-    .Condition "ControlType", ControlType, EqualsNumber, UIAControlTypeIDs.Group
+    .ControlType UIAControlTypeIDs.Group
     .ClassName "LandmarkTarget"
   End With
   

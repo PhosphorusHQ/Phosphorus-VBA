@@ -74,6 +74,10 @@ Public Sub Initialise( _
       This.FindBy = By.pConditions
       This.EvaluationLogic = "ClassName"
       Condition This.EvaluationLogic, UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, EvaluationLogic
+    Case By.ControlType
+      This.FindBy = By.pConditions
+      This.EvaluationLogic = "ControlType"
+      Condition This.EvaluationLogic, UIAProperties.ControlType, UIAPropertyComparisons.EqualsNumber, EvaluationLogic
     Case Else
       ErrorLogging.LogError Errors.FindElementUnhandledByInLocator, "Unhanded By Locator: " & UIACommon.GetByName(FindBy)
       Exit Sub
@@ -108,12 +112,16 @@ Public Sub AutomationId(ID As String)
   Condition "AutomationId", UIAProperties.AutomationId, UIAPropertyComparisons.IsTheString, ID
 End Sub
 
-Public Sub NameIs(Name As String)
-  Condition "NameIs", UIAProperties.Name, UIAPropertyComparisons.IsTheString, Name
-End Sub
-
 Public Sub ClassName(Name As String)
   Condition "ClassName", UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, Name
+End Sub
+
+Public Sub ControlType(CtrlType As UIAControlTypeIDs)
+  Condition "ControlType", UIAProperties.ControlType, UIAPropertyComparisons.EqualsNumber, CtrlType
+End Sub
+
+Public Sub NameIs(Name As String)
+  Condition "NameIs", UIAProperties.Name, UIAPropertyComparisons.IsTheString, Name
 End Sub
 
 Public Sub ListAllConditions()

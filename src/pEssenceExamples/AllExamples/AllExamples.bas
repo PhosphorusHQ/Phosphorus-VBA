@@ -16,12 +16,13 @@ Public Sub AllExamples()
   
   RunningAllExamples = True
   Window.HighlightElements = False
-
+  
   Calculator.Calculator
 
   Dim WBT As WebBrowserType
   For WBT = WebBrowserType.[_First] + 1 To WebBrowserType.[_Last] - 1
     Factory.CurrentWebBrowserType = WBT
+    HelloWorld.HelloWorldWideWeb
     ExampleDomainDotCom.ExampleDomainDotCom
     LetCodeDotIn.RadioButtonsAndCheckboxes
     TheInternet.TheInternet
@@ -30,6 +31,6 @@ Public Sub AllExamples()
   Window.HighlightElements = False
   RunningAllExamples = False
 
-  MsgBox "What next? Select Interaction speeds - slow, medium, fast, no delay? More pages ..."
+  MsgBox "All Examples Run!"
 
 End Sub

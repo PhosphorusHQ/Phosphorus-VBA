@@ -13,6 +13,7 @@ Option Explicit
 Public Const Banner = "banner"
 Public Const Button = "button"
 Public Const CheckBox = "checkbox"
+Public Const ComboBox = "combobox"
 Public Const Description = "description"
 Public Const Group = "group"
 Public Const Heading = "heading"

@@ -141,11 +141,19 @@ Const SELFLAG_VALID = &H1F 'Bitmask of all valid flags (0x10)
 'Extend selection (range): SELFLAG_TAKEFOCUS Or SELFLAG_EXTENDSELECTION
 'Select only this item, no focus change: SELFLAG_TAKESELECTION
 
+Private Sub AutoFindUIAElement(Element As pElement)
+  If Element.UIAElement Is Nothing Then
+    Element.ParentLocator.Find 10
+  End If
+End Sub
+
 '**********
 '* Clicks *
 '**********
 Public Sub Click(Element As pElement)
-    
+  
+  AutoFindUIAElement Element
+  
   Toaster.Message "Clicking " & Name, Action
     
   IsElementReady Element
@@ -375,6 +383,9 @@ Public Sub DragAndDrop( _
 'DragAndDropWithVisualFeedback
 'ctrlKey:=True makes a copy
 
+  AutoFindUIAElement SourceElement
+  AutoFindUIAElement TargetElement
+
   Toaster.Message "Drag And Drop " & SourceElement.GivenName, Action
   
   If SourceElement.UIAElement Is Nothing Or TargetElement.UIAElement Is Nothing Then Exit Sub
@@ -449,6 +460,7 @@ Public Sub DragAndDrop( _
 End Sub
 
 Public Function IsElementReady(Element As pElement) As Boolean
+  AutoFindUIAElement Element
   Dim ret As Boolean
   ret = True
   ret = ret And Element.IsAlive()
@@ -471,6 +483,7 @@ Private Sub MoveMouseToElement(Element As pElement)
 End Sub
 
 Public Sub TryToScrollItemIntoView(Element As pElement)
+  AutoFindUIAElement Element
   If Element.HasProperty(UIAProperties.IsScrollItemPatternAvailable) Then
     If Element.HasProperty(UIAProperties.IsOffscreen) Then
       If Element.GetProperty(UIAProperties.IsOffscreen) Then

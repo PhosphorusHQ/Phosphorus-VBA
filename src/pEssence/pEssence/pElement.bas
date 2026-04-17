@@ -20,12 +20,20 @@ Option Explicit
 
 Public GivenName As String
 Public UIAElement As IUIAutomationElement
+Public ParentLocator As pLocator
 
 Private Sub Class_Terminate()
   Set UIAElement = Nothing
 End Sub
 
+Private Sub AutoFindElement()
+  If UIAElement Is Nothing Then
+    ParentLocator.Find 10
+  End If
+End Sub
+
 Public Sub CloseWindow()
+  AutoFindElement
   Toaster.Message "Close Window " & Name, Action
   Actions.IsElementReady Me
   If GetProperty(UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
@@ -40,6 +48,7 @@ End Sub
 
 'Tools > References > OLE Automation needed for IUnknown type
 Public Function GetPattern(PatternId As Long, Optional RaiseError As Boolean) As IUnknown
+  AutoFindElement
   On Error Resume Next
   Set GetPattern = UIAElement.GetCurrentPattern(PatternId)
   On Error GoTo 0
@@ -52,12 +61,14 @@ Public Function GetPattern(PatternId As Long, Optional RaiseError As Boolean) As
 End Function
 
 Public Function GetProperty(PropertyId As Long) As Variant
+  AutoFindElement
   On Error Resume Next
   GetProperty = UIAElement.GetCurrentPropertyValue(PropertyId)
   On Error GoTo 0
 End Function
 
 Public Function GetToggleState() As Integer
+  AutoFindElement
   If HasPattern(UIAPatterns.TogglePattern) Then
     Dim CurrentElementTogglePattern As IUIAutomationTogglePattern
     Set CurrentElementTogglePattern = GetPattern(UIAPatterns.TogglePattern, RaiseError:=True)
@@ -66,6 +77,7 @@ Public Function GetToggleState() As Integer
 End Function
 
 Public Function GetValue() As String
+  AutoFindElement
   If HasPattern(UIAPatterns.ValuePattern) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
     Set CurrentElementValuePattern = GetPattern(UIAPatterns.ValuePattern, RaiseError:=True)
@@ -74,6 +86,7 @@ Public Function GetValue() As String
 End Function
 
 Public Function HasPattern(PatternId As Long, Optional RaiseError As Boolean) As Boolean
+  AutoFindElement
   On Error Resume Next
   Dim Pattern As IUnknown
   On Error Resume Next
@@ -83,6 +96,7 @@ Public Function HasPattern(PatternId As Long, Optional RaiseError As Boolean) As
 End Function
 
 Public Function HasProperty(PropertyId As Long, Optional RaiseError As Boolean) As Boolean
+  AutoFindElement
   On Error Resume Next
   Dim Property As Variant
   On Error Resume Next
@@ -92,6 +106,7 @@ Public Function HasProperty(PropertyId As Long, Optional RaiseError As Boolean) 
 End Function
 
 Public Function IsAlive() As Boolean
+  'DON'T USE AUTOFIND ON THIS METHOD - it will create an infiite loop!
   On Error Resume Next
   Dim pid As Long
   pid = UIAElement.CurrentProcessId  'any property access will fail if stale
@@ -100,12 +115,15 @@ Public Function IsAlive() As Boolean
 End Function
 
 Public Function IsEnabled() As Boolean
+  AutoFindElement
   Window.HighlightElement Me.UIAElement
   IsEnabled = GetProperty(UIAProperties.IsEnabled)
   Window.ReleaseHighlighting
 End Function
 
 Public Function IsSelected() As Boolean
+  
+  AutoFindElement
             
   Window.HighlightElement Me.UIAElement
             
@@ -142,6 +160,7 @@ End Function
 
 'Highlight only when setting the element state - this is an action, but not for gets, which may be part of another action!?
 Public Sub SetValue(Value As String)
+  AutoFindElement
   Window.HighlightElement UIAElement
   If HasPattern(UIAPatterns.ValuePattern) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
@@ -155,6 +174,7 @@ Public Sub WaitForPropertyValue( _
   UIAProperty As UIAProperties, _
   UIAPropertyValue As Variant, _
   Optional TimeoutInSeconds As Integer)
+  AutoFindElement
   WaitForPropertyValueOrPatternState UIAProperty:=UIAProperty, UIAPropertyValue:=UIAPropertyValue, TimeoutInSeconds:=TimeoutInSeconds
 End Sub
   
@@ -162,6 +182,7 @@ Public Sub WaitForPatternState( _
   UIAPatternID As UIAPatterns, _
   PatternState As Variant, _
   Optional TimeoutInSeconds As Integer)
+  AutoFindElement
   WaitForPropertyValueOrPatternState UIAPatternID:=UIAPatternID, PatternState:=PatternState, TimeoutInSeconds:=TimeoutInSeconds
 End Sub
   

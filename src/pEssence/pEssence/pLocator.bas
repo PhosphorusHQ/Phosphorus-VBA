@@ -31,6 +31,7 @@ Private Type Properties
   FindFirst As Boolean
   AllSearchConditions As Scripting.Dictionary
   EvaluationLogic As String
+  PositionInMatchingSet  As Integer
 End Type
 
 Private This As Properties
@@ -55,7 +56,8 @@ Public Sub Initialise( _
   
   Set This.Element = New pElement
   This.Element.GivenName = ElementName
-  
+  Set This.Element.ParentLocator = Me
+
   If RootUIAElementLocator Is Nothing Then
     Set This.RootUIAElement = Factory.GetRootDesktopElement
     This.RootUIAElementIsDesktop = True
@@ -114,53 +116,59 @@ Public Sub Condition( _
   
 End Sub
 
-Public Sub AriaRole(Role As String, Optional ConditionName As String)
-  If ConditionName = "" Then: ConditionName = "AriaRole"
+Public Sub AriaRole(Role As String, Optional ConditionNameSuffix As String)
+  Dim ConditionName As String
+  ConditionName = "AriaRole"
+  If ConditionNameSuffix <> "" Then: ConditionName = ConditionName & ConditionNameSuffix
   Condition ConditionName, UIAProperties.AriaRole, UIAPropertyComparisons.IsTheString, Role
 End Sub
 
 Public Sub AriaRoleBanner()
-  AriaRole AriaRoles.Banner, "AriaRoleBanner"
+  AriaRole AriaRoles.Banner, "Banner"
 End Sub
 
 Public Sub AriaRoleButton()
-  AriaRole AriaRoles.Button, "AriaRoleButton"
+  AriaRole AriaRoles.Button, "Button"
 End Sub
 
 Public Sub AriaRoleCheckBox()
-  AriaRole AriaRoles.CheckBox, "AriaRoleCheckBox"
+  AriaRole AriaRoles.CheckBox, "CheckBox"
+End Sub
+
+Public Sub AriaRoleComboBox()
+  AriaRole AriaRoles.ComboBox, "ComboBox"
 End Sub
 
 Public Sub AriaRoleDescription()
-  AriaRole AriaRoles.Description, "AriaRoleDescription"
+  AriaRole AriaRoles.Description, "Description"
 End Sub
 
 Public Sub AriaRoleGroup()
-  AriaRole AriaRoles.Group, "AriaRoleGroup"
+  AriaRole AriaRoles.Group, "Group"
 End Sub
 
 Public Sub AriaRoleHeading()
-  AriaRole AriaRoles.Heading, "AriaRoleHeading"
+  AriaRole AriaRoles.Heading, "Heading"
 End Sub
 
 Public Sub AriaRoleLink()
-  AriaRole AriaRoles.Link, "AriaRoleLink"
+  AriaRole AriaRoles.Link, "Link"
 End Sub
 
 Public Sub AriaRoleList()
-  AriaRole AriaRoles.List, "AriaRoleList"
+  AriaRole AriaRoles.List, "List"
 End Sub
 
 Public Sub AriaRoleListItem()
-  AriaRole AriaRoles.ListItem, "AriaRoleListItem"
+  AriaRole AriaRoles.ListItem, "ListItem"
 End Sub
 
 Public Sub AriaRoleRadio()
-  AriaRole AriaRoles.Radio, "AriaRoleRadio"
+  AriaRole AriaRoles.Radio, "Radio"
 End Sub
 
 Public Sub AriaRoleTextBox()
-  AriaRole AriaRoles.TextBox, "AriaRoleTextBox"
+  AriaRole AriaRoles.TextBox, "TextBox"
 End Sub
 
 Public Sub AutomationId(ID As String)
@@ -188,6 +196,10 @@ End Sub
 Public Sub PositionInTreescope(Position As Integer)
   Condition POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, Position
   This.EvaluationLogic = "AND(" & This.EvaluationLogic & ", " & POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
+End Sub
+
+Public Sub PositionInMatchingSet(Position As Integer)
+  This.PositionInMatchingSet = Position
 End Sub
 
 Public Sub ListAllConditions()
@@ -275,7 +287,7 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
   
   Dim FoundElement As IUIAutomationElement
   If CountOfFoundElements = 1 Then
-    Set This.Element = FoundElements(0)
+    Set This.Element.UIAElement = FoundElements(0).UIAElement
     If FindElementAgain Then
       If This.Element.HasProperty(UIAProperties.IsScrollItemPatternAvailable) Then
         Actions.TryToScrollItemIntoView This.Element
@@ -338,7 +350,6 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
         CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, C.ConditionName, C.Evaluate(CurrentElement))
       End If
     Next k
-
     Dim MatchFound As Boolean
     On Error Resume Next
     MatchFound = Excel.Evaluate(CurrentEvaluationLogic) 'Evaluate the formula with Excel!
@@ -359,11 +370,19 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
     End If
     On Error GoTo 0
     If MatchFound Then
-      ReDim Preserve ReturnElements(CountOfMatchingElements)
-      Set ReturnElements(CountOfMatchingElements) = CurrentElement
-      CountOfMatchingElements = CountOfMatchingElements + 1
-      If This.FindFirst Then
-        Exit For
+     CountOfMatchingElements = CountOfMatchingElements + 1
+      If This.PositionInMatchingSet = 0 Then
+        ReDim Preserve ReturnElements(CountOfMatchingElements - 1)
+        Set ReturnElements(CountOfMatchingElements - 1) = CurrentElement
+        If This.FindFirst Then
+          Exit For
+        End If
+      Else
+        If CountOfMatchingElements = This.PositionInMatchingSet Then
+          ReDim Preserve ReturnElements(0)
+          Set ReturnElements(0) = CurrentElement
+          Exit For
+        End If
       End If
     End If
   Next i

@@ -18,8 +18,6 @@ Attribute VB_Exposed = True
 ' =======================================================================
 Option Explicit
 
-Implements pWB
-
 Private Type BrowserAttributes
   WebAppName As String
   URL As String
@@ -129,18 +127,18 @@ Private Sub InitialiseAllLocators()
 
 End Sub
 
-Public Function pWB_GetRootWebArea() As pLocator
+Public Function GetRootWebArea() As pLocator
   Set pWB_GetRootWebArea = This.RootWebArea
 End Function
 
-Public Function pWB_GetCurrentURL() As String
+Public Function GetCurrentURL() As String
   With This.AddressAndSearchBar
     .Find 10
     pWB_GetCurrentURL = .Element.GetValue()
   End With
 End Function
 
-Public Sub pWB_NavigateBack()
+Public Sub NavigateBack()
   With This.BackButton
     .Find 10
     Actions.Click .Element

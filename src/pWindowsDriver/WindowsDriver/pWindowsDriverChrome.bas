@@ -61,16 +61,16 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   Select Case InstanceType
     Case pWinDriver.pInstanceType.Executable
       'Launch Chrome via executable with no parameters other than the url, if any
-      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Chrome, "--force-renderer-accessibility " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Chrome, "--force-renderer-accessibility " & URL, Phosphorus.WindowShowStates.Maximized
     Case pWinDriver.pInstanceType.NewProfile
       This.TempDirectory = This.ParentWindowsDriver.CreateTempDirectory
-      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Chrome, "--force-renderer-accessibility" & " --user-data-dir=""" & This.TempDirectory & """ " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Chrome, "--force-renderer-accessibility" & " --user-data-dir=""" & This.TempDirectory & """ " & URL, Phosphorus.WindowShowStates.Maximized
       'Override the current path for the new profile sign-in screen
       CurrentpPath = "/Window[@Name=""Google Chrome""]"
     Case pWinDriver.pInstanceType.GuestModeNoSignIn
       This.TempDirectory = This.ParentWindowsDriver.CreateTempDirectory
       ' --bwsi Indicates that the browser is in "browse without sign-in" (Guest session) mode. Should completely disable extensions, sync and bookmarks.
-      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Chrome, "--force-renderer-accessibility" & " --bwsi" & " --user-data-dir=""" & This.TempDirectory & """ " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Chrome, "--force-renderer-accessibility" & " --bwsi" & " --user-data-dir=""" & This.TempDirectory & """ " & URL, Phosphorus.WindowShowStates.Maximized
     Case Else
       Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledAppConfiguration, "Chrome, Instance Type: #" & InstanceType
   End Select

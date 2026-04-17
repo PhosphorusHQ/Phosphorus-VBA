@@ -61,7 +61,7 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   Select Case InstanceType
     Case pWinDriver.pInstanceType.Executable
       'Launch Opera via executable with no parameters other than the url, if any
-      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Opera, URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Opera, URL, Phosphorus.WindowShowStates.Maximized
     Case Else
       Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledAppConfiguration, "Opera, Instance Type: #" & InstanceType
   End Select

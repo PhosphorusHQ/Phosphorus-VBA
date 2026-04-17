@@ -135,7 +135,7 @@ Public Sub Launch( _
   Optional ByVal Document As String, _
   Optional ByVal TimeoutInSeconds As Integer, _
   Optional ByVal CheckHTTPStatusCodeOnly As Boolean, _
-  Optional ByVal WindowShowState As Phosphorus.WindowShowStates = Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED)
+  Optional ByVal WindowShowState As Phosphorus.WindowShowStates = Phosphorus.WindowShowStates.Maximized)
   
   This.WebAppTitle = WebAppTitle
   
@@ -179,7 +179,7 @@ Public Sub Launch( _
         This.PageLoadedElementExpectedWindowInteractionState = UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
       
       Case Else
-        Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledDriverType, "Driver Type: #" & This.DriverType
+        Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledWebBrowserType, "Driver Type: #" & This.DriverType
         
     End Select
 

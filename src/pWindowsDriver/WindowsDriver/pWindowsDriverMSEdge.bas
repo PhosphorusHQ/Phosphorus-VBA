@@ -65,26 +65,26 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
     
     Case pWinDriver.pInstanceType.ReuseACurrentOpenInstance
       'Launch Edge via protocol
-      Phosphorus.WindowsProcesses.LaunchCommandByProtocol WebAppName, "microsoft-edge:", URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+      Phosphorus.WindowsProcesses.LaunchCommandByProtocol WebAppName, "microsoft-edge:", URL, Phosphorus.WindowShowStates.Maximized
 
     Case pWinDriver.pInstanceType.Executable
       'Launch Edge via executable with no parameters other than the url, if any
-      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, URL, Phosphorus.WindowShowStates.Maximized
     
     Case pWinDriver.pInstanceType.NewWindow
       'Launch Edge via executable with new window command line argument & the url, if any
-      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--new-window " & URL, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--new-window " & URL, Phosphorus.WindowShowStates.Maximized
     
     Case pWinDriver.pInstanceType.AppMode
       'Launch Edge via executable in App Mode (new window + simplified interface)
-      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--app " & URL, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--app " & URL, Phosphorus.WindowShowStates.Maximized
     
     Case pWinDriver.pInstanceType.NewProfile
       This.TempDirectory = This.ParentWindowsDriver.CreateTempDirectory
-      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--user-data-dir=""" & This.TempDirectory & """ --new-window " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
+      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--user-data-dir=""" & This.TempDirectory & """ --new-window " & URL, Phosphorus.WindowShowStates.Maximized
 
     Case pWinDriver.pInstanceType.ApplicationUserModelID
-      Phosphorus.WindowsProcesses.LaunchAppByAUMID Phosphorus.WindowsWindowsApps.MicrosoftEdge, URL, Phosphorus.WindowShowStates.SW_SHOWNORMAL
+      Phosphorus.WindowsProcesses.LaunchAppByAUMID Phosphorus.WindowsWindowsApps.MicrosoftEdge, URL, Phosphorus.WindowShowStates.Normal
     
     Case Else
       Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledAppConfiguration, "Microsoft Edge, Instance Type: #" & This.InstanceType

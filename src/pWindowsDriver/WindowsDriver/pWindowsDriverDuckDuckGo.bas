@@ -55,7 +55,7 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
   End If
   Select Case InstanceType
     Case pWinDriver.pInstanceType.ApplicationUserModelID
-      Phosphorus.WindowsProcesses.LaunchAppByAUMID Phosphorus.WindowsWindowsApps.DuckDuckGo, URL, Phosphorus.WindowShowStates.SW_SHOWNORMAL
+      Phosphorus.WindowsProcesses.LaunchAppByAUMID Phosphorus.WindowsWindowsApps.DuckDuckGo, URL, Phosphorus.WindowShowStates.Normal
     Case Else
       Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledAppConfiguration, "Duck Duck Go, Instance Type: #" & InstanceType
   End Select

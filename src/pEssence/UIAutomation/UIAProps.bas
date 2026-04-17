@@ -10,8 +10,6 @@ Attribute VB_Name = "UIAProps"
 ' =======================================================================
 Option Explicit
 
-Public Const POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER = "PositionOfElementInTreescopeCounter"
-
 'https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-automation-element-propids
 Public Enum UIAProperties 'UIA_PropertyIds
   AcceleratorKey = UIA_AcceleratorKeyPropertyId

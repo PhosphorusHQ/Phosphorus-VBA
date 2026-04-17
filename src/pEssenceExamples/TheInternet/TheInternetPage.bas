@@ -58,27 +58,22 @@ Public Sub Initialize()
   End With
   
   With This.ForkMe
-    .Initialise "ForkMe", This.RootWebArea, Children, pConditions, "AND(AriaRoleLink, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleLink: .NameIs "Fork me on GitHub"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 1
+    .Initialise "ForkMe", This.RootWebArea, Children, pConditions, "AND(AriaRoleLink, NameIs)"
+    .AriaRoleLink: .NameIs "Fork me on GitHub": .PositionInTreescope 1
   End With
   
   With This.HomePageHeading1
-    .Initialise "Heading1", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleHeading: .NameIs "Welcome to the-internet"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
+    .Initialise "Heading1", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs)"
+    .AriaRoleHeading: .NameIs "Welcome to the-internet": .PositionInTreescope 2
   End With
 
   With This.HomePageHeading2
-    .Initialise "Heading1", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleHeading: .NameIs "Available Examples"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
+    .Initialise "Heading1", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs)"
+    .AriaRoleHeading: .NameIs "Available Examples": .PositionInTreescope 3
   End With
 
   With This.ListOfExamples
-    .Initialise "ListOfExamples", This.RootWebArea, Children, pConditions, "AND(AriaRoleList, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleList
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 4
+    .Initialise "ListOfExamples", This.RootWebArea, Children, By.AriaRole, AriaRoles.List: .PositionInTreescope 4
   End With
 
 End Sub
@@ -130,9 +125,8 @@ Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText As St
   Dim SubPageHeading As pLocator
   Set SubPageHeading = Factory.GetNewLocator
   With SubPageHeading
-    .Initialise "SubPageHeading", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleHeading: .NameIs SubPageHeadingText
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
+    .Initialise "SubPageHeading", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs)"
+    .AriaRoleHeading: .NameIs SubPageHeadingText: .PositionInTreescope 2
     Debug.Assert .ElementExists(2)
   End With
 
@@ -146,36 +140,31 @@ Public Sub Checkboxes()
   Dim FirstCheckbox As pLocator
   Set FirstCheckbox = Factory.GetNewLocator
   With FirstCheckbox
-    .Initialise "FirstCheckbox", This.RootWebArea, Children, pConditions, "AND(AriaRoleCheckBox, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleCheckBox
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
+    .Initialise "FirstCheckbox", This.RootWebArea, Children, By.AriaRole, AriaRoles.CheckBox: .PositionInTreescope 3
     .Find 10
   End With
 
   Dim FirstCheckboxDescription As pLocator
   Set FirstCheckboxDescription = Factory.GetNewLocator
   With FirstCheckboxDescription
-    .Initialise "FirstCheckboxDescription", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ", NameIs)"
-    .AriaRoleDescription: .NameIs " checkbox 1"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 4
+    .Initialise "FirstCheckboxDescription", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs)"
+    .AriaRoleDescription: .NameIs " checkbox 1": .PositionInTreescope 4
     .Find 10
   End With
 
   Dim SecondCheckbox As pLocator
   Set SecondCheckbox = Factory.GetNewLocator
   With SecondCheckbox
-    .Initialise "SecondCheckbox", This.RootWebArea, Children, pConditions, "AND(AriaRoleCheckBox, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleCheckBox
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 6
+    .Initialise "SecondCheckbox", This.RootWebArea, Children, By.AriaRole, AriaRoles.CheckBox
+    .PositionInTreescope 6
     .Find 10
   End With
 
   Dim SecondCheckboxDescription As pLocator
   Set SecondCheckboxDescription = Factory.GetNewLocator
   With SecondCheckboxDescription
-    .Initialise "FirstCheckboxDescription", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ", NameIs)"
-    .AriaRoleDescription: .NameIs " checkbox 2"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 7
+    .Initialise "FirstCheckboxDescription", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs)"
+    .AriaRoleDescription: .NameIs " checkbox 2": .PositionInTreescope 7
     .Find 10
   End With
   
@@ -207,18 +196,15 @@ Public Sub DragAndDrop()
     Dim FirstItem As pLocator
     Set FirstItem = Factory.GetNewLocator
     With FirstItem
-      .Initialise "FirstItem", This.RootWebArea, Children, pConditions, "AND(AriaRoleBanner, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-      .AriaRoleBanner
-      .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
+      .Initialise "FirstItem", This.RootWebArea, Children, By.AriaRole, AriaRoles.Banner
+      .PositionInTreescope 3
       .Find 10
     End With
 
     Dim SecondItem As pLocator
     Set SecondItem = Factory.GetNewLocator
     With SecondItem
-      .Initialise "SecondItem", This.RootWebArea, Children, pConditions, "AND(AriaRoleBanner, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-      .AriaRoleBanner
-      .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 4
+      .Initialise "SecondItem", This.RootWebArea, Children, By.AriaRole, AriaRoles.Banner: .PositionInTreescope 4
       .Find 10
     End With
         
@@ -260,64 +246,52 @@ Private Sub FormAuthentication_Login()
   Dim SubHeader As pLocator
   Set SubHeader = Factory.GetNewLocator
   With SubHeader
-    .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, ClassName, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleHeading
-    .ClassName "subheader"
+    .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, ClassName, NameIs)"
+    .AriaRoleHeading: .ClassName "subheader": .PositionInTreescope 3
     .NameIs "This is where you can log into the secure area. Enter tomsmith for the username and SuperSecretPassword! for the password. If the information is wrong you should see error messages."
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
     Debug.Assert .ElementExists(5)
   End With
 
   Dim UsernameLabel As pLocator
   Set UsernameLabel = Factory.GetNewLocator
   With UsernameLabel
-    .Initialise "UsernameLabel", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleDescription
-    .NameIs "Username"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 4
+    .Initialise "UsernameLabel", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs)"
+    .AriaRoleDescription: .NameIs "Username": .PositionInTreescope 4
     Debug.Assert .ElementExists(0)
   End With
 
   Dim UsernameTextBox As pLocator
   Set UsernameTextBox = Factory.GetNewLocator
   With UsernameTextBox
-    .Initialise "UsernameTextBox", This.RootWebArea, Children, pConditions, "AND(AriaRoleTextBox, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleTextBox
-    .NameIs "Username"
+    .Initialise "UsernameTextBox", This.RootWebArea, Children, pConditions, "AND(AriaRoleTextBox, NameIs)"
+    .AriaRoleTextBox: .NameIs "Username": .PositionInTreescope 5
     '.Condition "LabeledBy", LabeledBy, IsTheString, "Username" ' This returns an element!
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 5
     Debug.Assert .ElementExists(0)
   End With
 
   Dim PasswordLabel As pLocator
   Set PasswordLabel = Factory.GetNewLocator
   With PasswordLabel
-    .Initialise "PasswordLabel", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleDescription
-    .NameIs "Password"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 6
+    .Initialise "PasswordLabel", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs)"
+    .AriaRoleDescription: .NameIs "Password": .PositionInTreescope 6
     Debug.Assert .ElementExists(0)
   End With
 
   Dim PasswordTextBox As pLocator
   Set PasswordTextBox = Factory.GetNewLocator
   With PasswordTextBox
-    .Initialise "FirstItem", This.RootWebArea, Children, pConditions, "AND(AriaRoleTextBox, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleTextBox
-    .NameIs "Password"
-    '.Condition "LabeledBy", LabeledBy, IsTheString, "Password" ' This returns an element!
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 7
+    .Initialise "FirstItem", This.RootWebArea, Children, pConditions, "AND(AriaRoleTextBox, NameIs)"
+    .AriaRoleTextBox: .NameIs "Password": .PositionInTreescope 7
+    'TODO: .Condition "LabeledBy", LabeledBy, IsTheString, "Password" ' This returns an element!
     Debug.Assert .ElementExists(0)
   End With
 
   Dim LoginButton As pLocator
   Set LoginButton = Factory.GetNewLocator
   With LoginButton
-    .Initialise "LoginButton", This.RootWebArea, Children, pConditions, "AND(AriaRoleButton, NameEndsWith, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleButton
+    .Initialise "LoginButton", This.RootWebArea, Children, pConditions, "AND(AriaRoleButton, NameEndsWith)"
+    .AriaRoleButton: .Condition "NameEndsWith", Name, EndsWithTheString, " Login": .PositionInTreescope 8
     'Name='? Login' - starts with a unicode character?
-    .Condition "NameEndsWith", Name, EndsWithTheString, " Login"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 8
     Debug.Assert .ElementExists(0)
   End With
 
@@ -348,18 +322,16 @@ Private Sub FormAuthentication_Secure()
   Dim SecureMesssage As pLocator
   Set SecureMesssage = Factory.GetNewLocator
   With SecureMesssage
-    .Initialise "SecureMesssage", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleDescription: .NameIs " You logged into a secure area!"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
+    .Initialise "SecureMesssage", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs)"
+    .AriaRoleDescription: .NameIs " You logged into a secure area!": .PositionInTreescope 2
     Debug.Assert .ElementExists(5)
   End With
 
   Dim SecureMesssageHyperlink As pLocator
   Set SecureMesssageHyperlink = Factory.GetNewLocator
   With SecureMesssageHyperlink
-    .Initialise "SecureMesssageHyperlink", This.RootWebArea, Children, pConditions, "AND(AriaRoleLink, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleLink: .NameIs "×"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
+    .Initialise "SecureMesssageHyperlink", This.RootWebArea, Children, pConditions, "AND(AriaRoleLink, NameIs)"
+    .AriaRoleLink: .NameIs "×": .PositionInTreescope 3
     Debug.Assert .ElementExists(0)
   End With
 
@@ -372,28 +344,24 @@ Private Sub FormAuthentication_Secure()
   Dim Heading As pLocator
   Set Heading = Factory.GetNewLocator
   With Heading
-    .Initialise "Heading", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleHeading: .NameIs "Secure Area"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
+    .Initialise "Heading", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs)"
+    .AriaRoleHeading: .NameIs "Secure Area": .PositionInTreescope 2
     Debug.Assert .ElementExists(5)
   End With
 
   Dim SubHeader As pLocator
   Set SubHeader = Factory.GetNewLocator
   With SubHeader
-    .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, ClassName, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleHeading: .ClassName "subheader"
-    .NameIs "Welcome to the Secure Area. When you are done click logout below."
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 3
+    .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, ClassName, NameIs)"
+    .AriaRoleHeading: .ClassName "subheader": .NameIs "Welcome to the Secure Area. When you are done click logout below.": .PositionInTreescope 3
     Debug.Assert .ElementExists(0)
   End With
 
   Dim Logout As pLocator
   Set Logout = Factory.GetNewLocator
   With Logout
-    .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRoleLink, NameIs, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-    .AriaRoleLink: .NameIs "Logout"
-    .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 4
+    .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRoleLink, NameIs)"
+    .AriaRoleLink: .NameIs "Logout": .PositionInTreescope 4
     Debug.Assert .ElementExists(0)
   End With
 

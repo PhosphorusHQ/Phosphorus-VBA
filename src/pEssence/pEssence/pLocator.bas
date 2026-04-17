@@ -35,6 +35,8 @@ End Type
 
 Private This As Properties
 
+Private Const POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER = "PositionOfElementInTreescopeCounter"
+
 Private Sub Class_Initialize()
   Set This.AllSearchConditions = New Scripting.Dictionary
 End Sub
@@ -183,6 +185,11 @@ Public Sub NameIs_(Name As String, Optional ConditionNameSuffix As String)
   Condition ConditionName, UIAProperties.Name, UIAPropertyComparisons.IsTheString, Name
 End Sub
 
+Public Sub PositionInTreescope(Position As Integer)
+  Condition POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, Position
+  This.EvaluationLogic = "AND(" & This.EvaluationLogic & ", " & POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
+End Sub
+
 Public Sub ListAllConditions()
   Dim k As Variant
   For Each k In This.AllSearchConditions.Keys
@@ -325,7 +332,7 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
     For Each k In This.AllSearchConditions.Keys
       Dim C As New pCondition
       Set C = This.AllSearchConditions(k)
-      If C.ConditionName = UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER Then
+      If C.ConditionName = POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER Then
         CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, C.ConditionName, ((i + 1) = C.UIAPropertyValue))
       Else
         CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, C.ConditionName, C.Evaluate(CurrentElement))

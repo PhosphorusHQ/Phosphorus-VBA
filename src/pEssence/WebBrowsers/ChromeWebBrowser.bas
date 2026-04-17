@@ -122,8 +122,7 @@ Private Sub InitialiseAllLocators()
   
     'Second Pane Below Browser View
     With This.BrowserViewSubView1
-      .Initialise "BrowserViewSubView1", This.BrowserView, Children, pConditions, "AND(ClassName, " & UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER & ")"
-      .ClassName "View": .Condition UIAProps.POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER, 0, EqualsNumber, 2
+      .Initialise "BrowserViewSubView1", This.BrowserView, Children, By.ClassName, "View": .PositionInTreescope 2
     End With
 
       This.RootWebArea.Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True

@@ -126,13 +126,13 @@ Private Sub InitialiseAllLocators()
 End Sub
 
 Public Function GetRootWebArea() As pLocator
-  Set pWB_GetRootWebArea = This.RootWebArea
+  Set GetRootWebArea = This.RootWebArea
 End Function
 
 Public Function GetCurrentURL() As String
   With This.AddressAndSearchBar
     .Find 10
-    pWB_GetCurrentURL = .Element.GetValue()
+    GetCurrentURL = .Element.GetValue()
   End With
 End Function
 

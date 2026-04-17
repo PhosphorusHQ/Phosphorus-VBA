@@ -71,7 +71,7 @@ Private Sub Class_Terminate()
   Set This.RootWebArea = Nothing
 End Sub
 
-Public Sub pWB_Start(WebAppName As String, URL As String, WebAppPageTitle As String)
+Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
   Toaster.Message "Starting " & WebAppName
   This.WebAppName = WebAppName
   This.URL = URL
@@ -128,13 +128,13 @@ Private Sub InitialiseAllLocators()
 End Sub
 
 Public Function GetRootWebArea() As pLocator
-  Set pWB_GetRootWebArea = This.RootWebArea
+  Set GetRootWebArea = This.RootWebArea
 End Function
 
 Public Function GetCurrentURL() As String
   With This.AddressAndSearchBar
     .Find 10
-    pWB_GetCurrentURL = .Element.GetValue()
+    GetCurrentURL = .Element.GetValue()
   End With
 End Function
 

@@ -32,6 +32,14 @@ Private Sub AutoFindElement()
   End If
 End Sub
 
+Public Sub Click()
+  Actions.Click Me
+End Sub
+
+Public Sub DragAndDrop(ToElement As pElement)
+  Actions.DragAndDrop Me, ToElement
+End Sub
+
 Public Sub CloseWindow()
   AutoFindElement
   Toaster.Message "Close Window " & Name, Action

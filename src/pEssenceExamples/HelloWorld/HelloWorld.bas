@@ -38,9 +38,10 @@ Sub HelloWorldWideWeb()
   End With
   
   SearchBox.Element.SetValue "Hello World"
-  Actions.Click SearchButton.Element
+  SearchButton.Element.Click
 
   If RunningAllExamples Then: Debug.Print "Behold The World Wide Web!": Else: MsgBox "Behold The World Wide Web!"
+  Snooze 1000
   
   Set WebBrowser = Nothing
   Set SearchBox = Nothing

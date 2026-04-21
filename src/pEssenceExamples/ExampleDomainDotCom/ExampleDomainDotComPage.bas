@@ -23,7 +23,6 @@ Const TARGET_PAGE_URL = "https://www.example.com/"
 Const TARGET_PAGE_TITLE = "Example Domain"
 Const TARGET_PAGE_LINK = "https://iana.org/domains/example"
 
-
 Private Type PageAttributes
   WebBrowser As Object
   RootWebArea As pLocator

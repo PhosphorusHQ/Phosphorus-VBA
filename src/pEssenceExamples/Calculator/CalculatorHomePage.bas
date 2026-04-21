@@ -91,13 +91,13 @@ End Sub
 Public Sub SelectCalculatorType(CalculatorType As String)
   Toaster.Message "Selecting " & CalculatorType
   OpenNavigationMenu
-  Actions.Click GetMenuElement(CalculatorType)
+  GetMenuElement(CalculatorType).Click
 End Sub
 
 Private Sub OpenNavigationMenu()
   'Always find the element before we take action on it!
   This.OpenCloseNavigationMenuButton.Find 10
-  Actions.Click This.OpenCloseNavigationMenuButton.Element
+  This.OpenCloseNavigationMenuButton.Element.Click
 End Sub
 
 Private Function GetMenuElement(CalculatorType As String) As pElement

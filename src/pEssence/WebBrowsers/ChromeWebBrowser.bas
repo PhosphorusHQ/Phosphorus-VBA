@@ -141,7 +141,7 @@ End Function
 Public Sub NavigateBack()
   With This.BackButton
     .Find 10
-    Actions.Click .Element
+    .Element.Click
     This.RootWebArea.Find 10, FindElementAgain:=True
   End With
 End Sub
@@ -163,7 +163,7 @@ Public Sub AcknowledgeChangeYourPasswordAlert()
     .Initialise "RootView", RootView, Descendants, By.AriaRole, AriaRoles.Button
     .ElementExists 10
     .Find 10
-    Actions.Click .Element
+    .Element.Click
     This.RootWebArea.Find 10, FindElementAgain:=True
   End With
   

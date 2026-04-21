@@ -107,7 +107,7 @@ Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText As St
     .Find 10
   End With
   
-  Actions.Click ListItemHyperlink.Element
+  ListItemHyperlink.Element.Click
   
   Set ListItem = Nothing
   Set ListItemHyperlink = Nothing
@@ -172,13 +172,13 @@ Public Sub Checkboxes()
   'The second checkbox is already checked!
   Debug.Assert SecondCheckbox.Element.GetToggleState()
   
-  Actions.Click FirstCheckbox.Element
+  FirstCheckbox.Element.Click
   Debug.Assert FirstCheckbox.Element.GetToggleState()
   
-  Actions.Click SecondCheckbox.Element
+  SecondCheckbox.Element.Click
   Debug.Assert Not SecondCheckbox.Element.GetToggleState()
   
-  Actions.Click FirstCheckbox.Element
+  FirstCheckbox.Element.Click
   Debug.Assert Not FirstCheckbox.Element.GetToggleState()
 
   This.WebBrowser.NavigateBack
@@ -214,13 +214,13 @@ Public Sub DragAndDrop()
         
     Select Case i
       Case 1 'A->B
-        Actions.DragAndDrop FirstItem.Element, SecondItem.Element
+        FirstItem.Element.DragAndDrop SecondItem.Element
       Case 2 'B<-A
-        Actions.DragAndDrop SecondItem.Element, FirstItem.Element
+        SecondItem.Element.DragAndDrop FirstItem.Element
       Case 3 'B<-A
-        Actions.DragAndDrop SecondItem.Element, FirstItem.Element
+        SecondItem.Element.DragAndDrop FirstItem.Element
       Case 4 'B->A
-        Actions.DragAndDrop FirstItem.Element, SecondItem.Element
+        FirstItem.Element.DragAndDrop SecondItem.Element
     End Select
     
     Set FirstItem = Nothing
@@ -304,7 +304,7 @@ Private Sub FormAuthentication_Login()
 
   UsernameTextBox.Element.SetValue "tomsmith"
   PasswordTextBox.Element.SetValue "SuperSecretPassword!"
-  Actions.Click LoginButton.Element
+  LoginButton.Element.Click
 
   If Factory.CurrentWebBrowserType = Chrome Then
     This.WebBrowser.AcknowledgeChangeYourPasswordAlert
@@ -321,7 +321,6 @@ End Sub
 
 Private Sub FormAuthentication_Secure()
 
-  'We need to a FindElement here!
   Snooze 1000
   Debug.Assert This.RootWebArea.ElementExists
   Debug.Assert (This.WebBrowser.GetCurrentURL = TARGET_PAGE_URL & "/secure") Or (This.WebBrowser.GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", "") & "/secure")
@@ -346,7 +345,7 @@ Private Sub FormAuthentication_Secure()
   End With
 
   'Click on it then verify the element doesn't exist! Wait?
-  Actions.Click SecureMesssageHyperlink.Element
+  SecureMesssageHyperlink.Element.Click
   Snooze 500
   Debug.Assert SecureMesssage.ElementDoesntExist(0)
   Debug.Assert SecureMesssageHyperlink.ElementDoesntExist(0)
@@ -376,7 +375,7 @@ Private Sub FormAuthentication_Secure()
   End With
 
   'Click logout takes us back!
-  Actions.Click Logout.Element
+  Logout.Element.Click
   Snooze 500
   Debug.Assert Heading.ElementDoesntExist(2)
 

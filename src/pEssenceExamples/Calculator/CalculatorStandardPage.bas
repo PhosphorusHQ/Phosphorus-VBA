@@ -258,7 +258,7 @@ Public Sub Calculate(Keystrokes As String, Answer As String)
     If NextButtonName <> "" Then
       Dim NextButton As pElement
       Set NextButton = This.Elements(NextButtonName)
-      Actions.Click NextButton
+      NextButton.Click
     Else
       Continue = False
     End If

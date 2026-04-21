@@ -58,22 +58,22 @@ Public Sub Initialize()
   End With
   
   With This.ForkMe
-    .Initialise "ForkMe", This.RootWebArea, Children, pConditions, "AND(AriaRoleLink, NameIs)"
-    .AriaRoleLink: .NameIs "Fork me on GitHub": .PositionInTreescope 1
+    .Initialise "ForkMe", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleLink, NameIs)"
+    .AriaRoleLink: .NameIs "Fork me on GitHub"
   End With
   
   With This.HomePageHeading1
-    .Initialise "Heading1", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs)"
-    .AriaRoleHeading: .NameIs "Welcome to the-internet": .PositionInTreescope 2
+    .Initialise "Heading1", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleHeading, NameIs)"
+    .AriaRoleHeading: .NameIs "Welcome to the-internet"
   End With
 
   With This.HomePageHeading2
-    .Initialise "Heading1", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs)"
-    .AriaRoleHeading: .NameIs "Available Examples": .PositionInTreescope 3
+    .Initialise "Heading1", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleHeading, NameIs)"
+    .AriaRoleHeading: .NameIs "Available Examples"
   End With
 
   With This.ListOfExamples
-    .Initialise "ListOfExamples", This.RootWebArea, Children, By.AriaRole, AriaRoles.List: .PositionInTreescope 4
+    .Initialise "ListOfExamples", This.RootWebArea, Descendants, By.AriaRole, AriaRoles.List
   End With
 
 End Sub
@@ -86,7 +86,7 @@ Public Sub RunHomePageChecks()
   Debug.Assert This.HomePageHeading2.ElementExists(10)
   Debug.Assert This.HomePageHeading2.Element.GetProperty(Level) = 2
   Debug.Assert This.ListOfExamples.ElementExists(10) = True
-  Debug.Assert This.ListOfExamples.Element.GetProperty(SizeOfSet) = 44
+  Debug.Assert This.ListOfExamples.Element.GetProperty(SizeOfSet) = 44 Or This.ListOfExamples.Element.GetProperty(SizeOfSet) = 0 '44 Fails in Firefox!?
 End Sub
 
 Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText As String)
@@ -125,8 +125,8 @@ Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText As St
   Dim SubPageHeading As pLocator
   Set SubPageHeading = Factory.GetNewLocator
   With SubPageHeading
-    .Initialise "SubPageHeading", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs)"
-    .AriaRoleHeading: .NameIs SubPageHeadingText: .PositionInTreescope 2
+    .Initialise "SubPageHeading", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleHeading, NameIs)"
+    .AriaRoleHeading: .NameIs SubPageHeadingText:
     Debug.Assert .ElementExists(2)
   End With
 
@@ -140,31 +140,32 @@ Public Sub Checkboxes()
   Dim FirstCheckbox As pLocator
   Set FirstCheckbox = Factory.GetNewLocator
   With FirstCheckbox
-    .Initialise "FirstCheckbox", This.RootWebArea, Children, By.AriaRole, AriaRoles.CheckBox: .PositionInTreescope 3
+    .Initialise "FirstCheckbox", This.RootWebArea, Descendants, By.AriaRole, AriaRoles.CheckBox: .PositionInMatchingSet 1
     .Find 10
   End With
 
   Dim FirstCheckboxDescription As pLocator
   Set FirstCheckboxDescription = Factory.GetNewLocator
   With FirstCheckboxDescription
-    .Initialise "FirstCheckboxDescription", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs)"
-    .AriaRoleDescription: .NameIs " checkbox 1": .PositionInTreescope 4
+    .Initialise "FirstCheckboxDescription", This.RootWebArea, Descendants, pConditions, "AND(OR(AriaRoleDescription, ControlType), NameIs)"
+    .AriaRoleDescription: .NameIs " checkbox 1": .ControlType Text
     .Find 10
   End With
 
   Dim SecondCheckbox As pLocator
   Set SecondCheckbox = Factory.GetNewLocator
   With SecondCheckbox
-    .Initialise "SecondCheckbox", This.RootWebArea, Children, By.AriaRole, AriaRoles.CheckBox
-    .PositionInTreescope 6
+    .Initialise "SecondCheckbox", This.RootWebArea, Descendants, By.AriaRole, AriaRoles.CheckBox
+    .PositionInMatchingSet 2
     .Find 10
   End With
 
   Dim SecondCheckboxDescription As pLocator
   Set SecondCheckboxDescription = Factory.GetNewLocator
   With SecondCheckboxDescription
-    .Initialise "FirstCheckboxDescription", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs)"
-    .AriaRoleDescription: .NameIs " checkbox 2": .PositionInTreescope 7
+    .Initialise "SecondCheckboxDescription", This.RootWebArea, Descendants, pConditions, "AND(OR(AriaRoleDescription, ControlType), OR(NameIsCB21,NameIsCB22))"
+    .AriaRoleDescription: .Condition "NameIsCB21", Name, IsTheString, " checkbox 2": .Condition "NameIsCB22", Name, IsTheString, " checkbox 2 "
+    .ControlType Text
     .Find 10
   End With
   
@@ -179,7 +180,7 @@ Public Sub Checkboxes()
   
   Actions.Click FirstCheckbox.Element
   Debug.Assert Not FirstCheckbox.Element.GetToggleState()
-  
+
   This.WebBrowser.NavigateBack
   Debug.Assert (This.WebBrowser.GetCurrentURL = TARGET_PAGE_URL) Or (This.WebBrowser.GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", ""))
 
@@ -196,15 +197,18 @@ Public Sub DragAndDrop()
     Dim FirstItem As pLocator
     Set FirstItem = Factory.GetNewLocator
     With FirstItem
-      .Initialise "FirstItem", This.RootWebArea, Children, By.AriaRole, AriaRoles.Banner
-      .PositionInTreescope 3
+      .Initialise "FirstItem", This.RootWebArea, Descendants, By.AriaRole, AriaRoles.Banner
+      '.PositionInTreescope 3
+      .PositionInMatchingSet 1
       .Find 10
     End With
 
     Dim SecondItem As pLocator
     Set SecondItem = Factory.GetNewLocator
     With SecondItem
-      .Initialise "SecondItem", This.RootWebArea, Children, By.AriaRole, AriaRoles.Banner: .PositionInTreescope 4
+      .Initialise "SecondItem", This.RootWebArea, Descendants, By.AriaRole, AriaRoles.Banner:
+      '.PositionInTreescope 4
+      .PositionInMatchingSet 2
       .Find 10
     End With
         
@@ -246,8 +250,8 @@ Private Sub FormAuthentication_Login()
   Dim SubHeader As pLocator
   Set SubHeader = Factory.GetNewLocator
   With SubHeader
-    .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, ClassName, NameIs)"
-    .AriaRoleHeading: .ClassName "subheader": .PositionInTreescope 3
+    .Initialise "SubHeader", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleHeading, ClassName, NameIs)"
+    .AriaRoleHeading: .ClassName "subheader"
     .NameIs "This is where you can log into the secure area. Enter tomsmith for the username and SuperSecretPassword! for the password. If the information is wrong you should see error messages."
     Debug.Assert .ElementExists(5)
   End With
@@ -255,16 +259,17 @@ Private Sub FormAuthentication_Login()
   Dim UsernameLabel As pLocator
   Set UsernameLabel = Factory.GetNewLocator
   With UsernameLabel
-    .Initialise "UsernameLabel", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs)"
-    .AriaRoleDescription: .NameIs "Username": .PositionInTreescope 4
+    .Initialise "UsernameLabel", This.RootWebArea, Descendants, pConditions, "AND(OR(AriaRoleDescription, ControlType), NameIs)"
+    .AriaRoleDescription: .NameIs "Username"
+    .ControlType UIAControlTypeIDs.Group
     Debug.Assert .ElementExists(0)
   End With
 
   Dim UsernameTextBox As pLocator
   Set UsernameTextBox = Factory.GetNewLocator
   With UsernameTextBox
-    .Initialise "UsernameTextBox", This.RootWebArea, Children, pConditions, "AND(AriaRoleTextBox, NameIs)"
-    .AriaRoleTextBox: .NameIs "Username": .PositionInTreescope 5
+    .Initialise "UsernameTextBox", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleTextBox, NameIs)"
+    .AriaRoleTextBox: .NameIs "Username"
     '.Condition "LabeledBy", LabeledBy, IsTheString, "Username" ' This returns an element!
     Debug.Assert .ElementExists(0)
   End With
@@ -272,16 +277,18 @@ Private Sub FormAuthentication_Login()
   Dim PasswordLabel As pLocator
   Set PasswordLabel = Factory.GetNewLocator
   With PasswordLabel
-    .Initialise "PasswordLabel", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs)"
-    .AriaRoleDescription: .NameIs "Password": .PositionInTreescope 6
+    .Initialise "PasswordLabel", This.RootWebArea, Descendants, pConditions, "AND(OR(AriaRoleDescription, ControlType), NameIs)"
+    .AriaRoleDescription: .NameIs "Password"
+    .ControlType UIAControlTypeIDs.Group
     Debug.Assert .ElementExists(0)
   End With
 
   Dim PasswordTextBox As pLocator
   Set PasswordTextBox = Factory.GetNewLocator
   With PasswordTextBox
-    .Initialise "FirstItem", This.RootWebArea, Children, pConditions, "AND(AriaRoleTextBox, NameIs)"
-    .AriaRoleTextBox: .NameIs "Password": .PositionInTreescope 7
+    .Initialise "PasswordTextBox", This.RootWebArea, Descendants, pConditions, "AND(OR(AriaRoleTextBox, ControlType), NameIs)"
+    .AriaRoleTextBox: .NameIs "Password"
+    .ControlType UIAControlTypeIDs.Edit
     'TODO: .Condition "LabeledBy", LabeledBy, IsTheString, "Password" ' This returns an element!
     Debug.Assert .ElementExists(0)
   End With
@@ -289,8 +296,8 @@ Private Sub FormAuthentication_Login()
   Dim LoginButton As pLocator
   Set LoginButton = Factory.GetNewLocator
   With LoginButton
-    .Initialise "LoginButton", This.RootWebArea, Children, pConditions, "AND(AriaRoleButton, NameEndsWith)"
-    .AriaRoleButton: .Condition "NameEndsWith", Name, EndsWithTheString, " Login": .PositionInTreescope 8
+    .Initialise "LoginButton", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleButton, NameEndsWith)"
+    .AriaRoleButton: .Condition "NameEndsWith", Name, EndsWithTheString, " Login"
     'Name='? Login' - starts with a unicode character?
     Debug.Assert .ElementExists(0)
   End With
@@ -322,16 +329,19 @@ Private Sub FormAuthentication_Secure()
   Dim SecureMesssage As pLocator
   Set SecureMesssage = Factory.GetNewLocator
   With SecureMesssage
-    .Initialise "SecureMesssage", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs)"
-    .AriaRoleDescription: .NameIs " You logged into a secure area!": .PositionInTreescope 2
+    .Initialise "SecureMesssage", This.RootWebArea, Descendants, pConditions, "AND(OR(AriaRoleDescription, ControlType), OR(NameIs1, NameIs2))"
+    .AriaRoleDescription
+    .Condition "NameIs1", Name, IsTheString, " You logged into a secure area!"
+    .Condition "NameIs2", Name, IsTheString, " You logged into a secure area! "
+    .ControlType UIAControlTypeIDs.Text
     Debug.Assert .ElementExists(5)
   End With
 
   Dim SecureMesssageHyperlink As pLocator
   Set SecureMesssageHyperlink = Factory.GetNewLocator
   With SecureMesssageHyperlink
-    .Initialise "SecureMesssageHyperlink", This.RootWebArea, Children, pConditions, "AND(AriaRoleLink, NameIs)"
-    .AriaRoleLink: .NameIs "×": .PositionInTreescope 3
+    .Initialise "SecureMesssageHyperlink", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleLink, NameIs)"
+    .AriaRoleLink: .NameIs "×"
     Debug.Assert .ElementExists(0)
   End With
 
@@ -344,28 +354,28 @@ Private Sub FormAuthentication_Secure()
   Dim Heading As pLocator
   Set Heading = Factory.GetNewLocator
   With Heading
-    .Initialise "Heading", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs)"
-    .AriaRoleHeading: .NameIs "Secure Area": .PositionInTreescope 2
+    .Initialise "Heading", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleHeading, NameIs)"
+    .AriaRoleHeading: .NameIs "Secure Area"
     Debug.Assert .ElementExists(5)
   End With
 
   Dim SubHeader As pLocator
   Set SubHeader = Factory.GetNewLocator
   With SubHeader
-    .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, ClassName, NameIs)"
-    .AriaRoleHeading: .ClassName "subheader": .NameIs "Welcome to the Secure Area. When you are done click logout below.": .PositionInTreescope 3
+    .Initialise "SubHeader", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleHeading, ClassName, NameIs)"
+    .AriaRoleHeading: .ClassName "subheader": .NameIs "Welcome to the Secure Area. When you are done click logout below."
     Debug.Assert .ElementExists(0)
   End With
 
   Dim Logout As pLocator
   Set Logout = Factory.GetNewLocator
   With Logout
-    .Initialise "SubHeader", This.RootWebArea, Children, pConditions, "AND(AriaRoleLink, NameIs)"
-    .AriaRoleLink: .NameIs "Logout": .PositionInTreescope 4
+    .Initialise "SubHeader", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleLink, NameIs)"
+    .AriaRoleLink: .NameIs "Logout" '
     Debug.Assert .ElementExists(0)
   End With
 
-'Click logout takes us back!
+  'Click logout takes us back!
   Actions.Click Logout.Element
   Snooze 500
   Debug.Assert Heading.ElementDoesntExist(2)

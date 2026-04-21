@@ -61,8 +61,10 @@ Public Sub Initialize()
   
   Set This.Description = Factory.GetNewLocator
   With This.Description
-    .Initialise "Heading", This.RootWebArea, Children, pConditions, "AND(AriaRoleDescription, NameIs)"
+    'NB: Firefox doesn't give the Aria Role here!
+    .Initialise "Heading", This.RootWebArea, Children, pConditions, "AND(OR(AriaRoleDescription, ControlType), NameIs)"
     .AriaRoleDescription
+    .ControlType Text
     .NameIs "This domain is for use in documentation examples without needing permission. Avoid use in operations."
   End With
     

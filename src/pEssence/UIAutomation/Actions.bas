@@ -165,11 +165,11 @@ Public Sub Click(Element As pElement)
   If TryTogglePattern(Element) Then GoTo Cleanup
   If TryLegacyIAccessibleDefaultAction(Element) Then GoTo Cleanup
   If TryLegacyIAccessiblePatternSelect(Element, SELFLAG_TAKEFOCUS + SELFLAG_TAKESELECTION) Then GoTo Cleanup
-  ' Try this last as we don't know if it worked!
-  If TryMouseClickByMessage(Element, LeftClick) Then GoTo Cleanup
 'This works?
   If TryMouseClicksByEvent(Element, LeftClick) Then GoTo Cleanup
   If TryMouseClickByMessage(Element, LeftClickSynchronous) Then GoTo Cleanup
+  ' Try this last as we don't know if it worked!
+  If TryMouseClickByMessage(Element, LeftClick) Then GoTo Cleanup
 
 Cleanup:
   Window.ReleaseHighlighting

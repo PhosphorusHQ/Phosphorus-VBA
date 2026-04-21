@@ -90,7 +90,7 @@ Private Sub InitialiseAllLocators()
     .NameIs This.WebAppPageTitle & " - Google Chrome"
     .ControlType UIAControlTypeIDs.Window
     .ClassName "Chrome_WidgetWin_1"
-    .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
+    .WindowInteractionState ReadyForUserInteraction
   End With
 
   With This.BrowserRootView

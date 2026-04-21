@@ -143,6 +143,14 @@ Public Sub AriaRoleDescription()
   AriaRole AriaRoles.Description, "Description"
 End Sub
 
+Public Sub AriaRoleDialog()
+  AriaRole AriaRoles.Dialog, "Dialog"
+End Sub
+
+Public Sub AriaRoleDocument()
+  AriaRole AriaRoles.Document, "Document"
+End Sub
+
 Public Sub AriaRoleGroup()
   AriaRole AriaRoles.Group, "Group"
 End Sub
@@ -169,6 +177,14 @@ End Sub
 
 Public Sub AriaRoleTextBox()
   AriaRole AriaRoles.TextBox, "TextBox"
+End Sub
+
+Public Sub AriaRoleTabPanel()
+  AriaRole AriaRoles.TabPanel, "TabPanel"
+End Sub
+
+Public Sub AriaRoleToolbar()
+  AriaRole AriaRoles.Toolbar, "Toolbar"
 End Sub
 
 Public Sub AutomationId(ID As String)
@@ -200,6 +216,10 @@ End Sub
 
 Public Sub PositionInMatchingSet(Position As Integer)
   This.PositionInMatchingSet = Position
+End Sub
+
+Public Sub WindowInteractionState(State As UIAWindowInteractionStates)
+  Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, State
 End Sub
 
 Public Sub ListAllConditions()

@@ -90,7 +90,7 @@ Private Sub InitialiseAllLocators()
     .Condition "NameLike", Name, IsLikeTheString, This.WebAppPageTitle & " - " & "*" & " - Microsoft" & ChrW(8203) & " Edge"
     .ControlType UIAControlTypeIDs.Window
     .ClassName "Chrome_WidgetWin_1"
-    .Condition "WindowInteractionState", WindowWindowInteractionState, EqualsNumber, UIAWindowInteractionStates.ReadyForUserInteraction
+    .WindowInteractionState ReadyForUserInteraction
   End With
 
   This.BrowserRootView.Initialise "BrowserRootView", This.MasterWindow, Children, By.ClassName, "BrowserRootView"

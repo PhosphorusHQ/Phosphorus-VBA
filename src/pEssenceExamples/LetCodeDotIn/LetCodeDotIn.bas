@@ -16,7 +16,7 @@ Sub RadioButtonsAndCheckboxes()
 
   If Not RunningAllExamples Then
     Window.HighlightElements = True
-    Factory.CurrentWebBrowserType = 2
+    Factory.CurrentWebBrowserType = 1
   End If
   
   Dim LetCodeDotIn As LetCodeDotInPageRadio

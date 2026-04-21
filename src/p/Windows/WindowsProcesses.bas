@@ -86,8 +86,10 @@ Public Sub Test_LaunchExecutable()
 ' WINDOWS SYSTEM TOOLS
 '  LaunchExecutable Phosphorus.WindowsExecutables.WindowsTaskManager, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
 '  LaunchExecutable Phosphorus.WindowsExecutables.WindowsCharacterMap, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
-  LaunchExecutable Phosphorus.WindowsExecutables.WindowsDiskCleanUp, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.Minimized
-
+'  LaunchExecutable Phosphorus.WindowsExecutables.WindowsDiskCleanUp, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.Minimized
+'    LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -P Phosphorus -url https://www.example.com/", Phosphorus.WindowShowStates.Maximized
+  LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -url https://www.example.com/", Phosphorus.WindowShowStates.Maximized
+    
 End Sub
 
 'Public Sub OpenExecuteable(ByVal ShowCmd As Phosphorus.WindowShowStates)

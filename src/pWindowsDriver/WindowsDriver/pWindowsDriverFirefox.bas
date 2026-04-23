@@ -61,7 +61,7 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
     Case pWinDriver.pInstanceType.Executable
       'Launch Edge via executable with no parameters other than the url, if any
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -P Phosphorus -url " & URL, Phosphorus.WindowShowStates.Maximized
-'Lots of command line options - how to avoid sage mode popup
+'Lots of command line options - how to avoid safe mode popup
       '-private --no-remote
 '      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -browser -ProfileManager " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED
 '      Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -browser -private -url " & URL, Phosphorus.WindowShowStates.SW_SHOWMAXIMIZED

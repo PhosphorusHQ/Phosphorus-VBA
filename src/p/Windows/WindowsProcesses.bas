@@ -264,7 +264,3 @@ Public Function GetProcessIdByCommandLine(ByVal commandLineSnippet As String) As
 ErrorHandler:
     GetProcessIdByCommandLine = 0
 End Function
-
-
-
-

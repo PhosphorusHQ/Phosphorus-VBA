@@ -22,7 +22,7 @@ Option Explicit
 Private Type Properties
   Initialised As Boolean
   Element As pElement
-  Elements() As pElement 'IUIAutomationElement
+  Elements() As pElement
   RootUIAElement As IUIAutomationElement
   RootUIAElementLocator As pLocator
   RootUIAElementIsDesktop As Boolean
@@ -418,6 +418,31 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
   End If
   
 End Function
+
+Public Sub ListAllChildren()
+  Dim AllElements As IUIAutomationElementArray
+  If Element.UIAElement Is Nothing Then
+    ErrorLogging.LogError Errors.FindElementsRootElementIsNothing, "List All Children - The root element is nothing!"
+    Exit Sub
+  Else
+    Set AllElements = Element.UIAElement.FindAll(TreeScope.Children, UIA.CreateTrueCondition)
+  End If
+  If AllElements.Length = 0 Then
+    ErrorLogging.LogError Errors.FindElementsFindNoElementsBelowRoot, "Could not find any elements below the Root Element!"
+    Exit Sub
+  End If
+  Dim i As Long
+  Dim CurrentElement As IUIAutomationElement
+  For i = 0 To AllElements.Length - 1
+    Set CurrentElement = AllElements.GetElement(i)
+    Debug.Print "Element #" & i
+    Debug.Print "AriaRole: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.AriaRole)
+    Debug.Print "ControlType: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.ControlType)
+    Debug.Print "ClassName: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.ClassName)
+    Debug.Print "Name: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.Name)
+    Debug.Print "..."
+  Next i
+End Sub
 
 Private Function EvaluationLogicIsOk() As Boolean
   

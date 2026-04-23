@@ -22,7 +22,7 @@ Sub HelloWorldWideWeb()
   
   Set WebBrowser = Factory.GetNewWebBrowser
   WebBrowser.Start "Hello World!", "https://www.google.com", "Google"
-
+  
   Set SearchBox = Factory.GetNewLocator
   With SearchBox
     .Initialise _

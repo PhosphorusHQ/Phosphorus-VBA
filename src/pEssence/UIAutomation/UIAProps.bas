@@ -197,14 +197,14 @@ Public Enum UIAControlTypeIDs
   Document = UIA_ControlTypeIds.UIA_DocumentControlTypeId
   Edit = UIA_ControlTypeIds.UIA_EditControlTypeId
   Group = UIA_ControlTypeIds.UIA_GroupControlTypeId
-  header = UIA_ControlTypeIds.UIA_HeaderControlTypeId
+  Header = UIA_ControlTypeIds.UIA_HeaderControlTypeId
   HeaderItem = UIA_ControlTypeIds.UIA_HeaderItemControlTypeId
   Hyperlink = UIA_ControlTypeIds.UIA_HyperlinkControlTypeId
   Image = UIA_ControlTypeIds.UIA_ImageControlTypeId
   List = UIA_ControlTypeIds.UIA_ListControlTypeId
   ListItem = UIA_ControlTypeIds.UIA_ListItemControlTypeId
-  MenuBar = UIA_ControlTypeIds.UIA_MenuBarControlTypeId
   Menu = UIA_ControlTypeIds.UIA_MenuControlTypeId
+  MenuBar = UIA_ControlTypeIds.UIA_MenuBarControlTypeId
   MenuItem = UIA_ControlTypeIds.UIA_MenuItemControlTypeId
   Pane = UIA_ControlTypeIds.UIA_PaneControlTypeId
   ProgressBar = UIA_ControlTypeIds.UIA_ProgressBarControlTypeId
@@ -223,6 +223,7 @@ Public Enum UIAControlTypeIDs
   Thumb = UIA_ControlTypeIds.UIA_ThumbControlTypeId
   TitleBar = UIA_ControlTypeIds.UIA_TitleBarControlTypeId
   Toolbar = UIA_ControlTypeIds.UIA_ToolBarControlTypeId
+  ToolTip = UIA_ControlTypeIds.UIA_ToolTipControlTypeId
   TreeControl = UIA_ControlTypeIds.UIA_TreeControlTypeId
   TreeItem = UIA_ControlTypeIds.UIA_TreeItemControlTypeId
   Window = UIA_ControlTypeIds.UIA_WindowControlTypeId
@@ -236,15 +237,64 @@ Public Enum UIAWindowInteractionStates 'UIAutomationClient.WindowInteractionStat
   Running = WindowInteractionState_Running
 End Enum
 
-Public Function GetWindowInteractionStateName(WindowInteractionState As Long) As String
-  Dim r As String
-  Select Case WindowInteractionState 'UIAutomationClient.WindowInteractionState
-    Case WindowInteractionState_Running: r = "Running"
-    Case WindowInteractionState_Closing: r = "Closing"
-    Case WindowInteractionState_ReadyForUserInteraction: r = "ReadyForUserInteraction"
-    Case WindowInteractionState_BlockedByModalWindow: r = "BlockedByModalWindow"
-    Case WindowInteractionState_NotResponding: r = "NotResponding"
-    Case Else: r = "Unknown Window Interaction State (" & WindowInteractionState & ")"
+Public Function ControlTypeName(ControlTypeID As UIAControlTypeIDs) As String
+  Dim R As String
+  Select Case ControlTypeID
+    Case AppBar: R = "AppBar"
+    Case Button: R = "Button"
+    Case Calendar: R = "Calendar"
+    Case CheckBox: R = "CheckBox"
+    Case ComboBox: R = "ComboBox"
+    Case Custom: R = "Custom"
+    Case DataGrid: R = "DataGrid"
+    Case DataItem: R = "DataItem"
+    Case Document: R = "Document"
+    Case Edit: R = "Edit"
+    Case Group: R = "Group"
+    Case Header: R = "Header"
+    Case HeaderItem: R = "HeaderItem"
+    Case Hyperlink: R = "Hyperlink"
+    Case Image: R = "Image"
+    Case List: R = "List"
+    Case ListItem: R = "ListItem"
+    Case Menu: R = "Menu"
+    Case MenuBar: R = "MenuBar"
+    Case MenuItem: R = "MenuItem"
+    Case Pane: R = "Pane"
+    Case ProgressBar: R = "ProgressBar"
+    Case RadioButton: R = "RadioButton"
+    Case ScrollBar: R = "ScrollBar"
+    Case SemanticZoom: R = "SemanticZoom"
+    Case Separator: R = "Separator"
+    Case Slider: R = "Slider"
+    Case Spinner: R = "Spinner"
+    Case SplitButton: R = "SplitButton"
+    Case TabControl: R = "Tab"
+    Case TabItem: R = "TabItem"
+    Case Table: R = "Table"
+    Case Text: R = "Text"
+    Case Thumb: R = "Thumb"
+    Case TitleBar: R = "TitleBar"
+    Case Toolbar: R = "ToolBar"
+    Case ToolTip: R = "ToolTip"
+    Case TreeControl: R = "Tree"
+    Case TreeItem: R = "TreeItem"
+    Case Window: R = "Window"
+    Case Else
+      MsgBox "ControlTypeID: " & ControlTypeID & " not handled in ControlTypeName"
   End Select
-  GetWindowInteractionStateName = r
+  ControlTypeName = R
+End Function
+
+Public Function GetWindowInteractionStateName(WindowInteractionState As Long) As String
+  Dim R As String
+  Select Case WindowInteractionState 'UIAutomationClient.WindowInteractionState
+    Case WindowInteractionState_Running: R = "Running"
+    Case WindowInteractionState_Closing: R = "Closing"
+    Case WindowInteractionState_ReadyForUserInteraction: R = "ReadyForUserInteraction"
+    Case WindowInteractionState_BlockedByModalWindow: R = "BlockedByModalWindow"
+    Case WindowInteractionState_NotResponding: R = "NotResponding"
+    Case Else: R = "Unknown Window Interaction State (" & WindowInteractionState & ")"
+  End Select
+  GetWindowInteractionStateName = R
 End Function

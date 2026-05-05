@@ -75,8 +75,10 @@ Public Sub Test_LaunchExecutable()
 '  LaunchExecutable Phosphorus.WindowsExecutables.WindowsExplorer, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
 '  LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftWord, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
   'https://peter.sh/experiments/chromium-command-line-switches/
-'  LaunchExecutable Phosphorus.WindowsExecutables.PowerShell, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
-'  LaunchExecutable Phosphorus.WindowsExecutables.Opera, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
+'  LaunchExecutable Phosphorus.WindowsExecutables.PowerShell, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED'
+  'LaunchExecutable Phosphorus.WindowsExecutables.Opera, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.Maximized
+  LaunchExecutable Phosphorus.WindowsExecutables.Opera, "--force-renderer-accessibility " & "https://www.example.com/", Phosphorus.WindowShowStates.Maximized
+
 '  LaunchExecutable Phosphorus.WindowsExecutables.WindowsNotepad, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
 '  LaunchExecutable Phosphorus.WindowsExecutables.WindowsPCHealthCheck, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
 '  LaunchExecutable Phosphorus.WindowsExecutables.AdobeAcrobat, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
@@ -88,7 +90,7 @@ Public Sub Test_LaunchExecutable()
 '  LaunchExecutable Phosphorus.WindowsExecutables.WindowsCharacterMap, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.SW_SHOWMINIMIZED
 '  LaunchExecutable Phosphorus.WindowsExecutables.WindowsDiskCleanUp, VBA.Constants.vbNullString, Phosphorus.WindowShowStates.Minimized
 '    LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -P Phosphorus -url https://www.example.com/", Phosphorus.WindowShowStates.Maximized
-  LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -url https://www.example.com/", Phosphorus.WindowShowStates.Maximized
+'  LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -url https://www.example.com/", Phosphorus.WindowShowStates.Maximized
     
 End Sub
 

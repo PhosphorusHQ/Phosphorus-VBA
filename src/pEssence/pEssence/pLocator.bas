@@ -82,6 +82,10 @@ Public Sub Initialise( _
       This.FindBy = By.pConditions
       This.EvaluationLogic = "ClassName"
       Condition This.EvaluationLogic, UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, EvaluationLogic
+    Case By.NameIs
+      This.FindBy = By.pConditions
+      This.EvaluationLogic = "NameIs"
+      Condition This.EvaluationLogic, UIAProperties.Name, UIAPropertyComparisons.IsTheString, EvaluationLogic
     Case By.ControlType
       This.FindBy = By.pConditions
       This.EvaluationLogic = "ControlType"
@@ -215,6 +219,7 @@ Public Sub PositionInTreescope(Position As Integer)
 End Sub
 
 Public Sub PositionInMatchingSet(Position As Integer)
+  'Use -1 for last item
   This.PositionInMatchingSet = Position
 End Sub
 
@@ -398,7 +403,11 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
           Exit For
         End If
       Else
-        If CountOfMatchingElements = This.PositionInMatchingSet Then
+        If This.PositionInMatchingSet = -1 Then
+          ' Replace the return element with every match so we are left with the last one!
+          ReDim Preserve ReturnElements(0)
+          Set ReturnElements(0) = CurrentElement
+        ElseIf CountOfMatchingElements = This.PositionInMatchingSet Then
           ReDim Preserve ReturnElements(0)
           Set ReturnElements(0) = CurrentElement
           Exit For
@@ -420,6 +429,14 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
 End Function
 
 Public Sub ListAllChildren()
+  ListAllDescendants ChildrenOnly:=True
+End Sub
+    
+'dim TreeWalker As UIAutomationClient.IUIAutomationTreeWalker
+'  Dim ParentElement As IUIAutomationElement
+'Set ParentElement = This.TreeWalker.GetParentElement(CurrentElement)
+
+Public Sub ListAllDescendants(Optional Level As Integer = 0, Optional ChildrenOnly As Boolean)
   Dim AllElements As IUIAutomationElementArray
   If Element.UIAElement Is Nothing Then
     ErrorLogging.LogError Errors.FindElementsRootElementIsNothing, "List All Children - The root element is nothing!"
@@ -435,12 +452,16 @@ Public Sub ListAllChildren()
   Dim CurrentElement As IUIAutomationElement
   For i = 0 To AllElements.Length - 1
     Set CurrentElement = AllElements.GetElement(i)
-    Debug.Print "Element #" & i
-    Debug.Print "AriaRole: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.AriaRole)
-    Debug.Print "ControlType: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.ControlType)
-    Debug.Print "ClassName: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.ClassName)
-    Debug.Print "Name: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.Name)
-    Debug.Print "..."
+    Debug.Print VBA.Strings.String(1 * 2, " ") & "Element #" & i
+    Debug.Print VBA.Strings.String(1 * 2, " ") & "AriaRole: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.AriaRole)
+    Debug.Print VBA.Strings.String(1 * 2, " ") & "ControlType: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.ControlType) & " (" & ControlTypeName(CurrentElement.GetCurrentPropertyValue(UIAProperties.ControlType)) & ")"
+    Debug.Print VBA.Strings.String(1 * 2, " ") & "ClassName: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.ClassName)
+    Debug.Print VBA.Strings.String(1 * 2, " ") & "Name: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.Name)
+    Debug.Print ""
+    If Not ChildrenOnly Then
+      ListAllDescendants Level
+    End If
+
   Next i
 End Sub
 

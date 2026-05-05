@@ -23,6 +23,7 @@ Public Enum WebBrowserType
   Chrome
   Edge
   Firefox
+  Opera
   [_Last]
 End Enum
 
@@ -57,6 +58,8 @@ Public Function GetNewWebBrowser() As Object
       Set GetNewWebBrowser = New EdgeWebBrowser
     Case WebBrowserType.Firefox
       Set GetNewWebBrowser = New FirefoxWebBrowser
+    Case WebBrowserType.Opera
+      Set GetNewWebBrowser = New OperaWebBrowser
     Case Else
       pExceptions.Raise pEssenceUnhandledWebBrowserType
   End Select

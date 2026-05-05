@@ -120,7 +120,7 @@ Private Const WS_POPUP           As Long = &H80000000
 
 Private Enum MouseClickType
   LeftClick
-  RightClick
+  ClickRight
   DoubleClick
   LeftClickSynchronous
 End Enum
@@ -175,6 +175,28 @@ Cleanup:
   Window.ReleaseHighlighting
 
 End Sub
+
+Public Sub RightClick(Element As pElement)
+'  MouseClicks WM_RBUTTONDOWN, MK_RBUTTON, WM_RBUTTONUP, 0, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP
+
+  AutoFindUIAElement Element
+  
+  Toaster.Message "Clicking " & Name, Action
+    
+  IsElementReady Element
+  Window.HighlightElement Element.UIAElement
+  MoveMouseToElement Element
+
+  If TryMouseClicksByEvent(Element, ClickRight) Then GoTo Cleanup
+'  If TryMouseClickByMessage(Element, LeftClickSynchronous) Then GoTo Cleanup
+  ' Try this last as we don't know if it worked!
+  If TryMouseClickByMessage(Element, ClickRight) Then GoTo Cleanup
+
+Cleanup:
+  Window.ReleaseHighlighting
+
+End Sub
+
 
 Private Function TryInvokePattern(Element As pElement) As Boolean
   On Error GoTo Finish
@@ -312,7 +334,7 @@ Private Sub MouseClickByMessage(Element As pElement, ClickType As MouseClickType
       PostMessage hWnd, WM_LBUTTONDOWN, 1, MakeLParam
       Snooze 35
       PostMessage hWnd, WM_LBUTTONUP, 0, MakeLParam
-    Case MouseClickType.RightClick
+    Case MouseClickType.ClickRight
       PostMessage hWnd, WM_RBUTTONDOWN, 0, MakeLParam
       Snooze 40
       PostMessage hWnd, WM_RBUTTONUP, 0, MakeLParam
@@ -335,7 +357,7 @@ Private Function TryMouseClicksByEvent(Element As pElement, ClickType As MouseCl
   Select Case ClickType
     Case MouseClickType.LeftClick
       MouseClicksByEvent Element, MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP
-    Case MouseClickType.RightClick
+    Case MouseClickType.ClickRight
       MouseClicksByEvent Element, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP
   End Select
   TryMouseClicksByEvent = True

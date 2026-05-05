@@ -20,6 +20,7 @@ Public Enum By
   AutomationId
   ClassName
   ControlType
+  NameIs
 End Enum
 
 Public Enum UIAPropertyComparisons
@@ -41,36 +42,36 @@ Public Enum TreeScope
 End Enum
 
 Public Function GetByName(NamedBy As By) As String
-  Dim r As String
+  Dim R As String
   Select Case NamedBy
     Case By.pConditions
-      r = "pConditon"
+      R = "pConditon"
     Case By.AutomationId
-      r = "AutomationId"
+      R = "AutomationId"
     Case Else
       ErrorLogging.LogError Errors.UnhandledGetName, "Unhanded UIAPropertyComparisons: " & "(" & NamedBy & ")"
       Exit Function
   End Select
-  GetByName = r
+  GetByName = R
 End Function
 
 Public Function GetUIAPropertyComparisonsName(Comparison As UIAPropertyComparisons) As String
-  Dim r As String
+  Dim R As String
   Select Case Comparison
     Case UIAPropertyComparisons.IsTheString
-      r = "IsTheString"
+      R = "IsTheString"
     Case UIAPropertyComparisons.IsLikeTheString
-      r = "IsLike"
+      R = "IsLike"
     Case UIAPropertyComparisons.EqualsNumber
-      r = "Equals"
+      R = "Equals"
     Case UIAPropertyComparisons.StartsWithTheString
-      r = "StartsWith"
+      R = "StartsWith"
     Case UIAPropertyComparisons.EndsWithTheString
-      r = "EndsWith"
+      R = "EndsWith"
     Case Else
       ErrorLogging.LogError Errors.UnhandledGetName, "Unhanded UIAPropertyComparisons: " & "(" & Comparison & ")"
       Exit Function
   End Select
-  GetUIAPropertyComparisonsName = r
+  GetUIAPropertyComparisonsName = R
 End Function
 

@@ -201,18 +201,18 @@ Public Sub HighlightElement(Ele As IUIAutomationElement, _
     
   Dim hBrush As LongPtr: hBrush = CreateSolidBrush(BorderColor)
     
-  Dim r As rect
-  r.Left = 0: r.Top = 0
-  r.Right = Width: r.Bottom = Height
+  Dim R As rect
+  R.Left = 0: R.Top = 0
+  R.Right = Width: R.Bottom = Height
     
   ' Draw outer border
-  FillRect hdc, r, hBrush
+  FillRect hdc, R, hBrush
     
   ' Erase inner area (make border only)
-  r.Left = BorderThickness: r.Top = BorderThickness
-  r.Right = Width - BorderThickness: r.Bottom = Height - BorderThickness
+  R.Left = BorderThickness: R.Top = BorderThickness
+  R.Right = Width - BorderThickness: R.Bottom = Height - BorderThickness
   Dim HWhiteBrush As LongPtr: HWhiteBrush = CreateSolidBrush(vbWhite)
-  FillRect hdc, r, HWhiteBrush
+  FillRect hdc, R, HWhiteBrush
     
   DeleteObject hBrush
   DeleteObject HWhiteBrush
@@ -259,8 +259,8 @@ Public Function CreateDragHighlight(Ele As IUIAutomationElement, x As Long, y As
 
   Dim hBrush As LongPtr: hBrush = CreateSolidBrush(&HFF)      ' Red
 '  Dim hBrush As LongPtr: hBrush = CreateSolidBrush(&HFF0000)      ' Red?
-  Dim r As rect: r.Left = 0: r.Top = 0: r.Right = W: r.Bottom = h
-  FillRect hdc, r, hBrush
+  Dim R As rect: R.Left = 0: R.Top = 0: R.Right = W: R.Bottom = h
+  FillRect hdc, R, hBrush
   
   DeleteObject hBrush
   ReleaseDC hWnd, hdc

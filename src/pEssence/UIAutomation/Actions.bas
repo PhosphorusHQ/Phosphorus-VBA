@@ -80,13 +80,13 @@ Private Const WS_POPUP           As Long = &H80000000
     ByVal dwData As Long, ByVal dwExtraInfo As LongPtr)
 
  Private Declare PtrSafe Function SendMessage Lib "user32" Alias "SendMessageA" ( _
-    ByVal hWnd As LongPtr, ByVal wMsg As Long, ByVal wParam As LongPtr, lParam As Any) As LongPtr
+    ByVal hwnd As LongPtr, ByVal wMsg As Long, ByVal wParam As LongPtr, lParam As Any) As LongPtr
         
   Private Declare PtrSafe Function PostMessage Lib "user32" Alias "PostMessageA" ( _
-    ByVal hWnd As LongPtr, ByVal wMsg As Long, ByVal wParam As LongPtr, lParam As Any) As Long
+    ByVal hwnd As LongPtr, ByVal wMsg As Long, ByVal wParam As LongPtr, lParam As Any) As Long
 
   Private Declare PtrSafe Function ScreenToClient Lib "user32" ( _
-    ByVal hWnd As LongPtr, lpPoint As POINTAPI) As Long
+    ByVal hwnd As LongPtr, lpPoint As POINTAPI) As Long
                   
 #Else
   ' 32-bit Office
@@ -108,13 +108,13 @@ Private Const WS_POPUP           As Long = &H80000000
     ByVal dwData As Long, ByVal dwExtraInfo As Long)
 
    Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" _
-        (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
+        (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
         
     Private Declare Function PostMessage Lib "user32" Alias "PostMessageA" _
-        (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
+        (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
         
     Private Declare Function ScreenToClient Lib "user32" _
-        (ByVal hwnd As Long, lpPoint As POINTAPI) As Long
+        (ByVal hWnd As Long, lpPoint As POINTAPI) As Long
    
 #End If
 
@@ -316,13 +316,13 @@ Private Sub MouseClickByMessage(Element As pElement, ClickType As MouseClickType
   Dim centerX As Long: centerX = CLng(rect(0) + rect(2) \ 2)
   Dim centerY As Long: centerY = CLng(rect(1) + rect(3) \ 2)
     
-  Dim hWnd As LongPtr
-  hWnd = Element.UIAElement.GetCurrentPropertyValue(UIA_NativeWindowHandlePropertyId)
+  Dim hwnd As LongPtr
+  hwnd = Element.UIAElement.GetCurrentPropertyValue(UIA_NativeWindowHandlePropertyId)
     
   Dim pt As POINTAPI
   pt.x = centerX
   pt.y = centerY
-  ScreenToClient hWnd, pt
+  ScreenToClient hwnd, pt
     
   'Make LPARAM from x,y coordinates
   Dim MakeLParam As LongPtr
@@ -331,21 +331,21 @@ Private Sub MouseClickByMessage(Element As pElement, ClickType As MouseClickType
   'Use PostMessage by default - asynchronous, safer for UI Automation
   Select Case ClickType
     Case MouseClickType.LeftClick
-      PostMessage hWnd, WM_LBUTTONDOWN, 1, MakeLParam
+      PostMessage hwnd, WM_LBUTTONDOWN, 1, MakeLParam
       Snooze 35
-      PostMessage hWnd, WM_LBUTTONUP, 0, MakeLParam
+      PostMessage hwnd, WM_LBUTTONUP, 0, MakeLParam
     Case MouseClickType.ClickRight
-      PostMessage hWnd, WM_RBUTTONDOWN, 0, MakeLParam
+      PostMessage hwnd, WM_RBUTTONDOWN, 0, MakeLParam
       Snooze 40
-      PostMessage hWnd, WM_RBUTTONUP, 0, MakeLParam
+      PostMessage hwnd, WM_RBUTTONUP, 0, MakeLParam
     Case MouseClickType.DoubleClick
-      PostMessage hWnd, WM_LBUTTONDBLCLK, 1, MakeLParam
+      PostMessage hwnd, WM_LBUTTONDBLCLK, 1, MakeLParam
       Snooze 50
-      PostMessage hWnd, WM_LBUTTONUP, 0, MakeLParam
+      PostMessage hwnd, WM_LBUTTONUP, 0, MakeLParam
     Case MouseClickType.LeftClickSynchronous
-      SendMessage hWnd, WM_LBUTTONDOWN, 1, MakeLParam
+      SendMessage hwnd, WM_LBUTTONDOWN, 1, MakeLParam
       Snooze 500
-      SendMessage hWnd, WM_LBUTTONUP, 0, MakeLParam
+      SendMessage hwnd, WM_LBUTTONUP, 0, MakeLParam
   End Select
   
 End Sub

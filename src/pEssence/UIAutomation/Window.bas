@@ -24,46 +24,46 @@ Option Explicit
     ByVal dwExStyle As Long, ByVal lpClassName As String, ByVal lpWindowName As String, _
     ByVal dwStyle As Long, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, _
     ByVal hWndParent As LongPtr, ByVal hMenu As LongPtr, ByVal hInstance As LongPtr, ByVal lpParam As LongPtr) As LongPtr
-  Private Declare PtrSafe Function DestroyWindow Lib "user32" (ByVal hWnd As LongPtr) As Long
-  Private Declare PtrSafe Function SetWindowPos Lib "user32" (ByVal hWnd As LongPtr, ByVal hWndInsertAfter As LongPtr, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
-  Private Declare PtrSafe Function ShowWindow Lib "user32" (ByVal hWnd As LongPtr, ByVal nCmdShow As Long) As Long
-  Private Declare PtrSafe Function UpdateWindow Lib "user32" (ByVal hWnd As LongPtr) As Long
-  Private Declare PtrSafe Function GetDC Lib "user32" (ByVal hWnd As LongPtr) As LongPtr
-  Private Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hWnd As LongPtr, ByVal hdc As LongPtr) As Long
+  Private Declare PtrSafe Function DestroyWindow Lib "user32" (ByVal hwnd As LongPtr) As Long
+  Private Declare PtrSafe Function SetWindowPos Lib "user32" (ByVal hwnd As LongPtr, ByVal hwndInsertAfter As LongPtr, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
+  Private Declare PtrSafe Function ShowWindow Lib "user32" (ByVal hwnd As LongPtr, ByVal nCmdShow As Long) As Long
+  Private Declare PtrSafe Function UpdateWindow Lib "user32" (ByVal hwnd As LongPtr) As Long
+  Private Declare PtrSafe Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
+  Private Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hdc As LongPtr) As Long
   Private Declare PtrSafe Function CreateSolidBrush Lib "gdi32" (ByVal crColor As Long) As LongPtr
   Private Declare PtrSafe Function FillRect Lib "user32" (ByVal hdc As LongPtr, lpRect As rect, ByVal hBrush As LongPtr) As Long
   Private Declare PtrSafe Function DeleteObject Lib "gdi32" (ByVal hObject As LongPtr) As Long
-  Private Declare PtrSafe Function SetLayeredWindowAttributes Lib "user32" (ByVal hWnd As LongPtr, ByVal crKey As Long, ByVal bAlpha As Byte, ByVal dwFlags As Long) As Long
+  Private Declare PtrSafe Function SetLayeredWindowAttributes Lib "user32" (ByVal hwnd As LongPtr, ByVal crKey As Long, ByVal bAlpha As Byte, ByVal dwFlags As Long) As Long
   Private Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
   Private Declare PtrSafe Function FindWindowEx Lib "user32" Alias "FindWindowExA" ( _
     ByVal hWndParent As LongPtr, ByVal hWndChildAfter As LongPtr, _
     ByVal lpszClass As String, ByVal lpszWindow As String) As LongPtr
   Private Declare PtrSafe Function GetWindowLong Lib "user32" _
     Alias "GetWindowLongA" ( _
-    ByVal hWnd As LongPtr, _
+    ByVal hwnd As LongPtr, _
     ByVal nIndex As LongPtr) As LongPtr
   Private Declare PtrSafe Function SetWindowLong Lib "user32" _
     Alias "SetWindowLongA" ( _
-    ByVal hWnd As LongPtr, _
+    ByVal hwnd As LongPtr, _
     ByVal nIndex As LongPtr, _
     ByVal dwNewLong As LongPtr) As LongPtr
   Private Declare PtrSafe Function DrawMenuBar Lib "user32" ( _
-    ByVal hWnd As LongPtr) As LongPtr
+    ByVal hwnd As LongPtr) As LongPtr
 #Else
   Private Declare Function CreateWindowEx Lib "user32" Alias "CreateWindowExA" ( _
     ByVal dwExStyle As Long, ByVal lpClassName As String, ByVal lpWindowName As String, _
     ByVal dwStyle As Long, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, _
     ByVal hWndParent As Long, ByVal hMenu As Long, ByVal hInstance As Long, ByVal lpParam As Long) As Long
-  Private Declare Function DestroyWindow Lib "user32" (ByVal hwnd As Long) As Long
-  Private Declare Function SetWindowPos Lib "user32" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
-  Private Declare Function ShowWindow Lib "user32" (ByVal hwnd As Long, ByVal nCmdShow As Long) As Long
-  Private Declare Function UpdateWindow Lib "user32" (ByVal hwnd As Long) As Long
-  Private Declare Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
-  Private Declare Function ReleaseDC Lib "user32" (ByVal hwnd As Long, ByVal hdc As Long) As Long
+  Private Declare Function DestroyWindow Lib "user32" (ByVal hWnd As Long) As Long
+  Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
+  Private Declare Function ShowWindow Lib "user32" (ByVal hWnd As Long, ByVal nCmdShow As Long) As Long
+  Private Declare Function UpdateWindow Lib "user32" (ByVal hWnd As Long) As Long
+  Private Declare Function GetDC Lib "user32" (ByVal hWnd As Long) As Long
+  Private Declare Function ReleaseDC Lib "user32" (ByVal hWnd As Long, ByVal hdc As Long) As Long
   Private Declare Function CreateSolidBrush Lib "gdi32" (ByVal crColor As Long) As Long
   Private Declare Function FillRect Lib "user32" (ByVal hdc As Long, lpRect As RECT, ByVal hBrush As Long) As Long
   Private Declare Function DeleteObject Lib "gdi32" (ByVal hObject As Long) As Long
-  Private Declare Function SetLayeredWindowAttributes Lib "user32" (ByVal hwnd As Long, ByVal crKey As Long, ByVal bAlpha As Byte, ByVal dwFlags As Long) As Long
+  Private Declare Function SetLayeredWindowAttributes Lib "user32" (ByVal hWnd As Long, ByVal crKey As Long, ByVal bAlpha As Byte, ByVal dwFlags As Long) As Long
   Private Declare Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As Long
   Private Declare Function FindWindowEx Lib "user32" Alias "FindWindowExA" ( _
     ByVal hWndParent As Long, ByVal hWndChildAfter As Long, _
@@ -128,8 +128,8 @@ Public Sub WaitForWindowInteractionState( _
   Element.WaitForPropertyValue UIAProperties.WindowWindowInteractionState, UIAPropertyValue
 End Sub
 
-Public Sub Destroy(hWnd As LongPtr)
-  DestroyWindow hWnd
+Public Sub Destroy(hwnd As LongPtr)
+  DestroyWindow hwnd
 End Sub
 
 ' =============================================================
@@ -246,16 +246,16 @@ End Sub
 ' =============================================================
 Public Function CreateDragHighlight(Ele As IUIAutomationElement, x As Long, y As Long, W As Long, h As Long) As LongPtr
 
-  Dim hWnd As LongPtr
-  hWnd = CreateWindowEx( _
+  Dim hwnd As LongPtr
+  hwnd = CreateWindowEx( _
     WS_EX_LAYERED Or WS_EX_TRANSPARENT Or WS_EX_TOOLWINDOW Or WS_EX_TOPMOST, _
     "Static", "DragHighlight", WS_POPUP, x, y, W, h, 0, 0, 0, 0)
     
-  If hWnd = 0 Then Exit Function
+  If hwnd = 0 Then Exit Function
     
-  SetLayeredWindowAttributes hWnd, 0, 160, LWA_ALPHA   ' Semi-transparent red
+  SetLayeredWindowAttributes hwnd, 0, 160, LWA_ALPHA   ' Semi-transparent red
     
-  Dim hdc As LongPtr: hdc = GetDC(hWnd)
+  Dim hdc As LongPtr: hdc = GetDC(hwnd)
 
   Dim hBrush As LongPtr: hBrush = CreateSolidBrush(&HFF)      ' Red
 '  Dim hBrush As LongPtr: hBrush = CreateSolidBrush(&HFF0000)      ' Red?
@@ -263,43 +263,43 @@ Public Function CreateDragHighlight(Ele As IUIAutomationElement, x As Long, y As
   FillRect hdc, R, hBrush
   
   DeleteObject hBrush
-  ReleaseDC hWnd, hdc
+  ReleaseDC hwnd, hdc
     
-  ShowWindow hWnd, SW_SHOWNA
-  UpdateWindow hWnd
-  CreateDragHighlight = hWnd
+  ShowWindow hwnd, SW_SHOWNA
+  UpdateWindow hwnd
+  CreateDragHighlight = hwnd
     
 End Function
 
-Public Sub UpdateDragHighlight(hWnd As LongPtr, x As Long, y As Long)
-  If hWnd = 0 Then Exit Sub
-  SetWindowPos hWnd, HWND_TOPMOST, x, y, 0, 0, SWP_NOSIZE Or SWP_NOACTIVATE
+Public Sub UpdateDragHighlight(hwnd As LongPtr, x As Long, y As Long)
+  If hwnd = 0 Then Exit Sub
+  SetWindowPos hwnd, HWND_TOPMOST, x, y, 0, 0, SWP_NOSIZE Or SWP_NOACTIVATE
 End Sub
 
 Public Sub MakeAlwaysOnTopByCaptionAndClassName(Caption As String, ClassName As String)
 
-  Dim hWnd As LongPtr
+  Dim hwnd As LongPtr
     
   ' First try by caption
-  hWnd = FindWindow(vbNullString, Caption)
+  hwnd = FindWindow(vbNullString, Caption)
     
   ' If that fails, search for UserForm class ("ThunderDFrame" is the class name for VBA UserForms)
-  If hWnd = 0 Then
-    hWnd = FindWindowEx(0, 0, ClassName, Caption)
+  If hwnd = 0 Then
+    hwnd = FindWindowEx(0, 0, ClassName, Caption)
   End If
     
   ' Final fallback: search without caption (first ThunderDFrame)
-  If hWnd = 0 Then
-    hWnd = FindWindowEx(0, 0, ClassName, vbNullString)
+  If hwnd = 0 Then
+    hwnd = FindWindowEx(0, 0, ClassName, vbNullString)
   End If
     
-  If hWnd = 0 Then
+  If hwnd = 0 Then
     Debug.Print "Could not find UserForm window handle"
     Exit Sub
   End If
     
   ' Make it Always On Top
-  SetWindowPos hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE Or SWP_NOACTIVATE Or SWP_SHOWWINDOW
+  SetWindowPos hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE Or SWP_NOACTIVATE Or SWP_SHOWWINDOW
     
 End Sub
 

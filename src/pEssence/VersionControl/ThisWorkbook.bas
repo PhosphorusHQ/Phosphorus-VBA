@@ -15,7 +15,7 @@ Private Const ThisVBProjectName = "pEssence"
 Private Sub Workbook_Open()
   'Microsoft Visual Basic for Applications Extensilbility 5.3 - needed for VBProject
   'This is not built in but needs adding manually for the References module
-    
+        
   'Microsoft Scripting Runtime - needed for Scripting.dictionary/File System Object
   pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\scrrun.dll"
     
@@ -25,9 +25,16 @@ Private Sub Workbook_Open()
   'UIAutomationClient
   pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\UIAutomationCore.dll"
 
+  'MS Forms 2.0 Object Library - needed for JPK Treeview Control
+  pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\FM20.dll"
+  
   Dim strPhosphorusWBFullName As String
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
   pEssence.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
+
+  Dim strPhosphorusExpernalsFullName As String
+  strPhosphorusExpernalsFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus Externals.xlam")
+  pEssence.References.AddReferenceToWorkbookOrLibrary strPhosphorusExpernalsFullName
 
 End Sub
 

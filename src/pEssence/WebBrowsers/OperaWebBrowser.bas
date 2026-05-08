@@ -144,7 +144,12 @@ This.View.Find
 'Right click & close all other tabs
 This.LastTabView.Element.RightClick
 'Last tab?
-This.MasterWindow.ListAllChildren
+'This.MasterWindow.ListAllChildren
+'Snooze 500
+pHilby.Start This.MasterWindow.Element.UIAElement
+Stop
+
+'Search for element by name, then use a ListAllAncestors method and ListClildren to get find the best navigation path for transient elements!?
 
 '"/Pane[1]//MenuBar//MenuItem[@Name=""Close other tabs""]"
 

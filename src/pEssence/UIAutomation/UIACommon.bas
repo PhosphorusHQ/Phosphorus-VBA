@@ -75,3 +75,34 @@ Public Function GetUIAPropertyComparisonsName(Comparison As UIAPropertyCompariso
   GetUIAPropertyComparisonsName = R
 End Function
 
+Public Function GetElementRuntimeId(ByRef UIAElement As UIAutomationClient.IUIAutomationElement) As String
+     
+  Dim strRuntimeIDString As String
+  strRuntimeIDString = ""
+  
+  'The runtime ID is a unique array of elements (SAFEARRAY)
+  Dim varRuntimeIDArray As Variant
+  varRuntimeIDArray = UIAElement.GetRuntimeId
+  
+  'Check if the RuntimeID was retrieved successfully
+  If IsArray(varRuntimeIDArray) Then
+    'Iterate through the array
+    Dim i As Long
+    
+    For i = LBound(varRuntimeIDArray) To UBound(varRuntimeIDArray)
+      If i > LBound(varRuntimeIDArray) Then
+        strRuntimeIDString = strRuntimeIDString & " "
+      End If
+      strRuntimeIDString = strRuntimeIDString & varRuntimeIDArray(i)
+    Next i
+       
+  Else
+  
+    MsgBox "Failed to get runtime id!"
+       
+  End If
+  
+  GetElementRuntimeId = strRuntimeIDString
+
+End Function
+

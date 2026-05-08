@@ -16,7 +16,7 @@ Private Sub Workbook_Open()
 
   'Microsoft Visual Basic for Applications Extensilbility 5.3 - needed for VBProject
   'This is not built in but needs adding manually for the References module
-        
+
   'MS Forms 2.0 Object Library - needed for JPK Treeview Control
   'OLE Automation - needed for JPK Treeview Control - STDPicture
 

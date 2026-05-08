@@ -44,9 +44,15 @@ ExitFunction:
   ToasterIsActive = False
 End Function
 
-Private Function TurnOn() As Boolean
+Private Function TurnOn()
   If Not ToasterIsActive Then
     Set Toast = New frmToaster
+  End If
+End Function
+
+Public Function PopDown()
+  If Not Toast Is Nothing Then
+    Toast.PopDown
   End If
 End Function
 

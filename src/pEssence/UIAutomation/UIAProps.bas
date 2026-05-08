@@ -269,6 +269,7 @@ Public Function ControlTypeName(ControlTypeID As UIAControlTypeIDs) As String
     Case Slider: R = "Slider"
     Case Spinner: R = "Spinner"
     Case SplitButton: R = "SplitButton"
+    Case StatusBar: R = "StatusBar"
     Case TabControl: R = "Tab"
     Case TabItem: R = "TabItem"
     Case Table: R = "Table"

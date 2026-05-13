@@ -27,7 +27,10 @@ Private Sub Workbook_Open()
 
   'MS Forms 2.0 Object Library - needed for JPK Treeview Control
   pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\FM20.dll"
-  
+
+  'Microsoft Scripting Runtime - needed for Scripting.dictionary in pHilby - Built in
+  'pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\scrrun.dll"
+
   Dim strPhosphorusWBFullName As String
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
   pEssence.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName

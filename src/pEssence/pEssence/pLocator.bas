@@ -454,7 +454,7 @@ Public Sub ListAllDescendants(Optional Level As Integer = 0, Optional ChildrenOn
     Set CurrentElement = AllElements.GetElement(i)
     Debug.Print VBA.Strings.String(1 * 2, " ") & "Element #" & i
     Debug.Print VBA.Strings.String(1 * 2, " ") & "AriaRole: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.AriaRole)
-    Debug.Print VBA.Strings.String(1 * 2, " ") & "ControlType: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.ControlType) & " (" & ControlTypeName(CurrentElement.GetCurrentPropertyValue(UIAProperties.ControlType)) & ")"
+    Debug.Print VBA.Strings.String(1 * 2, " ") & "ControlType: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.ControlType) & " (" & GetControlTypeName(CurrentElement.GetCurrentPropertyValue(UIAProperties.ControlType)) & ")"
     Debug.Print VBA.Strings.String(1 * 2, " ") & "ClassName: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.ClassName)
     Debug.Print VBA.Strings.String(1 * 2, " ") & "Name: " & CurrentElement.GetCurrentPropertyValue(UIAProperties.Name)
     Debug.Print ""

@@ -23,7 +23,7 @@ Public Enum WebBrowserType
   Chrome
   Edge
   Firefox
-  Opera
+  Opera 'Not ready yet!
   [_Last]
 End Enum
 

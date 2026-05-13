@@ -148,7 +148,7 @@ Public Sub Checkboxes()
   Set FirstCheckboxDescription = Factory.GetNewLocator
   With FirstCheckboxDescription
     .Initialise "FirstCheckboxDescription", This.RootWebArea, Descendants, pConditions, "AND(OR(AriaRoleDescription, ControlType), NameIs)"
-    .AriaRoleDescription: .NameIs " checkbox 1": .ControlType Text
+    .AriaRoleDescription: .NameIs " checkbox 1": .ControlType UIAControlTypeIDs.Text
     .Find 10
   End With
 
@@ -165,7 +165,7 @@ Public Sub Checkboxes()
   With SecondCheckboxDescription
     .Initialise "SecondCheckboxDescription", This.RootWebArea, Descendants, pConditions, "AND(OR(AriaRoleDescription, ControlType), OR(NameIsCB21,NameIsCB22))"
     .AriaRoleDescription: .Condition "NameIsCB21", Name, IsTheString, " checkbox 2": .Condition "NameIsCB22", Name, IsTheString, " checkbox 2 "
-    .ControlType Text
+    .ControlType UIAControlTypeIDs.Text
     .Find 10
   End With
   

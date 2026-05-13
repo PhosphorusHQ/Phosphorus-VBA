@@ -93,7 +93,6 @@ Private Sub LoadUIATree(RootUIAElement As IUIAutomationElement)
     .NarratorReaderControl = True
     LoadRootElementAndAllDescendants RootUIAElement
     'Create the node controls and display the tree
-MsgBox "pHilby Ready!"
     .Refresh
   End With
 

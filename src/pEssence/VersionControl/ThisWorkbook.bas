@@ -29,7 +29,7 @@ Private Sub Workbook_Open()
   pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\FM20.dll"
 
   'Microsoft Scripting Runtime - needed for Scripting.dictionary in pHilby - Built in
-  'pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\scrrun.dll"
+  pEssence.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\scrrun.dll"
 
   Dim strPhosphorusWBFullName As String
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
@@ -38,6 +38,9 @@ Private Sub Workbook_Open()
   Dim strPhosphorusExpernalsFullName As String
   strPhosphorusExpernalsFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus Externals.xlam")
   pEssence.References.AddReferenceToWorkbookOrLibrary strPhosphorusExpernalsFullName
+
+  'Schedule adding the Toolbar Button for pHilby
+  Application.OnTime Now + TimeValue("00:00:05"), "pHilby.AddButtonToPhosphorusToolbar"
 
 End Sub
 

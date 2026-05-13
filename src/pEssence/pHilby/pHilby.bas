@@ -35,14 +35,36 @@ Public Const GCSAPPNAME As String = "pHilby - UI Automation Spy"
 #End If
 'Public gbCellsChanged As Boolean
 
-Private Sub StartTest()
-  pHilby.Start
+Public Sub AddButtonToPhosphorusToolbar()
+  
+  If PhosphorusToolbar Is Nothing Then
+    Phosphorus.Toolbar.CreatePhosphorusToolbar
+  End If
+  
+  'Need to create at least 1 control
+  Dim btn As CommandBarButton
+  Set btn = PhosphorusToolbar.Controls.Add(Type:=msoControlButton)
+  With btn
+    .Caption = "Launch pHilby"
+    .Style = msoButtonIconAndCaption
+    .OnAction = "LaunchpHilby"          ' Your macro name
+    .FaceId = 25             ' Optional icon (smiley face example)
+    .TooltipText = "Launch pHilby"
+  End With
+
+End Sub
+
+Private Sub LaunchpHilby()
+  If MsgBox("This may take some time ... please be patient!", vbExclamation + vbOKCancel, "Phosphorus - pHilby") = vbOK Then
+    pHilby.Start
+  End If
 End Sub
 
 Public Sub Start(Optional RootUIAElement As IUIAutomationElement)
 
+  Application.Cursor = xlWait
+
   Toaster.PopDown
- 
   Dim MaxNumberOfLevels As Integer
   MaxNumberOfLevels = 0
   If RootUIAElement Is Nothing Then
@@ -54,6 +76,8 @@ Public Sub Start(Optional RootUIAElement As IUIAutomationElement)
   Set ufrmForm = New frmpHilby
   With ufrmForm
     .LoadTreeView RootUIAElement, MaxNumberOfLevels:=MaxNumberOfLevels
+     Application.Cursor = xlDefault
+MsgBox "pHilby Ready!"
     .AppName = GCSAPPNAME
     .Show
     Unload ufrmForm
@@ -63,8 +87,6 @@ Public Sub Start(Optional RootUIAElement As IUIAutomationElement)
   #If DEBUGMODE = 1 Then
     ClassCounts
   #End If
-  
-'  AppActivate ufrmForm.Caption
 
 End Sub
 

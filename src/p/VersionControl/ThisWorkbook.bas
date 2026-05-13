@@ -37,6 +37,8 @@ Private Sub Workbook_Open()
   'Windows Script Host Object Model - needed for wshShell
   Phosphorus.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\wshom.ocx"
   
+  Toolbar.CreatePhosphorusToolbar
+  
 End Sub
 
 Private Sub Test_ListAllReferencesInProject()
@@ -49,6 +51,7 @@ End Sub
 
 'Always Save Code Changes on Closing Workbootk
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
+  Toolbar.DeletePhosphorusToolbar
   If (VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY") Or (VBA.Interaction.Environ$("COMPUTERNAME") = "ASPIRE16") Then
     ExportPhosphorusSourceCode
   End If

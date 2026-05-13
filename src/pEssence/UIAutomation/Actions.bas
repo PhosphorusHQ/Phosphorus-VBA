@@ -197,13 +197,12 @@ Cleanup:
 
 End Sub
 
-
 Private Function TryInvokePattern(Element As pElement) As Boolean
   On Error GoTo Finish
   TryInvokePattern = False
   If GetPatternPreChecks(Element, IsInvokePatternAvailable) Then
     Dim Pattern As IUIAutomationInvokePattern
-    Set Pattern = Element.GetPattern(UIAPatterns.InvokePattern)
+    Set Pattern = Element.GetPattern(UIAPatterns.Invoke)
     Pattern.Invoke
     TryInvokePattern = True
   End If
@@ -228,7 +227,7 @@ Private Function TrySelectionItemPatternSelect(Element As pElement) As Boolean
   TrySelectionItemPatternSelect = False
   If GetPatternPreChecks2(Element, UIAControlTypeIDs.ListItem, IsSelectionItemPatternAvailable) Then
     Dim Pattern As IUIAutomationSelectionItemPattern
-    Set Pattern = Element.GetPattern(UIAPatterns.SelectionItemPattern)
+    Set Pattern = Element.GetPattern(UIAPatterns.SelectionItem)
     Pattern.Select
     TrySelectionItemPatternSelect = True
   End If
@@ -243,7 +242,7 @@ Private Function TryTogglePattern(Element As pElement) As Boolean
     Dim InitialToggleState As Integer
     InitialToggleState = Element.GetToggleState()
     Dim Pattern As IUIAutomationTogglePattern
-    Set Pattern = Element.GetPattern(UIAPatterns.TogglePattern)
+    Set Pattern = Element.GetPattern(UIAPatterns.Toggle)
     Pattern.Toggle
     If InitialToggleState = 0 Then
       Element.WaitForPropertyValue UIAProperties.ToggleToggleState, 1
@@ -261,7 +260,7 @@ Private Function TryLegacyIAccessibleDefaultAction(Element As pElement) As Boole
   TryLegacyIAccessibleDefaultAction = False
   If GetPatternPreChecks2(Element, UIAControlTypeIDs.ListItem, IsLegacyIAccessiblePatternAvailable) Then
     Dim Pattern As IUIAutomationLegacyIAccessiblePattern
-    Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessiblePattern)
+    Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessible)
     Pattern.DoDefaultAction
     TryLegacyIAccessibleDefaultAction = True
   End If
@@ -274,7 +273,7 @@ Private Function TryLegacyIAccessiblePatternSelect(Element As pElement, Flags As
   TryLegacyIAccessiblePatternSelect = False
   If GetPatternPreChecks2(Element, UIAControlTypeIDs.ListItem, IsLegacyIAccessiblePatternAvailable) Then
     Dim Pattern As IUIAutomationLegacyIAccessiblePattern
-    Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessiblePattern)
+    Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessible)
     Pattern.Select Flags
     TryLegacyIAccessiblePatternSelect = True
   End If
@@ -367,14 +366,14 @@ End Function
 
 Private Sub MouseClicksByEvent(Element As pElement, Event1 As Long, Event2 As Long)
 
-  Dim clickablePoint As tagPOINT
-  Dim hasPoint As Boolean
-  hasPoint = Element.UIAElement.GetClickablePoint(clickablePoint)
+  Dim ClickablePoint As tagPOINT
+  Dim HasPoint As Boolean
+  HasPoint = Element.UIAElement.GetClickablePoint(ClickablePoint)
 
   Dim pt As POINTAPI
-  If hasPoint Then
-    pt.x = clickablePoint.x
-    pt.y = clickablePoint.y
+  If HasPoint Then
+    pt.x = ClickablePoint.x
+    pt.y = ClickablePoint.y
   Else
     'Fallback: center of bounding rectangle
     Dim rect As tagRECT

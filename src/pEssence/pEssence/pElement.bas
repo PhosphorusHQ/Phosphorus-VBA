@@ -50,7 +50,7 @@ Public Sub CloseWindow()
   If GetProperty(UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
     If HasProperty(UIAProperties.IsWindowPatternAvailable) Then
       Dim patt As IUIAutomationWindowPattern
-      Set patt = GetPattern(UIAPatterns.WindowPattern, RaiseError:=True)
+      Set patt = GetPattern(UIAPatterns.Window, RaiseError:=True)
       patt.Close
       Exit Sub
     End If
@@ -80,35 +80,29 @@ End Function
 
 Public Function GetToggleState() As Integer
   AutoFindElement
-  If HasPattern(UIAPatterns.TogglePattern) Then
+  If HasPattern(UIAPatterns.Toggle) Then
     Dim CurrentElementTogglePattern As IUIAutomationTogglePattern
-    Set CurrentElementTogglePattern = GetPattern(UIAPatterns.TogglePattern, RaiseError:=True)
+    Set CurrentElementTogglePattern = GetPattern(UIAPatterns.Toggle, RaiseError:=True)
     GetToggleState = CurrentElementTogglePattern.CurrentToggleState
   End If
 End Function
 
 Public Function GetValue() As String
   AutoFindElement
-  If HasPattern(UIAPatterns.ValuePattern) Then
+  If HasPattern(UIAPatterns.Value) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
-    Set CurrentElementValuePattern = GetPattern(UIAPatterns.ValuePattern, RaiseError:=True)
+    Set CurrentElementValuePattern = GetPattern(UIAPatterns.Value, RaiseError:=True)
     GetValue = CurrentElementValuePattern.CurrentValue
   End If
 End Function
 
 Public Function HasPattern(PatternId As Long, Optional RaiseError As Boolean) As Boolean
   AutoFindElement
-  On Error Resume Next
-  Dim Pattern As IUnknown
-  On Error Resume Next
-  Set Pattern = UIAElement.GetCurrentPattern(PatternId)
-  On Error GoTo 0
-  HasPattern = Not Pattern Is Nothing
+  HasPattern = UIAPatts.HasPattern(UIAElement, PatternId)
 End Function
 
 Public Function HasProperty(PropertyId As Long, Optional RaiseError As Boolean) As Boolean
   AutoFindElement
-  On Error Resume Next
   Dim Property As Variant
   On Error Resume Next
   Property = UIAElement.GetCurrentPropertyValue(PropertyId)
@@ -139,17 +133,17 @@ Public Function IsSelected() As Boolean
   Window.HighlightElement Me.UIAElement
             
   ' Method 1: Preferred - Use SelectionItemPattern
-  If HasPattern(UIAPatterns.SelectionItemPattern) Then
+  If HasPattern(UIAPatterns.SelectionItem) Then
      Dim SelectionItemPattern As IUIAutomationSelectionItemPattern
-     Set SelectionItemPattern = GetPattern(UIAPatterns.SelectionItemPattern)
+     Set SelectionItemPattern = GetPattern(UIAPatterns.SelectionItem)
      IsSelected = SelectionItemPattern.CurrentIsSelected
      GoTo Cleanup
   End If
   
   ' Method 2: try TogglePattern
-  If HasPattern(UIAPatterns.TogglePattern) Then
+  If HasPattern(UIAPatterns.Toggle) Then
      Dim TogglePattern As IUIAutomationTogglePattern
-     Set TogglePattern = GetPattern(UIAPatterns.TogglePattern)
+     Set TogglePattern = GetPattern(UIAPatterns.Toggle)
      IsSelected = TogglePattern.CurrentToggleState
      GoTo Cleanup
   End If
@@ -173,9 +167,9 @@ End Function
 Public Sub SetValue(Value As String)
   AutoFindElement
   Window.HighlightElement UIAElement
-  If HasPattern(UIAPatterns.ValuePattern) Then
+  If HasPattern(UIAPatterns.Value) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
-    Set CurrentElementValuePattern = GetPattern(UIAPatterns.ValuePattern, RaiseError:=True)
+    Set CurrentElementValuePattern = GetPattern(UIAPatterns.Value, RaiseError:=True)
     CurrentElementValuePattern.SetValue Value
   End If
   Window.ReleaseHighlighting
@@ -226,18 +220,18 @@ Private Sub WaitForPropertyValueOrPatternState( _
       PropertyValuePatternStateFound = (CurrentPropertyValue = UIAPropertyValue)
     Else
       Select Case UIAPatternID
-        Case UIAPatterns.SelectionItemPattern
+        Case UIAPatterns.SelectionItem
           Dim SelectionItemPattern As IUIAutomationSelectionItemPattern
-          Set SelectionItemPattern = GetPattern(UIAPatterns.SelectionItemPattern)
+          Set SelectionItemPattern = GetPattern(UIAPatterns.SelectionItem)
           Select Case PatternState
             Case "CurrentIsSelected"
               PropertyValuePatternStateFound = (SelectionItemPattern.CurrentIsSelected = 1)
             Case "CurrentIsNotSelected"
               PropertyValuePatternStateFound = (SelectionItemPattern.CurrentIsSelected = 0)
           End Select
-        Case UIAPatterns.TogglePattern
+        Case UIAPatterns.Toggle
           Dim TogglePattern As IUIAutomationTogglePattern
-          Set TogglePattern = GetPattern(UIAPatterns.TogglePattern)
+          Set TogglePattern = GetPattern(UIAPatterns.Toggle)
           Select Case PatternState
             Case "CurrentToggleStateOn"
               PropertyValuePatternStateFound = (TogglePattern.CurrentToggleState = 1)

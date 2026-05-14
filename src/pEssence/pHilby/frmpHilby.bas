@@ -49,6 +49,11 @@ Private Sub UserForm_Terminate()
   Set AllTreeViewNodes = Nothing
 End Sub
 
+Private Sub UserForm_Activate()
+  Window.ActivateWindowByCaptionAndClassName Me.Caption, "ThunderDFrame"
+  MsgBox "pHilby Ready!", vbExclamation, "Phosphorus"
+End Sub
+
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
   'Make sure all objects are destroyed
   If Not mcTree Is Nothing Then
@@ -219,7 +224,6 @@ Private Function GetUIAElementProperties(UIAElement As IUIAutomationElement) As 
 End Function
 
 Private Function GetUIAElementPatterns(UIAElement As IUIAutomationElement) As String
-'Stop
 
   'https://excelmacromastery.com/vba-dictionary/ Sorting by keys
   Dim arrList As Object
@@ -310,22 +314,16 @@ End Function
 Private Function GetPatternText_Selection(UIAElement As IUIAutomationElement) As String
   Dim Pattern As IUIAutomationSelectionPattern
   Set Pattern = UIAElement.GetCurrentPattern(UIAPatterns.Selection)
-'Debug.Print Pattern.CurrentCanSelectMultiple
-'Debug.Print Pattern.CurrentIsSelectionRequired
-Debug.Print "Selection Return Started"
   GetPatternText_Selection = vbCrLf & _
      "  CanSelectMultiple: " & (Pattern.CurrentCanSelectMultiple = 1) & vbCrLf & _
      "  SelectionRequired: " & (Pattern.CurrentIsSelectionRequired = 1) & vbCrLf
-Debug.Print "Selection Return Finished"
 End Function
 
 Private Function GetPatternText_Toggle(UIAElement As IUIAutomationElement) As String
   Dim Pattern As IUIAutomationTogglePattern
   Set Pattern = UIAElement.GetCurrentPattern(UIAPatterns.Toggle)
-Debug.Print "Toggle Return Started"
   GetPatternText_Toggle = vbCrLf & _
      "  ToggleState: " & (Pattern.CurrentToggleState = 1) & vbCrLf
-Debug.Print "Toggle Return Finished"
 End Function
 
 Private Function GetPatternText_Value(UIAElement As IUIAutomationElement) As String

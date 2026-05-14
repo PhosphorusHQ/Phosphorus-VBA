@@ -49,6 +49,11 @@ Option Explicit
     ByVal dwNewLong As LongPtr) As LongPtr
   Private Declare PtrSafe Function DrawMenuBar Lib "user32" ( _
     ByVal hwnd As LongPtr) As LongPtr
+
+  Private Declare PtrSafe Function SetForegroundWindow Lib "user32" (ByVal hwnd As LongPtr) As Long
+  Private Declare PtrSafe Function BringWindowToTop Lib "user32" (ByVal hwnd As LongPtr) As Long
+  Private Declare PtrSafe Function SetActiveWindow Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
+
 #Else
   Private Declare Function CreateWindowEx Lib "user32" Alias "CreateWindowExA" ( _
     ByVal dwExStyle As Long, ByVal lpClassName As String, ByVal lpWindowName As String, _
@@ -79,8 +84,12 @@ Option Explicit
     ByVal dwNewLong As Long) As Long
   Private Declare Function DrawMenuBar Lib "user32" ( _
     ByVal hWnd As Long) As Long
-#End If
+  
+  Private Declare Function SetForegroundWindow Lib "user32" (ByVal hwnd As Long) As Long
+  Private Declare Function BringWindowToTop Lib "user32" (ByVal hwnd As Long) As Long
+  Private Declare Function SetActiveWindow Lib "user32" (ByVal hwnd As Long) As Long
 
+#End If
     
 Private Type rect
   Left   As Long
@@ -99,6 +108,7 @@ Private Const WS_VISIBLE         As Long = &H10000000
 
 Private Const HWND_TOPMOST = -1
 Private Const HWND_NOTOPMOST = -2
+Private Const HWND_TOP = 0
 
 Private Const SWP_NOSIZE = &H1
 Private Const SWP_NOMOVE = &H2
@@ -276,28 +286,37 @@ Public Sub UpdateDragHighlight(hwnd As LongPtr, x As Long, y As Long)
   SetWindowPos hwnd, HWND_TOPMOST, x, y, 0, 0, SWP_NOSIZE Or SWP_NOACTIVATE
 End Sub
 
-Public Sub MakeAlwaysOnTopByCaptionAndClassName(Caption As String, ClassName As String)
-
+Public Function FindWindowByCaptionAndClassName(Caption As String, ClassName As String) As LongPtr
+  
   Dim hwnd As LongPtr
-    
+  
   ' First try by caption
-  hwnd = FindWindow(vbNullString, Caption)
+  hwnd = FindWindow(ClassName, Caption)
     
-  ' If that fails, search for UserForm class ("ThunderDFrame" is the class name for VBA UserForms)
+  ' If that fails, search for UserForm class
   If hwnd = 0 Then
     hwnd = FindWindowEx(0, 0, ClassName, Caption)
   End If
     
-  ' Final fallback: search without caption (first ThunderDFrame)
+  ' Final fallback: search without caption
   If hwnd = 0 Then
     hwnd = FindWindowEx(0, 0, ClassName, vbNullString)
   End If
     
   If hwnd = 0 Then
-    Debug.Print "Could not find UserForm window handle"
-    Exit Sub
+    Debug.Print "Could not find window '" & Caption & "'"
+    Exit Function
   End If
-    
+
+ FindWindowByCaptionAndClassName = hwnd
+ 
+End Function
+
+Public Sub MakeAlwaysOnTopByCaptionAndClassName(Caption As String, ClassName As String)
+
+  Dim hwnd As LongPtr
+  hwnd = FindWindowByCaptionAndClassName(Caption, ClassName)
+  
   ' Make it Always On Top
   SetWindowPos hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE Or SWP_NOACTIVATE Or SWP_SHOWWINDOW
     
@@ -318,7 +337,8 @@ Public Sub HideTopLevelFormTitleBarAndBorder(Caption As String)
 End Sub
 
 Public Sub MakeWindowTransparent(Caption As String, Color As Variant)
-  'set transparencies on userform
+'Set transparencies on userform
+  
   Dim formhandle As LongPtr
   Dim bytOpacity As Byte
  
@@ -334,3 +354,18 @@ Public Sub MakeWindowTransparent(Caption As String, Color As Variant)
   SetLayeredWindowAttributes formhandle, Color, bytOpacity, LWA_COLORKEY
 
 End Sub
+
+Public Sub ActivateWindowByCaptionAndClassName(Caption As String, ClassName As String)
+
+  Dim hwnd As LongPtr
+  hwnd = FindWindowByCaptionAndClassName(Caption, ClassName)
+    
+  ' Make it On Top
+  'http://www.jasinskionline.com/windowsapi/ref/s/setwindowpos.html
+  SetWindowPos hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE Or SWP_SHOWWINDOW
+'  BringWindowToTop hwnd
+'  SetForegroundWindow hwnd
+'  SetActiveWindow hwnd
+
+End Sub
+

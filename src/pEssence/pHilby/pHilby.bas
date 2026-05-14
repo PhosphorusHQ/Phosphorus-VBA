@@ -19,7 +19,7 @@ Attribute VB_Name = "pHilby"
 Option Explicit
 
 Public Const GCSAPPNAME As String = "pHilby - UI Automation Spy"
-'Public Const GCSBUILD As String = "26.5"
+Private Caption As String
 
 'In Tools, VBAProject properties, set the Conditional compilation argument
 'DebugMode = 1 to go into debugmode.
@@ -55,7 +55,7 @@ Public Sub AddButtonToPhosphorusToolbar()
 End Sub
 
 Private Sub LaunchpHilby()
-  If MsgBox("This may take some time ... please be patient!", vbExclamation + vbOKCancel, "Phosphorus - pHilby") = vbOK Then
+  If MsgBox("Loading the FULL DESKTOP! This may take some time ... please be patient!", vbExclamation + vbOKCancel, "Phosphorus - pHilby") = vbOK Then
     pHilby.Start
   End If
 End Sub
@@ -75,9 +75,9 @@ Public Sub Start(Optional RootUIAElement As IUIAutomationElement)
   Dim ufrmForm As frmpHilby
   Set ufrmForm = New frmpHilby
   With ufrmForm
+
     .LoadTreeView RootUIAElement, MaxNumberOfLevels:=MaxNumberOfLevels
      Application.Cursor = xlDefault
-MsgBox "pHilby Ready!"
     .AppName = GCSAPPNAME
     .Show
     Unload ufrmForm

@@ -23,6 +23,7 @@ Private AllTreeViewNodes As Scripting.Dictionary
 Private iMaxNumberOfLevels As Integer
 
 Private UnhandledPatterns As Scripting.Dictionary
+Public HighlightSelectedNodeElement As Boolean
 
 Private Sub UserForm_Initialize()
 'See the Compile constant DebugMode in tools, VBAProject properties
@@ -42,6 +43,7 @@ Private Sub UserForm_Initialize()
 End Sub
 
 Private Sub UserForm_Terminate()
+  Window.ReleaseHighlighting
   #If DEBUGMODE = 1 Then
     gFormTerm = gFormTerm + 1
     ClassCounts
@@ -385,5 +387,34 @@ Private Sub mcTree_Click(cNode As pExternals.clsNode)
   'This gets fired when a node is clicked
   txtProperties = AllTreeViewNodes(cNode.key)("AllProperties")
   txtPatterns = AllTreeViewNodes(cNode.key)("AllPatterns")
+  Window.ReleaseHighlighting
+  If HighlightSelectedNodeElement Then
+    Dim UIAElement As IUIAutomationElement
+    Set UIAElement = AllTreeViewNodes(cNode.key)("UIAElement")
+    If IsAlive(UIAElement) Then
+      Window.HighlightElement UIAElement
+      Application.OnTime Now + TimeValue("00:00:05"), "pHilby.ReleaseHighlighting"
+    Else
+      MsgBox "This element is not longer available!", vbCritical, "pHilby"
+    End If
+  End If
 End Sub
+
+Private Function IsAlive(UIAElement As IUIAutomationElement) As Boolean
+  On Error Resume Next
+  Dim pid As Long
+  pid = UIAElement.CurrentProcessId  'any property access will fail if stale
+  IsAlive = (Err.Number = 0) And (pid > 0)
+  On Error GoTo 0
+End Function
+
+Private Sub chkHighlightSelectedNodeElement_Click()
+  HighlightSelectedNodeElement = chkHighlightSelectedNodeElement.Value
+  Window.HighlightElements = chkHighlightSelectedNodeElement.Value
+End Sub
+
+Private Sub cbReleaseHighlighting_Click()
+  Window.ReleaseHighlighting
+End Sub
+
 

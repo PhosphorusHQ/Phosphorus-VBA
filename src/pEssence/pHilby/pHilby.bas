@@ -111,3 +111,8 @@ End Sub
     gFormTerm = 0
   End Sub
 #End If
+
+Public Sub ReleaseHighlighting()
+  Window.ReleaseHighlighting
+End Sub
+

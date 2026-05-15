@@ -363,9 +363,10 @@ Public Sub ActivateWindowByCaptionAndClassName(Caption As String, ClassName As S
   ' Make it On Top
   'http://www.jasinskionline.com/windowsapi/ref/s/setwindowpos.html
   SetWindowPos hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE Or SWP_SHOWWINDOW
-'  BringWindowToTop hwnd
-'  SetForegroundWindow hwnd
-'  SetActiveWindow hwnd
+  
+  BringWindowToTop hwnd
+  SetForegroundWindow hwnd
+  SetActiveWindow hwnd
 
 End Sub
 

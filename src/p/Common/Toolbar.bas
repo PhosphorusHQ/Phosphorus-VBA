@@ -32,10 +32,10 @@ Public Sub CreatePhosphorusToolbar()
   Dim btn As CommandBarButton
   Set btn = PhosphorusToolbar.Controls.Add(Type:=msoControlButton)
   With btn
-    .Caption = "Dummy Test"
+    .Caption = "Reset Cursor"
     .Style = msoButtonIconAndCaption
-    .OnAction = "DummyTest"          ' Your macro name
-    .FaceId = 59             ' Optional icon (smiley face example)
+    .OnAction = "ResetCursor"
+    .FaceId = 59   'Smiley face
     .TooltipText = "Dummy Test"
   End With
 
@@ -47,6 +47,6 @@ Public Sub DeletePhosphorusToolbar()
   On Error GoTo 0
 End Sub
 
-Public Sub DummyTest()
-  MsgBox "Hello!", vbExclamation, "Phosphorus"
+Public Sub ResetCursor()
+  Application.Cursor = xlDefault
 End Sub

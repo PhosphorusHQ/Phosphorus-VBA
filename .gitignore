@@ -5,7 +5,6 @@
 *.ini
 *.ps1
 *.lnk
-*.frx
 /Backups
 /Logs
 /LogReader.xlsx

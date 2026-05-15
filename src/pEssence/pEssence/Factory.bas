@@ -37,9 +37,9 @@ Public Function GetRootDesktopElement() As IUIAutomationElement
 End Function
 
 Public Function GetNewLocator() As pLocator
-  Dim Element As pLocator
-  Set Element = New pLocator
-  Set GetNewLocator = Element
+  Dim Locator As pLocator
+  Set Locator = New pLocator
+  Set GetNewLocator = Locator
 End Function
 
 Public Function GetNewElement(GivenName As String, UIAElement As IUIAutomationElement) As pElement

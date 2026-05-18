@@ -53,6 +53,7 @@ End Sub
 
 Private Sub UserForm_Activate()
   Window.ActivateWindowByCaptionAndClassName Me.Caption, "ThunderDFrame"
+  AppActivate Me.Caption
   MsgBox "pHilby Ready!", vbExclamation, "Phosphorus"
 End Sub
 
@@ -112,7 +113,7 @@ Private Sub LoadRootElementAndAllDescendants(UIAElement As IUIAutomationElement)
   AddItemToAllTreeViewNodes key, UIAElement
   
   Dim RuntimeId As String
-  RuntimeId = UIACommon.GetElementRuntimeId(UIAElement)
+  RuntimeId = UIAProps.GetElementRuntimeId(UIAElement)
 
   ' Add the root node and make it bold
   Dim Root As clsNode
@@ -147,7 +148,7 @@ Private Sub LoadAllRootElementDescendants(RootKey As String, UIAElement As IUIAu
     For i = 0 To AllElements.Length - 1
       SubKey = RootKey & "." & (i + 1)
       Set CurrentUIAElement = AllElements.GetElement(i)
-      RuntimeId = UIACommon.GetElementRuntimeId(CurrentUIAElement)
+      RuntimeId = UIAProps.GetElementRuntimeId(CurrentUIAElement)
       AddItemToAllTreeViewNodes SubKey, CurrentUIAElement
       Set ChildNode = ParentNode.AddChild(sKey:=SubKey, vCaption:=GetCaption(CurrentUIAElement))
       ChildNode.ControlTipText = "Key: " & SubKey & "; " & "RuntimeID: " & RuntimeId

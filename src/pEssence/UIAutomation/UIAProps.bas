@@ -237,6 +237,15 @@ Public Enum UIAWindowInteractionStates 'UIAutomationClient.WindowInteractionStat
   running = WindowInteractionState_Running
 End Enum
 
+Public Type Rectangle
+  Left As Double
+  Top As Double
+  Right As Double
+  Bottom As Double
+  Width As Double
+  Height As Double
+End Type
+
 Function GetPropertyName(PropertyId As Long) As String
   Dim R As String
   Select Case PropertyId
@@ -495,6 +504,10 @@ Public Function GetPropertyValueAsString(UIAElement As IUIAutomationElement, Pro
   PropertyStringValue = VBA.Conversion.CStr(UIAElement.GetCurrentPropertyValue(PropertyId))
   On Error GoTo 0
   Select Case PropertyId
+    Case UIAProperties.BoundingRectangle
+      Dim Rect As pEssence.BoundingRectangle
+      Set Rect = Factory.GetNewBoundingRectangle(UIAElement)
+      PropertyStringValue = "Left:=" & Rect.Left & ", Top:=" & Rect.Top & ", Right:=" & Rect.Right & ", Bottom:=" & Rect.Bottom & " (" & Rect.Width & " x " & Rect.Height & ")"
     Case UIAProperties.ControlType
       PropertyStringValue = UIAProps.GetControlTypeName(CLng(PropertyStringValue))
 '?? Show all values of just the set ones!?

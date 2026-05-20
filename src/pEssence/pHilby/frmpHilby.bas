@@ -49,6 +49,7 @@ Private Sub UserForm_Terminate()
     ClassCounts
   #End If
   Set AllTreeViewNodes = Nothing
+  pHilby.StoppHilbyUIAUIAPolling
 End Sub
 
 Private Sub UserForm_Activate()
@@ -169,12 +170,12 @@ Private Sub AddItemToAllTreeViewNodes(TreeNodeKey As String, UIAElement As IUIAu
   'Note that we have to store the properties here as the UIAElement may not be live after pHulby is loaded
   Dim coll As New Collection
   coll.Add Item:=UIAElement, key:="UIAElement"
-  coll.Add Item:=GetUIAElementProperties(UIAElement), key:="AllProperties"
+  coll.Add Item:=GetUIAElementProperties(TreeNodeKey, UIAElement), key:="AllProperties"
   coll.Add Item:=GetUIAElementPatterns(UIAElement), key:="AllPatterns"
   AllTreeViewNodes.Add TreeNodeKey, coll
 End Sub
 
-Private Function GetUIAElementProperties(UIAElement As IUIAutomationElement) As String
+Private Function GetUIAElementProperties(TreeNodeKey As String, UIAElement As IUIAutomationElement) As String
   
   'https://excelmacromastery.com/vba-dictionary/ Sorting by keys
   Dim arrList As Object
@@ -193,6 +194,8 @@ Private Function GetUIAElementProperties(UIAElement As IUIAutomationElement) As 
         ' Leave as is!
       ElseIf PropertyStringValue = "True" Or PropertyStringValue = "False" Then
         ' Leave as is!
+      ElseIf PropertyId = UIAProperties.BoundingRectangle Then
+        ' Leave as is!
       ElseIf IsNumeric(PropertyStringValue) Then
         ' Leave as is!
       Else
@@ -209,11 +212,15 @@ Private Function GetUIAElementProperties(UIAElement As IUIAutomationElement) As 
   
   'Populate the unsorted text
   Dim AllPropertiesText As String
+  AllPropertiesText = _
+    "Treeview Key: " & TreeNodeKey & vbCrLf & _
+    "Abosolute Path: " & "???" & vbCrLf
+    
   Dim key As Variant
   For Each key In arrList
-    If AllPropertiesText <> "" Then
+'    If AllPropertiesText <> "" Then
        AllPropertiesText = AllPropertiesText & vbCrLf
-    End If
+'    End If
     AllPropertiesText = AllPropertiesText & key & ": " & UnsortedDictionary(key)
   Next key
 
@@ -381,6 +388,7 @@ Private Sub cmdSearch_Click()
       Next i
     End If
     mcTree.Refresh
+    mcTree.ScrollToView MatchingNodes(Count)
   End If
 End Sub
 
@@ -418,4 +426,63 @@ Private Sub cbReleaseHighlighting_Click()
   Window.ReleaseHighlighting
 End Sub
 
+Private Sub chkUIAPolling_Click()
+  If chkUIAPolling Then
+    Snooze 2000 'Allow time for user to move to the first element
+    pHilby.StartpHilbyUIAPolling
+  Else
+    pHilby.StoppHilbyUIAUIAPolling
+  End If
+End Sub
+
+Public Sub SearchByCursorPoint(tPt As tagPOINT)
+  Dim CurrentNode As clsNode
+  Dim SmallestMatchingNode As clsNode
+  Dim SmallestMatchingRect As BoundingRectangle
+  Dim CurrentRect As BoundingRectangle
+  Dim Inside As Boolean
+  
+  Set SmallestMatchingNode = Nothing
+  
+  Dim Count As Integer
+  For Each CurrentNode In mcTree.Nodes
+
+    CurrentNode.Bold = False
+    CurrentNode.Expanded = False
+    Dim CurrentElement As IUIAutomationElement
+    Set CurrentElement = AllTreeViewNodes(CurrentNode.key)("UIAElement")
+    Set CurrentRect = Factory.GetNewBoundingRectangle(CurrentElement)
+    Inside = tPt.X >= CurrentRect.Left And tPt.X <= CurrentRect.Right And tPt.Y >= CurrentRect.Top And tPt.Y <= CurrentRect.Bottom
+    If Inside Then
+      If SmallestMatchingNode Is Nothing Then
+        Set SmallestMatchingNode = CurrentNode
+        Set SmallestMatchingRect = CurrentRect
+      Else
+        If CurrentRect.Left >= SmallestMatchingRect.Left And _
+           CurrentRect.Left <= SmallestMatchingRect.Right And _
+           CurrentRect.Top >= SmallestMatchingRect.Top And _
+           CurrentRect.Bottom <= SmallestMatchingRect.Bottom Then
+          Set SmallestMatchingNode = CurrentNode
+          Set SmallestMatchingRect = CurrentRect
+        End If
+      End If
+    End If
+  Next CurrentNode
+   
+  If SmallestMatchingNode Is Nothing Then
+      MsgBox "No matching nodes found.", vbCritical, "pHilby"
+  Else
+    Dim i As Integer
+    Dim ExpandableNode As clsNode
+    Set ExpandableNode = SmallestMatchingNode
+    While Not ExpandableNode Is Nothing
+      ExpandableNode.Expanded = True
+      Set ExpandableNode = ExpandableNode.ParentNode
+    Wend
+    mcTree.Refresh
+    mcTree.ScrollToView SmallestMatchingNode
+    SmallestMatchingNode.Bold = True
+  End If
+
+End Sub
 

@@ -29,7 +29,7 @@ Option Explicit
     Private Declare PtrSafe Function GetSystemMetrics Lib "user32" (ByVal nIndex As Long) As Long
     Private Declare PtrSafe Function SetWindowPos Lib "user32" _
         (ByVal hwnd As LongPtr, ByVal hwndInsertAfter As LongPtr, _
-         ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, _
+         ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, _
          ByVal uFlags As Long) As Long
 #Else
     Private Declare Function GetSystemMetrics Lib "user32" (ByVal nIndex As Long) As Long

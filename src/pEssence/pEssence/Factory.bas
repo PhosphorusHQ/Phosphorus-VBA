@@ -64,3 +64,10 @@ Public Function GetNewWebBrowser() As Object
       pExceptions.Raise pEssenceUnhandledWebBrowserType
   End Select
 End Function
+
+Public Function GetNewBoundingRectangle(Element As IUIAutomationElement) As BoundingRectangle
+  Dim BR As BoundingRectangle
+  Set BR = New BoundingRectangle
+  BR.GetCurrentBoundingRectangle Element
+  Set GetNewBoundingRectangle = BR
+End Function

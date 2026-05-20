@@ -22,16 +22,16 @@ Option Explicit
 #If VBA7 Then
   Private Declare PtrSafe Function CreateWindowEx Lib "user32" Alias "CreateWindowExA" ( _
     ByVal dwExStyle As Long, ByVal lpClassName As String, ByVal lpWindowName As String, _
-    ByVal dwStyle As Long, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, _
+    ByVal dwStyle As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, _
     ByVal hWndParent As LongPtr, ByVal hMenu As LongPtr, ByVal hInstance As LongPtr, ByVal lpParam As LongPtr) As LongPtr
   Private Declare PtrSafe Function DestroyWindow Lib "user32" (ByVal hwnd As LongPtr) As Long
-  Private Declare PtrSafe Function SetWindowPos Lib "user32" (ByVal hwnd As LongPtr, ByVal hwndInsertAfter As LongPtr, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
+  Private Declare PtrSafe Function SetWindowPos Lib "user32" (ByVal hwnd As LongPtr, ByVal hwndInsertAfter As LongPtr, ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
   Private Declare PtrSafe Function ShowWindow Lib "user32" (ByVal hwnd As LongPtr, ByVal nCmdShow As Long) As Long
   Private Declare PtrSafe Function UpdateWindow Lib "user32" (ByVal hwnd As LongPtr) As Long
   Private Declare PtrSafe Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
   Private Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hdc As LongPtr) As Long
   Private Declare PtrSafe Function CreateSolidBrush Lib "gdi32" (ByVal crColor As Long) As LongPtr
-  Private Declare PtrSafe Function FillRect Lib "user32" (ByVal hdc As LongPtr, lpRect As rect, ByVal hBrush As LongPtr) As Long
+  Private Declare PtrSafe Function FillRect Lib "user32" (ByVal hdc As LongPtr, lpRect As Rect, ByVal hBrush As LongPtr) As Long
   Private Declare PtrSafe Function DeleteObject Lib "gdi32" (ByVal hObject As LongPtr) As Long
   Private Declare PtrSafe Function SetLayeredWindowAttributes Lib "user32" (ByVal hwnd As LongPtr, ByVal crKey As Long, ByVal bAlpha As Byte, ByVal dwFlags As Long) As Long
   Private Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
@@ -91,7 +91,7 @@ Option Explicit
 
 #End If
     
-Private Type rect
+Private Type Rect
   Left   As Long
   Top    As Long
   Right  As Long
@@ -211,7 +211,7 @@ Public Sub HighlightElement(Ele As IUIAutomationElement, _
     
   Dim hBrush As LongPtr: hBrush = CreateSolidBrush(BorderColor)
     
-  Dim R As rect
+  Dim R As Rect
   R.Left = 0: R.Top = 0
   R.Right = Width: R.Bottom = Height
     
@@ -254,12 +254,12 @@ End Sub
 ' =============================================================
 ' Create moving highlight rectangle during drag
 ' =============================================================
-Public Function CreateDragHighlight(Ele As IUIAutomationElement, x As Long, y As Long, W As Long, h As Long) As LongPtr
+Public Function CreateDragHighlight(Ele As IUIAutomationElement, X As Long, Y As Long, W As Long, h As Long) As LongPtr
 
   Dim hwnd As LongPtr
   hwnd = CreateWindowEx( _
     WS_EX_LAYERED Or WS_EX_TRANSPARENT Or WS_EX_TOOLWINDOW Or WS_EX_TOPMOST, _
-    "Static", "DragHighlight", WS_POPUP, x, y, W, h, 0, 0, 0, 0)
+    "Static", "DragHighlight", WS_POPUP, X, Y, W, h, 0, 0, 0, 0)
     
   If hwnd = 0 Then Exit Function
     
@@ -269,7 +269,7 @@ Public Function CreateDragHighlight(Ele As IUIAutomationElement, x As Long, y As
 
   Dim hBrush As LongPtr: hBrush = CreateSolidBrush(&HFF)      ' Red
 '  Dim hBrush As LongPtr: hBrush = CreateSolidBrush(&HFF0000)      ' Red?
-  Dim R As rect: R.Left = 0: R.Top = 0: R.Right = W: R.Bottom = h
+  Dim R As Rect: R.Left = 0: R.Top = 0: R.Right = W: R.Bottom = h
   FillRect hdc, R, hBrush
   
   DeleteObject hBrush
@@ -281,9 +281,9 @@ Public Function CreateDragHighlight(Ele As IUIAutomationElement, x As Long, y As
     
 End Function
 
-Public Sub UpdateDragHighlight(hwnd As LongPtr, x As Long, y As Long)
+Public Sub UpdateDragHighlight(hwnd As LongPtr, X As Long, Y As Long)
   If hwnd = 0 Then Exit Sub
-  SetWindowPos hwnd, HWND_TOPMOST, x, y, 0, 0, SWP_NOSIZE Or SWP_NOACTIVATE
+  SetWindowPos hwnd, HWND_TOPMOST, X, Y, 0, 0, SWP_NOSIZE Or SWP_NOACTIVATE
 End Sub
 
 Public Function FindWindowByCaptionAndClassName(Caption As String, ClassName As String) As LongPtr

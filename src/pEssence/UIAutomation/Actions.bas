@@ -23,8 +23,8 @@ Option Explicit
 ' TYPE DEFINITIONS
 ' =============================================================
 Private Type POINTAPI
-  x As Long
-  y As Long
+  X As Long
+  Y As Long
 End Type
 
 ' =============================================================
@@ -71,7 +71,7 @@ Private Const WS_POPUP           As Long = &H80000000
   ' 64-bit Office
 
   Private Declare PtrSafe Function SetCursorPos Lib "user32" ( _
-    ByVal x As Long, ByVal y As Long) As Long
+    ByVal X As Long, ByVal Y As Long) As Long
 
   Private Declare PtrSafe Sub keybd_event Lib "user32" (ByVal bVk As Byte, ByVal bScan As Byte, ByVal dwFlags As Long, ByVal dwExtraInfo As LongPtr)
       
@@ -307,25 +307,25 @@ Private Sub MouseClickByMessage(Element As pElement, ClickType As MouseClickType
 
   If Element.UIAElement Is Nothing Then Exit Sub
     
-  Dim rect As Variant
-  rect = Element.UIAElement.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
+  Dim Rect As Variant
+  Rect = Element.UIAElement.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
   
-  If Not IsArray(rect) Or UBound(rect) < 3 Then Exit Sub
+  If Not IsArray(Rect) Or UBound(Rect) < 3 Then Exit Sub
     
-  Dim centerX As Long: centerX = CLng(rect(0) + rect(2) \ 2)
-  Dim centerY As Long: centerY = CLng(rect(1) + rect(3) \ 2)
+  Dim centerX As Long: centerX = CLng(Rect(0) + Rect(2) \ 2)
+  Dim centerY As Long: centerY = CLng(Rect(1) + Rect(3) \ 2)
     
   Dim hwnd As LongPtr
   hwnd = Element.UIAElement.GetCurrentPropertyValue(UIA_NativeWindowHandlePropertyId)
     
   Dim pt As POINTAPI
-  pt.x = centerX
-  pt.y = centerY
+  pt.X = centerX
+  pt.Y = centerY
   ScreenToClient hwnd, pt
     
   'Make LPARAM from x,y coordinates
   Dim MakeLParam As LongPtr
-  MakeLParam = (CLngPtr(pt.y) * &H10000) Or (pt.x And &HFFFF&)
+  MakeLParam = (CLngPtr(pt.Y) * &H10000) Or (pt.X And &HFFFF&)
     
   'Use PostMessage by default - asynchronous, safer for UI Automation
   Select Case ClickType
@@ -372,17 +372,17 @@ Private Sub MouseClicksByEvent(Element As pElement, Event1 As Long, Event2 As Lo
 
   Dim pt As POINTAPI
   If HasPoint Then
-    pt.x = ClickablePoint.x
-    pt.y = ClickablePoint.y
+    pt.X = ClickablePoint.X
+    pt.Y = ClickablePoint.Y
   Else
     'Fallback: center of bounding rectangle
-    Dim rect As tagRECT
-    rect = Element.UIAElement.CurrentBoundingRectangle
-    pt.x = rect.Left + (rect.Right - rect.Left) \ 2
-    pt.y = rect.Top + (rect.Bottom - rect.Top) \ 2
+    Dim Rect As tagRECT
+    Rect = Element.UIAElement.CurrentBoundingRectangle
+    pt.X = Rect.Left + (Rect.Right - Rect.Left) \ 2
+    pt.Y = Rect.Top + (Rect.Bottom - Rect.Top) \ 2
   End If
 
-  SetCursorPos pt.x, pt.y
+  SetCursorPos pt.X, pt.Y
   Snooze 50
   mouse_event Event1, 0, 0, 0, 0
   Snooze 80
@@ -495,11 +495,11 @@ End Function
 
 Private Sub MoveMouseToElement(Element As pElement)
   If Element.UIAElement Is Nothing Then Exit Sub
-  Dim rect As Variant
-  rect = Element.UIAElement.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
-  If Not IsArray(rect) Or UBound(rect) < 3 Then Exit Sub
-  Dim cx As Long: cx = CLng(rect(0) + rect(2) \ 2)
-  Dim cy As Long: cy = CLng(rect(1) + rect(3) \ 2)
+  Dim Rect As Variant
+  Rect = Element.UIAElement.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
+  If Not IsArray(Rect) Or UBound(Rect) < 3 Then Exit Sub
+  Dim cx As Long: cx = CLng(Rect(0) + Rect(2) \ 2)
+  Dim cy As Long: cy = CLng(Rect(1) + Rect(3) \ 2)
   SetCursorPos cx, cy
 End Sub
 

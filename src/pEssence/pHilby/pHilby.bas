@@ -18,8 +18,24 @@ Attribute VB_Name = "pHilby"
 
 Option Explicit
 
+#If VBA7 Then
+  Private Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As tagPOINT) As Long
+  Private Declare PtrSafe Function SetTimer Lib "user32" (ByVal hwnd As LongPtr, ByVal nIDEvent As LongPtr, ByVal uElapse As Long, ByVal lpTimerFunc As LongPtr) As LongPtr
+  Private Declare PtrSafe Function KillTimer Lib "user32" (ByVal hwnd As LongPtr, ByVal nIDEvent As LongPtr) As Long
+#Else
+  Private Declare Function GetCursorPos Lib "user32" (lpPoint As tagPOINT) As Long
+  Private Declare Function SetTimer Lib "user32" (ByVal hWnd As Long, ByVal nIDEvent As Long, ByVal uElapse As Long, ByVal lpTimerFunc As Long) As Long
+  Private Declare Function KillTimer Lib "user32" (ByVal hWnd As Long, ByVal nIDEvent As Long) As Long
+#End If
+
+Private UserForm As frmpHilby
 Public Const GCSAPPNAME As String = "pHilby - UI Automation Spy"
 Private Caption As String
+
+Private TimerID As LongPtr
+Private Const TIMER_INTERVAL As Long = 250   ' milliseconds (800ms is a good balance)
+Private PreviousTagPoint As tagPOINT
+Private PollingExpiryTime As Date
 
 'In Tools, VBAProject properties, set the Conditional compilation argument
 'DebugMode = 1 to go into debugmode.
@@ -33,7 +49,6 @@ Private Caption As String
   Public gFormInit As Long
   Public gFormTerm As Long
 #End If
-'Public gbCellsChanged As Boolean
 
 Public Sub AddButtonToPhosphorusToolbar()
   
@@ -72,16 +87,15 @@ Public Sub Start(Optional RootUIAElement As IUIAutomationElement)
     MaxNumberOfLevels = 0
   End If
   
-  Dim ufrmForm As frmpHilby
-  Set ufrmForm = New frmpHilby
-  With ufrmForm
+  Set UserForm = New frmpHilby
+  With UserForm
 
     .LoadTreeView RootUIAElement, MaxNumberOfLevels:=MaxNumberOfLevels
      Application.Cursor = xlDefault
     .AppName = GCSAPPNAME
     .Show
-    Unload ufrmForm
-    Set ufrmForm = Nothing
+    Unload UserForm
+    Set UserForm = Nothing
   End With
 
   #If DEBUGMODE = 1 Then
@@ -114,5 +128,46 @@ End Sub
 
 Public Sub ReleaseHighlighting()
   Window.ReleaseHighlighting
+End Sub
+
+Public Sub StartpHilbyUIAPolling()
+  StoppHilbyUIAUIAPolling
+  TimerID = SetTimer(0, 0, TIMER_INTERVAL, AddressOf TimerProc)
+'Stop
+  If TimerID = 0 Then MsgBox "Failed to start timer", vbCritical, "pHilby"
+End Sub
+
+Public Sub StoppHilbyUIAUIAPolling()
+  If TimerID <> 0 Then
+    KillTimer 0, TimerID
+    TimerID = 0
+  End If
+End Sub
+
+#If VBA7 Then
+Private Sub TimerProc(ByVal hwnd As LongPtr, ByVal uMsg As Long, ByVal nIDEvent As LongPtr, ByVal dwTime As Long)
+#Else
+Private Sub TimerProc(ByVal hwnd As Long, ByVal uMsg As Long, ByVal nIDEvent As Long, ByVal dwTime As Long)
+#End If
+  StoppHilbyUIAUIAPolling
+  Dim CurrentTagPoint As tagPOINT
+  GetCursorPos CurrentTagPoint
+  'Don't update pHilby if we haven't moved the cursor!
+  If Not ((CurrentTagPoint.X = PreviousTagPoint.X) And (CurrentTagPoint.Y = PreviousTagPoint.Y)) Then
+    UserForm.SearchByCursorPoint CurrentTagPoint
+    PollingExpiryTime = Now + TimeValue("00:00:02")
+  End If
+  PreviousTagPoint = CurrentTagPoint
+  'Only poll to the expiry time
+  If Now > PollingExpiryTime Then
+    'Untick polling
+    UserForm.chkUIAPolling = False
+    MsgBox "Element polling has stopped after no activity for 2 seconds.", vbInformation, "pHilby"
+    Exit Sub
+  End If
+  'Only poll while the pHilby
+  If Not UserForm Is Nothing Then
+    StartpHilbyUIAPolling
+  End If
 End Sub
 

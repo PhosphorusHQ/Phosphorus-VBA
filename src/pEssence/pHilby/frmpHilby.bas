@@ -110,8 +110,10 @@ End Sub
 Private Sub LoadRootElementAndAllDescendants(UIAElement As IUIAutomationElement)
 
   Dim key As String
+  Dim Path As String
   key = "1"
-  AddItemToAllTreeViewNodes key, UIAElement
+  Path = "/" & UIAProps.GetControlTypeName(UIAElement.CurrentControlType)
+  AddItemToAllTreeViewNodes key, UIAElement, Path
   
   Dim RuntimeId As String
   RuntimeId = UIAProps.GetElementRuntimeId(UIAElement)
@@ -124,11 +126,11 @@ Private Sub LoadRootElementAndAllDescendants(UIAElement As IUIAutomationElement)
   Root.Tag = UIAElement.CurrentName
   Root.Expanded = True
 
-  LoadAllRootElementDescendants key, UIAElement, 1, Root
+  LoadAllRootElementDescendants key, Path, UIAElement, 1, Root
 
 End Sub
 
-Private Sub LoadAllRootElementDescendants(RootKey As String, UIAElement As IUIAutomationElement, LevelCounter As Integer, ParentNode As clsNode)
+Private Sub LoadAllRootElementDescendants(RootKey As String, RootPath As String, UIAElement As IUIAutomationElement, LevelCounter As Integer, ParentNode As clsNode)
 
   'If iMaxNumberOfLevels=0 show all levels
   If iMaxNumberOfLevels = 0 Or (iMaxNumberOfLevels >= LevelCounter) Then
@@ -140,22 +142,43 @@ Private Sub LoadAllRootElementDescendants(RootKey As String, UIAElement As IUIAu
       ' No children, just exit
       Exit Sub
     End If
+ 
+    'Keep a tally the count of all control types at the current level
+    Dim ControlTypeCounts As Scripting.Dictionary
+    Dim CurrentControlTypeName As String
+    Dim CurrentControlTypeCount As Integer
+    Set ControlTypeCounts = New Scripting.Dictionary
     
     Dim i As Long
     Dim SubKey As String
+    Dim SubPath As String
     Dim RuntimeId As String
     Dim CurrentUIAElement As IUIAutomationElement
     Dim ChildNode As clsNode
     For i = 0 To AllElements.Length - 1
       SubKey = RootKey & "." & (i + 1)
       Set CurrentUIAElement = AllElements.GetElement(i)
+      CurrentControlTypeName = UIAProps.GetControlTypeName(CurrentUIAElement.CurrentControlType)
+      If ControlTypeCounts.Exists(CurrentControlTypeName) Then
+        CurrentControlTypeCount = ControlTypeCounts(CurrentControlTypeName)
+        ControlTypeCounts.Remove CurrentControlTypeName
+        CurrentControlTypeCount = CurrentControlTypeCount + 1
+      Else
+        CurrentControlTypeCount = 1
+      End If
+      ControlTypeCounts.Add CurrentControlTypeName, CurrentControlTypeCount
+      If CurrentControlTypeCount = 1 Then
+        SubPath = RootPath & "/" & CurrentControlTypeName
+      Else
+        SubPath = RootPath & "/" & CurrentControlTypeName & "[" & CStr(CurrentControlTypeCount) & "]"
+      End If
       RuntimeId = UIAProps.GetElementRuntimeId(CurrentUIAElement)
-      AddItemToAllTreeViewNodes SubKey, CurrentUIAElement
+      AddItemToAllTreeViewNodes SubKey, CurrentUIAElement, SubPath
       Set ChildNode = ParentNode.AddChild(sKey:=SubKey, vCaption:=GetCaption(CurrentUIAElement))
       ChildNode.ControlTipText = "Key: " & SubKey & "; " & "RuntimeID: " & RuntimeId
       ChildNode.Tag = CurrentUIAElement.CurrentName
       ChildNode.Expanded = False
-      LoadAllRootElementDescendants SubKey, CurrentUIAElement, LevelCounter + 1, ChildNode
+      LoadAllRootElementDescendants SubKey, SubPath, CurrentUIAElement, LevelCounter + 1, ChildNode
     Next i
     
   End If
@@ -166,16 +189,16 @@ Private Function GetCaption(UIAElement As IUIAutomationElement) As String
   GetCaption = UIAElement.CurrentName & " (" & UIAProps.GetControlTypeName(UIAElement.CurrentControlType) & ")"
 End Function
 
-Private Sub AddItemToAllTreeViewNodes(TreeNodeKey As String, UIAElement As IUIAutomationElement)
+Private Sub AddItemToAllTreeViewNodes(TreeNodeKey As String, UIAElement As IUIAutomationElement, Path As String)
   'Note that we have to store the properties here as the UIAElement may not be live after pHulby is loaded
   Dim coll As New Collection
   coll.Add Item:=UIAElement, key:="UIAElement"
-  coll.Add Item:=GetUIAElementProperties(TreeNodeKey, UIAElement), key:="AllProperties"
+  coll.Add Item:=GetUIAElementProperties(TreeNodeKey, UIAElement, Path), key:="AllProperties"
   coll.Add Item:=GetUIAElementPatterns(UIAElement), key:="AllPatterns"
   AllTreeViewNodes.Add TreeNodeKey, coll
 End Sub
 
-Private Function GetUIAElementProperties(TreeNodeKey As String, UIAElement As IUIAutomationElement) As String
+Private Function GetUIAElementProperties(TreeNodeKey As String, UIAElement As IUIAutomationElement, Path As String) As String
   
   'https://excelmacromastery.com/vba-dictionary/ Sorting by keys
   Dim arrList As Object
@@ -214,7 +237,7 @@ Private Function GetUIAElementProperties(TreeNodeKey As String, UIAElement As IU
   Dim AllPropertiesText As String
   AllPropertiesText = _
     "Treeview Key: " & TreeNodeKey & vbCrLf & _
-    "Abosolute Path: " & "???" & vbCrLf
+    "Absolute Path: " & Path & vbCrLf
     
   Dim key As Variant
   For Each key In arrList

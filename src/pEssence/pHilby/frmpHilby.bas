@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmpHilby
    ClientHeight    =   7380
    ClientLeft      =   108
    ClientTop       =   456
-   ClientWidth     =   12588
+   ClientWidth     =   14352
    OleObjectBlob   =   "frmpHilby.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -20,8 +20,10 @@ Public AppName As String
 Private WithEvents mcTree As pExternals.clsTreeView
 Attribute mcTree.VB_VarHelpID = -1
 Private AllTreeViewNodes As Scripting.Dictionary
-Private iMaxNumberOfLevels As Integer
 
+Private mRootUIAElement As IUIAutomationElement
+Private mMaxNumberOfLevels As Integer
+Private ActiveNode As pExternals.clsNode
 Private UnhandledPatterns As Scripting.Dictionary
 Public HighlightSelectedNodeElement As Boolean
 
@@ -68,7 +70,8 @@ End Sub
 
 Public Sub LoadTreeView(RootUIAElement As IUIAutomationElement, Optional MaxNumberOfLevels As Integer)
   UnloadTreeView
-  iMaxNumberOfLevels = MaxNumberOfLevels
+  Set mRootUIAElement = RootUIAElement
+  mMaxNumberOfLevels = MaxNumberOfLevels
   AllTreeViewNodes.RemoveAll
   Set UnhandledPatterns = New Scripting.Dictionary
   LoadUIATree RootUIAElement
@@ -109,31 +112,31 @@ End Sub
 
 Private Sub LoadRootElementAndAllDescendants(UIAElement As IUIAutomationElement)
 
-  Dim key As String
+  Dim Key As String
   Dim Path As String
-  key = "1"
+  Key = "1"
   Path = "/" & UIAProps.GetControlTypeName(UIAElement.CurrentControlType)
-  AddItemToAllTreeViewNodes key, UIAElement, Path
+  AddItemToAllTreeViewNodes Key, UIAElement, Path
   
   Dim RuntimeId As String
   RuntimeId = UIAProps.GetElementRuntimeId(UIAElement)
 
   ' Add the root node and make it bold
   Dim Root As clsNode
-  Set Root = mcTree.AddRoot(sKey:=key, vCaption:=GetCaption(UIAElement))
+  Set Root = mcTree.AddRoot(sKey:=Key, vCaption:=GetCaption(UIAElement))
   Root.Bold = True
   Root.ControlTipText = "Key: 1; " & "RuntimeID: " & RuntimeId
   Root.Tag = UIAElement.CurrentName
   Root.Expanded = True
 
-  LoadAllRootElementDescendants key, Path, UIAElement, 1, Root
+  LoadAllRootElementDescendants Key, Path, UIAElement, 1, Root
 
 End Sub
 
 Private Sub LoadAllRootElementDescendants(RootKey As String, RootPath As String, UIAElement As IUIAutomationElement, LevelCounter As Integer, ParentNode As clsNode)
 
   'If iMaxNumberOfLevels=0 show all levels
-  If iMaxNumberOfLevels = 0 Or (iMaxNumberOfLevels >= LevelCounter) Then
+  If mMaxNumberOfLevels = 0 Or (mMaxNumberOfLevels >= LevelCounter) Then
         
     Dim AllElements As IUIAutomationElementArray
     Set AllElements = UIAElement.FindAll(TreeScope.Children, UIA.CreateTrueCondition)
@@ -167,11 +170,7 @@ Private Sub LoadAllRootElementDescendants(RootKey As String, RootPath As String,
         CurrentControlTypeCount = 1
       End If
       ControlTypeCounts.Add CurrentControlTypeName, CurrentControlTypeCount
-      If CurrentControlTypeCount = 1 Then
-        SubPath = RootPath & "/" & CurrentControlTypeName
-      Else
-        SubPath = RootPath & "/" & CurrentControlTypeName & "[" & CStr(CurrentControlTypeCount) & "]"
-      End If
+      SubPath = RootPath & "/" & CurrentControlTypeName & "[" & CStr(CurrentControlTypeCount) & "]"
       RuntimeId = UIAProps.GetElementRuntimeId(CurrentUIAElement)
       AddItemToAllTreeViewNodes SubKey, CurrentUIAElement, SubPath
       Set ChildNode = ParentNode.AddChild(sKey:=SubKey, vCaption:=GetCaption(CurrentUIAElement))
@@ -192,9 +191,11 @@ End Function
 Private Sub AddItemToAllTreeViewNodes(TreeNodeKey As String, UIAElement As IUIAutomationElement, Path As String)
   'Note that we have to store the properties here as the UIAElement may not be live after pHulby is loaded
   Dim coll As New Collection
-  coll.Add Item:=UIAElement, key:="UIAElement"
-  coll.Add Item:=GetUIAElementProperties(TreeNodeKey, UIAElement, Path), key:="AllProperties"
-  coll.Add Item:=GetUIAElementPatterns(UIAElement), key:="AllPatterns"
+  coll.Add Item:=UIAElement, Key:="UIAElement"
+  coll.Add Item:=Path, Key:="Path"
+  coll.Add Item:=UIAProps.GetPropertyValueAsString(UIAElement, UIAProperties.Name), Key:="Name"
+  coll.Add Item:=GetUIAElementProperties(TreeNodeKey, UIAElement, Path), Key:="AllProperties"
+  coll.Add Item:=GetUIAElementPatterns(UIAElement), Key:="AllPatterns"
   AllTreeViewNodes.Add TreeNodeKey, coll
 End Sub
 
@@ -235,17 +236,16 @@ Private Function GetUIAElementProperties(TreeNodeKey As String, UIAElement As IU
   
   'Populate the unsorted text
   Dim AllPropertiesText As String
-  AllPropertiesText = _
-    "Treeview Key: " & TreeNodeKey & vbCrLf & _
-    "Absolute Path: " & Path & vbCrLf
+  AllPropertiesText = "Absolute Path: " & Path & vbCrLf
     
-  Dim key As Variant
-  For Each key In arrList
+  Dim Key As Variant
+  For Each Key In arrList
 '    If AllPropertiesText <> "" Then
        AllPropertiesText = AllPropertiesText & vbCrLf
 '    End If
-    AllPropertiesText = AllPropertiesText & key & ": " & UnsortedDictionary(key)
-  Next key
+'    AllPropertiesText = AllPropertiesText & Key & ": " & UnsortedDictionary(Key)
+    AllPropertiesText = AllPropertiesText & Key & ":" & vbTab & UnsortedDictionary(Key)
+  Next Key
 
   ' Clean up
   Set arrList = Nothing
@@ -281,13 +281,13 @@ Private Function GetUIAElementPatterns(UIAElement As IUIAutomationElement) As St
   
   'Populate the unsorted text
   Dim AllPatternsText As String
-  Dim key As Variant
-  For Each key In arrList
+  Dim Key As Variant
+  For Each Key In arrList
     If AllPatternsText <> "" Then
        AllPatternsText = AllPatternsText & vbCrLf
     End If
-    AllPatternsText = AllPatternsText & key
-  Next key
+    AllPatternsText = AllPatternsText & Key
+  Next Key
 
   ' Clean up
   Set arrList = Nothing
@@ -335,48 +335,48 @@ Private Function GetPatternText_LegacyIAccessible(UIAElement As IUIAutomationEle
   Dim Pattern As IUIAutomationLegacyIAccessiblePattern
   Set Pattern = UIAElement.GetCurrentPattern(UIAPatterns.LegacyIAccessible)
   GetPatternText_LegacyIAccessible = vbCrLf & _
-     "  Child: " & Pattern.CurrentChildId & vbCrLf & _
-     "  DefaultAction: " & CStr(Pattern.CurrentDefaultAction) & vbCrLf & _
-     "  Description: " & Pattern.CurrentDescription & vbCrLf & _
-     "  Help: " & Pattern.CurrentHelp & vbCrLf & _
-     "  KeyboardShortcut: " & Pattern.CurrentKeyboardShortcut & vbCrLf & _
-     "  Name: " & Pattern.CurrentName & vbCrLf & _
-     "  Value: " & Pattern.CurrentValue & vbCrLf
+     "  Child:" & vbTab & Pattern.CurrentChildId & vbCrLf & _
+     "  DefaultAction:" & vbTab & CStr(Pattern.CurrentDefaultAction) & vbCrLf & _
+     "  Description:" & vbTab & Pattern.CurrentDescription & vbCrLf & _
+     "  Help:" & vbTab & Pattern.CurrentHelp & vbCrLf & _
+     "  KeyboardShortcut:" & vbTab & Pattern.CurrentKeyboardShortcut & vbCrLf & _
+     "  Name:" & vbTab & Pattern.CurrentName & vbCrLf & _
+     "  Value:" & vbTab & Pattern.CurrentValue & vbCrLf
 End Function
 
 Private Function GetPatternText_Selection(UIAElement As IUIAutomationElement) As String
   Dim Pattern As IUIAutomationSelectionPattern
   Set Pattern = UIAElement.GetCurrentPattern(UIAPatterns.Selection)
   GetPatternText_Selection = vbCrLf & _
-     "  CanSelectMultiple: " & (Pattern.CurrentCanSelectMultiple = 1) & vbCrLf & _
-     "  SelectionRequired: " & (Pattern.CurrentIsSelectionRequired = 1) & vbCrLf
+     "  CanSelectMultiple:" & vbTab & (Pattern.CurrentCanSelectMultiple = 1) & vbCrLf & _
+     "  SelectionRequired:" & vbTab & (Pattern.CurrentIsSelectionRequired = 1) & vbCrLf
 End Function
 
 Private Function GetPatternText_Toggle(UIAElement As IUIAutomationElement) As String
   Dim Pattern As IUIAutomationTogglePattern
   Set Pattern = UIAElement.GetCurrentPattern(UIAPatterns.Toggle)
   GetPatternText_Toggle = vbCrLf & _
-     "  ToggleState: " & (Pattern.CurrentToggleState = 1) & vbCrLf
+     "  ToggleState:" & vbTab & (Pattern.CurrentToggleState = 1) & vbCrLf
 End Function
 
 Private Function GetPatternText_Value(UIAElement As IUIAutomationElement) As String
   Dim Pattern As IUIAutomationValuePattern
   Set Pattern = UIAElement.GetCurrentPattern(UIAPatterns.Value)
   GetPatternText_Value = vbCrLf & _
-     "  ReadOnly: " & (Pattern.CurrentIsReadOnly = 1) & vbCrLf & _
-     "  CurrentValue: " & CStr(Pattern.CurrentValue) & vbCrLf
+     "  ReadOnly:" & vbTab & (Pattern.CurrentIsReadOnly = 1) & vbCrLf & _
+     "  CurrentValue:" & vbTab & CStr(Pattern.CurrentValue) & vbCrLf
 End Function
 
 Private Function GetPatternText_Window(UIAElement As IUIAutomationElement) As String
   Dim Pattern As IUIAutomationWindowPattern
   Set Pattern = UIAElement.GetCurrentPattern(UIAPatterns.Window)
   GetPatternText_Window = vbCrLf & _
-     "  CanMaximize: " & (Pattern.CurrentCanMaximize = 1) & vbCrLf & _
-     "  CanMinimize: " & (Pattern.CurrentCanMinimize = 1) & vbCrLf & _
-     "  Modal: " & (Pattern.CurrentIsModal = 1) & vbCrLf & _
-     "  Topmost: " & (Pattern.CurrentIsTopmost = 1) & vbCrLf & _
-     "  WindowInteractionState: " & UIAProps.GetWindowInteractionStateName(Pattern.CurrentWindowInteractionState) & vbCrLf & _
-     "  WindowVisualState: " & UIAProps.GetWindowVisualStateName(Pattern.CurrentWindowVisualState) & vbCrLf
+     "  CanMaximize: " & vbTab & (Pattern.CurrentCanMaximize = 1) & vbCrLf & _
+     "  CanMinimize:" & vbTab & (Pattern.CurrentCanMinimize = 1) & vbCrLf & _
+     "  Modal:" & vbTab & (Pattern.CurrentIsModal = 1) & vbCrLf & _
+     "  Topmost:" & vbTab & (Pattern.CurrentIsTopmost = 1) & vbCrLf & _
+     "  WindowInteractionState:" & vbTab & UIAProps.GetWindowInteractionStateName(Pattern.CurrentWindowInteractionState) & vbCrLf & _
+     "  WindowVisualState:" & vbTab & UIAProps.GetWindowVisualStateName(Pattern.CurrentWindowVisualState) & vbCrLf
 End Function
 
 Private Sub cmdSearch_Click()
@@ -412,17 +412,20 @@ Private Sub cmdSearch_Click()
     End If
     mcTree.Refresh
     mcTree.ScrollToView MatchingNodes(Count)
+    'TODO: Activvale/Click on found node!?
   End If
 End Sub
 
 Private Sub mcTree_Click(cNode As pExternals.clsNode)
   'This gets fired when a node is clicked
-  txtProperties = AllTreeViewNodes(cNode.key)("AllProperties")
-  txtPatterns = AllTreeViewNodes(cNode.key)("AllPatterns")
+  Set ActiveNode = cNode
+  
+  txtProperties = AllTreeViewNodes(cNode.Key)("AllProperties")
+  txtPatterns = AllTreeViewNodes(cNode.Key)("AllPatterns")
   Window.ReleaseHighlighting
   If HighlightSelectedNodeElement Then
     Dim UIAElement As IUIAutomationElement
-    Set UIAElement = AllTreeViewNodes(cNode.key)("UIAElement")
+    Set UIAElement = AllTreeViewNodes(cNode.Key)("UIAElement")
     If IsAlive(UIAElement) Then
       Window.HighlightElement UIAElement
       Application.OnTime Now + TimeValue("00:00:05"), "pHilby.ReleaseHighlighting"
@@ -473,7 +476,7 @@ Public Sub SearchByCursorPoint(tPt As tagPOINT)
     CurrentNode.Bold = False
     CurrentNode.Expanded = False
     Dim CurrentElement As IUIAutomationElement
-    Set CurrentElement = AllTreeViewNodes(CurrentNode.key)("UIAElement")
+    Set CurrentElement = AllTreeViewNodes(CurrentNode.Key)("UIAElement")
     Set CurrentRect = Factory.GetNewBoundingRectangle(CurrentElement)
     Inside = tPt.X >= CurrentRect.Left And tPt.X <= CurrentRect.Right And tPt.Y >= CurrentRect.Top And tPt.Y <= CurrentRect.Bottom
     If Inside Then
@@ -507,5 +510,145 @@ Public Sub SearchByCursorPoint(tPt As tagPOINT)
     SmallestMatchingNode.Bold = True
   End If
 
+End Sub
+
+Private Sub cbExport_Click()
+
+  Application.ScreenUpdating = False
+  Application.Cursor = xlWait
+    
+  Dim wb As New Excel.Workbook
+  Set wb = Workbooks.Add
+  
+  Dim ws As Worksheet
+  Dim wsIndex As Worksheet
+  For Each ws In wb.Sheets
+    If ws.Name = "Sheet1" Then
+      ws.Name = "Index"
+      Set wsIndex = ws
+    Else
+      ws.Delete
+    End If
+  Next ws
+
+'Stop
+  wsIndex.Range("a1").Value = "Link"
+  wsIndex.Range("B1").Value = "Path"
+  wsIndex.Range("C1").Value = "Name"
+  With wsIndex.Range("A1:C1").Font
+    .Bold = True
+    .Underline = xlUnderlineStyleSingle
+  End With
+  wsIndex.Range("B2").Select
+  ActiveWindow.FreezePanes = True
+  
+  Dim SheetCounter As Integer
+  Range("A1").Select
+  Dim Key As Variant
+  For Each Key In AllTreeViewNodes
+    
+    SheetCounter = SheetCounter + 1
+    wsIndex.Cells(SheetCounter + 1, 2).Value = "'" & Key
+    wsIndex.Hyperlinks.Add _
+      Anchor:=wsIndex.Cells(SheetCounter + 1, 1), _
+      Address:="", _
+      SubAddress:="Node" & SheetCounter & "!A1", _
+      TextToDisplay:="Node" & SheetCounter & "!A1"
+    
+    wsIndex.Cells(SheetCounter + 1, 2).Value = AllTreeViewNodes(Key)("Path")
+    wsIndex.Cells(SheetCounter + 1, 3).Value = AllTreeViewNodes(Key)("Name")
+    
+    Set ws = wb.Sheets.Add(After:=wb.Sheets(wb.Sheets.Count))
+    ws.Name = "Node" & SheetCounter
+    ws.Hyperlinks.Add _
+      Anchor:=ws.Range("A1"), _
+      Address:="", _
+      SubAddress:=wsIndex.Name & "!A" & (SheetCounter + 1), _
+      TextToDisplay:="Back"
+
+    Dim i As Integer
+
+    Dim Properties() As String
+    Properties = Split(AllTreeViewNodes(Key)("AllProperties"), vbCrLf)
+    
+    Dim PropertyValues() As String
+    ReDim PropertyValues(UBound(Properties))
+    For i = 0 To UBound(Properties)
+      Dim Property() As String
+      If InStr(Properties(i), vbTab) > 0 Then
+        Property = Split(Properties(i), vbTab)
+        Properties(i) = Property(0)
+        PropertyValues(i) = Property(1)
+      End If
+    Next
+    
+    ws.Range("A2").Resize(UBound(Properties) + 1) = Application.Transpose(Properties)
+    ws.Range("B2").Resize(UBound(Properties) + 1) = Application.Transpose(PropertyValues)
+    
+    With ws.Range("A3")
+      .Value = "Properties"
+      .Font.Bold = True
+      .Font.Underline = xlUnderlineStyleSingle
+    End With
+
+'Stop
+    Dim AllPatterns As String
+    AllPatterns = AllTreeViewNodes(Key)("AllPatterns")
+    AllPatterns = Replace(AllPatterns, "=", "")
+    AllPatterns = Replace(AllPatterns, vbCrLf & vbCrLf, vbCrLf)
+    Dim Patterns() As String
+    Patterns = Split(AllPatterns, vbCrLf)
+    Dim PatternValues() As String
+    ReDim PatternValues(UBound(Patterns))
+    For i = 0 To UBound(Patterns)
+      Dim Pattern() As String
+      If InStr(Patterns(i), vbTab) > 0 Then
+        Pattern = Split(Patterns(i), vbTab)
+        Patterns(i) = Pattern(0)
+        PatternValues(i) = Pattern(1)
+      End If
+    Next
+    
+    Dim StartOfPatterns As Range
+    Set StartOfPatterns = ws.Range("A" & UBound(Properties) + 4)
+    With StartOfPatterns
+      .Value = "Patterns"
+      .Font.Bold = True
+      .Font.Underline = xlUnderlineStyleSingle
+    End With
+    StartOfPatterns.Offset(1, 0).Resize(UBound(Patterns) + 1) = Application.Transpose(Patterns)
+    StartOfPatterns.Offset(1, 1).Resize(UBound(Patterns) + 1) = Application.Transpose(PatternValues)
+
+    ws.Range("A1").EntireColumn.AutoFit
+    ws.Range("4:4").Select
+    ActiveWindow.FreezePanes = True
+    ws.Range("B4").Activate
+    
+  Next
+  
+  With wsIndex
+    .Activate
+    .Cells.EntireColumn.AutoFit
+  End With
+
+  Application.ScreenUpdating = True
+  Application.Cursor = xlDefault
+  
+  MsgBox "Export finished!", vbInformation, "pHilby"
+  
+End Sub
+
+Private Sub cbReload_Click()
+  Application.Cursor = xlWait
+  LoadTreeView mRootUIAElement, MaxNumberOfLevels:=mMaxNumberOfLevels
+  txtProperties = ""
+  txtPatterns = ""
+  Application.Cursor = xlDefault
+End Sub
+
+Private Sub cbSetCurrentAsRootNode_Click()
+  If Not ActiveNode Is Nothing Then
+    Set mRootUIAElement = AllTreeViewNodes(ActiveNode.Key)("UIAElement")
+  End If
 End Sub
 

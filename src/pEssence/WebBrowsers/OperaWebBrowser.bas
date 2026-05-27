@@ -90,8 +90,7 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
   This.WebAppPageTitle = WebAppPageTitle
   LaunchExecutable Phosphorus.WindowsExecutables.Opera, "--force-renderer-accessibility " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-'  This.AddressAndSearchBar.Find 10
-'  This.RootWebArea.Find 10
+  This.RootWebArea.Find 10
 End Sub
 
 Private Sub InitialiseAllLocators()
@@ -102,84 +101,58 @@ Private Sub InitialiseAllLocators()
     .ControlType UIAControlTypeIDs.Window
     .ClassName "Chrome_WidgetWin_1"
     .WindowInteractionState ReadyForUserInteraction
-.Find 10
   End With
 
   With This.RootView
     .Initialise "RootView", This.MasterWindow, Children, By.ClassName, "RootView"
-.Find 10
   End With
 
   This.NonClientView.Initialise "NonClientView", This.RootView, Children, By.ClassName, "NonClientView"
-This.NonClientView.Find
 
   This.BrowserNonClient.Initialise "BrowserNonClient", This.NonClientView, Children, By.NameIs, "Browser non-client"
-This.BrowserNonClient.Find
 
   This.BrowserClientView.Initialise "BrowserClientView", This.BrowserNonClient, Children, By.ClassName, "BrowserClientView"
-This.BrowserClientView.Find
 
   This.LiveBackgroundView.Initialise "LiveBackgroundView", This.BrowserClientView, Children, By.ClassName, "LiveBackgroundView"
-This.LiveBackgroundView.Find
 
   This.DefaultContentWrapper.Initialise "DefaultContentWrapper", This.LiveBackgroundView, Children, By.ClassName, "DefaultContentWrapper"
-This.DefaultContentWrapper.Find
 
   This.SidebarItemContentViewDockerView.Initialise "SidebarItemContentViewDockerView", This.DefaultContentWrapper, Children, By.ClassName, "SidebarItemContentViewDockerView"
-This.SidebarItemContentViewDockerView.Find
 
     This.View.Initialise "View", This.SidebarItemContentViewDockerView, Children, By.ClassName, "View"
-This.View.Find
 
       This.TopBarContainerView.Initialise "TopBarContainerView", This.View, Descendants, By.ClassName, "TopBarContainerView", FindFirst:=True
- This.TopBarContainerView.Find
 
         With This.LastTabView
           .Initialise "BackButton", This.TopBarContainerView, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
           .ClassName "TabView": .NameIs This.WebAppPageTitle: .PositionInMatchingSet -1
-.Find
         End With
 
-        
-'Right click & close all other tabs
-This.LastTabView.Element.RightClick
-'Last tab?
-'This.MasterWindow.ListAllChildren
-'Snooze 500
-pHilby.Start This.MasterWindow.Element.UIAElement
-Stop
-
-'Search for element by name, then use a ListAllAncestors method and ListClildren to get find the best navigation path for transient elements!?
-
-'"/Pane[1]//MenuBar//MenuItem[@Name=""Close other tabs""]"
-
+        'Right click & close all other tabs
+        This.LastTabView.Element.RightClick
         With This.CloseOtherTabs
           .Initialise "CloseOtherTabs", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
           .ControlType MenuItem: .NameIs "Close other tabs"
-.Find 10
         End With
-This.CloseOtherTabs.Element.Click
-
-Stop
-'Search for element by name, then use a ListAllAncestors method and ListClildren to get find the best navigation path for transient elements!?
+        This.CloseOtherTabs.Element.Click
 
       This.ToolbarView.Initialise "ToolbarView", This.View, Descendants, By.ClassName, "ToolbarView", FindFirst:=True
- This.ToolbarView.Find
 
         With This.BackButton
           .Initialise "BackButton", This.ToolbarView, Descendants, By.pConditions, "AND(AriaRoleButton, NameIs)", FindFirst:=True
           .AriaRoleButton: .NameIs "Back"
-.Find
         End With
  
-Stop
-     With This.PageContainerView
-        .Initialise "PageContainerView", This.View, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
-        .ClassName "PageContainerView": .NameIs "Page container"
-.Find
-      End With
+    With This.PageContainerView
+      .Initialise "PageContainerView", This.View, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
+      .ClassName "PageContainerView": .NameIs "Page container"
+    End With
         
          This.RootWebArea.Initialise "RootWebArea", This.PageContainerView, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
-This.RootWebArea.Find
-
+   
 End Sub
+
+Public Function GetRootWebArea() As pLocator
+  Set GetRootWebArea = This.RootWebArea
+End Function
+

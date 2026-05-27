@@ -36,6 +36,8 @@ Private Type BrowserAttributes
   CloseOtherTabs As pLocator
   ToolbarView As pLocator
   BackButton As pLocator
+  AddressBar As pLocator
+  AddressField As pLocator
   PageContainerView As pLocator
   RootWebArea As pLocator
 End Type
@@ -57,6 +59,8 @@ Private Sub Class_Initialize()
   Set This.CloseOtherTabs = Factory.GetNewLocator
   Set This.ToolbarView = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
+  Set This.AddressBar = Factory.GetNewLocator
+  Set This.AddressField = Factory.GetNewLocator
   Set This.PageContainerView = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
 End Sub
@@ -79,6 +83,8 @@ Private Sub Class_Terminate()
   Set This.CloseOtherTabs = Nothing
   Set This.ToolbarView = Nothing
   Set This.BackButton = Nothing
+  Set This.AddressBar = Nothing
+  Set This.AddressField = Nothing
   Set This.PageContainerView = Nothing
   Set This.RootWebArea = Nothing
 End Sub
@@ -136,13 +142,26 @@ Private Sub InitialiseAllLocators()
         End With
         This.CloseOtherTabs.Element.Click
 
-      This.ToolbarView.Initialise "ToolbarView", This.View, Descendants, By.ClassName, "ToolbarView", FindFirst:=True
-
+      With This.ToolbarView
+        .Initialise "ToolbarView", This.View, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
+        .ClassName "ToolbarView": .NameIs "Navigation"
+      End With
+      
         With This.BackButton
           .Initialise "BackButton", This.ToolbarView, Descendants, By.pConditions, "AND(AriaRoleButton, NameIs)", FindFirst:=True
           .AriaRoleButton: .NameIs "Back"
         End With
  
+        With This.AddressBar
+          .Initialise "AddressBar", This.ToolbarView, Descendants, By.pConditions, "AND(AriaRoleTextBox, ClassName, NameIs)", FindFirst:=True
+          .AriaRoleTextBox: .ClassName "AddressBarView": .NameIs "Address bar"
+        End With
+
+          With This.AddressField
+            .Initialise "AddressField", This.AddressBar, Descendants, By.pConditions, "AND(AriaRoleTextBox, ClassName, NameIs)", FindFirst:=True
+            .AriaRoleTextBox: .ClassName "AddressTextfieldView": .NameIs "Address field"
+          End With
+
     With This.PageContainerView
       .Initialise "PageContainerView", This.View, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
       .ClassName "PageContainerView": .NameIs "Page container"
@@ -155,4 +174,19 @@ End Sub
 Public Function GetRootWebArea() As pLocator
   Set GetRootWebArea = This.RootWebArea
 End Function
+
+Public Function GetCurrentURL() As String
+  With This.AddressField
+    .Find 10
+    GetCurrentURL = .Element.GetValue()
+  End With
+End Function
+
+Public Sub NavigateBack()
+  With This.BackButton
+    .Find 10
+    .Element.Click
+    This.RootWebArea.Find 10, FindElementAgain:=True
+  End With
+End Sub
 

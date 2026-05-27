@@ -17,7 +17,7 @@ Sub HelloWorldWideWeb()
   Dim SearchButton As pLocator
   
   If Not RunningAllExamples Then
-    Factory.CurrentWebBrowserType = WebBrowserType.Opera
+    Factory.CurrentWebBrowserType = 1
   End If
   
   Set WebBrowser = Factory.GetNewWebBrowser

@@ -94,12 +94,15 @@ Private Sub InitialiseAllLocators()
      .Initialise "URLbar", This.NavigationToolbar, Children, pConditions, _
       "AND(AriaRoleGroup, AutomationId)": .AriaRoleGroup: .AutomationId "urlbar"
     End With
-      
-      With This.URLInputBox
-       .Initialise "URLInputBox", This.URLbar, Children, pConditions, _
-        "AND(AriaRoleComboBox, ClassName)": .AriaRoleComboBox: .ClassName "urlbar-input-box"
-      End With
 
+      With This.URLInputBox
+       .Initialise "URLInputBox", This.URLbar, Descendants, pConditions, _
+        "AND(AriaRoleComboBox, OR(ClassName1, ClassName2))"
+        .AriaRoleComboBox
+        .Condition "ClassName1", UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, "urlbar-input-box"
+        .Condition "ClassName2", UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, "urlbar-input textbox-input" 'Firefox v 151.0.2
+      End With
+ 
  With This.TabBrowserPanels
     .Initialise "TabBrowserPanels", This.MasterWindow, Children, pConditions, "AND(AutomationId, ControlType)"
     .AutomationId "tabbrowser-tabpanels": .ControlType Pane

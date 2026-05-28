@@ -29,7 +29,11 @@ Sub RadioButtonsAndCheckboxes()
   GoTo ExitSub
 
 ErrorHandler:
-  MsgBox Err.Description & " (Error Number #" & Err.Number & ")"
+  MsgBox _
+    Err.Description & " (Error Number #" & Err.Number & ") " & _
+      "for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser " & _
+      "in 'LetCodeDotIn' Example!", _
+    vbCritical
   
 ExitSub:
   Set LetCodeDotIn = Nothing

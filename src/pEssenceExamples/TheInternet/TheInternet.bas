@@ -33,9 +33,13 @@ Sub TheInternet()
   GoTo ExitSub
 
 ErrorHandler:
-  MsgBox Err.Description & " (Error Number #" & Err.Number & ")"
+  MsgBox _
+    Err.Description & " (Error Number #" & Err.Number & ") " & _
+      "for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser " & _
+      "in 'TheInternet' Example!", _
+    vbCritical
   GoTo ExitSub
-  
+
 ExitSub:
   Set The_Internet = Nothing
   If Not RunningAllExamples Then

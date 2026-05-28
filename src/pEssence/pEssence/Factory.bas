@@ -23,11 +23,23 @@ Public Enum WebBrowserType
   Chrome
   Edge
   Firefox
-  Opera 'Not ready yet!
+  Opera
   [_Last]
 End Enum
 
 Public CurrentWebBrowserType As WebBrowserType
+
+Public Function GetWebBrowserName(TargetWebBrowserType As WebBrowserType) As String
+  Dim R As String
+  Select Case TargetWebBrowserType
+    Case Chrome: R = "Chrome"
+    Case Edge: R = "Edge"
+    Case Firefox: R = "Firefox"
+    Case Opera: R = "Opera"
+    Case Else: R = "Unhandled WebBrowser type in GetWebBrowserName #" & TargetWebBrowserType
+  End Select
+  GetWebBrowserName = R
+End Function
 
 Public Function GetRootDesktopElement() As IUIAutomationElement
   If RootDesktopUIAElement Is Nothing Then

@@ -248,28 +248,31 @@ Public Function Elements() As pElement()
   Elements = This.Elements
 End Function
 
-Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = True)
+Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = False)
 'Find a single element with a timeout
 
   If Not This.Element.UIAElement Is Nothing And This.Element.IsAlive() And Not FindElementAgain Then
     'The element has already been found, no need to find it again
     Exit Sub
   End If
-  
+
   'Make sure we have the root element before finding the current element
   If This.RootUIAElementIsDesktop Then
     If This.RootUIAElementLocator Is Nothing Then
       Set This.Element.UIAElement = Factory.GetRootDesktopElement
     End If
   Else
-    'Find/Re-Find the Root Element
-    This.RootUIAElementLocator.Find TimeoutInSeconds
+    'Make sure the root element has been set from it's locator
     Set This.RootUIAElement = This.RootUIAElementLocator.Element.UIAElement
+    'Find/Re-Find the Root Element?
+    If (This.RootUIAElement Is Nothing) Or (Not This.RootUIAElementLocator.Element.IsAlive()) Then
+      This.RootUIAElementLocator.Find TimeoutInSeconds, FindElementAgain:=True
+      Set This.RootUIAElement = This.RootUIAElementLocator.Element.UIAElement
+    End If
   End If
-
+ 
   Toaster.Message "Finding " & This.Element.GivenName, Finding
 
-'  Dim FoundElements() As IUIAutomationElement
   Dim FoundElements() As pElement
   Dim CountOfFoundElements As Integer
   
@@ -312,6 +315,7 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
   
   Dim FoundElement As IUIAutomationElement
   If CountOfFoundElements = 1 Then
+    Toaster.Message "Found " & This.Element.GivenName, Success
     Set This.Element.UIAElement = FoundElements(0).UIAElement
     If FindElementAgain Then
       If This.Element.HasProperty(UIAProperties.IsScrollItemPatternAvailable) Then
@@ -347,9 +351,14 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
   Else
     Set AllElements = This.RootUIAElement.FindAll(This.TreeScope, UIA.CreateTrueCondition)
   End If
-  If AllElements.Length = 0 Then
-    ErrorLogging.LogError Errors.FindElementsFindNoElementsBelowRoot, "Could not find any elements below the Root Element!"
+  If AllElements Is Nothing Then
+    'Could not find any elements below the Root Element - yet!
     Exit Function
+  Else
+    If AllElements.Length = 0 Then
+      'Could not find any elements below the Root Element - yet!
+      Exit Function
+    End If
   End If
 
   Dim ReturnElements() As pElement
@@ -364,7 +373,7 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
 
     Dim CurrentEvaluationLogic  As String
     CurrentEvaluationLogic = This.EvaluationLogic
-    
+      
     Dim k As Variant
     For Each k In This.AllSearchConditions.Keys
       Dim C As New pCondition
@@ -425,7 +434,7 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
   Else
     Findlements = ReturnElements
   End If
-  
+
 End Function
 
 Public Sub ListAllChildren()
@@ -544,3 +553,4 @@ Public Sub WaitForElementExists(TimeoutInSeconds As Long)
   Wend
 
 End Sub
+

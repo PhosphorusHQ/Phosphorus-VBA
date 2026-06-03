@@ -81,6 +81,13 @@ Public Function PowerShell() As Phosphorus.Executable
   PowerShell = myExecutable
 End Function
 
+Public Function SamsungBrowser() As Phosphorus.Executable
+  Dim myExecutable As Phosphorus.Executable
+  myExecutable.Name = "SamsungBrowser"
+  myExecutable.ExeFile = "samsunginternet.exe"
+  SamsungBrowser = myExecutable
+End Function
+
 Public Function WindowsExplorer() As Phosphorus.Executable
   Dim myExecutable As Phosphorus.Executable
   myExecutable.Name = "Windows Explorer"

@@ -20,9 +20,9 @@ Sub TheInternet()
     Window.HighlightElements = True
     Factory.CurrentWebBrowserType = 1
   End If
-  
+
   Set The_Internet = New TheInternetPage
-        
+
   With The_Internet
     .Initialize
     .RunHomePageChecks

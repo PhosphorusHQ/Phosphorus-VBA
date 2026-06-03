@@ -39,18 +39,7 @@ End Type
 Private This As BrowserAttributes
   
 Private Sub Class_Initialize()
-  Set This.MasterWindow = Factory.GetNewLocator
-  Set This.BrowserRootView = Factory.GetNewLocator
-  Set This.NonClientView = Factory.GetNewLocator
-  Set This.EdgeBrowserFrameViewWin = Factory.GetNewLocator
-  Set This.BrowserView = Factory.GetNewLocator
-  Set This.TopContainerView = Factory.GetNewLocator
-  Set This.EdgeToolbarView = Factory.GetNewLocator
-  Set This.BackButton = Factory.GetNewLocator
-  Set This.LocationBarView = Factory.GetNewLocator
-  Set This.AddressAndSearchBar = Factory.GetNewLocator
-  Set This.SidebarContentsSplitView = Factory.GetNewLocator
-  Set This.RootWebArea = Factory.GetNewLocator
+  GetAllLocators
 End Sub
 
 Private Sub Class_Terminate()
@@ -69,6 +58,25 @@ Private Sub Class_Terminate()
   Set This.AddressAndSearchBar = Nothing
   Set This.SidebarContentsSplitView = Nothing
   Set This.RootWebArea = Nothing
+End Sub
+
+Private Sub GetAllLocators()
+  DestroyLocators
+End Sub
+
+Private Sub DestroyLocators()
+  Set This.MasterWindow = Factory.GetNewLocator
+  Set This.BrowserRootView = Factory.GetNewLocator
+  Set This.NonClientView = Factory.GetNewLocator
+  Set This.EdgeBrowserFrameViewWin = Factory.GetNewLocator
+  Set This.BrowserView = Factory.GetNewLocator
+  Set This.TopContainerView = Factory.GetNewLocator
+  Set This.EdgeToolbarView = Factory.GetNewLocator
+  Set This.BackButton = Factory.GetNewLocator
+  Set This.LocationBarView = Factory.GetNewLocator
+  Set This.AddressAndSearchBar = Factory.GetNewLocator
+  Set This.SidebarContentsSplitView = Factory.GetNewLocator
+  Set This.RootWebArea = Factory.GetNewLocator
 End Sub
 
 Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
@@ -125,7 +133,13 @@ Private Sub InitialiseAllLocators()
 
 End Sub
 
-Public Function GetRootWebArea() As pLocator
+Public Function GetRootWebArea(Optional NewWebPage As Boolean) As pLocator
+  If NewWebPage Then
+    DestroyLocators
+    GetAllLocators
+    InitialiseAllLocators
+    This.RootWebArea.Find 10
+  End If
   Set GetRootWebArea = This.RootWebArea
 End Function
 

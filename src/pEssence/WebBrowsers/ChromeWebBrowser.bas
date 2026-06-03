@@ -39,6 +39,17 @@ End Type
 Private This As BrowserAttributes
 
 Private Sub Class_Initialize()
+  GetAllLocators
+End Sub
+
+Private Sub Class_Terminate()
+  On Error Resume Next
+  This.MasterWindow.Element.CloseWindow
+  On Error GoTo 0
+  DestroyLocators
+End Sub
+
+Private Sub GetAllLocators()
   Set This.MasterWindow = Factory.GetNewLocator
   Set This.BrowserRootView = Factory.GetNewLocator
   Set This.NonClientView = Factory.GetNewLocator
@@ -53,10 +64,7 @@ Private Sub Class_Initialize()
   Set This.RootWebArea = Factory.GetNewLocator
 End Sub
 
-Private Sub Class_Terminate()
-  On Error Resume Next
-  This.MasterWindow.Element.CloseWindow
-  On Error GoTo 0
+Private Sub DestroyLocators()
   Set This.MasterWindow = Nothing
   Set This.BrowserRootView = Nothing
   Set This.NonClientView = Nothing
@@ -127,7 +135,13 @@ Private Sub InitialiseAllLocators()
 
 End Sub
 
-Public Function GetRootWebArea() As pLocator
+Public Function GetRootWebArea(Optional NewWebPage As Boolean) As pLocator
+  If NewWebPage Then
+    DestroyLocators
+    GetAllLocators
+    InitialiseAllLocators
+    This.RootWebArea.Find 10
+  End If
   Set GetRootWebArea = This.RootWebArea
 End Function
 
@@ -159,11 +173,20 @@ Public Sub AcknowledgeChangeYourPasswordAlert()
    
   Dim PasswordAlertOkButton As pLocator
   Set PasswordAlertOkButton = Factory.GetNewLocator
+  Dim Continue As Boolean
   With PasswordAlertOkButton
     .Initialise "RootView", RootView, Descendants, By.AriaRole, AriaRoles.Button
     .ElementExists 10
     .Find 10
-    .Element.Click
+    Continue = True
+    While Continue
+      .Element.Click
+      Snooze 1000
+      Continue = False
+      On Error Resume Next
+      Continue = .ElementExists(0)
+      On Error GoTo 0
+    Wend
     This.RootWebArea.Find 10, FindElementAgain:=True
   End With
   

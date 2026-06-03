@@ -35,10 +35,6 @@ Private This As PageAttributes
 
 Private Sub Class_Initialize()
   Set This.WebBrowser = Factory.GetNewWebBrowser
-  Set This.ForkMe = Factory.GetNewLocator
-  Set This.HomePageHeading1 = Factory.GetNewLocator
-  Set This.HomePageHeading2 = Factory.GetNewLocator
-  Set This.ListOfExamples = Factory.GetNewLocator
 End Sub
 
 Private Sub Class_Terminate()
@@ -51,12 +47,28 @@ Private Sub Class_Terminate()
 End Sub
 
 Public Sub Initialize()
-  
+
   With This.WebBrowser
     .Start WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
     Set This.RootWebArea = .GetRootWebArea
   End With
   
+  InitialiseLocators
+
+End Sub
+
+Private Sub InitialiseLocators()
+
+  Set This.ForkMe = Nothing
+  Set This.HomePageHeading1 = Nothing
+  Set This.HomePageHeading2 = Nothing
+  Set This.ListOfExamples = Nothing
+  
+  Set This.ForkMe = Factory.GetNewLocator
+  Set This.HomePageHeading1 = Factory.GetNewLocator
+  Set This.HomePageHeading2 = Factory.GetNewLocator
+  Set This.ListOfExamples = Factory.GetNewLocator
+
   With This.ForkMe
     .Initialise "ForkMe", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleLink, NameIs)"
     .AriaRoleLink: .NameIs "Fork me on GitHub"
@@ -79,7 +91,9 @@ Public Sub Initialize()
 End Sub
 
 Public Sub RunHomePageChecks()
-  Debug.Assert (This.WebBrowser.GetCurrentURL = TARGET_PAGE_URL) Or (This.WebBrowser.GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", ""))
+  Dim CurrentURL As String
+  CurrentURL = This.WebBrowser.GetCurrentURL
+  Debug.Assert (CurrentURL = TARGET_PAGE_URL) Or (CurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", ""))
   Debug.Assert This.RootWebArea.Element.GetProperty(Name) = TARGET_PAGE_TITLE
   Debug.Assert This.HomePageHeading1.ElementExists(10)
   Debug.Assert This.HomePageHeading1.Element.GetProperty(Level) = 1
@@ -106,35 +120,46 @@ Private Sub SelectListItem(ItemName As String, Optional SubPageHeadingText As St
     .AriaRoleLink: .NameIs ItemName
     .Find 10
   End With
-  
+
   ListItemHyperlink.Element.Click
+
+  'Allow time for the old page to unload
+  Snooze 1000
   
-  Set ListItem = Nothing
-  Set ListItemHyperlink = Nothing
+  'Reload the new page
+  Set This.RootWebArea = This.WebBrowser.GetRootWebArea(NewWebPage:=True)
+  Debug.Assert This.RootWebArea.ElementExists(2)
   
-  Debug.Assert This.RootWebArea.ElementExists(10)
-  Debug.Assert This.ForkMe.ElementExists(2)
-  Debug.Assert This.HomePageHeading1.ElementDoesntExist(0)
-  Debug.Assert This.HomePageHeading2.ElementDoesntExist(0)
-  Debug.Assert This.ListOfExamples.ElementDoesntExist(0)
-      
+  'Now wait until the new subheader exists first!
   If SubPageHeadingText = "" Then
     SubPageHeadingText = ItemName
   End If
   
   Dim SubPageHeading As pLocator
+  Set SubPageHeading = Nothing
   Set SubPageHeading = Factory.GetNewLocator
   With SubPageHeading
     .Initialise "SubPageHeading", This.RootWebArea, Descendants, pConditions, "AND(AriaRoleHeading, NameIs)"
-    .AriaRoleHeading: .NameIs SubPageHeadingText:
+    .AriaRoleHeading: .NameIs SubPageHeadingText
     Debug.Assert .ElementExists(2)
   End With
+
+  Set ListItem = Nothing
+  Set ListItemHyperlink = Nothing
+
+  InitialiseLocators
+
+  Debug.Assert This.ForkMe.ElementExists(10)
+  Debug.Assert This.HomePageHeading1.ElementDoesntExist(0)
+  Debug.Assert This.HomePageHeading2.ElementDoesntExist(0)
+  Debug.Assert This.ListOfExamples.ElementDoesntExist(0)
 
 End Sub
 
 Public Sub Checkboxes()
-  
+
   SelectListItem "Checkboxes"
+  
   Debug.Assert (This.WebBrowser.GetCurrentURL = TARGET_PAGE_URL & "/checkboxes") Or (This.WebBrowser.GetCurrentURL = Replace(Replace(TARGET_PAGE_URL, "http://", ""), "https://", "") & "/checkboxes")
 
   Dim FirstCheckbox As pLocator
@@ -198,7 +223,6 @@ Public Sub DragAndDrop()
     Set FirstItem = Factory.GetNewLocator
     With FirstItem
       .Initialise "FirstItem", This.RootWebArea, Descendants, By.AriaRole, AriaRoles.Banner
-      '.PositionInTreescope 3
       .PositionInMatchingSet 1
       .Find 10
     End With
@@ -207,7 +231,6 @@ Public Sub DragAndDrop()
     Set SecondItem = Factory.GetNewLocator
     With SecondItem
       .Initialise "SecondItem", This.RootWebArea, Descendants, By.AriaRole, AriaRoles.Banner:
-      '.PositionInTreescope 4
       .PositionInMatchingSet 2
       .Find 10
     End With

@@ -154,7 +154,7 @@ Public Sub Click(Element As pElement)
   
   AutoFindUIAElement Element
   
-  Toaster.Message "Clicking " & Name, Action
+  Toaster.Message "Clicking " & Element.GivenName, Action
     
   IsElementReady Element
   Window.HighlightElement Element.UIAElement
@@ -396,8 +396,8 @@ End Sub
 Public Sub DragAndDrop( _
   SourceElement As pElement, _
   TargetElement As pElement, _
-  Optional holdTimeMs As Long = 400, _
-  Optional speed As Long = 500, _
+  Optional holdTimeMs As Long = 100, _
+  Optional speed As Long = 2000, _
   Optional ctrlKey As Boolean = False, _
   Optional shiftKey As Boolean = False, _
   Optional altKey As Boolean = False)

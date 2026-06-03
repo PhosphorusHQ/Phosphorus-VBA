@@ -39,6 +39,7 @@ End Sub
 Public Sub RightClick()
   Actions.RightClick Me
 End Sub
+
 Public Sub DragAndDrop(ToElement As pElement)
   Actions.DragAndDrop Me, ToElement
 End Sub

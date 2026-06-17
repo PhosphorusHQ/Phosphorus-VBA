@@ -49,14 +49,10 @@ End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
   
-  If (VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY") Or (VBA.Interaction.Environ$("COMPUTERNAME") = "ASPIRE16") Then
-    ExportPhosphorusSourceCode
-  End If
-  
-  pUnit.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
-  
   'Always Save Code Changes on Closing Workbook
-  If (VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY") Or (VBA.Interaction.Environ$("COMPUTERNAME") = "ASPIRE16") Then
+  ExportPhosphorusSourceCode
+  pUnit.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+  If Not ThisWorkbook.ReadOnly Then
     ThisWorkbook.Save
   End If
 
@@ -69,6 +65,10 @@ End Sub
 'End Sub
 
 Private Sub ExportPhosphorusSourceCode()
+  On Error Resume Next
+  VBA.FileSystem.MkDir ThisWorkbook.Path & "\src"
+  VBA.FileSystem.MkDir ThisWorkbook.Path & "\src\pUnit"
+  On Error GoTo 0
   Phosphorus.ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pUnit", projectName:=ThisVBProjectName
 End Sub
 

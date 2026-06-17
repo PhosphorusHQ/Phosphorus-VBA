@@ -93,7 +93,8 @@ Public Sub ExportModulesWithFolders(SubFolderForExport As String, Optional proje
   
   Next vbComp
 
-  MsgBox "Modules exported successfully to: " & basePath, vbInformation
+  'MsgBox "Modules exported successfully to: " & basePath, vbInformation
+
 End Sub
 
 Public Sub SetModulesToKeep(strModulesToKeep() As String)

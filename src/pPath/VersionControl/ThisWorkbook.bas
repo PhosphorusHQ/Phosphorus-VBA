@@ -50,13 +50,9 @@ End Sub
 'Always Save Code Changes on Closing Workbootk
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
 
-  If (VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY") Or (VBA.Interaction.Environ$("COMPUTERNAME") = "ASPIRE16") Then
-    ExportPhosphorusSourceCode
-  End If
-  
+  ExportPhosphorusSourceCode
   pPath.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
-  
-  If (VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY") Or (VBA.Interaction.Environ$("COMPUTERNAME") = "ASPIRE16") Then
+  If Not ThisWorkbook.ReadOnly Then
     ThisWorkbook.Save
   End If
 
@@ -69,6 +65,10 @@ Private Sub SetModulesToKeep()
 End Sub
 
 Private Sub ExportPhosphorusSourceCode()
+  On Error Resume Next
+  VBA.FileSystem.MkDir ThisWorkbook.Path & "\src"
+  VBA.FileSystem.MkDir ThisWorkbook.Path & "\src\pPath"
+  On Error GoTo 0
   Phosphorus.ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pPath", projectName:="pPath"
 End Sub
 

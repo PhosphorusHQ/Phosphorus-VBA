@@ -31,6 +31,10 @@ Private Sub Workbook_Open()
 End Sub
 
 Private Sub ExportPhosphorusSourceCode()
+  On Error Resume Next
+  VBA.FileSystem.MkDir ThisWorkbook.Path & "\src"
+  VBA.FileSystem.MkDir ThisWorkbook.Path & "\src\pEssenceExamples"
+  On Error GoTo 0
   ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pEssenceExamples"
 End Sub
 

@@ -45,19 +45,19 @@ Private Sub Workbook_Open()
 End Sub
 
 Private Sub ExportPhosphorusSourceCode()
+  On Error Resume Next
+  VBA.FileSystem.MkDir ThisWorkbook.Path & "\src"
+  VBA.FileSystem.MkDir ThisWorkbook.Path & "\src\pEssence"
+  On Error GoTo 0
   ModuleManagement.ExportModulesWithFolders SubFolderForExport:="\src\pEssence"
 End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
 
-  If (VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY") Or (VBA.Interaction.Environ$("COMPUTERNAME") = "ASPIRE16") Then
-    ExportPhosphorusSourceCode
-  End If
-  
-  pEssence.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
-  
   'Always Save Code Changes on Closing Workbootk
-  If (VBA.Interaction.Environ$("COMPUTERNAME") = "LYNNSHPENVY") Or (VBA.Interaction.Environ$("COMPUTERNAME") = "ASPIRE16") Then
+  ExportPhosphorusSourceCode
+  pEssence.References.RemoveAllNonBuiltInReferencesFromAProject ThisVBProjectName
+  If Not ThisWorkbook.ReadOnly Then
     ThisWorkbook.Save
   End If
 

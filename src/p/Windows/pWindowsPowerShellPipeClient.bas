@@ -314,15 +314,15 @@ End Function
 
 Private Sub WritePowerShellScript()
 
-  Dim fso As Object
+  Dim FSO As Object
   Dim file As Object
   Dim scriptContent As String
     
   On Error GoTo ErrorHandler
     
   ' Check if the script file already exists
-  Set fso = CreateObject("Scripting.FileSystemObject")
-  If fso.FileExists(ScriptPath) Then
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  If FSO.FileExists(ScriptPath) Then
     Exit Sub
   End If
         
@@ -375,7 +375,7 @@ Private Sub WritePowerShellScript()
     "}"
 
   ' Write the script to the file
-  Set file = fso.CreateTextFile(ScriptPath, True)
+  Set file = FSO.CreateTextFile(ScriptPath, True)
   file.Write scriptContent
   file.Close
   Exit Sub

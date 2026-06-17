@@ -1321,7 +1321,6 @@ Dim bMoveCopy As Boolean
 End Sub
 
 Private Sub mctlExpander_Click()
-'
     Expanded = Not Expanded
     If moTree.EditMode(Me) Then
         ' if any node is in edit mode exit edit mode

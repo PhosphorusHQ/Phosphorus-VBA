@@ -59,12 +59,19 @@ Private Sub Tests_LaunchAppByAUMID()
   'Ok
   'No UI?
 '  LaunchAppByAUMID Phosphorus.WindowsWindowsApps.MicrosoftEdgeDevToolsClient, Phosphorus.WindowShowStates.SW_SHOWNORMAL
+  
+'  LaunchAppByAUMID "Windows Calculator", Phosphorus.WindowsWindowsApps.MicrosoftWindowsCalculator_OfficialName, Phosphorus.WindowShowStates.Normal
+'  LaunchAppByAUMID "Duck Duck Go", Phosphorus.WindowsWindowsApps.DuckDuckGo_OfficialName, Phosphorus.WindowShowStates.Normal
+'  LaunchAppByAUMID "Microsoft Edge", Phosphorus.WindowsWindowsApps.MicrosoftEdge_OfficialName, URL:="google.com", ShowCmd:=Phosphorus.WindowShowStates.Normal
+  
 End Sub
 
-Public Sub LaunchAppByAUMID(myWindowsApp As Phosphorus.WindowsApp, Optional URL As String, Optional ByVal ShowCmd As Phosphorus.WindowShowStates)
-  myWindowsApp.AppID = Phosphorus.WindowsWindowsApps.GetAppID(myWindowsApp.OfficialName)
+Public Sub LaunchAppByAUMID(FriendlyName As String, OfficialName As String, Optional URL As String, Optional ByVal ShowCmd As Phosphorus.WindowShowStates)
+'  myWindowsApp.AppID = Phosphorus.WindowsWindowsApps.GetAppID(myWindowsApp.OfficialName)
+  Dim AppID As String
+  AppID = Phosphorus.WindowsWindowsApps.GetAppID(OfficialName)
   'TODO: Do all windows apps open in a normal screen state regardless of which value we pass
-  RunShellExecuteToStartNewProcess myWindowsApp.FriendlyName, "open", "shell:appsFolder\" & myWindowsApp.AppID, URL, VBA.Constants.vbNullString, ShowCmd
+  RunShellExecuteToStartNewProcess FriendlyName, "open", "shell:appsFolder\" & AppID, URL, VBA.Constants.vbNullString, ShowCmd
 End Sub
 
 Public Sub LaunchCommandByProtocol(ByVal ApplicationName, Protocol As String, URL As String, ByVal ShowCmd As Phosphorus.WindowShowStates)

@@ -336,16 +336,16 @@ End Sub
 'TOR
 'https://www.torproject.org/download/
 
-Private Sub ValidPageLoadElementForApps(App As Phosphorus.WindowsApp)
+Private Sub ValidPageLoadElementForApps(FriendlyName As String, OfficialName As String)
 'Check for no error if we open an app
 Arrange:
   Set pWindowsDriver = pWinDriver.pWindowsDriverStatic.GetNewPDriver(pWinDriver.pWindowsDriverType.WindowsApp)
-  pWindowsDriver.SetWindowsApp App
+  pWindowsDriver.SetWindowsApp FriendlyName, OfficialName
   Dim ExpectedErrorNumber As Long
   ExpectedErrorNumber = 0
   On Error GoTo ErrorHandler
 Act:
-  pWindowsDriver.Launch App.FriendlyName, App.OfficialName, TimeoutInSeconds:=30
+  pWindowsDriver.Launch FriendlyName, OfficialName, TimeoutInSeconds:=30
   Exit Sub
 ErrorHandler:
 Assert:
@@ -359,6 +359,6 @@ End Sub
 
 '@TestMethod
 Public Sub ValidPageLoadElement_MicrosoftWindowsCalculator()
-  ValidPageLoadElementForApps Phosphorus.WindowsWindowsApps.MicrosoftWindowsCalculator
+  ValidPageLoadElementForApps "Windows Calculator", Phosphorus.WindowsWindowsApps.MicrosoftWindowsCalculator_OfficialName
 End Sub
 

@@ -26,7 +26,8 @@ Private Type DriverProperties
   DriverType As pWinDriver.pWindowsDriverType
   WebBrowserType As pWinDriver.pWindowsDriverWebBrowserType
   TempDirectoryForCurrentAppInstance As String
-  WindowsApp As Phosphorus.WindowsApp
+  WindowsAppFriendlyName As String
+  WindowsAppOfficialName As String
   SubDriver As Object
   Navigate As pWindowsDriver_Navigate
   WebAppTitle As String
@@ -84,13 +85,10 @@ Public Function GetWindowsDriverWebBrowserType() As pWinDriver.pWindowsDriverWeb
   Set GetWindowsDriverWebBrowserType = This.WebBrowserType
 End Function
 
-Public Sub SetWindowsApp(WindowsApp As Phosphorus.WindowsApp)
-  This.WindowsApp = WindowsApp
+Public Sub SetWindowsApp(FriendlyName As String, OfficialName As String)
+  This.WindowsAppFriendlyName = FriendlyName
+  This.WindowsAppOfficialName = OfficialName
 End Sub
-
-Public Function GetWindowsApp() As Phosphorus.WindowsApp
-  GetWindowsApp = This.WindowsApp
-End Function
 
 Public Function GetDefaultImplicitTimeoutInSeconds() As Integer
   GetDefaultImplicitTimeoutInSeconds = DEFAULT_IMPLICIT_TIMEOUT_IN_SECONDS
@@ -174,8 +172,9 @@ Public Sub Launch( _
          End If
          
       Case pWinDriver.pWindowsDriverType.WindowsApp
-        Phosphorus.WindowsProcesses.LaunchAppByAUMID This.WindowsApp
-        This.PageLoadedElementPPath = This.WindowsApp.PageLoadedElementPPath
+Stop
+        Phosphorus.WindowsProcesses.LaunchAppByAUMID This.WindowsAppFriendlyName, This.WindowsAppOfficialName
+        This.PageLoadedElementPPath = "" 'This.WindowsApp.PageLoadedElementPPath
         This.PageLoadedElementExpectedWindowInteractionState = UIAutomationClient.WindowInteractionState.WindowInteractionState_ReadyForUserInteraction
       
       Case Else

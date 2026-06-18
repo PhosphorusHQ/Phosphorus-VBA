@@ -14,15 +14,15 @@ Option Explicit
 
 'Powershell command to get all app package names:
 '    powershell Get-AppxPackage | Select Name, PackageFamilyName
+' Add: '!App' to Package Family Name to get AppID
 
-Public Type WindowsApp
-  FriendlyName As String
-  OfficialName As String
-  AppID As String
-  PageLoadedElementPPath As String
-End Type
+'Return the Official Name of the app
 
-Public Function GetAppID(AppName As String) As String
+Public Const DuckDuckGo_OfficialName = "DuckDuckGo.DesktopBrowser"
+Public Const MicrosoftEdge_OfficialName = "Microsoft.MicrosoftEdge.Stable"
+Public Const MicrosoftWindowsCalculator_OfficialName = "Microsoft.WindowsCalculator"
+
+Public Function GetAppID(OfficialName As String) As String
 
   Dim WShell As Object
   Dim Exec As Object
@@ -30,8 +30,8 @@ Public Function GetAppID(AppName As String) As String
   Dim PackageFamilyName As String
   Dim Cmd As String
 
-  Cmd = "Get-AppxPackage -Name '*" & AppName & "*' | Select-Object -ExpandProperty PackageFamilyName"
-  Output = Phosphorus.WindowsPowerShell.Execute(Cmd, "WindowsWindowsApps.GetAppID(" & AppName & ")")
+  Cmd = "Get-AppxPackage -Name '*" & OfficialName & "*' | Select-Object -ExpandProperty PackageFamilyName"
+  Output = Phosphorus.WindowsPowerShell.Execute(Cmd, "WindowsWindowsApps.GetAppID(" & OfficialName & ")")
 
   ' Clean up the output (remove extra whitespace, newlines)
   Output = VBA.Strings.Trim(Output)
@@ -39,7 +39,7 @@ Public Function GetAppID(AppName As String) As String
   ' Check if output is empty (app not found)
   If Output = "" Then
     'Raise an exception
-    Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverWindowsAppNotFound, AppName
+    Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverWindowsAppNotFound, OfficialName
   Else
     ' Construct and return the App ID
     PackageFamilyName = Output
@@ -51,26 +51,4 @@ Public Function GetAppID(AppName As String) As String
     
 End Function
 
-Public Function DuckDuckGo() As Phosphorus.WindowsApp
-  Dim myWindowsApp As Phosphorus.WindowsApp
-  myWindowsApp.FriendlyName = "DuckDuckGo"
-  myWindowsApp.OfficialName = "DuckDuckGo" & "." & "DesktopBrowser"
-  DuckDuckGo = myWindowsApp
-End Function
-
-Public Function MicrosoftEdge() As Phosphorus.WindowsApp
-  Dim myWindowsApp As Phosphorus.WindowsApp
-  myWindowsApp.FriendlyName = "Microsoft Edge"
-  myWindowsApp.OfficialName = "Microsoft" & "." & "MicrosoftEdge" & "." & "Stable"
-  MicrosoftEdge = myWindowsApp
-End Function
-
-Public Function MicrosoftWindowsCalculator() As Phosphorus.WindowsApp
-  Dim myWindowsApp As Phosphorus.WindowsApp
-  myWindowsApp.FriendlyName = "Microsoft Windows Calculator"
-  myWindowsApp.OfficialName = "Microsoft" & "." & "WindowsCalculator"
-  myWindowsApp.PageLoadedElementPPath = "/Window[xp:starts-with(@Name,""Calculator"")]"
-  MicrosoftWindowsCalculator = myWindowsApp
-End Function
-
-'Code removed due to triggering false Malware alert in OneDrive
+'Other code removed due to triggering false Malware alert in OneDrive

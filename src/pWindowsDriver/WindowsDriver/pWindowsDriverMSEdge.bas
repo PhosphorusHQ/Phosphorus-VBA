@@ -84,7 +84,7 @@ Public Sub IWindowsDriverWebBrowser_LaunchApp(ByRef ParentWindowsDriver As pWind
       Phosphorus.WindowsProcesses.LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, "--user-data-dir=""" & This.TempDirectory & """ --new-window " & URL, Phosphorus.WindowShowStates.Maximized
 
     Case pWinDriver.pInstanceType.ApplicationUserModelID
-      Phosphorus.WindowsProcesses.LaunchAppByAUMID Phosphorus.WindowsWindowsApps.MicrosoftEdge, URL, Phosphorus.WindowShowStates.Normal
+      Phosphorus.WindowsProcesses.LaunchAppByAUMID "Microsoft Edge", Phosphorus.WindowsWindowsApps.MicrosoftEdge_OfficialName, URL, Phosphorus.WindowShowStates.Normal
     
     Case Else
       Phosphorus.pExceptions.Raise Phosphorus.Exceptions.WindowsDriverUnhandledAppConfiguration, "Microsoft Edge, Instance Type: #" & This.InstanceType

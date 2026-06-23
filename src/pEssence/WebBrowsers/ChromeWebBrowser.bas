@@ -125,10 +125,10 @@ Private Sub InitialiseAllLocators()
           With This.AddressAndSearchBar
             .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
           End With
-  
+
     'Second Pane Below Browser View
     With This.BrowserViewSubView1
-      .Initialise "BrowserViewSubView1", This.BrowserView, Children, By.ClassName, "View": .PositionInTreescope 2
+      .Initialise "BrowserViewSubView1", This.BrowserView, Children, By.ClassName, "View", FindFirst:=True
     End With
 
       This.RootWebArea.Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True

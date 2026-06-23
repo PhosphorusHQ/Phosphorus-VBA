@@ -108,13 +108,15 @@ Public Sub Condition( _
   ConditionName As String, _
   UIAProperty As UIAProperties, _
   UIAPropertyComparison As UIAPropertyComparisons, _
-  UIAPropertyValue As Variant)
+  UIAPropertyValue As Variant, _
+  Optional TrimProperty As Boolean = False)
   
   Dim cond As New pCondition
   cond.ConditionName = ConditionName
   cond.UIAProperty = UIAProperty
   cond.UIAPropertyComparison = UIAPropertyComparison
   cond.UIAPropertyValue = UIAPropertyValue
+  cond.TrimProperty = TrimProperty
   This.AllSearchConditions.Add ConditionName, cond
   Set cond = Nothing
   
@@ -155,6 +157,10 @@ Public Sub AriaRoleDocument()
   AriaRole AriaRoles.Document, "Document"
 End Sub
 
+Public Sub AriaRoleGeneric()
+  AriaRole AriaRoles.Generic, "Generic"
+End Sub
+
 Public Sub AriaRoleGroup()
   AriaRole AriaRoles.Group, "Group"
 End Sub
@@ -173,6 +179,18 @@ End Sub
 
 Public Sub AriaRoleListItem()
   AriaRole AriaRoles.ListItem, "ListItem"
+End Sub
+
+Public Sub AriaRoleMain()
+  AriaRole AriaRoles.Main, "Main"
+End Sub
+
+Public Sub AriaRoleNavigation()
+  AriaRole AriaRoles.Navigation, "Navigation"
+End Sub
+
+Public Sub AriaRoleNullString()
+  AriaRole AriaRoles.NullString, "NullString"
 End Sub
 
 Public Sub AriaRoleRadio()
@@ -207,10 +225,10 @@ Public Sub NameIs(Name As String)
   Condition "NameIs", UIAProperties.Name, UIAPropertyComparisons.IsTheString, Name
 End Sub
 
-Public Sub NameIs_(Name As String, Optional ConditionNameSuffix As String)
+Public Sub NameIs_(Name As String, Optional ConditionNameSuffix As String, Optional TrimProperty As Boolean = False)
   Dim ConditionName As String
   If ConditionNameSuffix = "" Then: ConditionName = "NameIs" & VBA.Replace(Name, " ", ""): Else: ConditionName = "NameIs" & ConditionNameSuffix
-  Condition ConditionName, UIAProperties.Name, UIAPropertyComparisons.IsTheString, Name
+  Condition ConditionName, UIAProperties.Name, UIAPropertyComparisons.IsTheString, Name, TrimProperty
 End Sub
 
 Public Sub PositionInTreescope(Position As Integer)

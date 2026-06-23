@@ -95,7 +95,7 @@ Private Sub InitialiseAllLocators()
   
     With This.BackButton
      .Initialise "BackButton", This.NavigationToolbar, Children, pConditions, _
-      "AND(AriaRoleButton, NameIs)": .AriaRoleButton: .NameIs "Backwards"
+      "AND(AriaRoleButton, OR(NameIsBackwards, NameIsBack))": .AriaRoleButton: .NameIs_ "Backwards": .NameIs_ "Back" 'Need Backwards BEFORE Back!
     End With
 
     With This.URLbar

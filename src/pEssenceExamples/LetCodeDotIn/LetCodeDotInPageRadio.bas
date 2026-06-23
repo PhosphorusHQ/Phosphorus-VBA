@@ -95,19 +95,33 @@ Public Sub Initialize()
     .Initialise "AllControls", This.RootWebArea, Descendants, pConditions, _
       "AND" & _
         "(" & _
-          "OR(AriaRoleHeading, AriaRoleDescription, AriaRoleRadio, AriaRoleCheckBox, ClassName)," & _
-          "NOT(AND(AriaRoleDescription, OR(NameIsProducts, NameIsGrooming, NameIsYes, NameIsNo!, NameIsFoo, NameIsBar, NameIsGoing, NameIsNotGoing, NameIsMaybe, NameIsRememberMe)))," & _
-          "NOT(AND(AriaRoleHeading, NameIsTopics))" & _
+          "OR(AriaRoleHeading, AriaRoleDescription, AriaRoleRadio, AriaRoleCheckBox, ClassName, AND(ControlTypeGroup, AriaRoleNullString, GroupClassForFirefox))," & _
+          "NOT(AND(AriaRoleDescription, OR(NameIsProducts, NameIsGrooming, NameIsRadioAndCheckbox, NameIsAndCheckbox, NameIsYes, NameIsNo!, Notice1, Notice2, NameIsFoo, NameIsBar, NameIsGoing, NameIsNotGoing, NameIsMaybe, NameIsRememberMe)))," & _
+          "NOT(AND(AriaRoleHeading, OR(NameIsTopics, NameIsLearningPoints)))" & _
          ")"
+'    .Initialise "AllControls", This.RootWebArea, Descendants, pConditions, _
+'      "AND" & _
+'        "(" & _
+'          "OR(AriaRoleHeading, AriaRoleDescription, AriaRoleRadio, AriaRoleCheckBox, ClassName)," & _
+'          "NOT(AND(AriaRoleDescription, OR(NameIsProducts, NameIsGrooming, NameIsRadioAndCheckbox, NameIsAndCheckbox, NameIsYes, NameIsNo!, Notice1, Notice2, NameIsFoo, NameIsBar, NameIsGoing, NameIsNotGoing, NameIsMaybe, NameIsRememberMe)))," & _
+'          "NOT(AND(AriaRoleHeading, NameIsTopics))" & _
+'         ")"
     .AriaRoleHeading: .AriaRoleDescription: .AriaRoleRadio: .AriaRoleCheckBox: .ClassName "label" 'Firefox uses class name 'labels'
+    .Condition "ControlTypeGroup", UIAProperties.ControlType, UIAPropertyComparisons.EqualsNumber, UIAControlTypeIDs.Group
+'    .AriaRoleGeneric: .AriaRoleMain: .AriaRoleNavigation
+    .AriaRoleNullString: .Condition "GroupClassForFirefox", UIAProperties.ClassName, IsTheString, "block text-sm font-semibold mb-2 text-slate-800 dark:text-slate-200"
     .NameIs_ "Products"
     .NameIs_ "Grooming"
-    .NameIs_ " Yes" 'NB: The text boxes start with a space! These are stripped out!
-    .NameIs_ " No", "No!" 'NB: We have to be careful that no condition name contains any other!?
-    .NameIs_ " Foo": .NameIs_ " Bar"
-    .NameIs_ " Going": .NameIs_ " Not going", "NotGoing": .NameIs_ " Maybe"
-    .NameIs_ " Remember me", "RememberMe"
+    .NameIs_ " & Checkbox", "AndCheckbox" 'Yandex!
+    .NameIs_ "Radio & Checkbox", "RadioAndCheckbox" 'Yandex!
+    .NameIs_ "Yes", , True: .NameIs_ "No", "No!", True
+    .Condition "Notice1", Name, StartsWithTheString, "* Notice: both buttons can be active due to non-matching "
+    .Condition "Notice2", Name, EndsWithTheString, " names (intentional bug)."
+    .NameIs_ "Foo", , True: .NameIs_ "Bar", , True
+    .NameIs_ "Going", , True: .NameIs_ "Not going", "NotGoing", True: .NameIs_ "Maybe", , True
+    .NameIs_ "Remember me", "RememberMe", True
     .NameIs_ "These are topics related to the article that might interest you", "Topics"
+    .NameIs_ "Learning Points", "LearningPoints"
     .FindAll False
     AllControls = .Elements
   End With
@@ -124,7 +138,7 @@ Public Sub Initialize()
             Debug.Assert CurrentUIAElement.CurrentName = "Radio & Checkbox"
             Set This.RadioAndCheckboxHeader = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 2
-            Debug.Assert CurrentUIAElement.CurrentAriaRole = AriaRoles.Description Or CurrentUIAElement.CurrentClassName = "label"
+            Debug.Assert (CurrentUIAElement.CurrentAriaRole = AriaRoles.Description) Or (CurrentUIAElement.CurrentClassName = "label") Or (CurrentUIAElement.CurrentClassName = "block text-sm font-semibold mb-2 text-slate-800 dark:text-slate-200")
             Debug.Assert CurrentUIAElement.CurrentName = "Select any one"
             Set This.SelectAnyOneSubHeader = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 3
@@ -136,9 +150,8 @@ Public Sub Initialize()
             Debug.Assert CurrentUIAElement.CurrentName = "No"
             Set This.SelectAnyOneNo = Factory.GetNewElement(This.SelectAnyOneSubHeader.GivenName & " - No", CurrentUIAElement)
           Case 5
-            Debug.Assert CurrentUIAElement.CurrentAriaRole = AriaRoles.Description Or CurrentUIAElement.CurrentClassName = "label"
-            'NB: Spelling mistake!
-            Debug.Assert CurrentUIAElement.CurrentName = "Cofirm you can select only one radio button"
+            Debug.Assert (CurrentUIAElement.CurrentAriaRole = AriaRoles.Description) Or (CurrentUIAElement.CurrentClassName = "label") Or (CurrentUIAElement.CurrentClassName = "block text-sm font-semibold mb-2 text-slate-800 dark:text-slate-200")
+            Debug.Assert CurrentUIAElement.CurrentName = "Confirm you can select only one radio button"
             Set This.ConfirmYouCanSelectOnlyOneRadioButton = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 6
             Debug.Assert CurrentUIAElement.CurrentAriaRole = AriaRoles.Radio
@@ -149,7 +162,7 @@ Public Sub Initialize()
             Debug.Assert CurrentUIAElement.CurrentName = "No"
             Set This.ConfirmYouCanSelectOnlyOneRadioButtonNo = Factory.GetNewElement(This.ConfirmYouCanSelectOnlyOneRadioButton.GivenName & " - No", CurrentUIAElement)
           Case 8
-            Debug.Assert CurrentUIAElement.CurrentAriaRole = AriaRoles.Description Or CurrentUIAElement.CurrentClassName = "label"
+            Debug.Assert (CurrentUIAElement.CurrentAriaRole = AriaRoles.Description) Or (CurrentUIAElement.CurrentClassName = "label") Or (CurrentUIAElement.CurrentClassName = "block text-sm font-semibold mb-2 text-slate-800 dark:text-slate-200")
             Debug.Assert CurrentUIAElement.CurrentName = "Find the bug"
             Set This.FindTheBug = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 9
@@ -161,7 +174,7 @@ Public Sub Initialize()
             Debug.Assert CurrentUIAElement.CurrentName = "No"
             Set This.FindTheBugNo = Factory.GetNewElement(This.FindTheBug.GivenName & " - No", CurrentUIAElement)
           Case 11
-            Debug.Assert CurrentUIAElement.CurrentAriaRole = AriaRoles.Description Or CurrentUIAElement.CurrentClassName = "label"
+            Debug.Assert (CurrentUIAElement.CurrentAriaRole = AriaRoles.Description) Or (CurrentUIAElement.CurrentClassName = "label") Or (CurrentUIAElement.CurrentClassName = "block text-sm font-semibold mb-2 text-slate-800 dark:text-slate-200")
             Debug.Assert CurrentUIAElement.CurrentName = "Find which one is selected"
             Set This.FindWhichOneIsSelected = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 12
@@ -173,7 +186,7 @@ Public Sub Initialize()
             Debug.Assert CurrentUIAElement.CurrentName = "Bar"
             Set This.FindWhichOneIsSelectedBar = Factory.GetNewElement(This.FindWhichOneIsSelected.GivenName & " - Bar", CurrentUIAElement)
           Case 14
-            Debug.Assert CurrentUIAElement.CurrentAriaRole = AriaRoles.Description Or CurrentUIAElement.CurrentClassName = "label"
+            Debug.Assert (CurrentUIAElement.CurrentAriaRole = AriaRoles.Description) Or (CurrentUIAElement.CurrentClassName = "label") Or (CurrentUIAElement.CurrentClassName = "block text-sm font-semibold mb-2 text-slate-800 dark:text-slate-200")
             Debug.Assert CurrentUIAElement.CurrentName = "Confirm last field is disabled"
             Set This.ConfirmLastFieldIsDisabled = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 15
@@ -189,7 +202,7 @@ Public Sub Initialize()
             Debug.Assert CurrentUIAElement.CurrentName = "Maybe"
             Set This.ConfirmLastFieldIsDisabledMaybe = Factory.GetNewElement(This.ConfirmLastFieldIsDisabled.GivenName & " - Maybe", CurrentUIAElement)
           Case 18
-            Debug.Assert CurrentUIAElement.CurrentAriaRole = AriaRoles.Description Or CurrentUIAElement.CurrentClassName = "label"
+            Debug.Assert (CurrentUIAElement.CurrentAriaRole = AriaRoles.Description) Or (CurrentUIAElement.CurrentClassName = "label") Or (CurrentUIAElement.CurrentClassName = "block text-sm font-semibold mb-2 text-slate-800 dark:text-slate-200")
             Debug.Assert CurrentUIAElement.CurrentName = "Find if the checkbox is selected?"
             Set This.FindIfTheCheckboxIsSelected = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 19
@@ -197,7 +210,7 @@ Public Sub Initialize()
             Debug.Assert CurrentUIAElement.CurrentName = "Remember me"
             Set This.FindIfTheCheckboxIsSelectedRememberMe = Factory.GetNewElement(This.FindIfTheCheckboxIsSelected.GivenName & " - Remember me", CurrentUIAElement)
           Case 20
-            Debug.Assert CurrentUIAElement.CurrentAriaRole = AriaRoles.Description Or CurrentUIAElement.CurrentClassName = "label"
+            Debug.Assert (CurrentUIAElement.CurrentAriaRole = AriaRoles.Description) Or (CurrentUIAElement.CurrentClassName = "label") Or (CurrentUIAElement.CurrentClassName = "block text-sm font-semibold mb-2 text-slate-800 dark:text-slate-200")
             Debug.Assert CurrentUIAElement.CurrentName = "Accept the T&C"
             Set This.AcceptTheTermsAndConditions = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 21
@@ -206,7 +219,7 @@ Public Sub Initialize()
             Set This.IAgreeToTheFAKETermsAndConditions = Factory.GetNewElement(CurrentUIAElement.CurrentName, CurrentUIAElement)
           Case 22
             Debug.Assert CurrentUIAElement.CurrentAriaRole = AriaRoles.Description
-            Debug.Assert CurrentUIAElement.CurrentName = " I agree to the "
+            Debug.Assert VBA.Strings.Trim(CurrentUIAElement.CurrentName) = "I agree to the"
           Case 23
             Debug.Assert CurrentUIAElement.CurrentAriaRole = AriaRoles.Description
             Debug.Assert CurrentUIAElement.CurrentName = "FAKE terms and conditions"
@@ -227,7 +240,7 @@ Public Sub Automate()
   
   'SelectAnyOne
   Debug.Assert This.SelectAnyOneYes.IsEnabled
-  Debug.Assert Not This.SelectAnyOneYes.IsSelected()
+  Debug.Assert This.SelectAnyOneYes.IsSelected()
   Debug.Assert This.SelectAnyOneNo.IsEnabled
   Debug.Assert Not This.SelectAnyOneNo.IsSelected()
   

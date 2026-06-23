@@ -22,12 +22,16 @@ Public ConditionName As String
 Public UIAProperty As UIAProperties
 Public UIAPropertyComparison As UIAPropertyComparisons
 Public UIAPropertyValue As Variant
+Public TrimProperty As Boolean
 
 Public Function Evaluate(Element As pElement) As Boolean
   Dim ReturnValue As Boolean
   'Cast from IUnknown type
   Dim CurrentValue As Variant
   CurrentValue = VBA.Conversion.CVar(Element.GetProperty(UIAProperty))
+  If TrimProperty Then
+    CurrentValue = VBA.Strings.Trim(CurrentValue)
+  End If
   Select Case UIAPropertyComparison
     Case UIAPropertyComparisons.IsTheString
        ReturnValue = (CurrentValue = UIAPropertyValue)

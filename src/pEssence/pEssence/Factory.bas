@@ -25,6 +25,7 @@ Public Enum WebBrowserType
   Firefox
   Opera
   Samsung
+  Yandex
   [_Last]
 End Enum
 
@@ -38,6 +39,7 @@ Public Function GetWebBrowserName(TargetWebBrowserType As WebBrowserType) As Str
     Case Firefox: R = "Firefox"
     Case Opera: R = "Opera"
     Case Samsung: R = "Samsung Browser"
+    Case Yandex: R = "Yandex Browser"
     Case Else: R = "Unhandled WebBrowser type in GetWebBrowserName #" & TargetWebBrowserType
   End Select
   GetWebBrowserName = R
@@ -76,6 +78,8 @@ Public Function GetNewWebBrowser() As Object
       Set GetNewWebBrowser = New OperaWebBrowser
     Case WebBrowserType.Samsung
       Set GetNewWebBrowser = New SamsungWebBrowser
+    Case WebBrowserType.Yandex
+      Set GetNewWebBrowser = New YandexWebBrowser
     Case Else
       pExceptions.Raise pEssenceUnhandledWebBrowserType
   End Select

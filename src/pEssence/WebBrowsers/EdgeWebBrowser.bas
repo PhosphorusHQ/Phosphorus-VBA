@@ -95,7 +95,7 @@ Private Sub InitialiseAllLocators()
   'Use: AscW & ChrW to determine embedded Unicode characters
   With This.MasterWindow
     .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameLike, ControlType, ClassName, WindowInteractionState)"
-    .Condition "NameLike", Name, IsLikeTheString, This.WebAppPageTitle & " - " & "*" & " - Microsoft" & ChrW(8203) & " Edge"
+    .Condition "NameLike", Name, IsLikeTheString, This.WebAppPageTitle & "* - *" & " - Microsoft" & ChrW(8203) & " Edge"
     .ControlType UIAControlTypeIDs.Window
     .ClassName "Chrome_WidgetWin_1"
     .WindowInteractionState ReadyForUserInteraction

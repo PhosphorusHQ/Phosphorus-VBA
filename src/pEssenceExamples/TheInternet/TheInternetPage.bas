@@ -329,7 +329,7 @@ Private Sub FormAuthentication_Login()
   PasswordTextBox.Element.SetValue "SuperSecretPassword!"
   LoginButton.Element.Click
 
-  If Factory.CurrentWebBrowserType = Chrome Then
+  If Factory.CurrentWebBrowserType = Chrome Or Factory.CurrentWebBrowserType = Chromium Then
     This.WebBrowser.AcknowledgeChangeYourPasswordAlert
   End If
 
@@ -369,7 +369,7 @@ Private Sub FormAuthentication_Secure()
 
   'Click on it then verify the element doesn't exist! Wait?
   SecureMesssageHyperlink.Element.Click
-  Snooze 500
+  Snooze 1000
   Debug.Assert SecureMesssage.ElementDoesntExist(0)
   Debug.Assert SecureMesssageHyperlink.ElementDoesntExist(0)
   
@@ -399,7 +399,7 @@ Private Sub FormAuthentication_Secure()
 
   'Click logout takes us back!
   Logout.Element.Click
-  Snooze 500
+  Snooze 1000
   Debug.Assert Heading.ElementDoesntExist(2)
 
   Set SecureMesssage = Nothing

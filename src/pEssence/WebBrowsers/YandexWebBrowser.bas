@@ -38,10 +38,6 @@ Private Type BrowserAttributes
   SuggestContents As pLocator
   AddressAndSearchBar As pLocator
   TitleBarView As pLocator
-'  ToolbarView As pLocator
-'  ToolbarViewContainerView As pLocator
-'  LocationBarContainer As pLocator
-'  LocationBarView As pLocator
   BackButton As pLocator
 End Type
 
@@ -75,11 +71,6 @@ Private Sub GetAllLocators()
   Set This.SuggestContents = Factory.GetNewLocator
   Set This.AddressAndSearchBar = Factory.GetNewLocator
   Set This.TitleBarView = Factory.GetNewLocator
-'  Set This.ToolbarView = Factory.GetNewLocator
-'  Set This.ToolbarViewContainerView = Factory.GetNewLocator
-'  Set This.LocationBarContainer = Factory.GetNewLocator
-'  Set This.LocationBarView = Factory.GetNewLocator
-'  Set This.AddressBox = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
 End Sub
 
@@ -100,11 +91,6 @@ Private Sub DestroyLocators()
   Set This.SuggestContents = Nothing
   Set This.AddressAndSearchBar = Nothing
   Set This.TitleBarView = Nothing
-'  Set This.ToolbarView = Nothing
-'  Set This.ToolbarViewContainerView = Nothing
-'  Set This.LocationBarContainer = Nothing
-'  Set This.LocationBarView = Nothing
-'  Set This.AddressBox = Nothing
   Set This.BackButton = Nothing
 End Sub
 
@@ -116,7 +102,7 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
   'We need to disable Background Running in settings (browser://settings/)
   LaunchExecutable Phosphorus.WindowsExecutables.YandexWebBrowser, " --force-renderer-accessibility=complete " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  This.RootWebArea.Find 10
+  This.RootWebArea.Find 60
 End Sub
 
 Private Sub InitialiseAllLocators()
@@ -187,26 +173,6 @@ Private Sub InitialiseAllLocators()
         .Initialise "AddressAndSearchBar", This.SuggestContents, Descendants, By.pConditions, "AND(AriaRoleTextBox, NameIs)"
         .AriaRoleTextBox: .NameIs "Address and search bar"
       End With
-
-'"DockBackgroundView"
-'"TabsAccessiblePaneView"
-'"CustoThemedTab" AriaRole: "tab" MatchPosition=1 = the last tab is first!
-'Opera:        This.LastTabView.Element.RightClick
-
-
-
-'    This.TopConainerView.Initialise "TopContainerView", This.MainContainerView, Children, By.ClassName, "TopContainerView"
-      
-'      This.ToolbarView.Initialise "ToolbarView", This.TopContainerView, Children, By.ClassName, "ToolbarView"
-
-'        This.ToolbarViewContainerView.Initialise "ToolbarViewContainerView", This.ToolbarView, Children, By.ClassName, "ToolbarView::ContainerView"
-
-'          This.LocationBarContainer.Initialise "LocationBarContainer", This.ToolbarViewContainerView, Children, By.ClassName, "LocationBarContainer"
-
-'            This.LocationBarView.Initialise "LocationBarView", This.LocationBarContainer, Children, By.ClassName, "LocationBarView"
-
-'              This.AddressBox.Initialise "AddressBox", This.LocationBarView, Children, By.ClassName, "OmniboxViewViews"
-
 
 End Sub
 

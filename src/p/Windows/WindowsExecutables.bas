@@ -46,6 +46,13 @@ Public Function Chromium() As Phosphorus.Executable
   Chromium = myExecutable
 End Function
 
+Public Function Epic() As Phosphorus.Executable
+  Dim myExecutable As Phosphorus.Executable
+  myExecutable.Name = "Epic"
+  myExecutable.ExeFile = "epic.exe"
+  Epic = myExecutable
+End Function
+
 Public Function Firefox() As Phosphorus.Executable
   Dim myExecutable As Phosphorus.Executable
   myExecutable.Name = "Firefox"

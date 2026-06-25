@@ -23,6 +23,7 @@ Public Enum WebBrowserType
   Chrome
   Chromium
   Edge
+  Epic
   Firefox
   Opera
   Samsung
@@ -75,6 +76,8 @@ Public Function GetNewWebBrowser() As Object
       Set GetNewWebBrowser = New ChromiumWebBrowser
     Case WebBrowserType.Edge
       Set GetNewWebBrowser = New EdgeWebBrowser
+    Case WebBrowserType.Epic
+      Set GetNewWebBrowser = New EpicWebBrowser
     Case WebBrowserType.Firefox
       Set GetNewWebBrowser = New FirefoxWebBrowser
     Case WebBrowserType.Opera

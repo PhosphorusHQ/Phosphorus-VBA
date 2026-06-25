@@ -76,8 +76,8 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
 '  LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -P Phosphorus -url " & This.URL, Phosphorus.WindowShowStates.Maximized
   LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -url " & This.URL, Phosphorus.WindowShowStates.Maximized
   InitialiseAllLocators
-  This.BackButton.Find 10
-  This.RootWebArea.Find 10
+'  This.BackButton.Find 60
+  This.RootWebArea.Find 60
 End Sub
 
 Private Sub InitialiseAllLocators()

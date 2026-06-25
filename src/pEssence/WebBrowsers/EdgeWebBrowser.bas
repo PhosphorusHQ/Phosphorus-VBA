@@ -86,8 +86,8 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
   This.WebAppPageTitle = WebAppPageTitle
   LaunchCommandByProtocol This.WebAppName, "microsoft-edge:", This.URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  This.AddressAndSearchBar.Find 10
-  This.RootWebArea.Find 10
+'  This.AddressAndSearchBar.Find 10
+  This.RootWebArea.Find 60
 End Sub
 
 Private Sub InitialiseAllLocators()

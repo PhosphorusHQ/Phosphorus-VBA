@@ -95,7 +95,7 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
   This.WebAppPageTitle = WebAppPageTitle
   LaunchExecutable Phosphorus.WindowsExecutables.SamsungBrowser, "--force-renderer-accessibility " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  This.RootWebArea.Find 10
+  This.RootWebArea.Find 60
 End Sub
 
 Private Sub InitialiseAllLocators()

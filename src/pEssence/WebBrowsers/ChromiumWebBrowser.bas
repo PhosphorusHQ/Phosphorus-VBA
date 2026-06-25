@@ -92,8 +92,8 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
   This.WebAppPageTitle = WebAppPageTitle
   LaunchExecutable Phosphorus.WindowsExecutables.Chromium, "--force-renderer-accessibility " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  This.AddressAndSearchBar.Find 10
-  This.RootWebArea.Find 10
+'  This.AddressAndSearchBar.Find 60
+  This.RootWebArea.Find 60
 End Sub
 
 Private Sub InitialiseAllLocators()

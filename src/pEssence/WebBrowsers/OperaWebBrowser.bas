@@ -138,7 +138,7 @@ Private Sub InitialiseAllLocators()
       This.TopBarContainerView.Initialise "TopBarContainerView", This.View, Descendants, By.ClassName, "TopBarContainerView", FindFirst:=True
 
         With This.LastTabView
-          .Initialise "BackButton", This.TopBarContainerView, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
+          .Initialise "LastTabView", This.TopBarContainerView, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
           .ClassName "TabView": .NameIs This.WebAppPageTitle: .PositionInMatchingSet -1
         End With
 

@@ -20,6 +20,7 @@ Option Explicit
 
 Public Enum WebBrowserType
   [_First]
+  Brave
   Chrome
   Chromium
   Edge
@@ -70,6 +71,8 @@ End Function
 
 Public Function GetNewWebBrowser() As Object
   Select Case CurrentWebBrowserType
+    Case WebBrowserType.Brave
+      Set GetNewWebBrowser = New BraveWebBrowser
     Case WebBrowserType.Chrome
       Set GetNewWebBrowser = New ChromeWebBrowser
     Case WebBrowserType.Chromium

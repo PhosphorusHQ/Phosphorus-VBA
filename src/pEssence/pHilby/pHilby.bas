@@ -75,21 +75,17 @@ Private Sub LaunchpHilby()
   End If
 End Sub
 
-Public Sub Start(Optional RootUIAElement As IUIAutomationElement)
+Public Sub Start(Optional RootUIAElement As IUIAutomationElement, Optional MaxNumberOfLevels As Integer = 0)
 
   Application.Cursor = xlWait
 
   Toaster.PopDown
-  Dim MaxNumberOfLevels As Integer
-  MaxNumberOfLevels = 0
   If RootUIAElement Is Nothing Then
     Set RootUIAElement = Factory.GetRootDesktopElement
-    MaxNumberOfLevels = 0
   End If
   
   Set UserForm = New frmpHilby
   With UserForm
-
     .LoadTreeView RootUIAElement, MaxNumberOfLevels:=MaxNumberOfLevels
      Application.Cursor = xlDefault
     .AppName = GCSAPPNAME

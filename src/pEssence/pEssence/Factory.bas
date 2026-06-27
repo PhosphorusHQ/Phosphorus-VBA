@@ -37,8 +37,11 @@ Public CurrentWebBrowserType As WebBrowserType
 Public Function GetWebBrowserName(TargetWebBrowserType As WebBrowserType) As String
   Dim R As String
   Select Case TargetWebBrowserType
+    Case Brave: R = "Brave"
     Case Chrome: R = "Chrome"
+    Case Chromium: R = "Chrome"
     Case Edge: R = "Edge"
+    Case Epic: R = "Epic"
     Case Firefox: R = "Firefox"
     Case Opera: R = "Opera"
     Case Samsung: R = "Samsung Browser"

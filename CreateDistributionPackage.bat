@@ -7,5 +7,6 @@ tar -rf PhosphorusPackage.tar "Phosphorus Tests.xlam" "PhosphorEssence - Example
 tar -rf PhosphorusPackage.tar "pUnit Test Runs - pUnit.xlam" "pUnit Test Runs - pPath.xlam"
 tar -rf PhosphorusPackage.tar ".\Tests"
 tar -rf PhosphorusPackage.tar LogReader.xlsx
+tar -rf PhosphorusPackage.tar LICENSE
 
 certutil -hashfile PhosphorusPackage.tar SHA256 > PhosphorusPackage.tar.SHA256.txt

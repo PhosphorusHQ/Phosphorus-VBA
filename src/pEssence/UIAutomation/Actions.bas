@@ -484,6 +484,7 @@ Public Function IsElementReady(Element As pElement) As Boolean
   AutoFindUIAElement Element
   Dim ret As Boolean
   ret = True
+  ret = ret And Element.IsEnabled()
   ret = ret And Element.IsAlive()
   If ret Then
     TryToScrollItemIntoView Element

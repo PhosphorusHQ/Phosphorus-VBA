@@ -18,7 +18,8 @@ Public Sub AllExamples()
   Window.HighlightElements = False
   
   Calculator.Calculator
-
+    
+  WebBrowserCommon.GetInternetSpeeds
   Dim WBT As WebBrowserType
   For WBT = WebBrowserType.[_First] + 1 To WebBrowserType.[_Last] - 1
     Factory.CurrentWebBrowserType = WBT

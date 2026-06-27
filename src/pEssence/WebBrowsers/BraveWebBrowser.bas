@@ -97,14 +97,18 @@ End Sub
 'How to install Chromium for all users on Windows
 'https://martinrotter.github.io/it-programming/2016/07/17/install-chromium-system-wide-windows/
 
-Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
+Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String, Optional BaseWaitTimeSeconds As Long = 10, Optional AbsoluteWaitTimeSeconds As Long)
   Toaster.Message "Starting " & WebAppName
   This.WebAppName = WebAppName
   This.URL = URL
   This.WebAppPageTitle = WebAppPageTitle
   LaunchExecutable Phosphorus.WindowsExecutables.Brave, "--force-renderer-accessibility " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  This.RootWebArea.Find 10 '60
+  If AbsoluteWaitTimeSeconds > 0 Then
+    This.RootWebArea.Find AbsoluteWaitTimeSeconds
+  Else
+    This.RootWebArea.Find BaseWaitTimeSeconds * (1000 / WebBrowserCommon.DownloadSpeedMbps)
+  End If
 End Sub
 
 Private Sub InitialiseAllLocators()

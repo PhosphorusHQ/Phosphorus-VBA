@@ -94,7 +94,7 @@ Private Sub DestroyLocators()
   Set This.BackButton = Nothing
 End Sub
 
-Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
+Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String, Optional BaseWaitTimeSeconds As Long = 10, Optional AbsoluteWaitTimeSeconds As Long)
   Toaster.Message "Starting " & WebAppName
   This.WebAppName = WebAppName
   This.URL = URL
@@ -102,7 +102,11 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
   'We need to disable Background Running in settings (browser://settings/)
   LaunchExecutable Phosphorus.WindowsExecutables.YandexWebBrowser, " --force-renderer-accessibility=complete " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  This.RootWebArea.Find 60
+  If AbsoluteWaitTimeSeconds > 0 Then
+    This.RootWebArea.Find AbsoluteWaitTimeSeconds
+  Else
+    This.RootWebArea.Find BaseWaitTimeSeconds * (1000 / WebBrowserCommon.DownloadSpeedMbps)
+  End If
 End Sub
 
 Private Sub InitialiseAllLocators()

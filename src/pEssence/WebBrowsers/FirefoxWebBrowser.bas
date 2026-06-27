@@ -67,7 +67,7 @@ Private Sub DestroyLocators()
   Set This.RootWebArea = Nothing
 End Sub
 
-Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
+Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String, Optional BaseWaitTimeSeconds As Long = 10, Optional AbsoluteWaitTimeSeconds As Long)
   Toaster.Message "Starting " & WebAppName
   This.WebAppName = WebAppName
   This.URL = URL
@@ -76,8 +76,11 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
 '  LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -P Phosphorus -url " & This.URL, Phosphorus.WindowShowStates.Maximized
   LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -url " & This.URL, Phosphorus.WindowShowStates.Maximized
   InitialiseAllLocators
-'  This.BackButton.Find 60
-  This.RootWebArea.Find 60
+  If AbsoluteWaitTimeSeconds > 0 Then
+    This.RootWebArea.Find AbsoluteWaitTimeSeconds
+  Else
+    This.RootWebArea.Find BaseWaitTimeSeconds * (1000 / WebBrowserCommon.DownloadSpeedMbps)
+  End If
 End Sub
 
 Private Sub InitialiseAllLocators()

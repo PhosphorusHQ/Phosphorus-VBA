@@ -174,6 +174,10 @@ Cleanup:
     
 End Function
 
+Public Function Name() As String
+  Name = GetProperty(UIAProperties.Name)
+End Function
+
 'Highlight only when setting the element state - this is an action, but not for gets, which may be part of another action!?
 Public Sub SetValue(Value As String)
   AutoFindElement

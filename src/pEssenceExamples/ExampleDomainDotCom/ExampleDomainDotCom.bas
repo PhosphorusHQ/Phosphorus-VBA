@@ -17,6 +17,7 @@ Sub ExampleDomainDotCom()
   On Error GoTo ErrorHandler
 
   If Not RunningAllExamples Then
+    WebBrowserCommon.GetInternetSpeeds
     Window.HighlightElements = True
     Factory.CurrentWebBrowserType = 1
   End If

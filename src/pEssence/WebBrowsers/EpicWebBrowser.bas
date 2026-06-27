@@ -88,15 +88,18 @@ End Sub
 'Download the Direct (offline, won't update)
 'Run this from a CMDline: mini_installer.exe --system-level
 
-Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String)
+Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String, Optional BaseWaitTimeSeconds As Long = 10, Optional AbsoluteWaitTimeSeconds As Long)
   Toaster.Message "Starting " & WebAppName
   This.WebAppName = WebAppName
   This.URL = URL
   This.WebAppPageTitle = WebAppPageTitle
   LaunchExecutable Phosphorus.WindowsExecutables.Epic, "--force-renderer-accessibility " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-'  This.AddressAndSearchBar.Find 60
-  This.RootWebArea.Find 60
+  If AbsoluteWaitTimeSeconds > 0 Then
+    This.RootWebArea.Find AbsoluteWaitTimeSeconds
+  Else
+    This.RootWebArea.Find BaseWaitTimeSeconds * (1000 / WebBrowserCommon.DownloadSpeedMbps)
+  End If
 End Sub
 
 Private Sub InitialiseAllLocators()

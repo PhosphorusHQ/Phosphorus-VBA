@@ -17,6 +17,7 @@ Sub HelloWorldWideWeb()
   Dim SearchButton As pLocator
   
   If Not RunningAllExamples Then
+    WebBrowserCommon.GetInternetSpeeds
     Factory.CurrentWebBrowserType = 1
   End If
   

@@ -32,6 +32,7 @@ Private Type Properties
   AllSearchConditions As Scripting.Dictionary
   EvaluationLogic As String
   PositionInMatchingSet  As Integer
+  RelativeElementNumber  As Integer
 End Type
 
 Private This As Properties
@@ -422,7 +423,15 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
     End If
     On Error GoTo 0
     If MatchFound Then
-     CountOfMatchingElements = CountOfMatchingElements + 1
+      If This.RelativeElementNumber <> 0 Then
+        Dim j As Integer
+        j = i + This.RelativeElementNumber
+        If j >= 0 And j <= AllElements.Length - 1 Then
+          'Get relative element
+          Set CurrentElement = Factory.GetNewElement("Found Element #" & (j + 1), AllElements.GetElement(j))
+        End If
+      End If
+      CountOfMatchingElements = CountOfMatchingElements + 1
       If This.PositionInMatchingSet = 0 Then
         ReDim Preserve ReturnElements(CountOfMatchingElements - 1)
         Set ReturnElements(CountOfMatchingElements - 1) = CurrentElement
@@ -454,6 +463,10 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
   End If
 
 End Function
+
+Public Sub RelativeElementNumber(RelativeElementNumber As Integer)
+  This.RelativeElementNumber = RelativeElementNumber
+End Sub
 
 Public Sub ListAllChildren()
   ListAllDescendants ChildrenOnly:=True

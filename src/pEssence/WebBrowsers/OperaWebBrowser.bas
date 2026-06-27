@@ -147,8 +147,8 @@ Private Sub InitialiseAllLocators()
         With This.CloseOtherTabs
           .Initialise "CloseOtherTabs", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
           .ControlType MenuItem: .NameIs "Close other tabs"
+          .Element.ClickIfEnabled This.MasterWindow.Element
         End With
-        This.CloseOtherTabs.Element.Click
 
       With This.ToolbarView
         .Initialise "ToolbarView", This.View, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True

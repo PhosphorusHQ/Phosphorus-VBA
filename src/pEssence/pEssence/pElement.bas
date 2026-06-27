@@ -36,6 +36,16 @@ Public Sub Click()
   Actions.Click Me
 End Sub
 
+Public Sub ClickIfEnabled(Optional NonClickItem As pElement)
+  If Me.IsEnabled Then
+    Me.Click
+  Else
+    If Not NonClickItem Is Nothing Then
+      NonClickItem.Click
+    End If
+  End If
+End Sub
+
 Public Sub RightClick()
   Actions.RightClick Me
 End Sub

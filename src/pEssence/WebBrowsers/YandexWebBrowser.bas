@@ -141,8 +141,8 @@ Private Sub InitialiseAllLocators()
         With This.CloseOtherTabs
           .Initialise "CloseOtherTabs", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
           .ControlType MenuItem: .NameIs "Close other tabs"
+          .Element.ClickIfEnabled This.MasterWindow.Element
         End With
-        This.CloseOtherTabs.Element.Click
             
       With This.TitleBarView
         .Initialise "TitleBarView", This.BrowserRootView2, Descendants, By.pConditions, "AND(AriaRoleToolbar, ClassName)", FindFirst:=True

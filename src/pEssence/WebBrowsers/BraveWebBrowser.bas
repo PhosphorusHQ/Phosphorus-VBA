@@ -158,8 +158,8 @@ Private Sub InitialiseAllLocators()
       With This.CloseOtherTabs
         .Initialise "CloseOtherTabs", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
         .ControlType MenuItem: .NameIs "Close other tabs"
+        .Element.ClickIfEnabled This.MasterWindow.Element
       End With
-      This.CloseOtherTabs.Element.Click
 
     'Second Pane Below Browser View
     With This.BrowserViewSubView1

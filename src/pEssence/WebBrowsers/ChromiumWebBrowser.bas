@@ -169,7 +169,7 @@ End Sub
 
 Public Sub AcknowledgeChangeYourPasswordAlert()
 
-  Snooze 1000
+  Application.Wait (Now + TimeValue("0:00:01"))
   
   Dim RootView As pLocator
   Set RootView = Factory.GetNewLocator
@@ -188,7 +188,7 @@ Public Sub AcknowledgeChangeYourPasswordAlert()
     Continue = True
     While Continue
       .Element.Click
-      Snooze 1000
+      Application.Wait (Now + TimeValue("0:00:01"))
       Continue = False
       On Error Resume Next
       Continue = .ElementExists(0)

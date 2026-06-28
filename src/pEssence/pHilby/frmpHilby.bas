@@ -51,6 +51,7 @@ Private Sub UserForm_Initialize()
 '  cbReleaseHighlighting.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\marker.png")
   cbUIAPolling.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hand.png")
   cbExport.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\xls.png")
+  cbExportToNode.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\xls2.png")
   cbSetCurrentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\root-directory.png")
   cbSetParentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\root-directory2.png")
   cbReload.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hacker.png")
@@ -594,7 +595,15 @@ Public Sub SearchByCursorPoint(tPt As tagPOINT)
 
 End Sub
 
+Private Sub cbExportToNode_Click()
+  cbExportToExcel ActiveNode
+End Sub
+
 Private Sub cbExport_Click()
+  cbExportToExcel
+End Sub
+
+Private Sub cbExportToExcel(Optional TargetNode As pExternals.clsNode)
 
   Application.ScreenUpdating = False
   Application.Cursor = xlWait
@@ -629,81 +638,107 @@ Private Sub cbExport_Click()
   Dim Key As Variant
   For Each Key In AllTreeViewNodes
     
-    SheetCounter = SheetCounter + 1
-    wsIndex.Cells(SheetCounter + 1, 2).Value = "'" & Key
-    wsIndex.Hyperlinks.Add _
-      Anchor:=wsIndex.Cells(SheetCounter + 1, 1), _
-      Address:="", _
-      SubAddress:="Node" & SheetCounter & "!A1", _
-      TextToDisplay:="Node" & SheetCounter & "!A1"
+    Dim ExportCurrentNode As Boolean
+    ExportCurrentNode = True
     
-    wsIndex.Cells(SheetCounter + 1, 2).Value = AllTreeViewNodes(Key)("Path")
-    wsIndex.Cells(SheetCounter + 1, 3).Value = AllTreeViewNodes(Key)("Name")
-    
-    Set ws = wb.Sheets.Add(After:=wb.Sheets(wb.Sheets.Count))
-    ws.Name = "Node" & SheetCounter
-    ws.Hyperlinks.Add _
-      Anchor:=ws.Range("A1"), _
-      Address:="", _
-      SubAddress:=wsIndex.Name & "!A" & (SheetCounter + 1), _
-      TextToDisplay:="Back"
-
-    Dim i As Integer
-
-    Dim Properties() As String
-    Properties = Split(AllTreeViewNodes(Key)("AllProperties"), vbCrLf)
-    
-    Dim PropertyValues() As String
-    ReDim PropertyValues(UBound(Properties))
-    For i = 0 To UBound(Properties)
-      Dim Property() As String
-      If InStr(Properties(i), vbTab) > 0 Then
-        Property = Split(Properties(i), vbTab)
-        Properties(i) = Property(0)
-        PropertyValues(i) = Property(1)
+    If Not TargetNode Is Nothing Then
+      If Len(Key) > Len(TargetNode.Key) Then
+        ExportCurrentNode = False
+      Else
+        If Len(Key) = Len(TargetNode.Key) Then
+          If Key = TargetNode.Key Then
+            ExportCurrentNode = True
+          Else
+            ExportCurrentNode = False
+          End If
+        Else
+          If VBA.Strings.Left(TargetNode.Key, Len(Key) + 1) = (Key & ".") Then
+            ExportCurrentNode = True
+          Else
+            ExportCurrentNode = False
+          End If
+        End If
       End If
-    Next
+    End If
     
-    ws.Range("A2").Resize(UBound(Properties) + 1) = Application.Transpose(Properties)
-    ws.Range("B2").Resize(UBound(Properties) + 1) = Application.Transpose(PropertyValues)
-    
-    With ws.Range("A3")
-      .Value = "Properties"
-      .Font.Bold = True
-      .Font.Underline = xlUnderlineStyleSingle
-    End With
+    If ExportCurrentNode Then
 
-    Dim AllPatterns As String
-    AllPatterns = AllTreeViewNodes(Key)("AllPatterns")
-    AllPatterns = Replace(AllPatterns, "=", "")
-    AllPatterns = Replace(AllPatterns, vbCrLf & vbCrLf, vbCrLf)
-    Dim Patterns() As String
-    Patterns = Split(AllPatterns, vbCrLf)
-    Dim PatternValues() As String
-    ReDim PatternValues(UBound(Patterns))
-    For i = 0 To UBound(Patterns)
-      Dim Pattern() As String
-      If InStr(Patterns(i), vbTab) > 0 Then
-        Pattern = Split(Patterns(i), vbTab)
-        Patterns(i) = Pattern(0)
-        PatternValues(i) = Pattern(1)
-      End If
-    Next
-    
-    Dim StartOfPatterns As Range
-    Set StartOfPatterns = ws.Range("A" & UBound(Properties) + 4)
-    With StartOfPatterns
-      .Value = "Patterns"
-      .Font.Bold = True
-      .Font.Underline = xlUnderlineStyleSingle
-    End With
-    StartOfPatterns.Offset(1, 0).Resize(UBound(Patterns) + 1) = Application.Transpose(Patterns)
-    StartOfPatterns.Offset(1, 1).Resize(UBound(Patterns) + 1) = Application.Transpose(PatternValues)
+      SheetCounter = SheetCounter + 1
+      wsIndex.Cells(SheetCounter + 1, 2).Value = "'" & Key
+      wsIndex.Hyperlinks.Add _
+        Anchor:=wsIndex.Cells(SheetCounter + 1, 1), _
+        Address:="", _
+        SubAddress:="Node" & SheetCounter & "!A1", _
+        TextToDisplay:="Node" & SheetCounter & "!A1"
 
-    ws.Range("A1").EntireColumn.AutoFit
-    ws.Range("4:4").Select
-    ActiveWindow.FreezePanes = True
-    ws.Range("B4").Activate
+      wsIndex.Cells(SheetCounter + 1, 2).Value = AllTreeViewNodes(Key)("Path")
+      wsIndex.Cells(SheetCounter + 1, 3).Value = AllTreeViewNodes(Key)("Name")
+
+      Set ws = wb.Sheets.Add(After:=wb.Sheets(wb.Sheets.Count))
+      ws.Name = "Node" & SheetCounter
+      ws.Hyperlinks.Add _
+        Anchor:=ws.Range("A1"), _
+        Address:="", _
+        SubAddress:=wsIndex.Name & "!A" & (SheetCounter + 1), _
+        TextToDisplay:="Back"
+
+      Dim i As Integer
+      Dim Properties() As String
+      Properties = Split(AllTreeViewNodes(Key)("AllProperties"), vbCrLf)
+
+      Dim PropertyValues() As String
+      ReDim PropertyValues(UBound(Properties))
+      For i = 0 To UBound(Properties)
+        Dim Property() As String
+        If InStr(Properties(i), vbTab) > 0 Then
+          Property = Split(Properties(i), vbTab)
+          Properties(i) = Property(0)
+          PropertyValues(i) = Property(1)
+        End If
+      Next
+
+      ws.Range("A2").Resize(UBound(Properties) + 1) = Application.Transpose(Properties)
+      ws.Range("B2").Resize(UBound(Properties) + 1) = Application.Transpose(PropertyValues)
+
+      With ws.Range("A3")
+        .Value = "Properties"
+        .Font.Bold = True
+        .Font.Underline = xlUnderlineStyleSingle
+      End With
+
+      Dim AllPatterns As String
+      AllPatterns = AllTreeViewNodes(Key)("AllPatterns")
+      AllPatterns = Replace(AllPatterns, "=", "")
+      AllPatterns = Replace(AllPatterns, vbCrLf & vbCrLf, vbCrLf)
+      Dim Patterns() As String
+      Patterns = Split(AllPatterns, vbCrLf)
+      Dim PatternValues() As String
+      ReDim PatternValues(UBound(Patterns))
+      For i = 0 To UBound(Patterns)
+        Dim Pattern() As String
+        If InStr(Patterns(i), vbTab) > 0 Then
+          Pattern = Split(Patterns(i), vbTab)
+          Patterns(i) = Pattern(0)
+          PatternValues(i) = Pattern(1)
+        End If
+      Next
+
+      Dim StartOfPatterns As Range
+      Set StartOfPatterns = ws.Range("A" & UBound(Properties) + 4)
+      With StartOfPatterns
+        .Value = "Patterns"
+        .Font.Bold = True
+        .Font.Underline = xlUnderlineStyleSingle
+      End With
+      StartOfPatterns.Offset(1, 0).Resize(UBound(Patterns) + 1) = Application.Transpose(Patterns)
+      StartOfPatterns.Offset(1, 1).Resize(UBound(Patterns) + 1) = Application.Transpose(PatternValues)
+
+      ws.Range("A1").EntireColumn.AutoFit
+      ws.Range("4:4").Select
+      ActiveWindow.FreezePanes = True
+      ws.Range("B4").Activate
+    
+    End If
     
   Next
   

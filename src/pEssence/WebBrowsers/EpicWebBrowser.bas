@@ -165,11 +165,11 @@ Public Function GetCurrentURL() As String
 End Function
 
 Public Sub NavigateBack()
-  With This.BackButton
-    .Find 10
-    .Element.Click
-    This.RootWebArea.Find 10, FindElementAgain:=True
-  End With
+  WebBrowserCommon.Navigate Me, This.BackButton, This.AddressAndSearchBar, This.RootWebArea
+End Sub
+
+Public Sub WaitForNewURL(TimeoutInSeconds As Integer)
+  WebBrowserCommon.WaitForNewURL GetCurrentURL, This.AddressAndSearchBar, This.RootWebArea, TimeoutInSeconds
 End Sub
 
 Public Sub AcknowledgeChangeYourPasswordAlert()

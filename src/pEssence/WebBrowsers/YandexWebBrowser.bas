@@ -131,7 +131,7 @@ Private Sub InitialiseAllLocators()
         .Initialise "CustoTopContainerView::PlaceholderView", This.BrowserRootView2, Children, By.ClassName, "CustoTopContainerView::PlaceholderView"
         .PositionInMatchingSet 1
       End With
-        
+    
         This.TabsAccessiblePaneView.Initialise "TabsAccessiblePaneView", This.CustoTopContainerViewPlaceholderView, Children, By.ClassName, "TabsAccessiblePaneView"
         
         With This.FirstTab
@@ -147,7 +147,7 @@ Private Sub InitialiseAllLocators()
           .ControlType MenuItem: .NameIs "Close other tabs"
           .Element.ClickIfEnabled This.MasterWindow.Element
         End With
-            
+
       With This.TitleBarView
         .Initialise "TitleBarView", This.BrowserRootView2, Descendants, By.pConditions, "AND(AriaRoleToolbar, ClassName)", FindFirst:=True
         .AriaRoleToolbar: .ClassName "TitleBarView"
@@ -161,10 +161,14 @@ Private Sub InitialiseAllLocators()
 
       This.BrowserView.Initialise "BrowserView", This.FrameView, Children, By.ClassName, "BrowserView"
 
-        This.View.Initialise "View", This.BrowserView, Children, By.ClassName, "View"
+        This.View.Initialise "View", This.BrowserView, Children, By.AutomationId, "view_1103"
 
-          This.RootWebArea.Initialise "RootWebArea", This.View, Descendants, By.AutomationId, "RootWebArea", True
-
+          With This.RootWebArea
+            .Initialise "RootWebArea", This.View, Descendants, By.AutomationId, "RootWebArea", True
+            'On Yandex, the Root view seems to take longer to appear so find her here & give it some time to load
+            .Find 10
+          End With
+  
   With This.RootView4
     .Initialise "RootView4", This.BrowserRootView, Children, By.ClassName, "RootView": .PositionInMatchingSet 4
   End With
@@ -198,10 +202,10 @@ Public Function GetCurrentURL() As String
 End Function
 
 Public Sub NavigateBack()
-  With This.BackButton
-    .Find 10
-    .Element.Click
-    This.RootWebArea.Find 10, FindElementAgain:=True
-  End With
+  WebBrowserCommon.Navigate Me, This.BackButton, This.AddressAndSearchBar, This.RootWebArea
+End Sub
+
+Public Sub WaitForNewURL(TimeoutInSeconds As Integer)
+  WebBrowserCommon.WaitForNewURL GetCurrentURL, This.AddressAndSearchBar, This.RootWebArea, TimeoutInSeconds
 End Sub
 

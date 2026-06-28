@@ -222,8 +222,8 @@ Public Sub ControlType(CtrlType As UIAControlTypeIDs)
   Condition "ControlType", UIAProperties.ControlType, UIAPropertyComparisons.EqualsNumber, CtrlType
 End Sub
 
-Public Sub NameIs(Name As String)
-  Condition "NameIs", UIAProperties.Name, UIAPropertyComparisons.IsTheString, Name
+Public Sub NameIs(Name As String, Optional TrimProperty As Boolean = False)
+  Condition "NameIs", UIAProperties.Name, UIAPropertyComparisons.IsTheString, Name, TrimProperty
 End Sub
 
 Public Sub NameIs_(Name As String, Optional ConditionNameSuffix As String, Optional TrimProperty As Boolean = False)

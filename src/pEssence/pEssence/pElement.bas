@@ -124,9 +124,9 @@ End Function
 Public Function IsAlive() As Boolean
   'DON'T USE AUTOFIND ON THIS METHOD - it will create an infiite loop!
   On Error Resume Next
-  Dim pid As Long
-  pid = UIAElement.CurrentProcessId  'any property access will fail if stale
-  IsAlive = (Err.Number = 0) And (pid > 0)
+  Dim PID As Long
+  PID = UIAElement.CurrentProcessId  'any property access will fail if stale
+  IsAlive = (Err.Number = 0) And (PID > 0)
   On Error GoTo 0
 End Function
 
@@ -193,17 +193,19 @@ End Sub
 Public Sub WaitForPropertyValue( _
   UIAProperty As UIAProperties, _
   UIAPropertyValue As Variant, _
-  Optional TimeoutInSeconds As Integer)
+  Optional TimeoutInSeconds As Integer, _
+  Optional WaitForNotValue As Boolean = False)
   AutoFindElement
-  WaitForPropertyValueOrPatternState UIAProperty:=UIAProperty, UIAPropertyValue:=UIAPropertyValue, TimeoutInSeconds:=TimeoutInSeconds
+  WaitForPropertyValueOrPatternState UIAProperty:=UIAProperty, UIAPropertyValue:=UIAPropertyValue, TimeoutInSeconds:=TimeoutInSeconds, WaitForNotValue:=WaitForNotValue
 End Sub
   
 Public Sub WaitForPatternState( _
   UIAPatternID As UIAPatterns, _
   PatternState As Variant, _
-  Optional TimeoutInSeconds As Integer)
+  Optional TimeoutInSeconds As Integer, _
+  Optional WaitForNotValue As Boolean = False)
   AutoFindElement
-  WaitForPropertyValueOrPatternState UIAPatternID:=UIAPatternID, PatternState:=PatternState, TimeoutInSeconds:=TimeoutInSeconds
+  WaitForPropertyValueOrPatternState UIAPatternID:=UIAPatternID, PatternState:=PatternState, TimeoutInSeconds:=TimeoutInSeconds, WaitForNotValue:=WaitForNotValue
 End Sub
   
 Private Sub WaitForPropertyValueOrPatternState( _
@@ -211,10 +213,10 @@ Private Sub WaitForPropertyValueOrPatternState( _
   Optional UIAPropertyValue As Variant, _
   Optional UIAPatternID As UIAPatterns, _
   Optional PatternState As Variant, _
-  Optional TimeoutInSeconds As Integer)
+  Optional TimeoutInSeconds As Integer, _
+  Optional WaitForNotValue As Boolean = False)
 
 'TODO: Allow a wait for milliseconds?
-'NOTE: Temp code until we move this methor to pElement
   
   'Calculate the end time
   Dim EndTime As Date
@@ -230,9 +232,13 @@ Private Sub WaitForPropertyValueOrPatternState( _
   Dim CurrentPropertyValue As Variant
   While Not (PropertyValuePatternStateFound Or PassedEndTime)
   
+'TODO: REUSE GET ELEMENT PROPERTIES etc HERE!! See UIAPatterns.Value
     If UIAProperty <> 0 Then
       CurrentPropertyValue = GetProperty(UIAProperty)
       PropertyValuePatternStateFound = (CurrentPropertyValue = UIAPropertyValue)
+      If WaitForNotValue Then
+        PropertyValuePatternStateFound = Not PropertyValuePatternStateFound
+      End If
     Else
       Select Case UIAPatternID
         Case UIAPatterns.SelectionItem
@@ -253,7 +259,14 @@ Private Sub WaitForPropertyValueOrPatternState( _
             Case "CurrentToggleStateOff"
               PropertyValuePatternStateFound = (TogglePattern.CurrentToggleState = 0)
           End Select
-        End Select
+        Case UIAPatterns.Value
+          PropertyValuePatternStateFound = (Me.GetValue = PatternState)
+        Case Else
+          MsgBox "PatternID not handled: " & UIAPatternID
+      End Select
+      If WaitForNotValue Then
+        PropertyValuePatternStateFound = Not PropertyValuePatternStateFound
+      End If
     End If
     
     If Not PropertyValuePatternStateFound Then

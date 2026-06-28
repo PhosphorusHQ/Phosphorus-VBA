@@ -10,8 +10,6 @@ Attribute VB_Name = "TheInternet"
 ' =======================================================================
 Option Explicit
 
-Private The_Internet As TheInternetPage
-
 Sub TheInternet()
 
   On Error GoTo ErrorHandler
@@ -22,6 +20,7 @@ Sub TheInternet()
     Factory.CurrentWebBrowserType = 1
   End If
 
+  Dim The_Internet As TheInternetPage
   Set The_Internet = New TheInternetPage
 
   With The_Internet

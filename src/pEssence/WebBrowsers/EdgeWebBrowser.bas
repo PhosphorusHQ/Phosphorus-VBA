@@ -43,9 +43,16 @@ Private Sub Class_Initialize()
 End Sub
 
 Private Sub Class_Terminate()
+'Stop
+  Dim ProcessId As Long
+  ProcessId = This.MasterWindow.Element.UIAElement.CurrentProcessId
   On Error Resume Next
   This.MasterWindow.Element.CloseWindow
   On Error GoTo 0
+  'MSEdge does not always close the session properly, so new instancs remain hidde
+  If ProcessId <> 0 Then
+    Phosphorus.WindowsProcesses.KillProcessByID ProcessId
+  End If
   Set This.MasterWindow = Nothing
   Set This.BrowserRootView = Nothing
   Set This.NonClientView = Nothing
@@ -85,6 +92,7 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String,
   This.URL = URL
   This.WebAppPageTitle = WebAppPageTitle
   LaunchCommandByProtocol This.WebAppName, "microsoft-edge:", This.URL, WindowShowStates.Maximized
+'  LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, URL, WindowShowStates.Maximized
   InitialiseAllLocators
   If AbsoluteWaitTimeSeconds > 0 Then
     This.RootWebArea.Find AbsoluteWaitTimeSeconds
@@ -154,10 +162,11 @@ Public Function GetCurrentURL() As String
 End Function
 
 Public Sub NavigateBack()
-  With This.BackButton
-    .Find 10
-    .Element.Click
-    This.RootWebArea.Find 10, FindElementAgain:=True
-  End With
+  WebBrowserCommon.Navigate Me, This.BackButton, This.AddressAndSearchBar, This.RootWebArea
 End Sub
+
+Public Sub WaitForNewURL(TimeoutInSeconds As Integer)
+  WebBrowserCommon.WaitForNewURL GetCurrentURL, This.AddressAndSearchBar, This.RootWebArea, TimeoutInSeconds
+End Sub
+
 

@@ -84,11 +84,12 @@ Private Sub Class_Terminate()
 End Sub
 
 Public Sub Initialize()
-  
+
   With This.WebBrowser
     .Start WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
     Set This.RootWebArea = .GetRootWebArea
   End With
+
     
   Dim AllControls() As pElement
   With This.AllControls

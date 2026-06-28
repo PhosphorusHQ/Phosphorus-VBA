@@ -32,7 +32,7 @@ Private Sub GetInternetSpeedsFromOokla()
   Dim DOWNLOAD As pLocator
   Dim UPLOAD As pLocator
   
-  Factory.CurrentWebBrowserType = Edge
+  Factory.CurrentWebBrowserType = Chrome 'Switched to Chrome from Edge as using Edge here causes problems for launching later Edge browser
   Set WebBrowser = Factory.GetNewWebBrowser
   WebBrowser.Start _
     "Speedtest by Ookla", "https://www.speedtest.net/", "Speedtest by Ookla - The Global Broadband Speed Test", _
@@ -41,11 +41,17 @@ Private Sub GetInternetSpeedsFromOokla()
   Dim Root As pLocator
   Set Root = WebBrowser.GetRootWebArea
   
+  
   Set Go = Factory.GetNewLocator
   With Go
-    .Initialise _
+'Edge
+'    .Initialise _
       "Go", Root, TreeScope_Descendants, By.pConditions, _
       "AND(AriaRoleHeading, NameIs)", FindFirst:=True: .AriaRoleHeading: .NameIs "GO"
+'Chrome
+    .Initialise _
+      "Go", Root, TreeScope_Descendants, By.pConditions, _
+      "AND(AriaRoleButton, NameIs)", FindFirst:=True: .AriaRoleButton: .NameIs "start speed test - connection type multi"
     .Find 10
     Snooze 2000
     .Element.Click
@@ -53,26 +59,43 @@ Private Sub GetInternetSpeedsFromOokla()
 
   Set ResultID = Factory.GetNewLocator
   With ResultID
-    .Initialise _
+'Edge
+'    .Initialise _
       "ResultID", Root, TreeScope_Descendants, By.pConditions, _
       "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "Result ID:":
-     .Find 120
+'Chrome
+'     .Initialise _
+'      "ResultID", Root, TreeScope_Descendants, By.pConditions, _
+'      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "Result ID":
+'     .Find 120
     End With
 
+    WebBrowser.WaitForNewURL 120
+    
   Set DOWNLOAD = New pLocator
   With DOWNLOAD
+'Edge
+'    .Initialise _
+      "DOWNLOAD", Root, TreeScope_Descendants, By.pConditions, _
+      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "DOWNLOAD", True: .RelativeElementNumber 3
+'Chrome
     .Initialise _
       "DOWNLOAD", Root, TreeScope_Descendants, By.pConditions, _
-      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "DOWNLOAD": .RelativeElementNumber 3
+      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "DOWNLOAD", True: .RelativeElementNumber 2
     .Find 2
   End With
   DownloadSpeedMbps = DOWNLOAD.Element.Name
   
   Set UPLOAD = New pLocator
   With UPLOAD
+'Edge
+'    .Initialise _
+      "UPLOAD", Root, TreeScope_Descendants, By.pConditions, _
+      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "UPLOAD", True: .RelativeElementNumber 3
+'Chrome
     .Initialise _
       "UPLOAD", Root, TreeScope_Descendants, By.pConditions, _
-      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "UPLOAD": .RelativeElementNumber 3
+      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "UPLOAD", True: .RelativeElementNumber 2
     .Find 2
   End With
   UploadSpeedMbps = UPLOAD.Element.Name
@@ -84,6 +107,21 @@ Private Sub GetInternetSpeedsFromOokla()
   Set UPLOAD = Nothing
   
   Debug.Print "Download speed is (Mbps): " & DownloadSpeedMbps & ", " & "Upload speed is (Mbps): " & UploadSpeedMbps
-  
+
 End Sub
 
+Public Sub Navigate(CurrentWebBrowser As Object, NavigationButton As pLocator, AddressElement As pLocator, RootWebArea As pLocator)
+  Dim CurrentURL As String
+  CurrentURL = CurrentWebBrowser.GetCurrentURL
+  With NavigationButton
+    .Find 10
+    .Element.Click
+  End With
+  AddressElement.Element.WaitForPatternState UIAPatterns.Value, CurrentURL, 10, True
+  RootWebArea.Find 10, FindElementAgain:=True
+End Sub
+
+Public Sub WaitForNewURL(CurrentURL As String, AddressElement As pLocator, RootWebArea As pLocator, TimeoutInSeconds As Integer)
+  AddressElement.Element.WaitForPatternState UIAPatterns.Value, CurrentURL, TimeoutInSeconds, True
+  RootWebArea.Find 10, FindElementAgain:=True
+End Sub

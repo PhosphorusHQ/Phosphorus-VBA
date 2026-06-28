@@ -44,8 +44,8 @@ Public Function GetWebBrowserName(TargetWebBrowserType As WebBrowserType) As Str
     Case Epic: R = "Epic"
     Case Firefox: R = "Firefox"
     Case Opera: R = "Opera"
-    Case Samsung: R = "Samsung Browser"
-    Case Yandex: R = "Yandex Browser"
+    Case Samsung: R = "Samsung"
+    Case Yandex: R = "Yandex"
     Case Else: R = "Unhandled WebBrowser type in GetWebBrowserName #" & TargetWebBrowserType
   End Select
   GetWebBrowserName = R

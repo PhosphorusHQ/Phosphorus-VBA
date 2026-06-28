@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmpHilby 
    Caption         =   "pHilby - Phosphorus UIAutomation Spy Tool"
-   ClientHeight    =   8148
+   ClientHeight    =   8052
    ClientLeft      =   108
    ClientTop       =   456
    ClientWidth     =   15096
@@ -44,7 +44,9 @@ Private Sub UserForm_Initialize()
 
   Set AllTreeViewNodes = New Scripting.Dictionary
 
-  cmdSearch.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\loupe.png")
+  cbExpand.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\expansion.png")
+  cbCollapse.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\collapse.png")
+  cbSearch.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\loupe.png")
   cbHighlightSelectedNodeElement.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\marker.png")
 '  cbReleaseHighlighting.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\marker.png")
   cbUIAPolling.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hand.png")
@@ -396,7 +398,38 @@ Private Function GetPatternText_Window(UIAElement As IUIAutomationElement) As St
      "  WindowVisualState:" & vbTab & UIAProps.GetWindowVisualStateName(Pattern.CurrentWindowVisualState) & vbCrLf
 End Function
 
-Private Sub cmdSearch_Click()
+Private Sub cbExpand_Click()
+  If Not ActiveNode Is Nothing Then
+    ExpandOrContractAllChildNodes ActiveNode, True
+  End If
+  mcTree.Refresh
+End Sub
+
+Private Sub cbCollapse_Click()
+  If Not ActiveNode Is Nothing Then
+    ExpandOrContractAllChildNodes ActiveNode, False
+  End If
+  mcTree.Refresh
+End Sub
+
+Private Sub ExpandOrContractAllChildNodes(Node As clsNode, Expand As Boolean)
+  Node.Expanded = Expand
+  Node.Bold = False
+  Dim ChildNode As clsNode
+  Dim NumberOfChildren, Counter As Integer
+  NumberOfChildren = 0
+  On Error Resume Next
+  NumberOfChildren = Node.ChildNodes.Count
+  On Error GoTo 0
+  If NumberOfChildren > 0 Then
+    For Counter = 1 To Node.ChildNodes.Count
+      Set ChildNode = Node.ChildNodes.Item(Counter)
+      ExpandOrContractAllChildNodes ChildNode, Expand
+    Next
+  End If
+End Sub
+
+Private Sub cbSearch_Click()
   Dim SearchText As String
   SearchText = VBA.Interaction.InputBox("Input the text to search for...", "pHilby")
   If SearchText <> "" Then
@@ -441,7 +474,7 @@ End Sub
 Private Sub mcTree_Click(cNode As pExternals.clsNode)
   'This gets fired when a node is clicked
   Set ActiveNode = cNode
-
+  
   txtProperties = AllTreeViewNodes(cNode.Key)("AllProperties")
   txtPatterns = AllTreeViewNodes(cNode.Key)("AllPatterns")
   Window.ReleaseHighlighting
@@ -455,6 +488,10 @@ Private Sub mcTree_Click(cNode As pExternals.clsNode)
       MsgBox "This element is not longer available!", vbCritical, "pHilby"
     End If
   End If
+
+  cbExpand.Enabled = True
+  cbCollapse.Enabled = True
+
 End Sub
 
 Private Function IsAlive(UIAElement As IUIAutomationElement) As Boolean
@@ -743,5 +780,4 @@ End Sub
 Private Sub lblTreeViewLink_Click()
   ThisWorkbook.FollowHyperlink "https://jkp-ads.com/articles/treeview.aspx"
 End Sub
-
 

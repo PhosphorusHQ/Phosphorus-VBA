@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmpHilby 
    Caption         =   "pHilby - Phosphorus UIAutomation Spy Tool"
-   ClientHeight    =   7668
+   ClientHeight    =   8148
    ClientLeft      =   108
    ClientTop       =   456
    ClientWidth     =   15096
@@ -23,6 +23,8 @@ Private AllTreeViewNodes As Scripting.Dictionary
 
 Private mRootUIAElement As IUIAutomationElement
 Private mMaxNumberOfLevels As Integer
+Private mDelayLoadingInSeconds As Integer
+
 Private ActiveNode As pExternals.clsNode
 Private UnhandledPatterns As Scripting.Dictionary
 Public HighlightSelectedNodeElement As Boolean
@@ -77,7 +79,12 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
   Set mcTree = Nothing
 End Sub
 
-Public Sub LoadTreeView(RootUIAElement As IUIAutomationElement, Optional MaxNumberOfLevels As Integer)
+Public Sub LoadTreeView(RootUIAElement As IUIAutomationElement, Optional MaxNumberOfLevels As Integer, Optional DelayLoadingInSeconds As Integer = 0)
+  mDelayLoadingInSeconds = DelayLoadingInSeconds
+  txtDelayLoading.Value = mDelayLoadingInSeconds
+  If DelayLoadingInSeconds > 0 Then
+    Application.Wait VBA.DateTime.DateAdd("s", mDelayLoadingInSeconds, Now)
+  End If
   UnloadTreeView
   Set mRootUIAElement = RootUIAElement
   mMaxNumberOfLevels = MaxNumberOfLevels
@@ -485,7 +492,7 @@ Private Sub cbUIAPolling_Click()
       .Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\pointer.png")
       .ControlTipText = "Don't Highlight Node of Element Under Cursor"
       .Tag = "Pushed"
-      Snooze 2000 'Allow time for user to move to the first element
+      Application.Wait (Now + TimeValue("0:00:02")) 'Allow time for user to move to the first element
       pHilby.StartpHilbyUIAPolling
     End If
   End With
@@ -678,7 +685,7 @@ End Sub
 Private Sub cbReload_Click()
   If Not mRootUIAElement Is Nothing Then
     Application.Cursor = xlWait
-    LoadTreeView mRootUIAElement, MaxNumberOfLevels:=mMaxNumberOfLevels
+    LoadTreeView mRootUIAElement, MaxNumberOfLevels:=mMaxNumberOfLevels, DelayLoadingInSeconds:=mDelayLoadingInSeconds
     txtProperties = ""
     txtPatterns = ""
     Set ActiveNode = mcTree.RootNodes(1)
@@ -715,6 +722,18 @@ Private Sub LevelsSpinButton_SpinDown()
     mMaxNumberOfLevels = mMaxNumberOfLevels - 1
   End If
   txtMaxNumberOfLevels.Value = mMaxNumberOfLevels
+End Sub
+
+Private Sub DelaySpinButton_SpinUp()
+  mDelayLoadingInSeconds = mDelayLoadingInSeconds + 1
+  txtDelayLoading.Value = mDelayLoadingInSeconds
+End Sub
+
+Private Sub DelaySpinButton_SpinDown()
+  If mDelayLoadingInSeconds > 0 Then
+    mDelayLoadingInSeconds = mDelayLoadingInSeconds - 1
+  End If
+  txtDelayLoading = mDelayLoadingInSeconds
 End Sub
 
 Private Sub lblFlatIconLink_Click()

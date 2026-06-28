@@ -75,7 +75,7 @@ Private Sub LaunchpHilby()
   End If
 End Sub
 
-Public Sub Start(Optional RootUIAElement As IUIAutomationElement, Optional MaxNumberOfLevels As Integer = 0)
+Public Sub Start(Optional RootUIAElement As IUIAutomationElement, Optional MaxNumberOfLevels As Integer = 0, Optional DelayLoadingInSeconds As Integer = 0)
 
   Application.Cursor = xlWait
 
@@ -86,7 +86,7 @@ Public Sub Start(Optional RootUIAElement As IUIAutomationElement, Optional MaxNu
   
   Set UserForm = New frmpHilby
   With UserForm
-    .LoadTreeView RootUIAElement, MaxNumberOfLevels:=MaxNumberOfLevels
+    .LoadTreeView RootUIAElement, MaxNumberOfLevels:=MaxNumberOfLevels, DelayLoadingInSeconds:=DelayLoadingInSeconds
      Application.Cursor = xlDefault
     .AppName = GCSAPPNAME
     .Show

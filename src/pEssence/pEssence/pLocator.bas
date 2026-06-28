@@ -585,6 +585,6 @@ Public Sub WaitForElementExists(TimeoutInSeconds As Long)
 
 End Sub
 
-Public Sub StartpHilby(Optional MaxNumberOfLevels As Integer)
-  pHilby.Start Me.Element.UIAElement, MaxNumberOfLevels
+Public Sub StartpHilby(Optional MaxNumberOfLevels As Integer, Optional DelayLoadingInSeconds As Integer = 0)
+  pHilby.Start Me.Element.UIAElement, MaxNumberOfLevels, DelayLoadingInSeconds
 End Sub

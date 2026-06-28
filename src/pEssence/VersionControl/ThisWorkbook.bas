@@ -13,6 +13,7 @@ Option Explicit
 Private Const ThisVBProjectName = "pEssence"
 
 Private Sub Workbook_Open()
+
   'Microsoft Visual Basic for Applications Extensilbility 5.3 - needed for VBProject
   'This is not built in but needs adding manually for the References module
         

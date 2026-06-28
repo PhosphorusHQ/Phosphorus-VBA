@@ -36,7 +36,13 @@ Private Sub Workbook_Open()
     
   'Windows Script Host Object Model - needed for wshShell
   Phosphorus.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\wshom.ocx"
-  
+
+  'Microsoft Windows Image Acquisition Library v2.0
+  Phosphorus.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\wiaaut.dll"
+
+  'OLE Automation - needed for StdPicture type
+  Phosphorus.References.AddReferenceToWorkbookOrLibrary "C:\Windows\System32\stdole2.tlb"
+
   Toolbar.CreatePhosphorusToolbar
   
 End Sub

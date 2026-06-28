@@ -39,6 +39,10 @@ Option Explicit
          ByVal uFlags As Long) As Long
 #End If
 
+Private Sub UserForm_Initialize()
+  Logo.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\Logo.png")
+End Sub
+
 ' This event fires AFTER the form is fully visible
 Private Sub UserForm_Activate()
   With Window

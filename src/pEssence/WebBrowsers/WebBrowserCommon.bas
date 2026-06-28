@@ -41,7 +41,6 @@ Private Sub GetInternetSpeedsFromOokla()
   Dim Root As pLocator
   Set Root = WebBrowser.GetRootWebArea
   
-  
   Set Go = Factory.GetNewLocator
   With Go
 'Edge

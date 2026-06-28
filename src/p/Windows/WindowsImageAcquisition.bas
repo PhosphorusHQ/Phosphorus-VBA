@@ -10,8 +10,8 @@ Attribute VB_Name = "WindowsImageAcquisition"
 ' =======================================================================
 Option Explicit
 
-Sub test()
-  WindowsImageAcquisition.LoadImageWIA ThisWorkbook.Path & "\images\Logo.png"
+Private Sub Test()
+  WindowsImageAcquisition.LoadImage ThisWorkbook.Path & "\images\Logo.png"
 End Sub
 
 Function LoadImage(ByVal FilePath As String) As StdPicture
@@ -50,5 +50,25 @@ Function LoadAndResizePNG( _
     
   On Error GoTo 0
 
+End Function
+
+' In a standard module
+Function LoadImageSolidBackground(ByVal FilePath As String, _
+                                  Optional BackColor As Long = vbWhite) As StdPicture
+    
+    Dim img As WIA.ImageFile
+    Dim proc As WIA.ImageProcess
+    
+    Set img = New WIA.ImageFile
+    img.LoadFile FilePath
+    
+    Set proc = New WIA.ImageProcess
+    
+    ' Add a background color filter (removes transparency)
+    proc.Filters.Add proc.FilterInfos("Convert").FilterID
+    proc.Filters(1).Properties("FormatID") = "{B96B3CAB-0728-11D3-9D7B-0000F81EF32E}" ' BMP format
+    'proc.Filters.Add proc.FilterInfos("Stamp").FilterID   ' Alternative method if needed
+    
+    Set LoadImageSolidBackground = proc.Apply(img).FileData.Picture
 End Function
 

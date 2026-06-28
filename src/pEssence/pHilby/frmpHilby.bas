@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmpHilby 
    Caption         =   "pHilby - Phosphorus UIAutomation Spy Tool"
-   ClientHeight    =   7380
+   ClientHeight    =   7656
    ClientLeft      =   108
    ClientTop       =   456
    ClientWidth     =   14352
@@ -35,13 +35,21 @@ Private Sub UserForm_Initialize()
   If Me.fraTreeControl.Font.Size < 4 Then
     Me.fraTreeControl.Font.Size = 4
   End If
-    
+  
   #If DEBUGMODE = 1 Then
     gFormInit = gFormInit + 1
   #End If
 
   Set AllTreeViewNodes = New Scripting.Dictionary
-    
+
+  cmdSearch.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\loupe.png")
+  cbHighlightSelectedNodeElement.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\marker.png")
+'  cbReleaseHighlighting.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\marker.png")
+  cbUIAPolling.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hand.png")
+  cbExport.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\xls.png")
+  cbSetCurrentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\root-directory.png")
+  cbReload.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hacker.png")
+
 End Sub
 
 Private Sub UserForm_Terminate()
@@ -414,8 +422,10 @@ Private Sub cmdSearch_Click()
     mcTree.Refresh
     If Count > 0 Then
       mcTree.ScrollToView MatchingNodes(Count)
+    Else
+      MsgBox "No matching name found!", vbInformation, "pHilby"
     End If
-    'TODO: Activvale/Click on found node!?
+    'TODO: Activate/Click on found node!?
   End If
 End Sub
 
@@ -446,22 +456,45 @@ Private Function IsAlive(UIAElement As IUIAutomationElement) As Boolean
   On Error GoTo 0
 End Function
 
-Private Sub chkHighlightSelectedNodeElement_Click()
-  HighlightSelectedNodeElement = chkHighlightSelectedNodeElement.Value
-  Window.HighlightElements = chkHighlightSelectedNodeElement.Value
+Private Sub cbHighlightSelectedNodeElement_Click()
+  With cbHighlightSelectedNodeElement
+    If .Tag = "Pushed" Then
+      .Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\marker.png")
+      .ControlTipText = "Highlight Element for Selected Node"
+      .Tag = "Not Pushed"
+      HighlightSelectedNodeElement = False
+      Window.ReleaseHighlighting
+    Else
+      .Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\highlighter.png")
+      .ControlTipText = "Don't Highlight Element for Selected Node"
+      .Tag = "Pushed"
+      HighlightSelectedNodeElement = True
+    End If
+    Window.HighlightElements = HighlightSelectedNodeElement
+  End With
 End Sub
 
-Private Sub cbReleaseHighlighting_Click()
-  Window.ReleaseHighlighting
+Private Sub cbUIAPolling_Click()
+  With cbUIAPolling
+    If .Tag = "Pushed" Then
+      UnpushcbUIAPolling
+      pHilby.StoppHilbyUIAUIAPolling
+    Else
+      .Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\pointer.png")
+      .ControlTipText = "Don't Highlight Node of Element Under Cursor"
+      .Tag = "Pushed"
+      Snooze 2000 'Allow time for user to move to the first element
+      pHilby.StartpHilbyUIAPolling
+    End If
+  End With
 End Sub
 
-Private Sub chkUIAPolling_Click()
-  If chkUIAPolling Then
-    Snooze 2000 'Allow time for user to move to the first element
-    pHilby.StartpHilbyUIAPolling
-  Else
-    pHilby.StoppHilbyUIAUIAPolling
-  End If
+Public Sub UnpushcbUIAPolling()
+  With cbUIAPolling
+    .Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hand.png")
+    .ControlTipText = "Highlight Node of Element Under Cursor"
+    .Tag = "Not Pushed"
+  End With
 End Sub
 
 Public Sub SearchByCursorPoint(tPt As tagPOINT)
@@ -653,5 +686,9 @@ Private Sub cbSetCurrentAsRootNode_Click()
   If Not ActiveNode Is Nothing Then
     Set mRootUIAElement = AllTreeViewNodes(ActiveNode.Key)("UIAElement")
   End If
+End Sub
+
+Private Sub cbFlatIconLink_Click()
+  ThisWorkbook.FollowHyperlink "https://www.flaticon.com/"
 End Sub
 

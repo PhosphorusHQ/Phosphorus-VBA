@@ -156,9 +156,8 @@ Private Sub TimerProc(ByVal hwnd As Long, ByVal uMsg As Long, ByVal nIDEvent As 
   PreviousTagPoint = CurrentTagPoint
   'Only poll to the expiry time
   If Now > PollingExpiryTime Then
-    'Untick polling
-    UserForm.chkUIAPolling = False
     MsgBox "Element polling has stopped after no activity for 2 seconds.", vbInformation, "pHilby"
+    UserForm.UnpushcbUIAPolling
     Exit Sub
   End If
   'Only poll while the pHilby

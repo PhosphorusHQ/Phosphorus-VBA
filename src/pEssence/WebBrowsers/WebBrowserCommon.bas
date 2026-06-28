@@ -18,6 +18,16 @@ Public Sub ForgetInternetSpeeds()
   UploadSpeedMbps = 0
 End Sub
 
+Public Sub SetDummyBroadbandInternetSpeeds()
+  DownloadSpeedMbps = 200
+  UploadSpeedMbps = 200
+End Sub
+
+Public Sub SetDummyMobileDataInternetSpeeds()
+  DownloadSpeedMbps = 20
+  UploadSpeedMbps = 20
+End Sub
+
 Public Sub GetInternetSpeeds()
   If DownloadSpeedMbps = 0 Or UploadSpeedMbps = 0 Then
     GetInternetSpeedsFromOokla

@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmpHilby 
    Caption         =   "pHilby - Phosphorus UIAutomation Spy Tool"
-   ClientHeight    =   7656
+   ClientHeight    =   7668
    ClientLeft      =   108
    ClientTop       =   456
-   ClientWidth     =   14352
+   ClientWidth     =   15096
    OleObjectBlob   =   "frmpHilby.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -48,6 +48,7 @@ Private Sub UserForm_Initialize()
   cbUIAPolling.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hand.png")
   cbExport.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\xls.png")
   cbSetCurrentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\root-directory.png")
+  cbSetParentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\root-directory2.png")
   cbReload.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hacker.png")
 
 End Sub
@@ -80,6 +81,7 @@ Public Sub LoadTreeView(RootUIAElement As IUIAutomationElement, Optional MaxNumb
   UnloadTreeView
   Set mRootUIAElement = RootUIAElement
   mMaxNumberOfLevels = MaxNumberOfLevels
+  txtMaxNumberOfLevels.Value = mMaxNumberOfLevels
   AllTreeViewNodes.RemoveAll
   Set UnhandledPatterns = New Scripting.Dictionary
   LoadUIATree RootUIAElement
@@ -432,7 +434,7 @@ End Sub
 Private Sub mcTree_Click(cNode As pExternals.clsNode)
   'This gets fired when a node is clicked
   Set ActiveNode = cNode
-  
+
   txtProperties = AllTreeViewNodes(cNode.Key)("AllProperties")
   txtPatterns = AllTreeViewNodes(cNode.Key)("AllPatterns")
   Window.ReleaseHighlighting
@@ -627,7 +629,6 @@ Private Sub cbExport_Click()
       .Font.Underline = xlUnderlineStyleSingle
     End With
 
-'Stop
     Dim AllPatterns As String
     AllPatterns = AllTreeViewNodes(Key)("AllPatterns")
     AllPatterns = Replace(AllPatterns, "=", "")
@@ -675,20 +676,53 @@ Private Sub cbExport_Click()
 End Sub
 
 Private Sub cbReload_Click()
-  Application.Cursor = xlWait
-  LoadTreeView mRootUIAElement, MaxNumberOfLevels:=mMaxNumberOfLevels
-  txtProperties = ""
-  txtPatterns = ""
-  Application.Cursor = xlDefault
+  If Not mRootUIAElement Is Nothing Then
+    Application.Cursor = xlWait
+    LoadTreeView mRootUIAElement, MaxNumberOfLevels:=mMaxNumberOfLevels
+    txtProperties = ""
+    txtPatterns = ""
+    Set ActiveNode = mcTree.RootNodes(1)
+    Application.Cursor = xlDefault
+  End If
 End Sub
 
 Private Sub cbSetCurrentAsRootNode_Click()
   If Not ActiveNode Is Nothing Then
     Set mRootUIAElement = AllTreeViewNodes(ActiveNode.Key)("UIAElement")
+    cbReload_Click
   End If
 End Sub
 
-Private Sub cbFlatIconLink_Click()
+Private Sub cbSetParentAsRootNode_Click()
+  If Not ActiveNode Is Nothing Then
+    Dim CurrentRootUIAElement As IUIAutomationElement
+    Set CurrentRootUIAElement = AllTreeViewNodes(ActiveNode.Key)("UIAElement")
+    If Not CurrentRootUIAElement Is Factory.GetRootDesktopElement Then
+      Set TreeWalker = UIA.ControlViewWalker
+      Set mRootUIAElement = TreeWalker.GetParentElement(CurrentRootUIAElement)
+      cbReload_Click
+    End If
+  End If
+End Sub
+
+Private Sub LevelsSpinButton_SpinUp()
+  mMaxNumberOfLevels = mMaxNumberOfLevels + 1
+  txtMaxNumberOfLevels.Value = mMaxNumberOfLevels
+End Sub
+
+Private Sub LevelsSpinButton_SpinDown()
+  If mMaxNumberOfLevels > 0 Then
+    mMaxNumberOfLevels = mMaxNumberOfLevels - 1
+  End If
+  txtMaxNumberOfLevels.Value = mMaxNumberOfLevels
+End Sub
+
+Private Sub lblFlatIconLink_Click()
   ThisWorkbook.FollowHyperlink "https://www.flaticon.com/"
 End Sub
+
+Private Sub lblTreeViewLink_Click()
+  ThisWorkbook.FollowHyperlink "https://jkp-ads.com/articles/treeview.aspx"
+End Sub
+
 

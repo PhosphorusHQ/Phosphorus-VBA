@@ -398,7 +398,8 @@ Private Sub cmdSearch_Click()
     Node.Expanded = False
     Next Node
     If Count = 0 Then
-       MsgBox "No matching nodes found.", vbCritical, "pHilby"
+       'Ignore
+       'MsgBox "No matching nodes found.", vbCritical, "pHilby"
     Else
       Dim i As Integer
       For i = 1 To Count
@@ -411,7 +412,9 @@ Private Sub cmdSearch_Click()
       Next i
     End If
     mcTree.Refresh
-    mcTree.ScrollToView MatchingNodes(Count)
+    If Count > 0 Then
+      mcTree.ScrollToView MatchingNodes(Count)
+    End If
     'TODO: Activvale/Click on found node!?
   End If
 End Sub
@@ -437,9 +440,9 @@ End Sub
 
 Private Function IsAlive(UIAElement As IUIAutomationElement) As Boolean
   On Error Resume Next
-  Dim pid As Long
-  pid = UIAElement.CurrentProcessId  'any property access will fail if stale
-  IsAlive = (Err.Number = 0) And (pid > 0)
+  Dim PID As Long
+  PID = UIAElement.CurrentProcessId  'any property access will fail if stale
+  IsAlive = (Err.Number = 0) And (PID > 0)
   On Error GoTo 0
 End Function
 

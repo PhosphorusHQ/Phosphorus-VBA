@@ -91,6 +91,9 @@ Public Sub Initialise( _
       This.FindBy = By.pConditions
       This.EvaluationLogic = "ControlType"
       Condition This.EvaluationLogic, UIAProperties.ControlType, UIAPropertyComparisons.EqualsNumber, EvaluationLogic
+    Case By.pPath
+      This.FindBy = FindBy
+      This.EvaluationLogic = EvaluationLogic
     Case Else
       ErrorLogging.LogError Errors.FindElementUnhandledByInLocator, "Unhanded By Locator: " & UIACommon.GetByName(FindBy)
       Exit Sub
@@ -357,101 +360,132 @@ End Sub
 Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAutomationElement()
 'Find 1 or more elements with no timeout
 
-  If Not EvaluationLogicIsOk Then
-    ErrorLogging.LogError Errors.FaultyEvaluationLogicUnspecifiedError, "The evaluation logic is faulty: '" & This.EvaluationLogic & "'"
-    Exit Function
-  End If
-  
-  ' Find the child/descendant elements of the root element
-  Dim AllElements As IUIAutomationElementArray
-  If This.RootUIAElement Is Nothing Then
-    ErrorLogging.LogError Errors.FindElementsRootElementIsNothing, "The root element is nothing for element '" & This.Element.GivenName & "'!"
-    Exit Function
-  Else
-    Set AllElements = This.RootUIAElement.FindAll(This.TreeScope, UIA.CreateTrueCondition)
-  End If
-  If AllElements Is Nothing Then
-    'Could not find any elements below the Root Element - yet!
-    Exit Function
-  Else
-    If AllElements.Length = 0 Then
-      'Could not find any elements below the Root Element - yet!
+  If This.FindBy <> By.pPath Then
+    If Not EvaluationLogicIsOk Then
+      ErrorLogging.LogError Errors.FaultyEvaluationLogicUnspecifiedError, "The evaluation logic is faulty: '" & This.EvaluationLogic & "'"
       Exit Function
     End If
   End If
-
+    
   Dim ReturnElements() As pElement
   Dim CountOfMatchingElements As Integer
-  CountOfMatchingElements = 0
-
-  Dim i As Long
   Dim CurrentElement As pElement
-  For i = 0 To AllElements.Length - 1
-    
-    Set CurrentElement = Factory.GetNewElement("Found Element #" & (i + 1), AllElements.GetElement(i))
+  CountOfMatchingElements = 0
+  
+  If This.FindBy = By.pPath Then
 
-    Dim CurrentEvaluationLogic  As String
-    CurrentEvaluationLogic = This.EvaluationLogic
-      
-    Dim k As Variant
-    For Each k In This.AllSearchConditions.Keys
-      Dim C As New pCondition
-      Set C = This.AllSearchConditions(k)
-      If C.ConditionName = POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER Then
-        CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, C.ConditionName, ((i + 1) = C.UIAPropertyValue))
-      Else
-        CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, C.ConditionName, C.Evaluate(CurrentElement))
-      End If
-    Next k
-    Dim MatchFound As Boolean
-    On Error Resume Next
-    MatchFound = Excel.Evaluate(CurrentEvaluationLogic) 'Evaluate the formula with Excel!
-    'Did we get and error?
-    If Err.Number = 0 Then
-      'Do nothing!
-    Else
-      If Err.Number = 13 Then
-        On Error GoTo 0
-        ErrorLogging.LogError _
-          Errors.FaultyEvaluationLogicUnspecifiedErrorOnEvaluation, _
-          "The evaluation logic did not evaluate to TRUE or FALSE:" & vbCrLf & vbCrLf & _
-          "'" & This.EvaluationLogic & "' returned '" & VBA.Conversion.CStr(Excel.Evaluate(CurrentEvaluationLogic)) & "'"
-        Exit Function
-      Else
-        Err.Raise Err.Number, Err.Description
-      End If
-    End If
-    On Error GoTo 0
-    If MatchFound Then
-      If This.RelativeElementNumber <> 0 Then
-        Dim j As Integer
-        j = i + This.RelativeElementNumber
-        If j >= 0 And j <= AllElements.Length - 1 Then
-          'Get relative element
-          Set CurrentElement = Factory.GetNewElement("Found Element #" & (j + 1), AllElements.GetElement(j))
-        End If
-      End If
-      CountOfMatchingElements = CountOfMatchingElements + 1
-      If This.PositionInMatchingSet = 0 Then
+    Dim pPathLocator As pPath.Core
+    Set pPathLocator = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
+    pPathLocator.Initialise
+    pPathLocator.SetApplicationRootElement This.RootUIAElement
+
+    Dim pPathResponse As pPath.ReturnClass
+    Set pPathResponse = pPathLocator.Evaluate(This.EvaluationLogic)
+
+    If pPathResponse.ReturnedValue = True Then
+      Dim NumberOfMatchingElements As Long
+      NumberOfMatchingElements = pPathResponse.GetFinalNumberOfMatchingElements
+      Dim Counter As Integer
+      For Counter = 1 To NumberOfMatchingElements
+        CountOfMatchingElements = CountOfMatchingElements + 1
         ReDim Preserve ReturnElements(CountOfMatchingElements - 1)
+        Set CurrentElement = Factory.GetNewElement("Found Element #" & (Counter + 1), pPathResponse.GetMatchingElement(Counter))
         Set ReturnElements(CountOfMatchingElements - 1) = CurrentElement
-        If This.FindFirst Then
-          Exit For
-        End If
-      Else
-        If This.PositionInMatchingSet = -1 Then
-          ' Replace the return element with every match so we are left with the last one!
-          ReDim Preserve ReturnElements(0)
-          Set ReturnElements(0) = CurrentElement
-        ElseIf CountOfMatchingElements = This.PositionInMatchingSet Then
-          ReDim Preserve ReturnElements(0)
-          Set ReturnElements(0) = CurrentElement
-          Exit For
-        End If
+      Next Counter
+    End If
+    
+    Set pPathLocator = Nothing
+    Set pPathResponse = Nothing
+
+  Else
+
+    ' Find the child/descendant elements of the root element
+    Dim AllElements As IUIAutomationElementArray
+    If This.RootUIAElement Is Nothing Then
+      ErrorLogging.LogError Errors.FindElementsRootElementIsNothing, "The root element is nothing for element '" & This.Element.GivenName & "'!"
+      Exit Function
+    Else
+      Set AllElements = This.RootUIAElement.FindAll(This.TreeScope, UIA.CreateTrueCondition)
+    End If
+    If AllElements Is Nothing Then
+      'Could not find any elements below the Root Element - yet!
+      Exit Function
+    Else
+      If AllElements.Length = 0 Then
+        'Could not find any elements below the Root Element - yet!
+        Exit Function
       End If
     End If
-  Next i
 
+    Dim i As Long
+    For i = 0 To AllElements.Length - 1
+    
+      Set CurrentElement = Factory.GetNewElement("Found Element #" & (i + 1), AllElements.GetElement(i))
+
+      Dim CurrentEvaluationLogic  As String
+      CurrentEvaluationLogic = This.EvaluationLogic
+  
+      Dim k As Variant
+      For Each k In This.AllSearchConditions.Keys
+        Dim C As New pCondition
+        Set C = This.AllSearchConditions(k)
+        If C.ConditionName = POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER Then
+          CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, C.ConditionName, ((i + 1) = C.UIAPropertyValue))
+        Else
+          CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, C.ConditionName, C.Evaluate(CurrentElement))
+        End If
+      Next k
+      Dim MatchFound As Boolean
+      On Error Resume Next
+      MatchFound = Excel.Evaluate(CurrentEvaluationLogic) 'Evaluate the formula with Excel!
+      'Did we get and error?
+      If Err.Number = 0 Then
+        'Do nothing!
+      Else
+        If Err.Number = 13 Then
+          On Error GoTo 0
+          ErrorLogging.LogError _
+            Errors.FaultyEvaluationLogicUnspecifiedErrorOnEvaluation, _
+            "The evaluation logic did not evaluate to TRUE or FALSE:" & vbCrLf & vbCrLf & _
+            "'" & This.EvaluationLogic & "' returned '" & VBA.Conversion.CStr(Excel.Evaluate(CurrentEvaluationLogic)) & "'"
+          Exit Function
+        Else
+          Err.Raise Err.Number, Err.Description
+        End If
+      End If
+      On Error GoTo 0
+      If MatchFound Then
+        If This.RelativeElementNumber <> 0 Then
+          Dim j As Integer
+          j = i + This.RelativeElementNumber
+          If j >= 0 And j <= AllElements.Length - 1 Then
+            'Get relative element
+            Set CurrentElement = Factory.GetNewElement("Found Element #" & (j + 1), AllElements.GetElement(j))
+          End If
+        End If
+        CountOfMatchingElements = CountOfMatchingElements + 1
+        If This.PositionInMatchingSet = 0 Then
+          ReDim Preserve ReturnElements(CountOfMatchingElements - 1)
+          Set ReturnElements(CountOfMatchingElements - 1) = CurrentElement
+          If This.FindFirst Then
+            Exit For
+          End If
+        Else
+          If This.PositionInMatchingSet = -1 Then
+            ' Replace the return element with every match so we are left with the last one!
+            ReDim Preserve ReturnElements(0)
+            Set ReturnElements(0) = CurrentElement
+          ElseIf CountOfMatchingElements = This.PositionInMatchingSet Then
+            ReDim Preserve ReturnElements(0)
+            Set ReturnElements(0) = CurrentElement
+            Exit For
+          End If
+        End If
+      End If
+    Next i
+
+  End If
+  
   If pEssence.Utils.IsArrayEmpty(ReturnElements) Then
     If AcceptNoElements Then
       'Find elements is nothing?

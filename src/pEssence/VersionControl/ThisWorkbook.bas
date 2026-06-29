@@ -36,9 +36,13 @@ Private Sub Workbook_Open()
   strPhosphorusWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus.xlam")
   pEssence.References.AddReferenceToWorkbookOrLibrary strPhosphorusWBFullName
 
-  Dim strPhosphorusExpernalsFullName As String
-  strPhosphorusExpernalsFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus Externals.xlam")
-  pEssence.References.AddReferenceToWorkbookOrLibrary strPhosphorusExpernalsFullName
+  Dim strPhosphorusExternalsWBFullName As String
+  strPhosphorusExternalsWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "Phosphorus Externals.xlam")
+  pEssence.References.AddReferenceToWorkbookOrLibrary strPhosphorusExternalsWBFullName
+
+  Dim strPPathWBFullName As String
+  strPPathWBFullName = VBA.Strings.Replace(ThisWorkbook.FullName, ThisWorkbook.Name, "pPath.xlam")
+  pEssence.References.AddReferenceToWorkbookOrLibrary strPPathWBFullName
 
   'Schedule adding the Toolbar Button for pHilby
   Application.OnTime Now + TimeValue("00:00:05"), "pHilby.AddButtonToPhosphorusToolbar"

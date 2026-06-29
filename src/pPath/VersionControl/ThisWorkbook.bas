@@ -74,7 +74,7 @@ End Sub
 
 Private Sub RemoveAllPhosphorusSourceCode()
   SetModulesToKeep
-  Phosphorus.ModuleManagement.RemoveAllComponentsExcept ThisWorkbook.vbProject
+  Phosphorus.ModuleManagement.RemoveAllComponentsExcept ThisWorkbook.VBProject
 End Sub
 
 Private Sub ImportAllPhosphorusSourceCode()

@@ -15,14 +15,14 @@ Option Explicit
 ' Add a reference to a DLL, etc or macro-enabled workbook and save its FullPath and project name
 Public Sub AddReferenceToWorkbookOrLibrary(TargetFilePath As String, Optional vbTargetProjName As String)
   
-  Dim vbProj As vbProject
+  Dim vbProj As VBProject
   
   If Dir(TargetFilePath) = "" Then
     MsgBox "References: The file " & TargetFilePath & " does not exist!"
     Exit Sub
   End If
 
-  Dim vbOpenProject As vbProject
+  Dim vbOpenProject As VBProject
   If vbTargetProjName <> "" Then
      For Each vbOpenProject In Application.VBE.VBProjects
        If vbOpenProject.Name = vbTargetProjName Then
@@ -33,7 +33,7 @@ Public Sub AddReferenceToWorkbookOrLibrary(TargetFilePath As String, Optional vb
   
   ' Get the VBProject of the current workbook
   If vbProj Is Nothing Then
-    Set vbProj = ThisWorkbook.vbProject
+    Set vbProj = ThisWorkbook.VBProject
   End If
   
   ' Check if reference already exists
@@ -54,8 +54,8 @@ End Sub
 
 Public Sub ListAllReferencesInAProject(vbTargetProjectName As String)
     
-  Dim vbTargetProject As vbProject
-  Dim vbOpenProject As vbProject
+  Dim vbTargetProject As VBProject
+  Dim vbOpenProject As VBProject
   For Each vbOpenProject In Application.VBE.VBProjects
     If vbOpenProject.Name = vbTargetProjectName Then
       Set vbTargetProject = vbOpenProject
@@ -72,8 +72,8 @@ End Sub
 
 Public Sub RemoveAllNonBuiltInReferencesFromAProject(vbTargetProjectName As String)
 
-  Dim vbTargetProject As vbProject
-  Dim vbOpenProject As vbProject
+  Dim vbTargetProject As VBProject
+  Dim vbOpenProject As VBProject
   For Each vbOpenProject In Application.VBE.VBProjects
     If vbOpenProject.Name = vbTargetProjectName Then
       Set vbTargetProject = vbOpenProject

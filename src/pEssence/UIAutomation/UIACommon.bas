@@ -22,6 +22,7 @@ Public Enum By
   ClassName
   ControlType
   NameIs
+  pPath
 End Enum
 
 Public Enum UIAPropertyComparisons

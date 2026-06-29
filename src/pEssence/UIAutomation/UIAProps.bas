@@ -516,38 +516,8 @@ Public Function GetPropertyValueAsString(UIAElement As IUIAutomationElement, Pro
 '???    Case UIAProperties.GridRow
 '      If PropertyStringValue = 0 Then: PropertyStringValue = ""
     Case UIAProperties.RuntimeId
-      PropertyStringValue = GetElementRuntimeId(UIAElement)
+      PropertyStringValue = pPath.RuntimeIDs.GetElementRuntimeId(UIAElement)
   End Select
   GetPropertyValueAsString = PropertyStringValue
 End Function
 
-Public Function GetElementRuntimeId(ByRef UIAElement As UIAutomationClient.IUIAutomationElement) As String
-     
-  Dim strRuntimeIDString As String
-  strRuntimeIDString = ""
-  
-  'The runtime ID is a unique array of elements (SAFEARRAY)
-  Dim varRuntimeIDArray As Variant
-  varRuntimeIDArray = UIAElement.GetRuntimeId
-  
-  'Check if the RuntimeID was retrieved successfully
-  If IsArray(varRuntimeIDArray) Then
-    'Iterate through the array
-    Dim i As Long
-    
-    For i = LBound(varRuntimeIDArray) To UBound(varRuntimeIDArray)
-      If i > LBound(varRuntimeIDArray) Then
-        strRuntimeIDString = strRuntimeIDString & " "
-      End If
-      strRuntimeIDString = strRuntimeIDString & varRuntimeIDArray(i)
-    Next i
-       
-  Else
-  
-    MsgBox "Failed to get runtime id!"
-       
-  End If
-  
-  GetElementRuntimeId = strRuntimeIDString
-
-End Function

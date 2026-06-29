@@ -207,7 +207,7 @@ Public Sub HighlightElement(Ele As IUIAutomationElement, _
     
   ' === DRAW BORDER (not fill) ===
   Dim hdc As LongPtr: hdc = GetDC(HwndOverlay)
-  If hdc = 0 Then GoTo Cleanup
+  If hdc = 0 Then GoTo CleanUp
     
   Dim hBrush As LongPtr: hBrush = CreateSolidBrush(BorderColor)
     
@@ -230,7 +230,7 @@ Public Sub HighlightElement(Ele As IUIAutomationElement, _
     
   Snooze DurationMs
     
-Cleanup:
+CleanUp:
   Exit Sub
 
 ErrHandler:

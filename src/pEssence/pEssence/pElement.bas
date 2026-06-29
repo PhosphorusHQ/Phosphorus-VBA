@@ -148,7 +148,7 @@ Public Function IsSelected() As Boolean
      Dim SelectionItemPattern As IUIAutomationSelectionItemPattern
      Set SelectionItemPattern = GetPattern(UIAPatterns.SelectionItem)
      IsSelected = SelectionItemPattern.CurrentIsSelected
-     GoTo Cleanup
+     GoTo CleanUp
   End If
   
   ' Method 2: try TogglePattern
@@ -156,7 +156,7 @@ Public Function IsSelected() As Boolean
      Dim TogglePattern As IUIAutomationTogglePattern
      Set TogglePattern = GetPattern(UIAPatterns.Toggle)
      IsSelected = TogglePattern.CurrentToggleState
-     GoTo Cleanup
+     GoTo CleanUp
   End If
   
   ' Method 2: Fallback - Direct property (works on many controls)
@@ -169,7 +169,7 @@ Public Function IsSelected() As Boolean
 '    IsRadioButtonSelected = False
 '  End If
     
-Cleanup:
+CleanUp:
   Window.ReleaseHighlighting
     
 End Function

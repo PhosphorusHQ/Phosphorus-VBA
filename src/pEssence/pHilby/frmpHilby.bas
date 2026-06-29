@@ -16,6 +16,7 @@ Attribute VB_Exposed = False
 '@Folder pHilby
 Option Explicit
 
+Const FormName As String = "pHilby"
 Public AppName As String
 Private WithEvents mcTree As pExternals.clsTreeView
 Attribute mcTree.VB_VarHelpID = -1
@@ -55,7 +56,9 @@ Private Sub UserForm_Initialize()
   cbSetCurrentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\root-directory.png")
   cbSetParentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\root-directory2.png")
   cbReload.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hacker.png")
-
+  cbExecutepPath.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\guillotine.png")
+  cbClearpPath.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\cleaning.png")
+  
 End Sub
 
 Private Sub UserForm_Terminate()
@@ -95,6 +98,7 @@ Public Sub LoadTreeView(RootUIAElement As IUIAutomationElement, Optional MaxNumb
   AllTreeViewNodes.RemoveAll
   Set UnhandledPatterns = New Scripting.Dictionary
   LoadUIATree RootUIAElement
+  Set ActiveNode = mcTree.RootNodes(1)
 End Sub
 
 Private Sub UnloadTreeView()
@@ -134,13 +138,12 @@ Private Sub LoadRootElementAndAllDescendants(UIAElement As IUIAutomationElement)
 
   Dim Key As String
   Dim Path As String
+  Dim RuntimeId As String
   Key = "1"
   Path = "/" & UIAProps.GetControlTypeName(UIAElement.CurrentControlType)
-  AddItemToAllTreeViewNodes Key, UIAElement, Path
+  RuntimeId = pPath.RuntimeIDs.GetElementRuntimeId(UIAElement)
+  AddItemToAllTreeViewNodes Key, UIAElement, Path, RuntimeId
   
-  Dim RuntimeId As String
-  RuntimeId = UIAProps.GetElementRuntimeId(UIAElement)
-
   ' Add the root node and make it bold
   Dim Root As clsNode
   Set Root = mcTree.AddRoot(sKey:=Key, vCaption:=GetCaption(UIAElement))
@@ -191,8 +194,8 @@ Private Sub LoadAllRootElementDescendants(RootKey As String, RootPath As String,
       End If
       ControlTypeCounts.Add CurrentControlTypeName, CurrentControlTypeCount
       SubPath = RootPath & "/" & CurrentControlTypeName & "[" & CStr(CurrentControlTypeCount) & "]"
-      RuntimeId = UIAProps.GetElementRuntimeId(CurrentUIAElement)
-      AddItemToAllTreeViewNodes SubKey, CurrentUIAElement, SubPath
+      RuntimeId = pPath.RuntimeIDs.GetElementRuntimeId(CurrentUIAElement)
+      AddItemToAllTreeViewNodes SubKey, CurrentUIAElement, SubPath, RuntimeId
       Set ChildNode = ParentNode.AddChild(sKey:=SubKey, vCaption:=GetCaption(CurrentUIAElement))
       ChildNode.ControlTipText = "Key: " & SubKey & "; " & "RuntimeID: " & RuntimeId
       ChildNode.Tag = CurrentUIAElement.CurrentName
@@ -208,11 +211,12 @@ Private Function GetCaption(UIAElement As IUIAutomationElement) As String
   GetCaption = UIAElement.CurrentName & " (" & UIAProps.GetControlTypeName(UIAElement.CurrentControlType) & ")"
 End Function
 
-Private Sub AddItemToAllTreeViewNodes(TreeNodeKey As String, UIAElement As IUIAutomationElement, Path As String)
+Private Sub AddItemToAllTreeViewNodes(TreeNodeKey As String, UIAElement As IUIAutomationElement, Path As String, RuntimeId As String)
   'Note that we have to store the properties here as the UIAElement may not be live after pHulby is loaded
   Dim coll As New Collection
   coll.Add Item:=UIAElement, Key:="UIAElement"
   coll.Add Item:=Path, Key:="Path"
+  coll.Add Item:=RuntimeId, Key:="RuntimeId"
   coll.Add Item:=UIAProps.GetPropertyValueAsString(UIAElement, UIAProperties.Name), Key:="Name"
   coll.Add Item:=GetUIAElementProperties(TreeNodeKey, UIAElement, Path), Key:="AllProperties"
   coll.Add Item:=GetUIAElementPatterns(UIAElement), Key:="AllPatterns"
@@ -220,7 +224,7 @@ Private Sub AddItemToAllTreeViewNodes(TreeNodeKey As String, UIAElement As IUIAu
 End Sub
 
 Private Function GetUIAElementProperties(TreeNodeKey As String, UIAElement As IUIAutomationElement, Path As String) As String
-  
+
   'https://excelmacromastery.com/vba-dictionary/ Sorting by keys
   Dim arrList As Object
   Set arrList = CreateObject("System.Collections.ArrayList")
@@ -430,9 +434,136 @@ Private Sub ExpandOrContractAllChildNodes(Node As clsNode, Expand As Boolean)
   End If
 End Sub
 
+Private Sub cbExecutepPath_Click()
+  
+  On Error GoTo CleanUp
+  
+  If txtpPath.Value = "" Then
+    MsgBox "No pPath Set!", vbExclamation, FormName
+    Exit Sub
+  End If
+  
+  If ActiveNode Is Nothing Then
+    MsgBox "No Active Node!", vbExclamation, FormName
+    Exit Sub
+  End If
+      
+  Application.Cursor = xlWait
+
+  'Execute the pPath
+  Dim CurrentActiveNodeUIAElement As IUIAutomationElement
+  Dim pPathString As String
+  pPathString = txtpPath.Value
+  Set CurrentActiveNodeUIAElement = AllTreeViewNodes(ActiveNode.Key)("UIAElement")
+
+  Dim pPathLocator As pPath.Core
+  Dim pPathResponse As pPath.ReturnClass
+  Set pPathLocator = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
+  pPathLocator.Initialise
+  pPathLocator.SetApplicationRootElement CurrentActiveNodeUIAElement
+  Set pPathResponse = pPathLocator.Evaluate(pPathString)
+
+  If pPathResponse.GetErrorMessage <> "" Then
+    MsgBox "Error: " & pPathResponse.GetErrorMessage, vbCritical, FormName
+    GoTo CleanUp
+  End If
+
+  Dim NumberOfMatchingElements As Long
+  Dim CurrentMatchingRuntimeID As String
+  Dim MatchingRuntimeIds  As New Collection
+  NumberOfMatchingElements = pPathResponse.GetFinalNumberOfMatchingElements
+  Dim Counter As Integer
+  Dim CurrentMatchingUIAElement As IUIAutomationElement
+  For Counter = 1 To NumberOfMatchingElements
+    Set CurrentMatchingUIAElement = pPathResponse.GetMatchingElement(Counter)
+    CurrentMatchingRuntimeID = pPath.RuntimeIDs.GetElementRuntimeId(CurrentMatchingUIAElement)
+    MatchingRuntimeIds.Add CurrentMatchingRuntimeID
+  Next Counter
+  Set CurrentMatchingUIAElement = Nothing
+
+  'Loop through all nodes
+  Dim CurrentTestNodeRuntimeID As String
+  Dim TestNode As clsNode
+  Dim MatchingTestNodes  As New Collection
+  For Each TestNode In mcTree.Nodes
+
+    CurrentTestNodeRuntimeID = AllTreeViewNodes(TestNode.Key)("RuntimeId")
+    
+    TestNode.Expanded = False
+    TestNode.ForeColor = VBA.ColorConstants.vbBlack
+    TestNode.Bold = False
+    If TestNode Is ActiveNode Then
+      TestNode.ForeColor = VBA.ColorConstants.vbBlack
+      TestNode.Bold = True
+    End If
+          
+    Dim MatchingRuntimeId As Variant
+    Dim MatchFound As Boolean
+    MatchFound = False
+    For Each MatchingRuntimeId In MatchingRuntimeIds
+     If CurrentTestNodeRuntimeID = MatchingRuntimeId Then
+       MatchFound = True
+        TestNode.ForeColor = VBA.ColorConstants.vbBlue
+        MatchingTestNodes.Add TestNode
+      End If
+    Next MatchingRuntimeId
+
+  Next TestNode
+  Set TestNode = Nothing
+
+  If NumberOfMatchingElements = 0 Then
+    MsgBox "No matching elements!", vbExclamation, FormName
+    GoTo CleanUp
+  End If
+  
+  'Expand parents of all matching nodes
+  Dim MatchingTestNode As Variant
+  For Each MatchingTestNode In MatchingTestNodes
+    Dim CurrentNode As clsNode
+    Set CurrentNode = MatchingTestNode
+    Dim Continue As Boolean
+    Continue = True
+    While Not CurrentNode.ParentNode Is Nothing And Continue
+      If CurrentNode.ParentNode.Expanded Then
+        Continue = False
+      Else
+        CurrentNode.ParentNode.Expanded = True
+        Set CurrentNode = CurrentNode.ParentNode
+      End If
+    Wend
+    Set CurrentNode = Nothing
+  Next MatchingTestNode
+                
+  mcTree.Refresh
+
+CleanUp:
+  If Err.Number <> 0 Then
+    MsgBox "Error: " & Err.Description, vbInformation, FormName
+  End If
+  Set CurrentActiveNodeUIAElement = Nothing
+  Set pPathLocator = Nothing
+  Set pPathResponse = Nothing
+  Application.Cursor = xlDefault
+
+End Sub
+
+Private Sub cbClearpPath_Click()
+  Dim Node As clsNode
+  For Each Node In mcTree.Nodes
+    With Node
+      .ForeColor = VBA.ColorConstants.vbBlack
+      If Node Is ActiveNode Then
+        .Bold = True
+      Else
+        .Bold = False
+      End If
+    End With
+  Next Node
+End Sub
+
 Private Sub cbSearch_Click()
   Dim SearchText As String
-  SearchText = VBA.Interaction.InputBox("Input the text to search for...", "pHilby")
+  SearchText = VBA.Interaction.InputBox("Input the text to search for...", FormName)
   If SearchText <> "" Then
     Dim Node As clsNode
     Dim MatchingNodes() As clsNode
@@ -450,7 +581,7 @@ Private Sub cbSearch_Click()
     Next Node
     If Count = 0 Then
        'Ignore
-       'MsgBox "No matching nodes found.", vbCritical, "pHilby"
+       'MsgBox "No matching nodes found.", vbCritical, FormName
     Else
       Dim i As Integer
       For i = 1 To Count
@@ -466,16 +597,17 @@ Private Sub cbSearch_Click()
     If Count > 0 Then
       mcTree.ScrollToView MatchingNodes(Count)
     Else
-      MsgBox "No matching name found!", vbInformation, "pHilby"
+      MsgBox "No matching name found!", vbInformation, FormName
     End If
     'TODO: Activate/Click on found node!?
   End If
 End Sub
 
 Private Sub mcTree_Click(cNode As pExternals.clsNode)
-  'This gets fired when a node is clicked
+'This gets fired when a node is clicked
+
   Set ActiveNode = cNode
-  
+
   txtProperties = AllTreeViewNodes(cNode.Key)("AllProperties")
   txtPatterns = AllTreeViewNodes(cNode.Key)("AllPatterns")
   Window.ReleaseHighlighting
@@ -486,7 +618,7 @@ Private Sub mcTree_Click(cNode As pExternals.clsNode)
       Window.HighlightElement UIAElement
       Application.OnTime Now + TimeValue("00:00:05"), "pHilby.ReleaseHighlighting"
     Else
-      MsgBox "This element is not longer available!", vbCritical, "pHilby"
+      MsgBox "This element is not longer available!", vbCritical, FormName
     End If
   End If
 
@@ -579,7 +711,7 @@ Public Sub SearchByCursorPoint(tPt As tagPOINT)
   Next CurrentNode
    
   If SmallestMatchingNode Is Nothing Then
-      MsgBox "No matching nodes found.", vbCritical, "pHilby"
+      MsgBox "No matching nodes found.", vbCritical, FormName
   Else
     Dim i As Integer
     Dim ExpandableNode As clsNode
@@ -750,7 +882,7 @@ Private Sub cbExportToExcel(Optional TargetNode As pExternals.clsNode)
   Application.ScreenUpdating = True
   Application.Cursor = xlDefault
   
-  MsgBox "Export finished!", vbInformation, "pHilby"
+  MsgBox "Export finished!", vbInformation, FormName
   
 End Sub
 
@@ -760,7 +892,6 @@ Private Sub cbReload_Click()
     LoadTreeView mRootUIAElement, MaxNumberOfLevels:=mMaxNumberOfLevels, DelayLoadingInSeconds:=mDelayLoadingInSeconds
     txtProperties = ""
     txtPatterns = ""
-    Set ActiveNode = mcTree.RootNodes(1)
     Application.Cursor = xlDefault
   End If
 End Sub

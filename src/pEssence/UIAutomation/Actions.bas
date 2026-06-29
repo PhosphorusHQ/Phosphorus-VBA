@@ -160,18 +160,18 @@ Public Sub Click(Element As pElement)
   Window.HighlightElement Element.UIAElement
   MoveMouseToElement Element
 
-  If TryInvokePattern(Element) Then GoTo Cleanup
-  If TrySelectionItemPatternSelect(Element) Then GoTo Cleanup
-  If TryTogglePattern(Element) Then GoTo Cleanup
-  If TryLegacyIAccessibleDefaultAction(Element) Then GoTo Cleanup
-  If TryLegacyIAccessiblePatternSelect(Element, SELFLAG_TAKEFOCUS + SELFLAG_TAKESELECTION) Then GoTo Cleanup
+  If TryInvokePattern(Element) Then GoTo CleanUp
+  If TrySelectionItemPatternSelect(Element) Then GoTo CleanUp
+  If TryTogglePattern(Element) Then GoTo CleanUp
+  If TryLegacyIAccessibleDefaultAction(Element) Then GoTo CleanUp
+  If TryLegacyIAccessiblePatternSelect(Element, SELFLAG_TAKEFOCUS + SELFLAG_TAKESELECTION) Then GoTo CleanUp
 'This works?
-  If TryMouseClicksByEvent(Element, LeftClick) Then GoTo Cleanup
-  If TryMouseClickByMessage(Element, LeftClickSynchronous) Then GoTo Cleanup
+  If TryMouseClicksByEvent(Element, LeftClick) Then GoTo CleanUp
+  If TryMouseClickByMessage(Element, LeftClickSynchronous) Then GoTo CleanUp
   ' Try this last as we don't know if it worked!
-  If TryMouseClickByMessage(Element, LeftClick) Then GoTo Cleanup
+  If TryMouseClickByMessage(Element, LeftClick) Then GoTo CleanUp
 
-Cleanup:
+CleanUp:
   Window.ReleaseHighlighting
 
 End Sub
@@ -187,12 +187,12 @@ Public Sub RightClick(Element As pElement)
   Window.HighlightElement Element.UIAElement
   MoveMouseToElement Element
 
-  If TryMouseClicksByEvent(Element, ClickRight) Then GoTo Cleanup
+  If TryMouseClicksByEvent(Element, ClickRight) Then GoTo CleanUp
 '  If TryMouseClickByMessage(Element, LeftClickSynchronous) Then GoTo Cleanup
   ' Try this last as we don't know if it worked!
-  If TryMouseClickByMessage(Element, ClickRight) Then GoTo Cleanup
+  If TryMouseClickByMessage(Element, ClickRight) Then GoTo CleanUp
 
-Cleanup:
+CleanUp:
   Window.ReleaseHighlighting
 
 End Sub

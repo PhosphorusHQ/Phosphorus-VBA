@@ -55,7 +55,7 @@ Private Sub UserForm_Initialize()
   cbUIAPolling.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "hand.png")
   cbExport.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "xls.png")
   cbExportToNode.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "xls2.png")
-  cbSetCurrentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "oot-directory.png")
+  cbSetCurrentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "root-directory.png")
   cbSetParentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "root-directory2.png")
   cbReload.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "hacker.png")
   cbSearch.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "loupe.png")
@@ -80,7 +80,6 @@ End Sub
 Private Sub UserForm_Activate()
   Window.ActivateWindowByCaptionAndClassName Me.Caption, "ThunderDFrame"
   AppActivate Me.Caption
-  MsgBox "pHilby Ready!", vbExclamation, "Phosphorus"
 End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
@@ -104,7 +103,12 @@ Public Sub LoadTreeView(RootUIAElement As IUIAutomationElement, Optional MaxNumb
   AllTreeViewNodes.RemoveAll
   Set UnhandledPatterns = New Scripting.Dictionary
   LoadUIATree RootUIAElement
+  SetRootAsActiveNode
+End Sub
+
+Private Sub SetRootAsActiveNode()
   Set ActiveNode = mcTree.RootNodes(1)
+  ActiveNode.Bold = True
 End Sub
 
 Private Sub UnloadTreeView()
@@ -414,6 +418,7 @@ Private Sub cbExpand_Click()
     ExpandOrContractAllChildNodes ActiveNode, True
   End If
   mcTree.Refresh
+  SetRootAsActiveNode
 End Sub
 
 Private Sub cbCollapse_Click()
@@ -421,6 +426,7 @@ Private Sub cbCollapse_Click()
     ExpandOrContractAllChildNodes ActiveNode, False
   End If
   mcTree.Refresh
+  SetRootAsActiveNode
 End Sub
 
 Private Sub ExpandOrContractAllChildNodes(Node As clsNode, Expand As Boolean)
@@ -500,7 +506,7 @@ Private Sub cbSearch_Click()
 End Sub
 
 Private Sub cbExecutepPath_Click()
-  
+
   On Error GoTo CleanUp
   
   If txtSearchText.Value = "" Then

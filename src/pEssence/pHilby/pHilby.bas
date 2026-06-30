@@ -70,14 +70,29 @@ Public Sub AddButtonToPhosphorusToolbar()
 End Sub
 
 Private Sub LaunchpHilby()
-  If MsgBox("Loading the FULL DESKTOP! This may take some time ... please be patient!", vbExclamation + vbOKCancel, "Phosphorus - pHilby") = vbOK Then
-    pHilby.Start
+  Dim LevelsString As String
+  LevelsString = InputBox("How many tree levels would you like to load into pHilby? (1-3 is Recommended). Leave blank for all levels)", "pHilby")
+  If LevelsString = "" Then
+    If MsgBox("Loading the FULL DESKTOP! This may take some time ... please be patient!", vbExclamation + vbOKCancel, "Phosphorus - pHilby") = vbOK Then
+      pHilby.Start
+    End If
+  Else
+    Dim LevelsInteger As Integer
+    If IsNumeric(LevelsString) Then
+      LevelsInteger = CInt(LevelsString)
+      pHilby.Start , LevelsInteger
+    Else
+      MsgBox "Sorry, the text """ & LevelsString & """ cannot be converted to an integer!", vbExclamation + vbOKCancel, "Phosphorus - pHilby"
+    End If
   End If
 End Sub
 
 Public Sub Start(Optional RootUIAElement As IUIAutomationElement, Optional MaxNumberOfLevels As Integer = 0, Optional DelayLoadingInSeconds As Integer = 0)
 
   Application.Cursor = xlWait
+  
+  'pPath always requires the Logger class
+  Phosphorus.Log4PStatic.GetLogger
 
   Toaster.PopDown
   If RootUIAElement Is Nothing Then
@@ -89,7 +104,7 @@ Public Sub Start(Optional RootUIAElement As IUIAutomationElement, Optional MaxNu
     .LoadTreeView RootUIAElement, MaxNumberOfLevels:=MaxNumberOfLevels, DelayLoadingInSeconds:=DelayLoadingInSeconds
      Application.Cursor = xlDefault
     .AppName = GCSAPPNAME
-    .Show
+    .Show 'Must always be Modal, set in properties!
     Unload UserForm
     Set UserForm = Nothing
   End With
@@ -97,6 +112,8 @@ Public Sub Start(Optional RootUIAElement As IUIAutomationElement, Optional MaxNu
   #If DEBUGMODE = 1 Then
     ClassCounts
   #End If
+
+  Phosphorus.Log4PStatic.CloseLogger
 
 End Sub
 

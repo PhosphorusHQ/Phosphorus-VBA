@@ -459,7 +459,9 @@ Private Sub cbSearch_Click()
     Dim MatchingNodes() As clsNode
     Dim Count As Integer
     For Each Node In mcTree.Nodes
-    If Node.Tag = SearchText Then
+    'https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/wildcard-characters-used-in-string-comparisons
+    'https://learn.microsoft.com/en-us/office/vba/language/reference/user-interface-help/like-operator
+    If Node.Tag Like SearchText Then
       Node.Bold = True
       Count = Count + 1
       ReDim Preserve MatchingNodes(Count)

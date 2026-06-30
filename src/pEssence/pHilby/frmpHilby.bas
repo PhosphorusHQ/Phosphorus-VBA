@@ -30,6 +30,9 @@ Private ActiveNode As pExternals.clsNode
 Private UnhandledPatterns As Scripting.Dictionary
 Public HighlightSelectedNodeElement As Boolean
 
+Private RootImageFolder As String
+Private SearchExecuted As Boolean
+
 Private Sub UserForm_Initialize()
 'See the Compile constant DebugMode in tools, VBAProject properties
 'DebugMode=1 will enable the #If to Stop in Error handlers
@@ -45,20 +48,23 @@ Private Sub UserForm_Initialize()
 
   Set AllTreeViewNodes = New Scripting.Dictionary
 
-  cbExpand.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\expansion.png")
-  cbCollapse.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\collapse.png")
-  cbSearch.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\loupe.png")
-  cbHighlightSelectedNodeElement.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\marker.png")
-'  cbReleaseHighlighting.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\marker.png")
-  cbUIAPolling.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hand.png")
-  cbExport.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\xls.png")
-  cbExportToNode.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\xls2.png")
-  cbSetCurrentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\root-directory.png")
-  cbSetParentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\root-directory2.png")
-  cbReload.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hacker.png")
-  cbExecutepPath.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\guillotine.png")
-  cbClearpPath.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\cleaning.png")
+  RootImageFolder = ThisWorkbook.Path & "\images\pHilby\"
+  cbExpand.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "expansion.png")
+  cbCollapse.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "collapse.png")
+  cbHighlightSelectedNodeElement.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "marker.png")
+  cbUIAPolling.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "hand.png")
+  cbExport.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "xls.png")
+  cbExportToNode.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "xls2.png")
+  cbSetCurrentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "oot-directory.png")
+  cbSetParentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "root-directory2.png")
+  cbReload.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "hacker.png")
+  cbSearch.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "loupe.png")
+  cbExecutepPath.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "control-system.png")
+  cbResetSearch.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "reset.png")
   
+  SearchExecuted = False
+  cbResetSearch.Enabled = False
+
 End Sub
 
 Private Sub UserForm_Terminate()
@@ -434,11 +440,68 @@ Private Sub ExpandOrContractAllChildNodes(Node As clsNode, Expand As Boolean)
   End If
 End Sub
 
+Private Sub txtSearchText_Change()
+  If txtSearchText.Value = "" Then
+    cbSearch.Enabled = False
+    cbExecutepPath.Enabled = False
+  Else
+    cbSearch.Enabled = True
+    cbExecutepPath.Enabled = True
+  End If
+End Sub
+
+Private Sub cbSearch_Click()
+  Dim SearchText As String
+'  SearchText = VBA.Interaction.InputBox("Input the text to search for...", FormName)
+  SearchText = txtSearchText.Value
+  If SearchText <> "" Then
+    Dim Node As clsNode
+    Dim MatchingNodes() As clsNode
+    Dim Count As Integer
+    For Each Node In mcTree.Nodes
+    If Node.Tag = SearchText Then
+      Node.Bold = True
+      Count = Count + 1
+      ReDim Preserve MatchingNodes(Count)
+      Set MatchingNodes(Count) = Node
+    Else
+      Node.Bold = False
+    End If
+    Node.Expanded = False
+    Next Node
+    If Count = 0 Then
+       'Ignore
+       'MsgBox "No matching nodes found.", vbCritical, FormName
+    Else
+      Dim i As Integer
+      For i = 1 To Count
+        Dim ExpandableNode As clsNode
+        Set ExpandableNode = MatchingNodes(i)
+        While Not ExpandableNode Is Nothing
+          ExpandableNode.Expanded = True
+          Set ExpandableNode = ExpandableNode.ParentNode
+        Wend
+      Next i
+    End If
+    mcTree.Refresh
+    If Count > 0 Then
+      mcTree.ScrollToView MatchingNodes(Count)
+    Else
+      MsgBox "No matching name found!", vbInformation, FormName
+    End If
+    'TODO: Activate/Click on found node!?
+  End If
+  
+  SearchExecuted = True
+  cbResetSearch.Enabled = True
+
+End Sub
+
 Private Sub cbExecutepPath_Click()
   
   On Error GoTo CleanUp
   
-  If txtpPath.Value = "" Then
+  If txtSearchText.Value = "" Then
     MsgBox "No pPath Set!", vbExclamation, FormName
     Exit Sub
   End If
@@ -453,7 +516,7 @@ Private Sub cbExecutepPath_Click()
   'Execute the pPath
   Dim CurrentActiveNodeUIAElement As IUIAutomationElement
   Dim pPathString As String
-  pPathString = txtpPath.Value
+  pPathString = txtSearchText.Value
   Set CurrentActiveNodeUIAElement = AllTreeViewNodes(ActiveNode.Key)("UIAElement")
 
   Dim pPathLocator As pPath.Core
@@ -535,6 +598,8 @@ Private Sub cbExecutepPath_Click()
   Next MatchingTestNode
                 
   mcTree.Refresh
+  SearchExecuted = True
+  cbResetSearch.Enabled = True
 
 CleanUp:
   If Err.Number <> 0 Then
@@ -547,7 +612,7 @@ CleanUp:
 
 End Sub
 
-Private Sub cbClearpPath_Click()
+Private Sub cbResetSearch_Click()
   Dim Node As clsNode
   For Each Node In mcTree.Nodes
     With Node
@@ -559,48 +624,10 @@ Private Sub cbClearpPath_Click()
       End If
     End With
   Next Node
-End Sub
+  txtSearchText.Value = ""
+  SearchExecuted = False
+  cbResetSearch.Enabled = False
 
-Private Sub cbSearch_Click()
-  Dim SearchText As String
-  SearchText = VBA.Interaction.InputBox("Input the text to search for...", FormName)
-  If SearchText <> "" Then
-    Dim Node As clsNode
-    Dim MatchingNodes() As clsNode
-    Dim Count As Integer
-    For Each Node In mcTree.Nodes
-    If Node.Tag = SearchText Then
-      Node.Bold = True
-      Count = Count + 1
-      ReDim Preserve MatchingNodes(Count)
-      Set MatchingNodes(Count) = Node
-    Else
-      Node.Bold = False
-    End If
-    Node.Expanded = False
-    Next Node
-    If Count = 0 Then
-       'Ignore
-       'MsgBox "No matching nodes found.", vbCritical, FormName
-    Else
-      Dim i As Integer
-      For i = 1 To Count
-        Dim ExpandableNode As clsNode
-        Set ExpandableNode = MatchingNodes(i)
-        While Not ExpandableNode Is Nothing
-          ExpandableNode.Expanded = True
-          Set ExpandableNode = ExpandableNode.ParentNode
-        Wend
-      Next i
-    End If
-    mcTree.Refresh
-    If Count > 0 Then
-      mcTree.ScrollToView MatchingNodes(Count)
-    Else
-      MsgBox "No matching name found!", vbInformation, FormName
-    End If
-    'TODO: Activate/Click on found node!?
-  End If
 End Sub
 
 Private Sub mcTree_Click(cNode As pExternals.clsNode)

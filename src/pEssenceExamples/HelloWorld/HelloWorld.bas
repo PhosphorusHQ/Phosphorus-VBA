@@ -47,5 +47,5 @@ Sub HelloWorldWideWeb()
   Set WebBrowser = Nothing
   Set SearchBox = Nothing
   Set SearchButton = Nothing
-  
+
 End Sub

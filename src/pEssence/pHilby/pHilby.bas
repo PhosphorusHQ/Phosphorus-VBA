@@ -70,19 +70,19 @@ Public Sub AddButtonToPhosphorusToolbar()
 End Sub
 
 Private Sub LaunchpHilby()
-  Dim LevelsString As String
-  LevelsString = InputBox("How many tree levels would you like to load into pHilby? (1-3 is Recommended). Leave blank for all levels)", "pHilby")
-  If LevelsString = "" Then
+  Dim LevelString As String
+  LevelString = InputBox("How many tree levels would you like to load into pHilby? (1-3 is Recommended). Leave blank for all levels)", "pHilby")
+  If LevelString = "" Then
     If MsgBox("Loading the FULL DESKTOP! This may take some time ... please be patient!", vbExclamation + vbOKCancel, "Phosphorus - pHilby") = vbOK Then
       pHilby.Start
     End If
   Else
     Dim LevelsInteger As Integer
-    If IsNumeric(LevelsString) Then
-      LevelsInteger = CInt(LevelsString)
+    If IsNumeric(LevelString) Then
+      LevelsInteger = CInt(LevelString)
       pHilby.Start , LevelsInteger
     Else
-      MsgBox "Sorry, the text """ & LevelsString & """ cannot be converted to an integer!", vbExclamation + vbOKCancel, "Phosphorus - pHilby"
+      MsgBox "Sorry, the text """ & LevelString & """ cannot be converted to an integer!", vbExclamation + vbOKCancel, "Phosphorus - pHilby"
     End If
   End If
 End Sub

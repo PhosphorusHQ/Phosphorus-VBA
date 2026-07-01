@@ -252,7 +252,6 @@ Public Function Evaluate( _
         This.pPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
 
         This.NodeTests.ProcessNextNodeTest myNextStep
-
         If myNextStep.NumberOfPredicateSets > 0 Then
           This.pPathReturnClass.MoveCandidateElementsToWorkingCopy This.CurrentLocationPathExpressionCounter
           This.Predicates.ProcessPredicates myNextStep

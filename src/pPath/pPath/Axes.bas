@@ -140,7 +140,7 @@ Private Sub GetParents( _
       This.pPathReturnClass.AddMatchingElement This.pPathReturnClass.GetCandidateElements(This.CurrentLocationPathExpressionCounter), eleParentUIElement, "", strCurrentElementAbsoluteXPath
     End If
 
-    If Not boolCurrentIsApplicationRootUIElement Then
+    If Not boolCurrentIsApplicationRootUIElement And boolGetAllAncestors Then
       GetParents eleParentUIElement, strCurrentStepAxis, strCurrentElementAbsoluteXPath & "/..", boolGetAllAncestors, AllAncestorsOrSelfRuntimeIDs
     End If
 

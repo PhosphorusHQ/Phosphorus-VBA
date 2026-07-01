@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmpHilby 
    Caption         =   "pHilby - Phosphorus UIAutomation Spy Tool"
-   ClientHeight    =   8052
+   ClientHeight    =   7524
    ClientLeft      =   108
    ClientTop       =   456
    ClientWidth     =   15096
@@ -32,6 +32,10 @@ Public HighlightSelectedNodeElement As Boolean
 
 Private RootImageFolder As String
 Private SearchExecuted As Boolean
+Private pPathContextNodes() As pExternals.clsNode
+Private pPathContextNodesBackColour As Long
+
+'Private pPathContextNodesInitialpPaths() As String
 
 Private Sub UserForm_Initialize()
 'See the Compile constant DebugMode in tools, VBAProject properties
@@ -59,12 +63,14 @@ Private Sub UserForm_Initialize()
   cbSetParentAsRootNode.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "root-directory2.png")
   cbReload.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "hacker.png")
   cbSearch.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "loupe.png")
+  cbAddpPathContextNode.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "addcontextnode.png")
+  cbClearAllpPathContextNodes.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "deletenodes.png")
   cbExecutepPath.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "control-system.png")
   cbResetSearch.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "reset.png")
   
   SearchExecuted = False
   cbResetSearch.Enabled = False
-
+  pPathContextNodesBackColour = VBA.ColorConstants.vbCyan
 End Sub
 
 Private Sub UserForm_Terminate()
@@ -505,6 +511,35 @@ Private Sub cbSearch_Click()
 
 End Sub
 
+Private Sub cbAddpPathContextNode_Click()
+  Dim i As Integer
+  If Phosphorus.Utils.GetSizeOfArray(pPathContextNodes()) = -1 Then
+    i = 1
+    ReDim pPathContextNodes(i)
+  Else
+    Debug.Print Phosphorus.Utils.GetSizeOfArray(pPathContextNodes())
+    i = Phosphorus.Utils.GetSizeOfArray(pPathContextNodes()) + 1
+    ReDim Preserve pPathContextNodes(i)
+  End If
+  Set pPathContextNodes(i) = ActiveNode
+  ActiveNode.BackColor = pPathContextNodesBackColour
+  cbClearAllpPathContextNodes.Enabled = True
+End Sub
+
+Private Sub cbClearAllpPathContextNodes_Click()
+  Dim Node As clsNode
+  Dim Counter As Integer
+  For Counter = 1 To Phosphorus.Utils.GetSizeOfArray(pPathContextNodes())
+    Set Node = pPathContextNodes(Counter)
+'    If Node.BackColor = pPathContextNodesBackColour Then
+      Node.BackColor = VBA.ColorConstants.vbWhite
+      Node.ForeColor = VBA.ColorConstants.vbBlack 'The active node text will have been colured white
+'    End If
+  Next Counter
+  Erase pPathContextNodes()
+  cbClearAllpPathContextNodes.Enabled = False
+End Sub
+
 Private Sub cbExecutepPath_Click()
 
   On Error GoTo CleanUp
@@ -513,27 +548,59 @@ Private Sub cbExecutepPath_Click()
     MsgBox "No pPath Set!", vbExclamation, FormName
     Exit Sub
   End If
-  
-  If ActiveNode Is Nothing Then
-    MsgBox "No Active Node!", vbExclamation, FormName
-    Exit Sub
-  End If
       
   Application.Cursor = xlWait
 
   'Execute the pPath
-  Dim CurrentActiveNodeUIAElement As IUIAutomationElement
   Dim pPathString As String
   pPathString = txtSearchText.Value
-  Set CurrentActiveNodeUIAElement = AllTreeViewNodes(ActiveNode.Key)("UIAElement")
 
   Dim pPathLocator As pPath.Core
   Dim pPathResponse As pPath.ReturnClass
   Set pPathLocator = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
   pPathLocator.Initialise
-  pPathLocator.SetApplicationRootElement CurrentActiveNodeUIAElement
-  Set pPathResponse = pPathLocator.Evaluate(pPathString)
-
+  Dim RootNode As pExternals.clsNode
+  Dim RootNodeElement As UIAutomationClient.IUIAutomationElement
+  Set RootNode = mcTree.RootNodes(1)
+  Set RootNodeElement = AllTreeViewNodes(RootNode.Key)("UIAElement")
+  pPathLocator.SetApplicationRootElement RootNodeElement
+  
+  'Load array of context node elements
+  Dim pPathContextNodeElements() As UIAutomationClient.IUIAutomationElement
+  Dim Node As clsNode
+  Dim i As Integer
+  For i = 1 To Phosphorus.Utils.GetSizeOfArray(pPathContextNodes())
+    Set Node = pPathContextNodes(i)
+    If i = 1 Then
+      ReDim pPathContextNodeElements(i)
+    Else
+      ReDim Preserve pPathContextNodeElements(i)
+    End If
+    Set pPathContextNodeElements(i) = AllTreeViewNodes(Node.Key)("UIAElement")
+  Next i
+  i = i - 1
+  
+  Dim ContextNodeElement As UIAutomationClient.IUIAutomationElement
+  Dim InitialPath As String
+  If i = 0 Then
+    Set pPathResponse = pPathLocator.Evaluate(pPathString)
+  Else
+    If i = 1 Then
+      Dim ContextNode As pExternals.clsNode
+      Set ContextNode = pPathContextNodes(i)
+      Set ContextNodeElement = pPathContextNodeElements(i)
+      InitialPath = AllTreeViewNodes(ContextNode.Key)("Path")
+      Set pPathResponse = pPathLocator.Evaluate(pPathString, ContextNodeElement, InitialPath)
+    Else
+      Dim k As Integer
+      For k = 1 To Phosphorus.Utils.GetSizeOfArray(pPathContextNodeElements())
+        Set ContextNodeElement = pPathContextNodeElements(k)
+        InitialPath = AllTreeViewNodes(Node.Key)("Path")
+        pPathLocator.AddContextNode ContextNodeElement, InitialPath
+      Next k
+      Set pPathResponse = pPathLocator.Evaluate(pPathString)
+    End If
+  End If
   If pPathResponse.GetErrorMessage <> "" Then
     MsgBox "Error: " & pPathResponse.GetErrorMessage, vbCritical, FormName
     GoTo CleanUp
@@ -542,14 +609,15 @@ Private Sub cbExecutepPath_Click()
   Dim NumberOfMatchingElements As Long
   Dim CurrentMatchingRuntimeID As String
   Dim MatchingRuntimeIds  As New Collection
+
   NumberOfMatchingElements = pPathResponse.GetFinalNumberOfMatchingElements
-  Dim Counter As Integer
+  Dim j As Integer
   Dim CurrentMatchingUIAElement As IUIAutomationElement
-  For Counter = 1 To NumberOfMatchingElements
-    Set CurrentMatchingUIAElement = pPathResponse.GetMatchingElement(Counter)
+  For j = 1 To NumberOfMatchingElements
+    Set CurrentMatchingUIAElement = pPathResponse.GetMatchingElement(j)
     CurrentMatchingRuntimeID = pPath.RuntimeIDs.GetElementRuntimeId(CurrentMatchingUIAElement)
     MatchingRuntimeIds.Add CurrentMatchingRuntimeID
-  Next Counter
+  Next j
   Set CurrentMatchingUIAElement = Nothing
 
   'Loop through all nodes
@@ -557,7 +625,7 @@ Private Sub cbExecutepPath_Click()
   Dim TestNode As clsNode
   Dim MatchingTestNodes  As New Collection
   For Each TestNode In mcTree.Nodes
-
+    
     CurrentTestNodeRuntimeID = AllTreeViewNodes(TestNode.Key)("RuntimeId")
     
     TestNode.Expanded = False
@@ -586,13 +654,14 @@ Private Sub cbExecutepPath_Click()
     MsgBox "No matching elements!", vbExclamation, FormName
     GoTo CleanUp
   End If
+    
+  Dim Continue As Boolean
+  Dim CurrentNode As clsNode
   
-  'Expand parents of all matching nodes
+  'Expand ancestors of all matching nodes
   Dim MatchingTestNode As Variant
   For Each MatchingTestNode In MatchingTestNodes
-    Dim CurrentNode As clsNode
     Set CurrentNode = MatchingTestNode
-    Dim Continue As Boolean
     Continue = True
     While Not CurrentNode.ParentNode Is Nothing And Continue
       If CurrentNode.ParentNode.Expanded Then
@@ -604,16 +673,37 @@ Private Sub cbExecutepPath_Click()
     Wend
     Set CurrentNode = Nothing
   Next MatchingTestNode
-                
+                                
+  'Expand ancestors of all context nodes
+  Dim c As Integer
+  For c = 1 To Phosphorus.Utils.GetSizeOfArray(pPathContextNodes())
+    Set CurrentNode = pPathContextNodes(c)
+    Continue = True
+    While Not CurrentNode.ParentNode Is Nothing And Continue
+      If CurrentNode.ParentNode.Expanded Then
+        Continue = False
+      Else
+        CurrentNode.ParentNode.Expanded = True
+        Set CurrentNode = CurrentNode.ParentNode
+      End If
+    Wend
+    Set CurrentNode = Nothing
+  Next c
+  
   mcTree.Refresh
   SearchExecuted = True
   cbResetSearch.Enabled = True
 
+  If MatchingTestNodes.Count <> NumberOfMatchingElements Then
+    MsgBox NumberOfMatchingElements & " matching elements were found in the UI but only " & MatchingTestNodes.Count & " were matched to nodes in the pHilby Tree!", vbInformation, FormName
+  End If
+  
 CleanUp:
+  
   If Err.Number <> 0 Then
     MsgBox "Error: " & Err.Description, vbInformation, FormName
   End If
-  Set CurrentActiveNodeUIAElement = Nothing
+'  Set CurrentActiveNodeUIAElement = Nothing
   Set pPathLocator = Nothing
   Set pPathResponse = Nothing
   Application.Cursor = xlDefault
@@ -922,6 +1012,7 @@ Private Sub cbExportToExcel(Optional TargetNode As pExternals.clsNode)
 End Sub
 
 Private Sub cbReload_Click()
+  cbClearAllpPathContextNodes_Click
   If Not mRootUIAElement Is Nothing Then
     Application.Cursor = xlWait
     LoadTreeView mRootUIAElement, MaxNumberOfLevels:=mMaxNumberOfLevels, DelayLoadingInSeconds:=mDelayLoadingInSeconds

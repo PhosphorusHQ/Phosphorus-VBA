@@ -252,9 +252,9 @@ End Sub
 Public Sub ListAllConditions()
   Dim k As Variant
   For Each k In This.AllSearchConditions.Keys
-    Dim C As New pCondition
-    Set C = This.AllSearchConditions(k)
-    Debug.Print C.ConditionName; C.UIAProperty; C.UIAPropertyComparison, C.UIAPropertyValue
+    Dim c As New pCondition
+    Set c = This.AllSearchConditions(k)
+    Debug.Print c.ConditionName; c.UIAProperty; c.UIAPropertyComparison, c.UIAPropertyValue
   Next k
 End Sub
 
@@ -427,12 +427,12 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
   
       Dim k As Variant
       For Each k In This.AllSearchConditions.Keys
-        Dim C As New pCondition
-        Set C = This.AllSearchConditions(k)
-        If C.ConditionName = POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER Then
-          CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, C.ConditionName, ((i + 1) = C.UIAPropertyValue))
+        Dim c As New pCondition
+        Set c = This.AllSearchConditions(k)
+        If c.ConditionName = POSITION_OF_ELEMENT_IN_TREESCOPE_COUNTER Then
+          CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, c.ConditionName, ((i + 1) = c.UIAPropertyValue))
         Else
-          CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, C.ConditionName, C.Evaluate(CurrentElement))
+          CurrentEvaluationLogic = VBA.Strings.Replace(CurrentEvaluationLogic, c.ConditionName, c.Evaluate(CurrentElement))
         End If
       Next k
       Dim MatchFound As Boolean
@@ -552,12 +552,12 @@ Private Function EvaluationLogicIsOk() As Boolean
   End If
   
   Dim k As Variant
-  Dim C As New pCondition
+  Dim c As New pCondition
   For Each k In This.AllSearchConditions.Keys
-    Set C = This.AllSearchConditions(k)
-    If VBA.Strings.InStr(This.EvaluationLogic, C.ConditionName) = 0 Then
+    Set c = This.AllSearchConditions(k)
+    If VBA.Strings.InStr(This.EvaluationLogic, c.ConditionName) = 0 Then
       EvaluationLogicIsOk = False
-      ErrorLogging.LogError Errors.FaultyEvaluationLogicConditionIsNotUsed, "The Condition '" & C.ConditionName & "' is not used in the locator '" & This.EvaluationLogic & "'"
+      ErrorLogging.LogError Errors.FaultyEvaluationLogicConditionIsNotUsed, "The Condition '" & c.ConditionName & "' is not used in the locator '" & This.EvaluationLogic & "'"
       Exit Function
     End If
   Next k
@@ -566,8 +566,8 @@ Private Function EvaluationLogicIsOk() As Boolean
   RedactedEvaluationLogic = This.EvaluationLogic
     
   For Each k In This.AllSearchConditions.Keys
-    Set C = This.AllSearchConditions(k)
-    RedactedEvaluationLogic = VBA.Strings.Replace(RedactedEvaluationLogic, C.ConditionName, "")
+    Set c = This.AllSearchConditions(k)
+    RedactedEvaluationLogic = VBA.Strings.Replace(RedactedEvaluationLogic, c.ConditionName, "")
   Next k
     
   RedactedEvaluationLogic = VBA.Strings.UCase(RedactedEvaluationLogic)

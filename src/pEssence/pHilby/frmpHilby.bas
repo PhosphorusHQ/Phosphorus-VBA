@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmpHilby 
    Caption         =   "pHilby - Phosphorus UIAutomation Spy Tool"
-   ClientHeight    =   7524
+   ClientHeight    =   7668
    ClientLeft      =   108
    ClientTop       =   456
    ClientWidth     =   15096
@@ -35,6 +35,7 @@ Private SearchExecuted As Boolean
 Private pPathContextNodes() As pExternals.clsNode
 Private pPathContextNodesBackColour As Long
 
+
 'Private pPathContextNodesInitialpPaths() As String
 
 Private Sub UserForm_Initialize()
@@ -45,7 +46,7 @@ Private Sub UserForm_Initialize()
   If Me.fraTreeControl.Font.Size < 4 Then
     Me.fraTreeControl.Font.Size = 4
   End If
-  
+
   #If DEBUGMODE = 1 Then
     gFormInit = gFormInit + 1
   #End If
@@ -67,7 +68,7 @@ Private Sub UserForm_Initialize()
   cbClearAllpPathContextNodes.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "deletenodes.png")
   cbExecutepPath.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "control-system.png")
   cbResetSearch.Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "reset.png")
-  
+    
   SearchExecuted = False
   cbResetSearch.Enabled = False
   pPathContextNodesBackColour = VBA.ColorConstants.vbCyan
@@ -125,15 +126,9 @@ Private Sub UnloadTreeView()
 End Sub
 
 Private Sub LoadUIATree(RootUIAElement As IUIAutomationElement)
-
-  Dim cRoot As clsNode
-  Dim cNode As clsNode
-  Dim cExtraNode As clsNode
-  Dim i As Long
-  Dim k As Long
-
+  
   Set mcTree = pExternals.Factory.GetTreeView
-    
+
   With mcTree
     'Pass the frame to the TreeControl of the treeview class
     Set .TreeControl = Me.fraTreeControl
@@ -143,6 +138,11 @@ Private Sub LoadUIATree(RootUIAElement As IUIAutomationElement)
     .ShowLines = True
     .ShowExpanders = True
     .NarratorReaderControl = True
+    .ImageAdd WindowsImageAcquisition.LoadImage(RootImageFolder & "root-directory24px.png"), "RootNodeOpen"
+    .ImageAdd WindowsImageAcquisition.LoadImage(RootImageFolder & "closedfolder24px.png"), "RootNodeClosed"
+    .ImageAdd WindowsImageAcquisition.LoadImage(RootImageFolder & "closedfolder.png"), "ClosedFolder"
+    .ImageAdd WindowsImageAcquisition.LoadImage(RootImageFolder & "root-directory16px.png"), "OpenFolder"
+    .ImageAdd WindowsImageAcquisition.LoadImage(RootImageFolder & "point.png"), "Attribute"
     LoadRootElementAndAllDescendants RootUIAElement
     'Create the node controls and display the tree
     .Refresh
@@ -162,9 +162,10 @@ Private Sub LoadRootElementAndAllDescendants(UIAElement As IUIAutomationElement)
   
   ' Add the root node and make it bold
   Dim Root As clsNode
-  Set Root = mcTree.AddRoot(sKey:=Key, vCaption:=GetCaption(UIAElement))
+  Set Root = mcTree.AddRoot(sKey:=Key, vCaption:=GetCaption(UIAElement), vImageMain:="RootNodeClosed", vImageExpanded:="RootNodeOpen")
+
   Root.Bold = True
-  Root.ControlTipText = "Key: 1; " & "RuntimeID: " & RuntimeId
+  Root.ControlTipText = "Key: 1; " & "RuntimeId: " & RuntimeId
   Root.Tag = UIAElement.CurrentName
   Root.Expanded = True
 
@@ -212,8 +213,8 @@ Private Sub LoadAllRootElementDescendants(RootKey As String, RootPath As String,
       SubPath = RootPath & "/" & CurrentControlTypeName & "[" & CStr(CurrentControlTypeCount) & "]"
       RuntimeId = pPath.RuntimeIDs.GetElementRuntimeId(CurrentUIAElement)
       AddItemToAllTreeViewNodes SubKey, CurrentUIAElement, SubPath, RuntimeId
-      Set ChildNode = ParentNode.AddChild(sKey:=SubKey, vCaption:=GetCaption(CurrentUIAElement))
-      ChildNode.ControlTipText = "Key: " & SubKey & "; " & "RuntimeID: " & RuntimeId
+      Set ChildNode = ParentNode.AddChild(sKey:=SubKey, vCaption:=GetCaption(CurrentUIAElement), vImageMain:="ClosedFolder", vImageExpanded:="OpenFolder")
+      ChildNode.ControlTipText = "Key: " & SubKey & "; " & "RuntimeId: " & RuntimeId
       ChildNode.Tag = CurrentUIAElement.CurrentName
       ChildNode.Expanded = False
       LoadAllRootElementDescendants SubKey, SubPath, CurrentUIAElement, LevelCounter + 1, ChildNode
@@ -229,14 +230,14 @@ End Function
 
 Private Sub AddItemToAllTreeViewNodes(TreeNodeKey As String, UIAElement As IUIAutomationElement, Path As String, RuntimeId As String)
   'Note that we have to store the properties here as the UIAElement may not be live after pHulby is loaded
-  Dim coll As New Collection
-  coll.Add Item:=UIAElement, Key:="UIAElement"
-  coll.Add Item:=Path, Key:="Path"
-  coll.Add Item:=RuntimeId, Key:="RuntimeId"
-  coll.Add Item:=UIAProps.GetPropertyValueAsString(UIAElement, UIAProperties.Name), Key:="Name"
-  coll.Add Item:=GetUIAElementProperties(TreeNodeKey, UIAElement, Path), Key:="AllProperties"
-  coll.Add Item:=GetUIAElementPatterns(UIAElement), Key:="AllPatterns"
-  AllTreeViewNodes.Add TreeNodeKey, coll
+  Dim Coll As New Collection
+  Coll.Add Item:=UIAElement, Key:="UIAElement"
+  Coll.Add Item:=Path, Key:="Path"
+  Coll.Add Item:=RuntimeId, Key:="RuntimeId"
+  Coll.Add Item:=UIAProps.GetPropertyValueAsString(UIAElement, UIAProperties.Name), Key:="Name"
+  Coll.Add Item:=GetUIAElementProperties(TreeNodeKey, UIAElement, Path), Key:="AllProperties"
+  Coll.Add Item:=GetUIAElementPatterns(UIAElement), Key:="AllPatterns"
+  AllTreeViewNodes.Add TreeNodeKey, Coll
 End Sub
 
 Private Function GetUIAElementProperties(TreeNodeKey As String, UIAElement As IUIAutomationElement, Path As String) As String
@@ -280,10 +281,7 @@ Private Function GetUIAElementProperties(TreeNodeKey As String, UIAElement As IU
     
   Dim Key As Variant
   For Each Key In arrList
-'    If AllPropertiesText <> "" Then
-       AllPropertiesText = AllPropertiesText & vbCrLf
-'    End If
-'    AllPropertiesText = AllPropertiesText & Key & ": " & UnsortedDictionary(Key)
+     AllPropertiesText = AllPropertiesText & vbCrLf
     AllPropertiesText = AllPropertiesText & Key & ":" & vbTab & UnsortedDictionary(Key)
   Next Key
 
@@ -544,6 +542,8 @@ Private Sub cbExecutepPath_Click()
 
   On Error GoTo CleanUp
   
+  RemoveAllAttributeNodes
+
   If txtSearchText.Value = "" Then
     MsgBox "No pPath Set!", vbExclamation, FormName
     Exit Sub
@@ -606,28 +606,65 @@ Private Sub cbExecutepPath_Click()
     GoTo CleanUp
   End If
 
+  'Get all matching elements
   Dim NumberOfMatchingElements As Long
-  Dim CurrentMatchingRuntimeID As String
-  Dim MatchingRuntimeIds  As New Collection
+  Dim CurrentMatchingRuntimeId As String
+
+  Dim AttributeName As String
+  Dim Caption As String
+  Dim AttributeValue As String
+
+  Dim MatchingElementAttributes As Scripting.Dictionary
+  Set MatchingElementAttributes = New Scripting.Dictionary
+  MatchingElementAttributes.RemoveAll
 
   NumberOfMatchingElements = pPathResponse.GetFinalNumberOfMatchingElements
   Dim j As Integer
   Dim CurrentMatchingUIAElement As IUIAutomationElement
   For j = 1 To NumberOfMatchingElements
     Set CurrentMatchingUIAElement = pPathResponse.GetMatchingElement(j)
-    CurrentMatchingRuntimeID = pPath.RuntimeIDs.GetElementRuntimeId(CurrentMatchingUIAElement)
-    MatchingRuntimeIds.Add CurrentMatchingRuntimeID
+    CurrentMatchingRuntimeId = pPath.RuntimeIDs.GetElementRuntimeId(CurrentMatchingUIAElement)
+  
+    Dim Coll As New Collection
+    Coll.Add Item:=CurrentMatchingRuntimeId, Key:="RuntimeId"
+
+    Dim ElementpPath As String
+    ElementpPath = pPathResponse.GetMatchingNavigationalPPath(j)
+    AttributeName = ""
+    AttributeValue = ""
+    If VBA.Strings.Left(ElementpPath, 2) = "/@" Then
+      Caption = VBA.Strings.Mid(ElementpPath, 3)
+      Coll.Add Item:=Caption, Key:="Caption"
+      Dim Split() As String
+      Split = VBA.Strings.Split(Caption, "=")
+      AttributeName = Split(0)
+      AttributeValue = VBA.Strings.Replace(Split(1), "'", "")
+    End If
+
+    Coll.Add Item:=ElementpPath, Key:="ElementpPath"
+    Coll.Add Item:=AttributeName, Key:="AttributeName" 'Only set for attributes!
+    Dim CollKey As String
+    CollKey = CurrentMatchingRuntimeId
+    If AttributeName <> "" Then
+      CollKey = CollKey & " " & AttributeName
+    End If
+
+    MatchingElementAttributes.Add CollKey, Coll
+    'Prepare for a new collection
+    Set Coll = Nothing
   Next j
   Set CurrentMatchingUIAElement = Nothing
 
   'Loop through all nodes
-  Dim CurrentTestNodeRuntimeID As String
+  Dim CurrentTestNodeRuntimeId As String
   Dim TestNode As clsNode
   Dim MatchingTestNodes  As New Collection
   For Each TestNode In mcTree.Nodes
-    
-    CurrentTestNodeRuntimeID = AllTreeViewNodes(TestNode.Key)("RuntimeId")
-    
+    'Dont process any new Attribute nodes!
+    If VBA.Strings.InStr(1, TestNode.Key, " Attribute: ") = 0 Then
+
+    CurrentTestNodeRuntimeId = AllTreeViewNodes(TestNode.Key)("RuntimeId")
+
     TestNode.Expanded = False
     TestNode.ForeColor = VBA.ColorConstants.vbBlack
     TestNode.Bold = False
@@ -639,14 +676,40 @@ Private Sub cbExecutepPath_Click()
     Dim MatchingRuntimeId As Variant
     Dim MatchFound As Boolean
     MatchFound = False
-    For Each MatchingRuntimeId In MatchingRuntimeIds
-     If CurrentTestNodeRuntimeID = MatchingRuntimeId Then
-       MatchFound = True
-        TestNode.ForeColor = VBA.ColorConstants.vbBlue
-        MatchingTestNodes.Add TestNode
-      End If
-    Next MatchingRuntimeId
+    Dim Key As Variant
+    Dim RuntimeId As String
+    For Each Key In MatchingElementAttributes
+      AttributeName = MatchingElementAttributes(Key)("AttributeName")
+      RuntimeId = MatchingElementAttributes(Key)("RuntimeId")
 
+      If AttributeName = "" Then
+        If CurrentTestNodeRuntimeId = RuntimeId Then
+          MatchFound = True
+          TestNode.ForeColor = VBA.ColorConstants.vbBlue
+          MatchingTestNodes.Add TestNode
+        End If
+      Else
+        Caption = MatchingElementAttributes(Key)("Caption")
+        If CurrentTestNodeRuntimeId = RuntimeId Then
+          MatchFound = True
+          'Add a new subnode!
+          Dim NewNode As pExternals.clsNode
+          Dim NewKey
+          Set NewNode = TestNode.AddChild(AttributeName & " Attribute: " & AttributeName, Caption, vImageMain:="Attribute")
+          With NewNode
+            .ForeColor = VBA.ColorConstants.vbBlue
+            .ControlTipText = AttributeName & " Attribute: " & AttributeName
+            .ControlTipText = "Key: " & TestNode.Key & "@" & AttributeName & "; " & "RuntimeId: " & RuntimeId
+            .Tag = AttributeName
+          End With
+          MatchingTestNodes.Add NewNode
+          Set NewNode = Nothing
+        End If
+      End If
+
+    Next Key
+  
+  End If
   Next TestNode
   Set TestNode = Nothing
 
@@ -703,7 +766,6 @@ CleanUp:
   If Err.Number <> 0 Then
     MsgBox "Error: " & Err.Description, vbInformation, FormName
   End If
-'  Set CurrentActiveNodeUIAElement = Nothing
   Set pPathLocator = Nothing
   Set pPathResponse = Nothing
   Application.Cursor = xlDefault
@@ -711,6 +773,7 @@ CleanUp:
 End Sub
 
 Private Sub cbResetSearch_Click()
+  RemoveAllAttributeNodes
   Dim Node As clsNode
   For Each Node In mcTree.Nodes
     With Node
@@ -722,16 +785,28 @@ Private Sub cbResetSearch_Click()
       End If
     End With
   Next Node
+  mcTree.Refresh
   txtSearchText.Value = ""
   SearchExecuted = False
   cbResetSearch.Enabled = False
+End Sub
 
+Private Sub RemoveAllAttributeNodes()
+  Dim Node As clsNode
+  For Each Node In mcTree.Nodes
+    If VBA.Strings.InStr(1, Node.Key, " Attribute: ") > 0 Then
+      mcTree.NodeRemove Node
+    End If
+  Next Node
 End Sub
 
 Private Sub mcTree_Click(cNode As pExternals.clsNode)
 'This gets fired when a node is clicked
 
   Set ActiveNode = cNode
+
+'Dont process any new Attribute nodes!
+If VBA.Strings.InStr(1, ActiveNode.Key, " Attribute: ") = 0 Then
 
   txtProperties = AllTreeViewNodes(cNode.Key)("AllProperties")
   txtPatterns = AllTreeViewNodes(cNode.Key)("AllPatterns")
@@ -749,6 +824,8 @@ Private Sub mcTree_Click(cNode As pExternals.clsNode)
 
   cbExpand.Enabled = True
   cbCollapse.Enabled = True
+
+End If
 
 End Sub
 
@@ -784,7 +861,7 @@ Private Sub cbUIAPolling_Click()
       UnpushcbUIAPolling
       pHilby.StoppHilbyUIAUIAPolling
     Else
-      .Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\pointer.png")
+      .Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "pointer.png")
       .ControlTipText = "Don't Highlight Node of Element Under Cursor"
       .Tag = "Pushed"
       Application.Wait (Now + TimeValue("0:00:02")) 'Allow time for user to move to the first element
@@ -795,7 +872,7 @@ End Sub
 
 Public Sub UnpushcbUIAPolling()
   With cbUIAPolling
-    .Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hand.png")
+    .Picture = WindowsImageAcquisition.LoadImage(RootImageFolder & "hand.png")
     .ControlTipText = "Highlight Node of Element Under Cursor"
     .Tag = "Not Pushed"
   End With

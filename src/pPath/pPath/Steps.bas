@@ -134,7 +134,7 @@ Public Function GetNextStep(strRemainingPPath As String) As pPath.Step
     'Attribute
     ElseIf (VBA.Strings.InStr(strRemainingPPath, Axes.Attribute) = 1) Then
       NextStep.Axis = Axes.Attribute
-      strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, VBA.Len(Axes.Following) + 1)
+      strRemainingPPath = VBA.Strings.Mid(strRemainingPPath, VBA.Len(Axes.Attribute) + 1)
 
     Else
 

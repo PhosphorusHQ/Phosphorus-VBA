@@ -134,7 +134,7 @@ Public Enum UIAProperties 'UIA_PropertyIds
   RangeValueSmallChange = UIA_RangeValueSmallChangePropertyId
   RangeValueValue = UIA_RangeValueValuePropertyId
   Rotation = UIA_RotationPropertyId
-  RuntimeId = UIA_RuntimeIdPropertyId
+  RuntimeID = UIA_RuntimeIdPropertyId
   ScrollHorizontallyScrollable = UIA_ScrollHorizontallyScrollablePropertyId
   ScrollHorizontalScrollPercent = UIA_ScrollHorizontalScrollPercentPropertyId
   ScrollHorizontalViewSize = UIA_ScrollHorizontalViewSizePropertyId
@@ -515,7 +515,7 @@ Public Function GetPropertyValueAsString(UIAElement As IUIAutomationElement, Pro
 '?? Show all values of just the set ones!?
 '???    Case UIAProperties.GridRow
 '      If PropertyStringValue = 0 Then: PropertyStringValue = ""
-    Case UIAProperties.RuntimeId
+    Case UIAProperties.RuntimeID
       PropertyStringValue = pPath.RuntimeIDs.GetElementRuntimeId(UIAElement)
   End Select
   GetPropertyValueAsString = PropertyStringValue

@@ -540,7 +540,7 @@ End Sub
 
 Private Sub cbExecutepPath_Click()
 
-  On Error GoTo CleanUp
+'  On Error GoTo CleanUp
   
   RemoveAllAttributeNodes
 
@@ -622,6 +622,7 @@ Private Sub cbExecutepPath_Click()
   Dim j As Integer
   Dim CurrentMatchingUIAElement As IUIAutomationElement
   For j = 1 To NumberOfMatchingElements
+  
     Set CurrentMatchingUIAElement = pPathResponse.GetMatchingElement(j)
     CurrentMatchingRuntimeId = pPath.RuntimeIDs.GetElementRuntimeId(CurrentMatchingUIAElement)
   
@@ -632,8 +633,10 @@ Private Sub cbExecutepPath_Click()
     ElementpPath = pPathResponse.GetMatchingNavigationalPPath(j)
     AttributeName = ""
     AttributeValue = ""
-    If VBA.Strings.Left(ElementpPath, 2) = "/@" Then
-      Caption = VBA.Strings.Mid(ElementpPath, 3)
+    Dim StartOfAttribute As Integer
+    StartOfAttribute = VBA.Conversion.CInt(VBA.Strings.InStr(1, ElementpPath, "/@"))
+    If StartOfAttribute > 0 Then
+      Caption = VBA.Strings.Mid(ElementpPath, StartOfAttribute + 2)
       Coll.Add Item:=Caption, Key:="Caption"
       Dim Split() As String
       Split = VBA.Strings.Split(Caption, "=")
@@ -768,6 +771,7 @@ CleanUp:
   End If
   Set pPathLocator = Nothing
   Set pPathResponse = Nothing
+  Set MatchingElementAttributes = Nothing
   Application.Cursor = xlDefault
 
 End Sub
@@ -785,7 +789,9 @@ Private Sub cbResetSearch_Click()
       End If
     End With
   Next Node
-  mcTree.Refresh
+  'mcTree.Refresh
+  'We need to reload the whole tree reset the underlying TreeView control
+  cbReload_Click
   txtSearchText.Value = ""
   SearchExecuted = False
   cbResetSearch.Enabled = False

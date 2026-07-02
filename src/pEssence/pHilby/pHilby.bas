@@ -63,8 +63,9 @@ Public Sub AddButtonToPhosphorusToolbar()
     .Caption = "Launch pHilby"
     .Style = msoButtonIconAndCaption
     .OnAction = "LaunchpHilby"          ' Your macro name
-    .FaceId = 25             ' Optional icon (smiley face example)
+'    .FaceId = 25             ' Optional icon (smiley face example)
     .TooltipText = "Launch pHilby"
+    .Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\pHilby\hacker.png")
   End With
 
 End Sub

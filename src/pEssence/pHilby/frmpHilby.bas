@@ -116,6 +116,7 @@ End Sub
 Private Sub SetRootAsActiveNode()
   Set ActiveNode = mcTree.RootNodes(1)
   ActiveNode.Bold = True
+  mcTree_Click ActiveNode
 End Sub
 
 Private Sub UnloadTreeView()

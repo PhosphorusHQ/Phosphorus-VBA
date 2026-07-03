@@ -49,7 +49,7 @@ Public Enum UIAProperties 'UIA_PropertyIds
   GridItemContainingGrid = UIA_GridItemContainingGridPropertyId
   GridItemRow = UIA_GridItemRowPropertyId
   GridItemRowSpan = UIA_GridItemRowSpanPropertyId
-  GridRow = UIA_GridRowCountPropertyId
+  GridRowCount = UIA_GridRowCountPropertyId
   HasKeyboardFocus = UIA_HasKeyboardFocusPropertyId
   HeadingLevel = UIA_HeadingLevelPropertyId
   HelpText = UIA_HelpTextPropertyId
@@ -286,7 +286,7 @@ Function GetPropertyName(PropertyId As Long) As String
     Case UIA_GridItemContainingGridPropertyId: R = "GridItemContainingGrid"
     Case UIA_GridItemRowPropertyId: R = "GridItemRow"
     Case UIA_GridItemRowSpanPropertyId: R = "GridItemRowSpan"
-    Case UIA_GridRowCountPropertyId: R = "GridRow"
+    Case UIA_GridRowCountPropertyId: R = "GridRowCount"
     Case UIA_GroupControlTypeId: R = "Group"
     Case UIA_HasKeyboardFocusPropertyId: R = "HasKeyboardFocus"
     Case UIA_HeadingLevelPropertyId: R = "HeadingLevel"

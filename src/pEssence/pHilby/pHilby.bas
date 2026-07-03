@@ -72,7 +72,7 @@ End Sub
 
 Private Sub LaunchpHilby()
   Dim LevelString As String
-  LevelString = InputBox("How many tree levels would you like to load into pHilby? (1-3 is Recommended). Leave blank for all levels)", "pHilby")
+  LevelString = InputBox("How many tree levels would you like to load into pHilby? (1-3 is Recommended). Leave blank for all levels)", "pHilby", 1)
   If LevelString = "" Then
     If MsgBox("Loading the FULL DESKTOP! This may take some time ... please be patient!", vbExclamation + vbOKCancel, "Phosphorus - pHilby") = vbOK Then
       pHilby.Start

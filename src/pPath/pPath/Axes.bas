@@ -394,6 +394,7 @@ Public Sub GetAttributes( _
     End If
 
     If Not IsEmpty(propValue) And propValue <> "" Then
+    
       Dim strPropertyString As String
       If propValue = "True" Or propValue = "False" Or VBA.Information.IsNumeric(propValue) Then
         strPropertyString = propValue
@@ -406,6 +407,7 @@ Public Sub GetAttributes( _
         eleCurrentUIElement, _
         propName, _
         InitialpPath & "@" & propName & "=" & strPropertyString
+        
     End If
 
   Next Key

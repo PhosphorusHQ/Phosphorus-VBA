@@ -35,7 +35,6 @@ Private SearchExecuted As Boolean
 Private pPathContextNodes() As pExternals.clsNode
 Private pPathContextNodesBackColour As Long
 
-
 'Private pPathContextNodesInitialpPaths() As String
 
 Private Sub UserForm_Initialize()
@@ -487,9 +486,18 @@ Private Sub cbSearch_Click()
        'MsgBox "No matching nodes found.", vbCritical, FormName
     Else
       Dim i As Integer
+      If HighlightSelectedNodeElement Then
+        Window.HighlightElements = True
+        Window.ReleaseHighlighting
+      End If
       For i = 1 To Count
         Dim ExpandableNode As clsNode
         Set ExpandableNode = MatchingNodes(i)
+        If HighlightSelectedNodeElement Then
+          Dim CurrentFoundUIAElement As IUIAutomationElement
+          Set CurrentFoundUIAElement = AllTreeViewNodes(ExpandableNode.Key)("UIAElement")
+          Window.HighlightElement CurrentFoundUIAElement, MultiHighlight:=True
+        End If
         While Not ExpandableNode Is Nothing
           ExpandableNode.Expanded = True
           Set ExpandableNode = ExpandableNode.ParentNode
@@ -551,6 +559,11 @@ Private Sub cbExecutepPath_Click()
   End If
       
   Application.Cursor = xlWait
+
+  If HighlightSelectedNodeElement Then
+    Window.HighlightElements = True
+    Window.ReleaseHighlighting
+  End If
 
   'Execute the pPath
   Dim pPathString As String
@@ -656,7 +669,9 @@ Private Sub cbExecutepPath_Click()
     MatchingElementAttributes.Add CollKey, Coll
     'Prepare for a new collection
     Set Coll = Nothing
+    
   Next j
+  
   Set CurrentMatchingUIAElement = Nothing
 
   'Loop through all nodes
@@ -664,56 +679,82 @@ Private Sub cbExecutepPath_Click()
   Dim TestNode As clsNode
   Dim MatchingTestNodes  As New Collection
   For Each TestNode In mcTree.Nodes
+  
     'Dont process any new Attribute nodes!
     If VBA.Strings.InStr(1, TestNode.Key, " Attribute: ") = 0 Then
 
-    CurrentTestNodeRuntimeId = AllTreeViewNodes(TestNode.Key)("RuntimeId")
+      CurrentTestNodeRuntimeId = AllTreeViewNodes(TestNode.Key)("RuntimeId")
 
-    TestNode.Expanded = False
-    TestNode.ForeColor = VBA.ColorConstants.vbBlack
-    TestNode.Bold = False
-    If TestNode Is ActiveNode Then
+      TestNode.Expanded = False
       TestNode.ForeColor = VBA.ColorConstants.vbBlack
-      TestNode.Bold = True
-    End If
-          
-    Dim MatchingRuntimeId As Variant
-    Dim MatchFound As Boolean
-    MatchFound = False
-    Dim Key As Variant
-    Dim RuntimeId As String
-    For Each Key In MatchingElementAttributes
-      AttributeName = MatchingElementAttributes(Key)("AttributeName")
-      RuntimeId = MatchingElementAttributes(Key)("RuntimeId")
-
-      If AttributeName = "" Then
-        If CurrentTestNodeRuntimeId = RuntimeId Then
-          MatchFound = True
-          TestNode.ForeColor = VBA.ColorConstants.vbBlue
-          MatchingTestNodes.Add TestNode
-        End If
-      Else
-        Caption = MatchingElementAttributes(Key)("Caption")
-        If CurrentTestNodeRuntimeId = RuntimeId Then
-          MatchFound = True
-          'Add a new subnode!
-          Dim NewNode As pExternals.clsNode
-          Dim NewKey
-          Set NewNode = TestNode.AddChild(AttributeName & " Attribute: " & AttributeName, Caption, vImageMain:="Attribute")
-          With NewNode
-            .ForeColor = VBA.ColorConstants.vbBlue
-            .ControlTipText = AttributeName & " Attribute: " & AttributeName
-            .ControlTipText = "Key: " & TestNode.Key & "@" & AttributeName & "; " & "RuntimeId: " & RuntimeId
-            .Tag = AttributeName
-          End With
-          MatchingTestNodes.Add NewNode
-          Set NewNode = Nothing
-        End If
+      TestNode.Bold = False
+      If TestNode Is ActiveNode Then
+        TestNode.ForeColor = VBA.ColorConstants.vbBlack
+        TestNode.Bold = True
       End If
+    
+      Dim MatchingRuntimeId As Variant
+      Dim MatchFound As Boolean
+      MatchFound = False
+      Dim Key As Variant
+      Dim RuntimeId As String
+      For Each Key In MatchingElementAttributes
+        
+        AttributeName = MatchingElementAttributes(Key)("AttributeName")
+        RuntimeId = MatchingElementAttributes(Key)("RuntimeId")
+        
+        Dim CurrentFoundUIAElement As IUIAutomationElement
+        Set CurrentFoundUIAElement = AllTreeViewNodes(TestNode.Key)("UIAElement")
+        
+        If AttributeName = "" Then
+        
+          If CurrentTestNodeRuntimeId = RuntimeId Then
+            MatchFound = True
+            TestNode.ForeColor = VBA.ColorConstants.vbBlue
+            MatchingTestNodes.Add TestNode
+            'Never highlight the desktop element
+            If HighlightSelectedNodeElement And Not (CurrentFoundUIAElement Is Factory.GetRootDesktopElement) Then
+              Window.HighlightElement CurrentFoundUIAElement, MultiHighlight:=True, DelayMs:=0
+            End If
+          End If
+          
+        Else
+          
+          Dim UniqueRuntimeIds As New Scripting.Dictionary
+          
+          If CurrentTestNodeRuntimeId = RuntimeId Then
+          
+            MatchFound = True
+            'Only highlight the element for the first attribute of each element
+            If Not UniqueRuntimeIds.Exists(CurrentTestNodeRuntimeId) Then
+              UniqueRuntimeIds.Add CurrentTestNodeRuntimeId, CurrentTestNodeRuntimeId
+              'Never highlight the desktop element
+              If HighlightSelectedNodeElement And Not (CurrentFoundUIAElement Is Factory.GetRootDesktopElement) Then
+                Window.HighlightElement CurrentFoundUIAElement, MultiHighlight:=True, DelayMs:=0
+              End If
+            End If
+            'Add a new subnode!
+            Dim NewNode As pExternals.clsNode
+            Dim NewKey
+            Set NewNode = TestNode.AddChild(AttributeName & " Attribute: " & AttributeName & " RuntimeId: " & CurrentTestNodeRuntimeId, Caption, vImageMain:="Attribute")
+            Caption = MatchingElementAttributes(Key)("Caption")
+            With NewNode
+              .ForeColor = VBA.ColorConstants.vbBlue
+              .ControlTipText = AttributeName & " Attribute: " & AttributeName
+              .ControlTipText = "Key: " & TestNode.Key & "@" & AttributeName & "; " & "RuntimeId: " & RuntimeId
+              .Tag = AttributeName
+            End With
+            MatchingTestNodes.Add NewNode
+            Set NewNode = Nothing
+          End If
+          Set UniqueRuntimeIds = Nothing
+        
+        End If
 
-    Next Key
+      Next Key
   
-  End If
+    End If
+  
   Next TestNode
   Set TestNode = Nothing
 
@@ -778,6 +819,7 @@ CleanUp:
 End Sub
 
 Private Sub cbResetSearch_Click()
+  Window.ReleaseHighlighting
   RemoveAllAttributeNodes
   Dim Node As clsNode
   For Each Node In mcTree.Nodes

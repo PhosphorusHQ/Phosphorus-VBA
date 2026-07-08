@@ -129,6 +129,7 @@ Private Const LWA_ALPHA = &H2                     'Only needed if you want to fa
  
 'Highlight element overlay
 Private HwndOverlay As LongPtr
+Private HwndOverlays As Collection
 Public HighlightElements As Boolean
     
 Public Sub WaitForWindowInteractionState( _
@@ -149,7 +150,8 @@ End Sub
 Public Sub HighlightElement(Ele As IUIAutomationElement, _
   Optional BorderThickness As Long = 6, _
   Optional BorderColor As Long = &HFF0000, _
-  Optional DurationMs As Long = 10)
+  Optional DelayMs As Long = 10, _
+  Optional MultiHighlight As Boolean = False)
 'Default is &HFF0000 Blue (BGR)
 'https://learn.microsoft.com/en-us/openspecs/microsoft_general_purpose_programming_languages/ms-vbal/4b7087c6-20fc-4d90-8d83-730a0c6a4aad
 '&H808000 421376 Cyan
@@ -159,7 +161,7 @@ Public Sub HighlightElement(Ele As IUIAutomationElement, _
   If Not HighlightElements Then
     Exit Sub
   End If
-    
+      
   ' Get bounding rect
   Dim RectArray As Variant
   RectArray = Ele.GetCurrentPropertyValue(UIA_BoundingRectanglePropertyId)
@@ -189,11 +191,16 @@ Public Sub HighlightElement(Ele As IUIAutomationElement, _
     WS_POPUP Or WS_VISIBLE, _
     Left, Top, Width, Height, _
     0, 0, 0, 0)
-    
+  
   If HwndOverlay = 0 Then
     Debug.Print "CreateWindowEx failed: " & Err.LastDllError
     Exit Sub
   End If
+  
+  If (Not MultiHighlight) Or (HwndOverlays Is Nothing) Then
+    Set HwndOverlays = New Collection
+  End If
+  HwndOverlays.Add HwndOverlay
 
   If BorderColor = &HFF0000 Then
     ' Set borderColour to fully opaque for Actions (default colour)
@@ -228,7 +235,7 @@ Public Sub HighlightElement(Ele As IUIAutomationElement, _
   DeleteObject HWhiteBrush
   ReleaseDC HwndOverlay, hdc
     
-  Snooze DurationMs
+  Snooze DelayMs
     
 CleanUp:
   Exit Sub
@@ -239,16 +246,24 @@ ErrHandler:
     
 End Sub
 
-Public Sub ReleaseHighlighting(Optional DurationMs As Long = 50)
+Public Sub ReleaseHighlighting(Optional DelayMs As Long = 50)
   
   If Not HighlightElements Then
     Exit Sub
   End If
 
   'Slight delay for better user experience
-  Snooze DurationMs
-  If HwndOverlay <> 0 Then DestroyWindow HwndOverlay
+  Snooze DelayMs
+  Dim hwnd As Variant
+  If Not HwndOverlays Is Nothing Then
+    For Each hwnd In HwndOverlays
+      HwndOverlay = hwnd
+      If HwndOverlay <> 0 Then DestroyWindow HwndOverlay
+    Next hwnd
+  End If
   
+  Set HwndOverlays = Nothing
+
 End Sub
 
 ' =============================================================

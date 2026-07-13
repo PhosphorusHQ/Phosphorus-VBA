@@ -39,7 +39,6 @@ Option Explicit
   ) As Long ' Use Long
 #End If
 
-
 'http://www.cpearson.com/Excel/CreateGUID.aspx
 Private Type GUID
     Data1 As Long
@@ -73,7 +72,7 @@ Public Function GetElementRuntimeID(ByRef MatchingElement As UIAutomationClient.
   Dim varRuntimeIDArray As Variant
   varRuntimeIDArray = MatchingElement.GetRuntimeId
   
-  'Check if the RuntimeID was retrived successfully
+  'Check if the RuntimeID was retrieved successfully
   If IsArray(varRuntimeIDArray) Then
     'Iterate through the array
     Dim i As Long
@@ -92,7 +91,7 @@ Public Function GetElementRuntimeID(ByRef MatchingElement As UIAutomationClient.
   End If
   
   If strRuntimeIDString = "" Then
-    
+
 '    Debug.Print _
 '      "ControlTypeID: " & MatchingElement.CurrentControlType, _
 '      "Name: " & MatchingElement.CurrentName

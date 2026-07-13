@@ -23,7 +23,7 @@ Option Explicit
   Private Declare PtrSafe Function CreateWindowEx Lib "user32" Alias "CreateWindowExA" ( _
     ByVal dwExStyle As Long, ByVal lpClassName As String, ByVal lpWindowName As String, _
     ByVal dwStyle As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, _
-    ByVal hWndParent As LongPtr, ByVal hMenu As LongPtr, ByVal hInstance As LongPtr, ByVal lpParam As LongPtr) As LongPtr
+    ByVal hwndParent As LongPtr, ByVal hMenu As LongPtr, ByVal hInstance As LongPtr, ByVal lpParam As LongPtr) As LongPtr
   Private Declare PtrSafe Function DestroyWindow Lib "user32" (ByVal hwnd As LongPtr) As Long
   Private Declare PtrSafe Function SetWindowPos Lib "user32" (ByVal hwnd As LongPtr, ByVal hwndInsertAfter As LongPtr, ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
   Private Declare PtrSafe Function ShowWindow Lib "user32" (ByVal hwnd As LongPtr, ByVal nCmdShow As Long) As Long
@@ -36,7 +36,7 @@ Option Explicit
   Private Declare PtrSafe Function SetLayeredWindowAttributes Lib "user32" (ByVal hwnd As LongPtr, ByVal crKey As Long, ByVal bAlpha As Byte, ByVal dwFlags As Long) As Long
   Private Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
   Private Declare PtrSafe Function FindWindowEx Lib "user32" Alias "FindWindowExA" ( _
-    ByVal hWndParent As LongPtr, ByVal hWndChildAfter As LongPtr, _
+    ByVal hwndParent As LongPtr, ByVal hWndChildAfter As LongPtr, _
     ByVal lpszClass As String, ByVal lpszWindow As String) As LongPtr
   Private Declare PtrSafe Function GetWindowLong Lib "user32" _
     Alias "GetWindowLongA" ( _

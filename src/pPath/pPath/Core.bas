@@ -277,7 +277,7 @@ Public Function Evaluate( _
   If This.pPathReturnClass.TopLevelFunctionPrefix = "count(" And This.pPathReturnClass.TopLevelFunctionSuffix = ")" Then
     This.pPathReturnClass.ReturnedValue = This.pPathReturnClass.GetFinalNumberOfMatchingElements
   ElseIf This.pPathReturnClass.TopLevelFunctionPrefix = "not(" And This.pPathReturnClass.TopLevelFunctionSuffix = ")" Then
-    This.pPathReturnClass.ReturnedValue = (This.pPathReturnClass.GetFinalNumberOfMatchingElements > 0)
+    This.pPathReturnClass.ReturnedValue = (This.pPathReturnClass.GetFinalNumberOfMatchingElements = 0)
   ElseIf This.pPathReturnClass.TopLevelFunctionPrefix <> "" Then
     Dim i As Integer
     Dim c As Integer

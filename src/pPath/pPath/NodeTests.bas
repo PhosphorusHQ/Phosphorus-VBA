@@ -53,10 +53,11 @@ Public Sub ProcessNextNodeTest(myNextStep As pPath.Step)
       End If
     End If
 
-    'Get attributes?
-    If (myNextStep.NodeTest = "node()") Then
-      This.Axes.GetAttributes eleCurrentUIElement, strCurrentNavigationalPPath & "/"
-    End If
+'    'Get attributes?
+'node() only returns child elements - attributes are on a different axis and so not children!
+'    If (myNextStep.NodeTest = "node()") Then
+'      This.Axes.GetAttributes eleCurrentUIElement, strCurrentNavigationalPPath & "/"
+'    End If
 
     'Get text?
     If (myNextStep.NodeTest = "text()") Then
@@ -139,5 +140,4 @@ Public Sub GetValuesOfDataType(UIElement As UIAutomationClient.IUIAutomationElem
   End If
 
 End Sub
-
 

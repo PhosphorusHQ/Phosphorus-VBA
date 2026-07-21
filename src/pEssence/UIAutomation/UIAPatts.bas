@@ -99,3 +99,19 @@ Public Function HasPattern(UIAElement As IUIAutomationElement, PatternId As Long
   HasPattern = Not Pattern Is Nothing
 End Function
 
+Public Function GetTextValue(UIElement As UIAutomationClient.IUIAutomationElement) As String
+
+  Dim TextPattern As IUIAutomationTextPattern
+  Dim TextContent As String
+  TextContent = ""
+  On Error Resume Next
+  Set TextPattern = UIElement.GetCurrentPattern(UIA_TextPatternId)
+  On Error GoTo 0
+
+  If Not TextPattern Is Nothing Then
+    TextContent = TextPattern.DocumentRange.GetText(-1) 'Get all text
+  End If
+
+  GetTextValue = TextContent
+
+End Function

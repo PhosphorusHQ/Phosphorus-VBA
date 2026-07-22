@@ -21,7 +21,7 @@ Public Sub CloseAllOtherWorkbooks()
  Dim wb As Workbook
  For Each wb In Application.Workbooks
    If wb.Name <> ThisWorkbook.Name Then
-     wb.Close savechanges:=False
+     wb.Close SaveChanges:=False
    End If
  Next
 End Sub

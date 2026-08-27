@@ -27,10 +27,11 @@ End Sub
 
 Public Function GetAllXPathExpressions(ByVal strFullLocationPathExpression As String) As String()
   strFullLocationPathExpression = VBA.Strings.Trim(strFullLocationPathExpression)
-  If VBA.Strings.Left(strFullLocationPathExpression, 1) = "(" And _
-     VBA.Strings.Right(strFullLocationPathExpression, 1) = ")" Then
-     strFullLocationPathExpression = VBA.Strings.Mid(strFullLocationPathExpression, 2, VBA.Strings.Len(strFullLocationPathExpression) - 2)
-  End If
+  'NOTE: DO NOT CATER FOR COMPOUND pPATHS TO BE WRAPPED IN PARENTHESES!
+  'If VBA.Strings.Left(strFullLocationPathExpression, 1) = "(" And _
+  '   VBA.Strings.Right(strFullLocationPathExpression, 1) = ")" Then
+  '   strFullLocationPathExpression = VBA.Strings.Mid(strFullLocationPathExpression, 2, VBA.Strings.Len(strFullLocationPathExpression) - 2)
+  'End If
   Dim strReturn() As String
   If strFullLocationPathExpression = "" Then
     ReDim strReturn(1)

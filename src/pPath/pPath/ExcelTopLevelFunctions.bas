@@ -50,7 +50,7 @@ Private Sub test()
     Dim intNumberOfAddtionalParameters As Integer
     strFunctionName = TopLevelFunction("FunctionName")
     intNumberOfAddtionalParameters = TopLevelFunction("NumberOfAddtionalParameters")
-    Debug.Print strFunctionName, intNumberOfAddtionalParameters
+    'Debug.Print strFunctionName, intNumberOfAddtionalParameters
   Next TopLevelFunction
 End Sub
 

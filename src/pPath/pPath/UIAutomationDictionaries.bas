@@ -119,9 +119,7 @@ Private Sub InitialiseAllPropertyIDsDictionary()
     .Add UIA_TableItemRowHeaderItemsPropertyId, "TableItemRowHeaderItems"
     .Add UIA_TableRowHeadersPropertyId, "TableRowHeaders"
   End With
-  
-Debug.Print AllPropertyIDs.Count
-  
+    
 End Sub
 
 Private Sub InitialiseNavigablePropertyIDsDictionary()

@@ -542,7 +542,7 @@ Private Sub cbAddpPathContextNode_Click()
     i = 1
     ReDim pPathContextNodes(i)
   Else
-    Debug.Print Phosphorus.Utils.GetSizeOfArray(pPathContextNodes())
+    'Debug.Print Phosphorus.Utils.GetSizeOfArray(pPathContextNodes())
     i = Phosphorus.Utils.GetSizeOfArray(pPathContextNodes()) + 1
     ReDim Preserve pPathContextNodes(i)
   End If

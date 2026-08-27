@@ -12,7 +12,7 @@ Option Explicit
 
 Public Const NULL_PPATH_ERROR_MESSAGE = "Some PPath expression must be specified!"
 
-Public Const MISSING_RELATIVE_PPATH_CONTEXT_NODE = "pPath is relative but no context node is provided '.'!"
+Public Const MISSING_RELATIVE_PPATH_CONTEXT_NODE = "pPath is relative but no context node is provided!"
 Public Const UNUSED_RELATIVE_PPATH_CONTEXT_NODE = "A context node is provided but isn't used!"
 Public Const MISSING_CONTEXT_NODE_INITIAL_PPATH = "A context node is provided but no initial pPath!"
 Public Const NUMBER_OF_RELATIVE_PPATHS_TO_CONTEXT_NODES_MISMATCH = "The number of nodes and relative pPaths do not match!"

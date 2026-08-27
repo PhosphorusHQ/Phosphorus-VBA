@@ -114,7 +114,7 @@ Public Sub FindAllControls(HomePage As CalculatorHomePage)
     .Initialise "CalculatorControls", CurrentCalculatorLandmarkGroupControl, Descendants, pConditions, "AND(ControlType, ClassName)"
     .ControlType UIAControlTypeIDs.Button
     .ClassName "Button"
-    .FindAll
+    .FindAll 0
   End With
   CalculatorControls = This.CalculatorControls.Elements
 

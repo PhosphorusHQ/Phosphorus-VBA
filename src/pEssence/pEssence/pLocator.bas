@@ -33,6 +33,17 @@ Private Type Properties
   EvaluationLogic As String
   PositionInMatchingSet  As Integer
   RelativeElementNumber  As Integer
+  'pPath only?
+'  ApplicationRootUIAElementLocator() As pLocator
+'  ApplicationRootUIAElement As IUIAutomationElement
+  ContextNodes() As pLocator
+  InitialpPaths() As String
+  ReturnedValue As String
+  ErrorMessage As String
+  NumberOfMatchingElements As Long
+  MatchingElementsPPaths() As String
+  MatchingElements() As UIAutomationClient.IUIAutomationElement
+  UnitTestingMode As Boolean
 End Type
 
 Private This As Properties
@@ -106,6 +117,30 @@ End Sub
 
 Public Sub SetTreeScope(UIAElement As IUIAutomationElement)
   Set This.RootUIAElement = UIAElement
+End Sub
+
+Public Sub SetUnitTestingMode(Mode As Boolean)
+  This.UnitTestingMode = Mode
+End Sub
+
+'Public Sub SetpPathApplicationRootElement(ApplicationRootUIAElementLocator As pLocator)
+'Stop
+'  Set This.ApplicationRootUIAElementLocator = ApplicationRootUIAElementLocator
+'End Sub
+
+Public Sub AddpPathContextNode(ContextNode As pLocator, InitialpPath As String)
+  Dim i As Integer
+  If Phosphorus.Utils.GetSizeOfArray(This.ContextNodes()) = -1 Then
+    i = 1
+    ReDim This.ContextNodes(i)
+    ReDim This.InitialpPaths(i)
+  Else
+    i = Phosphorus.Utils.GetSizeOfArray(This.ContextNodes()) + 1
+    ReDim Preserve This.ContextNodes(i)
+    ReDim Preserve This.InitialpPaths(i)
+  End If
+  Set This.ContextNodes(i) = ContextNode
+  This.InitialpPaths(i) = InitialpPath
 End Sub
 
 Public Sub Condition( _
@@ -310,7 +345,7 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
   PassedEndTime = False
   
   While Not (SomeElementsFound Or PassedEndTime)
-    FoundElements = Findlements(True)
+    FoundElements = Findlements(TimeoutInSeconds, True)
     CountOfFoundElements = 0
     If Not pEssence.Utils.IsArrayEmpty(FoundElements) Then
       CountOfFoundElements = UBound(FoundElements) + 1
@@ -351,16 +386,16 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
 
 End Sub
 
-Public Sub FindAll(Optional AcceptNoElements As Boolean)
+Public Sub FindAll(TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean)
 'Find more than 1 elements with no timeout
   Toaster.Message "Finding all elements " & This.Element.GivenName, Finding
-  This.Elements = Findlements(AcceptNoElements)
+  This.Elements = Findlements(TimeoutInSeconds, AcceptNoElements)
 End Sub
 
-Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAutomationElement()
+Private Function Findlements(TimeoutInSeconds As Long, AcceptNoElements As Boolean) As pElement() ' IUIAutomationElement()
 'Find 1 or more elements with no timeout
 
-  If This.FindBy <> By.pPath Then
+  If This.FindBy <> By.pPath Then 'pPath has it's only pre-checks
     If Not EvaluationLogicIsOk Then
       ErrorLogging.LogError Errors.FaultyEvaluationLogicUnspecifiedError, "The evaluation logic is faulty: '" & This.EvaluationLogic & "'"
       Exit Function
@@ -377,11 +412,64 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
     Dim pPathLocator As pPath.Core
     Set pPathLocator = pPath.ConstantsAndStatic.GetNewPhosphorusPPath
     pPathLocator.Initialise
-    pPathLocator.SetApplicationRootElement This.RootUIAElement
 
+    'Make sure the pPath Workbook is closed/nothing
+    pPath.Workbook.CloseWB
+  
+'    If Not This.ApplicationRootUIAElementLocator Is Nothing Then
+'      If This.ApplicationRootUIAElement Is Nothing Then
+'        This.ApplicationRootUIAElementLocator.Find TimeoutInSeconds
+'      Else
+'        pPathLocator.SetApplicationRootElement This.ApplicationRootUIAElement
+'      End If
+'    Else
+      pPathLocator.SetApplicationRootElement This.RootUIAElement
+'    End If
+    'Load array of context node elements
+    Dim pPathContextNodeElements() As UIAutomationClient.IUIAutomationElement
+    Dim ContextNode As pLocator
+  
+    Dim X As Integer
+    For X = 1 To Phosphorus.Utils.GetSizeOfArray(This.ContextNodes())
+      Set ContextNode = This.ContextNodes(X)
+      If X = 1 Then
+        ReDim pPathContextNodeElements(X)
+      Else
+        ReDim Preserve pPathContextNodeElements(X)
+      End If
+      If Not ContextNode Is Nothing Then
+        If ContextNode.Element.UIAElement Is Nothing Then
+          ContextNode.Find 10
+        End If
+      End If
+      Set pPathContextNodeElements(X) = ContextNode.Element.UIAElement
+    Next X
+    X = X - 1
+  
     Dim pPathResponse As pPath.ReturnClass
-    Set pPathResponse = pPathLocator.Evaluate(This.EvaluationLogic)
-
+    Dim ContextNodeElement As UIAutomationClient.IUIAutomationElement
+    Dim InitialPath As String
+    If X = 0 Then
+      Set pPathResponse = pPathLocator.Evaluate(This.EvaluationLogic, UnitTestingMode:=This.UnitTestingMode)
+    Else
+      If X = 1 Then
+        Set ContextNodeElement = pPathContextNodeElements(X)
+        Set pPathResponse = pPathLocator.Evaluate(This.EvaluationLogic, ContextNodeElement, This.InitialpPaths(X), UnitTestingMode:=This.UnitTestingMode)
+      Else
+        Dim Y As Integer
+        For Y = 1 To Phosphorus.Utils.GetSizeOfArray(pPathContextNodeElements())
+        Set ContextNodeElement = pPathContextNodeElements(Y)
+        pPathLocator.AddContextNode ContextNodeElement, This.InitialpPaths(Y)
+        Next Y
+        Set pPathResponse = pPathLocator.Evaluate(This.EvaluationLogic, UnitTestingMode:=This.UnitTestingMode)
+      End If
+    End If
+    This.ReturnedValue = pPathResponse.ReturnedValue
+    This.ErrorMessage = pPathResponse.GetErrorMessage
+    This.NumberOfMatchingElements = pPathResponse.GetFinalNumberOfMatchingElements
+    This.MatchingElementsPPaths = pPathResponse.GetMatchingNavigationalPPaths
+    This.MatchingElements = pPathResponse.GetMatchingElements
+    
     If pPathResponse.ReturnedValue = True Then
       Dim NumberOfMatchingElements As Long
       NumberOfMatchingElements = pPathResponse.GetFinalNumberOfMatchingElements
@@ -396,6 +484,9 @@ Private Function Findlements(AcceptNoElements As Boolean) As pElement() ' IUIAut
     
     Set pPathLocator = Nothing
     Set pPathResponse = Nothing
+
+    'Make sure the pPath Workbook is closed/nothing
+    pPath.Workbook.CloseWB
 
   Else
 
@@ -501,6 +592,27 @@ End Function
 Public Sub RelativeElementNumber(RelativeElementNumber As Integer)
   This.RelativeElementNumber = RelativeElementNumber
 End Sub
+
+Public Function ReturnedValue() As String
+  ReturnedValue = This.ReturnedValue
+End Function
+
+Public Function ErrorMessage() As String
+  ErrorMessage = This.ErrorMessage
+End Function
+
+Public Function NumberOfMatchingElements() As Long
+  NumberOfMatchingElements = This.NumberOfMatchingElements
+End Function
+
+Public Function MatchingElements() As UIAutomationClient.IUIAutomationElement()
+  MatchingElements = This.MatchingElements
+End Function
+
+Public Function MatchingElementsPPaths() As String()
+  MatchingElementsPPaths = This.MatchingElementsPPaths
+End Function
+
 
 Public Sub ListAllChildren()
   ListAllDescendants ChildrenOnly:=True

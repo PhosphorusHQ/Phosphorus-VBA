@@ -125,6 +125,10 @@ Property Get GetMatchingElement(ElementNumber As Integer) As UIAutomationClient.
   Set GetMatchingElement = MatchingElements.GetMatchingElement(ElementNumber)
 End Property
 
+Property Get GetMatchingElements() As UIAutomationClient.IUIAutomationElement()
+  GetMatchingElements = MatchingElements.GetMatchingElementsArray
+End Property
+
 Property Get GetMatchingNavigationalPPaths() As String()
   GetMatchingNavigationalPPaths = MatchingElements.GetNavigationalPPaths
 End Property
@@ -229,7 +233,6 @@ Property Get TopLevelFunctionSuffix() As String
   TopLevelFunctionSuffix = This.TopLevelFunctionSuffix
 End Property
 
-
 Property Let ReturnedValue(Value As Variant)
   This.ReturnedValue = Value
 End Property
@@ -237,5 +240,4 @@ End Property
 Property Get ReturnedValue() As Variant
   ReturnedValue = This.ReturnedValue
 End Property
-
 

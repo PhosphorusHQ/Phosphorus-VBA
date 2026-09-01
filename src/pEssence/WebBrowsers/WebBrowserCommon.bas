@@ -79,9 +79,9 @@ Phosphorus.Log4PStatic.GetLogger
 '      "ResultID", Root, TreeScope_Descendants, By.pConditions, _
 '      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "Result ID":
 '     .Find 120
-    End With
+  End With
 
-    WebBrowser.WaitForNewURL 120
+  WebBrowser.WaitForNewURL 120
     
   Set DOWNLOAD = New pLocator
   With DOWNLOAD
@@ -93,6 +93,7 @@ Phosphorus.Log4PStatic.GetLogger
 '    .Initialise _
 '      "DOWNLOAD", Root, TreeScope_Descendants, By.pConditions, _
 '      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "DOWNLOAD", True: .RelativeElementNumber 3
+     Snooze 2000 ' This helps!?
     .Initialise "DOWNLOAD", Root, TreeScope.None, By.pPath, "//*[@ClassName=""py-2 font-mono text-5xl MuiBox-root css-s31qlv""][1]"
     .Find 2
   End With
@@ -105,9 +106,10 @@ Phosphorus.Log4PStatic.GetLogger
       "UPLOAD", Root, TreeScope_Descendants, By.pConditions, _
       "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "UPLOAD", True: .RelativeElementNumber 3
 'Chrome
-    .Initialise _
-      "UPLOAD", Root, TreeScope_Descendants, By.pConditions, _
-      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "UPLOAD", True: .RelativeElementNumber 3
+'    .Initialise _
+'      "UPLOAD", Root, TreeScope_Descendants, By.pConditions, _
+'      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "UPLOAD", True: .RelativeElementNumber 3
+    .Initialise "UPLOAD", Root, TreeScope.None, By.pPath, "//*[@ClassName=""py-2 font-mono text-5xl MuiBox-root css-s31qlv""][2]"
     .Find 2
   End With
   UploadSpeedMbps = UPLOAD.Element.Name

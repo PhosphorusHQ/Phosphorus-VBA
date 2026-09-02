@@ -101,9 +101,11 @@ Private Sub InitialiseAllLocators()
     This.MatchingElementspPaths = .MatchingElementspPaths
     'Square brackets are reserved characters for 'Like' so we need to escape these with []!
     Debug.Assert This.MatchingElementspPaths(1) Like "/Window[[]*[]][[]@Name='" & This.Workbook.Name & " - Excel'[]]"
-    Window.HighlightElement .Element.UIAElement, BorderColor:=&H808000, MultiHighlight:=True, DelayMs:=0
-    Snooze 1000
-    Window.ReleaseHighlighting
+    If Not AllExamples.RunningAllExamples Then
+      Window.HighlightElement .Element.UIAElement, BorderColor:=&H808000, MultiHighlight:=True, DelayMs:=0
+      Snooze 1000
+      Window.ReleaseHighlighting
+    End If
   End With
   'These test assume that we are on the HOME tab unless specified otherwise
   pEssence.OfficeRibbon.SelectTab This.MasterWindow, "Home"
@@ -240,13 +242,15 @@ Private Sub Evaluation(ElementName As String, pPathString As String, ExpectedNum
     Debug.Assert .ErrorMessage = ""
     Debug.Assert .NumberOfMatchingElements = ExpectedNumberOfMatchingElements
     This.MatchingElements = This.TestLocator.MatchingElements
-    Dim i As Long
-    If .NumberOfMatchingElements >= 1 Then
-      For i = 1 To .NumberOfMatchingElements
-        Window.HighlightElement This.MatchingElements(i), BorderColor:=&H808000, MultiHighlight:=True, DelayMs:=0
-      Next i
-      Snooze 1000
-      Window.ReleaseHighlighting
+    If Not AllExamples.RunningAllExamples Then
+      Dim i As Long
+      If .NumberOfMatchingElements >= 1 Then
+        For i = 1 To .NumberOfMatchingElements
+          Window.HighlightElement This.MatchingElements(i), BorderColor:=&H808000, MultiHighlight:=True, DelayMs:=0
+        Next i
+          Snooze 1000
+        Window.ReleaseHighlighting
+      End If
     End If
   End With
 End Sub
@@ -2629,7 +2633,7 @@ Public Sub Evaluation_Test117()
 End Sub
 
 Public Sub Evaluation_Test118()
-  Evaluation "Evaluation_Test11", "/Edit[@Level=0]", 1, This.MasterWindow
+  Evaluation "Evaluation_Test118", "/Edit[@Level=0]", 1, This.MasterWindow
   This.MatchingElementspPaths = This.TestLocator.MatchingElementspPaths
   Debug.Assert This.MatchingElementspPaths(1) = "/Edit[1][@Name='Formula Bar']"
 End Sub

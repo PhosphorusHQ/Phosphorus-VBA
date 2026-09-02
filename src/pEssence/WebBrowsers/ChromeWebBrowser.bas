@@ -24,15 +24,8 @@ Private Type BrowserAttributes
   WebAppPageTitle As String
   MasterWindow As pLocator
   BrowserRootView As pLocator
-  NonClientView As pLocator
-  BrowserFrameViewWin As pLocator
-  BrowserView As pLocator
-  TopContainerView As pLocator
-  ToolbarView As pLocator
   BackButton As pLocator
-  LocationBarView As pLocator
   AddressAndSearchBar As pLocator
-  BrowserViewSubView1 As pLocator
   RootWebArea As pLocator
 End Type
 
@@ -52,30 +45,16 @@ End Sub
 Private Sub GetAllLocators()
   Set This.MasterWindow = Factory.GetNewLocator
   Set This.BrowserRootView = Factory.GetNewLocator
-  Set This.NonClientView = Factory.GetNewLocator
-  Set This.BrowserFrameViewWin = Factory.GetNewLocator
-  Set This.BrowserView = Factory.GetNewLocator
-  Set This.TopContainerView = Factory.GetNewLocator
-  Set This.ToolbarView = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
-  Set This.LocationBarView = Factory.GetNewLocator
   Set This.AddressAndSearchBar = Factory.GetNewLocator
-  Set This.BrowserViewSubView1 = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
 End Sub
 
 Private Sub DestroyLocators()
   Set This.MasterWindow = Nothing
   Set This.BrowserRootView = Nothing
-  Set This.NonClientView = Nothing
-  Set This.BrowserFrameViewWin = Nothing
-  Set This.BrowserView = Nothing
-  Set This.TopContainerView = Nothing
-  Set This.ToolbarView = Nothing
   Set This.BackButton = Nothing
-  Set This.LocationBarView = Nothing
   Set This.AddressAndSearchBar = Nothing
-  Set This.BrowserViewSubView1 = Nothing
   Set This.RootWebArea = Nothing
 End Sub
 
@@ -94,7 +73,7 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String,
 End Sub
 
 Private Sub InitialiseAllLocators()
-
+  
   'Use: AscW & ChrW to determine embedded Unicode characters
   With This.MasterWindow
     .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState)"
@@ -104,37 +83,17 @@ Private Sub InitialiseAllLocators()
     .WindowInteractionState ReadyForUserInteraction
   End With
 
-  With This.BrowserRootView
-    .Initialise "BrowserRootView", This.MasterWindow, Children, By.ClassName, "BrowserRootView"
+  This.BrowserRootView.Initialise "BrowserRootView", This.MasterWindow, Children, By.ClassName, "BrowserRootView"
+
+  With This.BackButton
+    .Initialise "BackButton", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
   End With
-
-  This.NonClientView.Initialise "NonClientView", This.BrowserRootView, Children, By.ClassName, "NonClientView"
-  This.BrowserFrameViewWin.Initialise "BrowserFrameViewWin", This.NonClientView, Children, By.ClassName, "BrowserFrameViewWin"
-  This.BrowserView.Initialise "BrowserView", This.BrowserFrameViewWin, Children, By.ClassName, "BrowserView"
-
-    'First Pane Below Browser View
-    This.TopContainerView.Initialise "TopContainerView", This.BrowserView, Children, By.ClassName, "TopContainerView"
   
-    This.ToolbarView.Initialise "ToolbarView", This.TopContainerView, Children, By.ClassName, "ToolbarView"
+  With This.AddressAndSearchBar
+    .Initialise "AddressAndSearchBar", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
+  End With
   
-        With This.BackButton
-          .Initialise "BackButton", This.ToolbarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
-        End With
-
-        With This.LocationBarView
-          .Initialise "LocationBarView", This.ToolbarView, Children, pConditions, "AND(ControlType, ClassName)": .ControlType UIAControlTypeIDs.Group: .ClassName "LocationBarView"
-        End With
-  
-          With This.AddressAndSearchBar
-            .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
-          End With
-
-    'Second Pane Below Browser View
-    With This.BrowserViewSubView1
-      .Initialise "BrowserViewSubView1", This.BrowserView, Children, By.ClassName, "View", FindFirst:=True
-    End With
-
-      This.RootWebArea.Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
+  This.RootWebArea.Initialise "RootWebArea", This.MasterWindow, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
 
 End Sub
 

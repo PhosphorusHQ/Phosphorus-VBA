@@ -94,60 +94,30 @@ Private Sub InitialiseAllLocators()
     .WindowInteractionState ReadyForUserInteraction
   End With
 
-'  With This.BrowserRootView
-'    .Initialise "BrowserRootView", This.MasterWindow, Children, By.ClassName, "BraveBrowserRootView"
-'  End With
+  With This.BackButton
+    .Initialise "BackButton", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
+  End With
+  
+  With This.AddressAndSearchBar
+    .Initialise "AddressAndSearchBar", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
+  End With
+  
+  This.BraveTabStrip.Initialise "BraveTabStrip", This.MasterWindow, Descendants, By.ClassName, "BraveTabStrip"
 
-'  This.NonClientView.Initialise "NonClientView", This.BrowserRootView, Children, By.ClassName, "NonClientView"
-'  This.BrowserFrameViewWin.Initialise "BrowserFrameViewWin", This.NonClientView, Children, By.ClassName, "BrowserFrameViewWin"
-'  This.BrowserView.Initialise "BrowserView", This.BrowserFrameViewWin, Children, By.ClassName, "BraveBrowserView"
+  With This.LastTab
+    .Initialise "LastTab", This.BraveTabStrip, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
+    .ClassName "BraveTab": .NameIs This.WebAppPageTitle: .PositionInMatchingSet -1
+  End With
 
-    'First Pane Below Browser View
-'    This.TopContainerView.Initialise "TopContainerView", This.BrowserView, Children, By.ClassName, "TopContainerView"
+  'Right click & close all other tabs
+  This.LastTab.Element.RightClick
+  With This.CloseOtherTabs
+    .Initialise "CloseOtherTabs", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
+    .ControlType MenuItem: .NameIs "Close other tabs"
+    .Element.ClickIfEnabled This.MasterWindow.Element
+  End With
 
-'      This.ToolbarView.Initialise "ToolbarView", This.TopContainerView, Children, By.ClassName, "BraveToolbarView"
-
-        With This.BackButton
-'          .Initialise "BackButton", This.ToolbarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
-          .Initialise "BackButton", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
-        End With
-        
-'        With This.LocationBarView
-'          .Initialise "LocationBarView", This.ToolbarView, Children, pConditions, "AND(ControlType, ClassName)": .ControlType UIAControlTypeIDs.Group: .ClassName "BraveLocationBarView"
-'        End With
-          
-          With This.AddressAndSearchBar
-'            .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
-            .Initialise "AddressAndSearchBar", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
-          End With
-
-'      This.BraveHorizontalTabStripRegionView.Initialise "BraveHorizontalTabStripRegionView", This.BrowserView, Children, By.ClassName, "BraveHorizontalTabStripRegionView"
-
-      With This.BraveTabStrip
-'        .Initialise "BraveTabStrip", This.BraveHorizontalTabStripRegionView, Children, By.ClassName, "BraveTabStrip"
-        .Initialise "BraveTabStrip", This.MasterWindow, Descendants, By.ClassName, "BraveTabStrip"
-      End With
-
-        With This.LastTab
-          .Initialise "LastTab", This.BraveTabStrip, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
-          .ClassName "BraveTab": .NameIs This.WebAppPageTitle: .PositionInMatchingSet -1
-        End With
-
-      'Right click & close all other tabs
-      This.LastTab.Element.RightClick
-      With This.CloseOtherTabs
-        .Initialise "CloseOtherTabs", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
-        .ControlType MenuItem: .NameIs "Close other tabs"
-        .Element.ClickIfEnabled This.MasterWindow.Element
-      End With
-
-'    'Second Pane Below Browser View
-'    With This.BrowserViewSubView1
-'      .Initialise "BrowserViewSubView1", This.BrowserView, Children, By.ClassName, "View", FindFirst:=True
-'    End With
-
-'      This.RootWebArea.Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
-      This.RootWebArea.Initialise "RootWebArea", This.MasterWindow, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
+  This.RootWebArea.Initialise "RootWebArea", This.MasterWindow, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
 
 End Sub
 

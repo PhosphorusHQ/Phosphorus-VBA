@@ -23,20 +23,11 @@ Private Type BrowserAttributes
   URL As String
   WebAppPageTitle As String
   MasterWindow As pLocator
-  BrowserRootView As pLocator
-  NonClientView As pLocator
-  BrowserFrameViewWin As pLocator
-  BrowserView As pLocator
-  TopContainerView As pLocator
-  BraveHorizontalTabStripRegionView As pLocator
   BraveTabStrip As pLocator
   LastTab As pLocator
   CloseOtherTabs As pLocator
-  ToolbarView As pLocator
   BackButton As pLocator
-  LocationBarView As pLocator
   AddressAndSearchBar As pLocator
-  BrowserViewSubView1 As pLocator
   RootWebArea As pLocator
 End Type
 
@@ -55,39 +46,21 @@ End Sub
 
 Private Sub GetAllLocators()
   Set This.MasterWindow = Factory.GetNewLocator
-  Set This.BrowserRootView = Factory.GetNewLocator
-  Set This.NonClientView = Factory.GetNewLocator
-  Set This.BrowserFrameViewWin = Factory.GetNewLocator
-  Set This.BrowserView = Factory.GetNewLocator
-  Set This.TopContainerView = Factory.GetNewLocator
-  Set This.BraveHorizontalTabStripRegionView = Factory.GetNewLocator
   Set This.BraveTabStrip = Factory.GetNewLocator
   Set This.LastTab = Factory.GetNewLocator
   Set This.CloseOtherTabs = Factory.GetNewLocator
-  Set This.ToolbarView = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
-  Set This.LocationBarView = Factory.GetNewLocator
   Set This.AddressAndSearchBar = Factory.GetNewLocator
-  Set This.BrowserViewSubView1 = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
 End Sub
 
 Private Sub DestroyLocators()
   Set This.MasterWindow = Nothing
-  Set This.BrowserRootView = Nothing
-  Set This.NonClientView = Nothing
-  Set This.BrowserFrameViewWin = Nothing
-  Set This.BrowserView = Nothing
-  Set This.TopContainerView = Nothing
-  Set This.BraveHorizontalTabStripRegionView = Nothing
   Set This.BraveTabStrip = Nothing
   Set This.LastTab = Nothing
   Set This.CloseOtherTabs = Nothing
-  Set This.ToolbarView = Nothing
   Set This.BackButton = Nothing
-  Set This.LocationBarView = Nothing
   Set This.AddressAndSearchBar = Nothing
-  Set This.BrowserViewSubView1 = Nothing
   Set This.RootWebArea = Nothing
 End Sub
 
@@ -121,35 +94,38 @@ Private Sub InitialiseAllLocators()
     .WindowInteractionState ReadyForUserInteraction
   End With
 
-  With This.BrowserRootView
-    .Initialise "BrowserRootView", This.MasterWindow, Children, By.ClassName, "BraveBrowserRootView"
-  End With
+'  With This.BrowserRootView
+'    .Initialise "BrowserRootView", This.MasterWindow, Children, By.ClassName, "BraveBrowserRootView"
+'  End With
 
-  This.NonClientView.Initialise "NonClientView", This.BrowserRootView, Children, By.ClassName, "NonClientView"
-  This.BrowserFrameViewWin.Initialise "BrowserFrameViewWin", This.NonClientView, Children, By.ClassName, "BrowserFrameViewWin"
-  This.BrowserView.Initialise "BrowserView", This.BrowserFrameViewWin, Children, By.ClassName, "BraveBrowserView"
+'  This.NonClientView.Initialise "NonClientView", This.BrowserRootView, Children, By.ClassName, "NonClientView"
+'  This.BrowserFrameViewWin.Initialise "BrowserFrameViewWin", This.NonClientView, Children, By.ClassName, "BrowserFrameViewWin"
+'  This.BrowserView.Initialise "BrowserView", This.BrowserFrameViewWin, Children, By.ClassName, "BraveBrowserView"
 
     'First Pane Below Browser View
-    This.TopContainerView.Initialise "TopContainerView", This.BrowserView, Children, By.ClassName, "TopContainerView"
+'    This.TopContainerView.Initialise "TopContainerView", This.BrowserView, Children, By.ClassName, "TopContainerView"
 
-      This.ToolbarView.Initialise "ToolbarView", This.TopContainerView, Children, By.ClassName, "BraveToolbarView"
+'      This.ToolbarView.Initialise "ToolbarView", This.TopContainerView, Children, By.ClassName, "BraveToolbarView"
 
         With This.BackButton
-          .Initialise "BackButton", This.ToolbarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
+'          .Initialise "BackButton", This.ToolbarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
+          .Initialise "BackButton", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
         End With
         
-        With This.LocationBarView
-          .Initialise "LocationBarView", This.ToolbarView, Children, pConditions, "AND(ControlType, ClassName)": .ControlType UIAControlTypeIDs.Group: .ClassName "BraveLocationBarView"
-        End With
+'        With This.LocationBarView
+'          .Initialise "LocationBarView", This.ToolbarView, Children, pConditions, "AND(ControlType, ClassName)": .ControlType UIAControlTypeIDs.Group: .ClassName "BraveLocationBarView"
+'        End With
           
           With This.AddressAndSearchBar
-            .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
+'            .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
+            .Initialise "AddressAndSearchBar", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
           End With
 
-      This.BraveHorizontalTabStripRegionView.Initialise "BraveHorizontalTabStripRegionView", This.BrowserView, Children, By.ClassName, "BraveHorizontalTabStripRegionView"
+'      This.BraveHorizontalTabStripRegionView.Initialise "BraveHorizontalTabStripRegionView", This.BrowserView, Children, By.ClassName, "BraveHorizontalTabStripRegionView"
 
       With This.BraveTabStrip
-        .Initialise "BraveTabStrip", This.BraveHorizontalTabStripRegionView, Children, By.ClassName, "BraveTabStrip"
+'        .Initialise "BraveTabStrip", This.BraveHorizontalTabStripRegionView, Children, By.ClassName, "BraveTabStrip"
+        .Initialise "BraveTabStrip", This.MasterWindow, Descendants, By.ClassName, "BraveTabStrip"
       End With
 
         With This.LastTab
@@ -165,12 +141,13 @@ Private Sub InitialiseAllLocators()
         .Element.ClickIfEnabled This.MasterWindow.Element
       End With
 
-    'Second Pane Below Browser View
-    With This.BrowserViewSubView1
-      .Initialise "BrowserViewSubView1", This.BrowserView, Children, By.ClassName, "View", FindFirst:=True
-    End With
+'    'Second Pane Below Browser View
+'    With This.BrowserViewSubView1
+'      .Initialise "BrowserViewSubView1", This.BrowserView, Children, By.ClassName, "View", FindFirst:=True
+'    End With
 
-      This.RootWebArea.Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
+'      This.RootWebArea.Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
+      This.RootWebArea.Initialise "RootWebArea", This.MasterWindow, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
 
 End Sub
 

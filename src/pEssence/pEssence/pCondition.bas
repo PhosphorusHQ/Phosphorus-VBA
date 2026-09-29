@@ -39,6 +39,8 @@ Public Function Evaluate(Element As pElement) As Boolean
        ReturnValue = (CurrentValue = UIAPropertyValue)
     Case UIAPropertyComparisons.IsLikeTheString
        ReturnValue = (CurrentValue Like UIAPropertyValue)
+    Case UIAPropertyComparisons.NotEqualsNumber
+       ReturnValue = (CurrentValue <> UIAPropertyValue)
     Case UIAPropertyComparisons.StartsWithTheString
        ReturnValue = (VBA.Strings.InStr(1, CurrentValue, UIAPropertyValue) = 1)
     Case UIAPropertyComparisons.EndsWithTheString

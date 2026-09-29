@@ -71,19 +71,19 @@ Public Function GetElementRuntimeID(ByRef MatchingElement As UIAutomationClient.
   'The runtime ID is a unique array of elements (SAFEARRAY)
   Dim varRuntimeIDArray As Variant
   varRuntimeIDArray = MatchingElement.GetRuntimeId
-  
+
   'Check if the RuntimeID was retrieved successfully
   If IsArray(varRuntimeIDArray) Then
     'Iterate through the array
     Dim i As Long
-    
+
     For i = LBound(varRuntimeIDArray) To UBound(varRuntimeIDArray)
       If i > LBound(varRuntimeIDArray) Then
         strRuntimeIDString = strRuntimeIDString & " "
       End If
       strRuntimeIDString = strRuntimeIDString & varRuntimeIDArray(i)
     Next i
-       
+        
   Else
   
     MsgBox "Failed to get runtime id!"

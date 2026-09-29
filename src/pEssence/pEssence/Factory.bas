@@ -39,7 +39,7 @@ Public Function GetWebBrowserName(TargetWebBrowserType As WebBrowserType) As Str
   Select Case TargetWebBrowserType
     Case Brave: R = "Brave"
     Case Chrome: R = "Chrome"
-    Case Chromium: R = "Chrome"
+    Case Chromium: R = "Chromium"
     Case Edge: R = "Edge"
     Case Epic: R = "Epic"
     Case Firefox: R = "Firefox"

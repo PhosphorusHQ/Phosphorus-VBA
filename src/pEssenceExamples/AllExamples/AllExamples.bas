@@ -33,9 +33,9 @@ Public Sub RunAllExamples()
     RunAnExample Examples.CalculatorExample
 'TargetWBT = WebBrowserType.Brave
 TargetWBT = 0 'All!
-    RunAnExample Examples.HelloWorldExample
+'    RunAnExample Examples.HelloWorldExample
 'PJG Needs rebuilding on NAS WordPress    RunAnExample Examples.ExampleDomainDotComExample
-'Needs rebuiding?
+'LetCodeIn Needs rebuiding on NAS WordPress?
     RunAnExample Examples.LetCodeDotInRadioButtonsAndCheckboxesExample
     RunAnExample Examples.TheInternetExample
   Next i
@@ -52,7 +52,6 @@ Private Sub RunAnExample(Example As Examples)
     Calculator.Calculator
   ElseIf Example = Examples.pPathExample Then
     pPathExamples.RunAllpPathTestsWithMultipleTries
-
   Else
 '    WebBrowserCommon.GetInternetSpeeds
 WebBrowserCommon.SetDummyMobileDataInternetSpeeds

@@ -45,6 +45,7 @@ Private Sub DestroyLocators()
 End Sub
 
 Private Sub OpenNewWorkBook()
+
   Set This.Workbook = Workbooks.Add
   This.Workbook.Activate
   
@@ -77,8 +78,10 @@ Private Sub OpenNewWorkBook()
     .Cells.EntireColumn.AutoFit
   
   End With
-  
+
   VBA.Interaction.DoEvents
+
+  This.Workbook.Activate
 
 End Sub
 

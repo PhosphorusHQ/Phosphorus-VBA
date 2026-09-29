@@ -19,21 +19,20 @@ Public Sub pPathExamples()
 
   On Error GoTo ErrorHandler
     
-  If Not RunningAllExamples Then
-    Window.HighlightElements = True
-  End If
+  'Always HighlightElements for pPath examples
+  Window.HighlightElements = True
 
   Set pPathPage = New pPathExamplesPage
   
   'Test all cases with the screen in landscape mode - portrait won't work for the Excel based tests!
-'  RunPreValidationTests
-'  RunEvaluationTests
-'  RunEvaluationExcelTests
+  RunPreValidationTests
+  RunEvaluationTests
+  RunEvaluationExcelTests
 'Phosphorus.Utils.PJGDebugMode = False
 'pPathPage.Evaluation_TestExcel008
 'pPathPage.Evaluation_TestExcel008
 'Phosphorus.Utils.PJGDebugMode = False
-pPathPage.Evaluation_Test053
+'pPathPage.Evaluation_Test053
   GoTo ExitSub
   
 ErrorHandler:
@@ -219,11 +218,11 @@ Private Sub RunEvaluationExcelTests()
   With pPathPage
     .Evaluation_TestExcel001
     .Evaluation_TestExcel002
-'PJG    .Evaluation_TestExcel003
-'PJG    .Evaluation_TestExcel004
-'PJG    .Evaluation_TestExcel005
-'PJG    .Evaluation_TestExcel006
-'PJG    .Evaluation_TestExcel007
+    .Evaluation_TestExcel003
+    .Evaluation_TestExcel004
+    .Evaluation_TestExcel005
+    .Evaluation_TestExcel006
+    .Evaluation_TestExcel007
     .Evaluation_TestExcel008
     .Evaluation_TestExcel009
     .Evaluation_TestExcel010
@@ -264,6 +263,7 @@ End Sub
 Public Sub RunAllpPathTestsWithMultipleTries()
   RunAllPreValidationTests
   RunAllEvaluationTests
+  RunAllEvaluationExcelTests
 End Sub
 
 Private Sub RunAllPreValidationTests()
@@ -428,6 +428,50 @@ Private Sub RunAllEvaluationTests()
   RunApPathTest "Evaluation_Test134"
 End Sub
 
+Private Sub RunAllEvaluationExcelTests()
+  RunApPathTest "Evaluation_TestExcel001"
+  RunApPathTest "Evaluation_TestExcel002"
+  RunApPathTest "Evaluation_TestExcel003"
+  RunApPathTest "Evaluation_TestExcel004"
+  RunApPathTest "Evaluation_TestExcel005"
+  RunApPathTest "Evaluation_TestExcel006"
+  RunApPathTest "Evaluation_TestExcel007"
+  RunApPathTest "Evaluation_TestExcel008"
+  RunApPathTest "Evaluation_TestExcel009"
+  RunApPathTest "Evaluation_TestExcel010"
+  RunApPathTest "Evaluation_TestExcel011"
+  RunApPathTest "Evaluation_TestExcel012"
+  RunApPathTest "Evaluation_TestExcel013"
+  RunApPathTest "Evaluation_TestExcel014"
+  RunApPathTest "Evaluation_TestExcel015"
+  RunApPathTest "Evaluation_TestExcel016"
+  RunApPathTest "Evaluation_TestExcel017"
+  RunApPathTest "Evaluation_TestExcel018"
+  RunApPathTest "Evaluation_TestExcel019"
+  RunApPathTest "Evaluation_TestExcel020"
+  RunApPathTest "Evaluation_TestExcel100"
+  RunApPathTest "Evaluation_TestExcel101"
+  RunApPathTest "Evaluation_TestExcel102"
+  RunApPathTest "Evaluation_TestExcel103"
+  RunApPathTest "Evaluation_TestExcel104"
+  RunApPathTest "Evaluation_TestExcel105"
+  RunApPathTest "Evaluation_TestExcel106"
+  RunApPathTest "Evaluation_TestExcel107"
+  RunApPathTest "Evaluation_TestExcel108"
+  RunApPathTest "Evaluation_TestExcel109"
+  RunApPathTest "Evaluation_TestExcel110"
+  RunApPathTest "Evaluation_TestExcel111"
+  RunApPathTest "Evaluation_TestExcel113"
+  RunApPathTest "Evaluation_TestExcel114"
+  RunApPathTest "Evaluation_TestExcel115"
+  RunApPathTest "Evaluation_TestExcel116"
+  RunApPathTest "Evaluation_TestExcel117"
+  RunApPathTest "Evaluation_TestExcel118"
+  RunApPathTest "Evaluation_TestExcel119"
+  RunApPathTest "Evaluation_TestExcel120"
+  RunApPathTest "Evaluation_TestExcel121"
+End Sub
+
 Private Sub RunApPathTest(TestName As String)
   AllExamples.TryToRunAnExampleMultipleTimes False, Examples.pPathExample_SubTest, TestName
 End Sub
@@ -438,6 +482,9 @@ Public Function RunASinglepPathTest(TestName As String) As Boolean
   Succeeded = False
   
   On Error GoTo ErrorHandler
+  
+  'Always HighlightElements for pPath examples
+  Window.HighlightElements = True
   
   Set pPathPage = New pPathExamplesPage
   
@@ -766,6 +813,94 @@ Public Function RunASinglepPathTest(TestName As String) As Boolean
         .Evaluation_Test133b
       Case "Evaluation_Test134"
         .Evaluation_Test134
+      
+      'Evaluation_Tests
+      Case "Evaluation_TestExcel001"
+        .Evaluation_TestExcel001
+      Case "Evaluation_TestExcel002"
+        .Evaluation_TestExcel002
+      Case "Evaluation_TestExcel003"
+        .Evaluation_TestExcel003
+      Case "Evaluation_TestExcel004"
+        .Evaluation_TestExcel004
+      Case "Evaluation_TestExcel005"
+        .Evaluation_TestExcel005
+      Case "Evaluation_TestExcel006"
+        .Evaluation_TestExcel006
+      Case "Evaluation_TestExcel007"
+        .Evaluation_TestExcel007
+      Case "Evaluation_TestExcel008"
+        .Evaluation_TestExcel008
+      Case "Evaluation_TestExcel009"
+        .Evaluation_TestExcel009
+      Case "Evaluation_TestExcel010"
+        .Evaluation_TestExcel010
+      Case "Evaluation_TestExcel011"
+        .Evaluation_TestExcel011
+      Case "Evaluation_TestExcel012"
+        .Evaluation_TestExcel012
+      Case "Evaluation_TestExcel013"
+        .Evaluation_TestExcel013
+      Case "Evaluation_TestExcel014"
+        .Evaluation_TestExcel014
+      Case "Evaluation_TestExcel015"
+        .Evaluation_TestExcel015
+      Case "Evaluation_TestExcel016"
+        .Evaluation_TestExcel016
+      Case "Evaluation_TestExcel017"
+        .Evaluation_TestExcel017
+      Case "Evaluation_TestExcel018"
+        .Evaluation_TestExcel018
+      Case "Evaluation_TestExcel019"
+        .Evaluation_TestExcel019
+      Case "Evaluation_TestExcel020"
+        .Evaluation_TestExcel020
+      Case "Evaluation_TestExcel100"
+        .Evaluation_TestExcel100
+      Case "Evaluation_TestExcel101"
+        .Evaluation_TestExcel101
+      Case "Evaluation_TestExcel102"
+        .Evaluation_TestExcel102
+      Case "Evaluation_TestExcel103"
+        .Evaluation_TestExcel103
+      Case "Evaluation_TestExcel104"
+        .Evaluation_TestExcel104
+      Case "Evaluation_TestExcel105"
+        .Evaluation_TestExcel105
+      Case "Evaluation_TestExcel106"
+        .Evaluation_TestExcel106
+      Case "Evaluation_TestExcel107"
+        .Evaluation_TestExcel107
+      Case "Evaluation_TestExcel108"
+        .Evaluation_TestExcel108
+      Case "Evaluation_TestExcel109"
+        .Evaluation_TestExcel109
+      Case "Evaluation_TestExcel110"
+        .Evaluation_TestExcel110
+      Case "Evaluation_TestExcel111"
+        .Evaluation_TestExcel111
+      Case "Evaluation_TestExcel112"
+        .Evaluation_TestExcel112
+      Case "Evaluation_TestExcel113"
+        .Evaluation_TestExcel113
+      Case "Evaluation_TestExcel114"
+        .Evaluation_TestExcel114
+      Case "Evaluation_TestExcel115"
+        .Evaluation_TestExcel115
+      Case "Evaluation_TestExcel116"
+        .Evaluation_TestExcel116
+      Case "Evaluation_TestExcel117"
+        .Evaluation_TestExcel117
+      Case "Evaluation_TestExcel118"
+        .Evaluation_TestExcel118
+      Case "Evaluation_TestExcel119"
+        .Evaluation_TestExcel119
+      Case "Evaluation_TestExcel120"
+        .Evaluation_TestExcel120
+      Case "Evaluation_TestExcel121"
+        .Evaluation_TestExcel121
+      Case "Evaluation_TestExcel122"
+        .Evaluation_TestExcel122
 
       Case Else
         MsgBox "Unhandled TestName: " & TestName

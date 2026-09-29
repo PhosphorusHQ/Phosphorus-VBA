@@ -30,7 +30,7 @@ Private Type Properties
   FindBy As By
   FindFirst As Boolean
   AllSearchConditions As Scripting.Dictionary
-  EvaluationLogic As String
+  EvaluationLogic As Variant
   PositionInMatchingSet  As Integer
   RelativeElementNumber  As Integer
   'pPath only?
@@ -63,7 +63,7 @@ Public Sub Initialise( _
   RootUIAElementLocator As pLocator, _
   TreeScope As Long, _
   FindBy As By, _
-  EvaluationLogic As String, _
+  EvaluationLogic As Variant, _
   Optional FindFirst As Boolean)
   
   Set This.Element = New pElement
@@ -85,23 +85,23 @@ Public Sub Initialise( _
     Case By.AriaRole
       This.FindBy = By.pConditions
       This.EvaluationLogic = "AriaRole"
-      Condition This.EvaluationLogic, UIAProperties.AriaRole, UIAPropertyComparisons.IsTheString, EvaluationLogic
+      Condition CStr(This.EvaluationLogic), UIAProperties.AriaRole, UIAPropertyComparisons.IsTheString, EvaluationLogic
     Case By.AutomationId
       This.FindBy = By.pConditions
       This.EvaluationLogic = "AutomationId"
-      Condition This.EvaluationLogic, UIAProperties.AutomationId, UIAPropertyComparisons.IsTheString, EvaluationLogic
+      Condition CStr(This.EvaluationLogic), UIAProperties.AutomationId, UIAPropertyComparisons.IsTheString, EvaluationLogic
     Case By.ClassName
       This.FindBy = By.pConditions
       This.EvaluationLogic = "ClassName"
-      Condition This.EvaluationLogic, UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, EvaluationLogic
+      Condition CStr(This.EvaluationLogic), UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, EvaluationLogic
     Case By.NameIs
       This.FindBy = By.pConditions
       This.EvaluationLogic = "NameIs"
-      Condition This.EvaluationLogic, UIAProperties.Name, UIAPropertyComparisons.IsTheString, EvaluationLogic
+      Condition CStr(This.EvaluationLogic), UIAProperties.Name, UIAPropertyComparisons.IsTheString, EvaluationLogic
     Case By.ControlType
       This.FindBy = By.pConditions
       This.EvaluationLogic = "ControlType"
-      Condition This.EvaluationLogic, UIAProperties.ControlType, UIAPropertyComparisons.EqualsNumber, EvaluationLogic
+      Condition CStr(This.EvaluationLogic), UIAProperties.ControlType, UIAPropertyComparisons.EqualsNumber, EvaluationLogic
     Case By.pPath
       This.FindBy = FindBy
       This.EvaluationLogic = EvaluationLogic
@@ -256,8 +256,10 @@ Public Sub ClassName(Name As String)
   Condition "ClassName", UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, Name
 End Sub
 
-Public Sub ControlType(CtrlType As UIAControlTypeIDs)
-  Condition "ControlType", UIAProperties.ControlType, UIAPropertyComparisons.EqualsNumber, CtrlType
+Public Sub ControlType(CtrlType As UIAControlTypeIDs, Optional ConditionNameSuffix As String)
+  Dim ConditionName As String
+  If ConditionNameSuffix = "" Then: ConditionName = "ControlType": Else: ConditionName = "ControlType" & ConditionNameSuffix
+  Condition ConditionName, UIAProperties.ControlType, UIAPropertyComparisons.EqualsNumber, CtrlType
 End Sub
 
 Public Sub NameIs(Name As String, Optional TrimProperty As Boolean = False)
@@ -305,7 +307,31 @@ Public Function Elements() As pElement()
   Elements = This.Elements
 End Function
 
-Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean, Optional FindElementAgain As Boolean = False)
+Public Sub FindWithRefresh( _
+  Optional TimeoutInSeconds As Long, _
+  Optional AcceptNoElements As Boolean, _
+  Optional FindElementAgain As Boolean = False, _
+  Optional RefreshButton As pLocator, _
+  Optional Retries As Integer)
+  
+  If Retries = 0 Then
+    Retries = 1
+  End If
+  Dim CountOfRetries As Integer
+  CountOfRetries = 0
+  While (Not ElementExists(TimeoutInSeconds)) And (CountOfRetries < Retries)
+    RefreshButton.Element.Click
+    CountOfRetries = CountOfRetries + 1
+    Find TimeoutInSeconds, AcceptNoElements, FindElementAgain
+  Wend
+  
+End Sub
+
+Public Sub Find( _
+  Optional TimeoutInSeconds As Long, _
+  Optional AcceptNoElements As Boolean, _
+  Optional FindElementAgain As Boolean = False)
+
 'Find a single element with a timeout
 
   If Not This.Element.UIAElement Is Nothing And This.Element.IsAlive() And Not FindElementAgain Then
@@ -365,7 +391,7 @@ Public Sub Find(Optional TimeoutInSeconds As Long, Optional AcceptNoElements As 
   ElseIf CountOfFoundElements = 0 And Not AcceptNoElements Then
     ErrorLogging.LogError _
       Errors.FindElementsExpectedOneElementFoundNone, _
-      "Expected to find one element but found none." & vbCrLf & vbCrLf & _
+      "Expected to find one element but found none." & vbCrLf & _
       "Looking for '" & This.Element.GivenName & "' element, evaluation logic: '" & This.EvaluationLogic & "', timeout (" & TimeoutInSeconds & " seconds)"
     Exit Sub
   End If
@@ -445,7 +471,7 @@ Private Function Findlements(TimeoutInSeconds As Long, AcceptNoElements As Boole
       Set pPathContextNodeElements(X) = ContextNode.Element.UIAElement
     Next X
     X = X - 1
-  
+
     Dim pPathResponse As pPath.ReturnClass
     Dim ContextNodeElement As UIAutomationClient.IUIAutomationElement
     Dim InitialPath As String
@@ -618,10 +644,6 @@ Public Sub ListAllChildren()
   ListAllDescendants ChildrenOnly:=True
 End Sub
     
-'dim TreeWalker As UIAutomationClient.IUIAutomationTreeWalker
-'  Dim ParentElement As IUIAutomationElement
-'Set ParentElement = This.TreeWalker.GetParentElement(CurrentElement)
-
 Public Sub ListAllDescendants(Optional Level As Integer = 0, Optional ChildrenOnly As Boolean)
   Dim AllElements As IUIAutomationElementArray
   If Element.UIAElement Is Nothing Then
@@ -655,8 +677,8 @@ Private Function EvaluationLogicIsOk() As Boolean
   
   Dim CountOfLeftBraces As Integer
   Dim CountOfRightBraces As Integer
-  CountOfLeftBraces = Utils.CountOccurrences(This.EvaluationLogic, "(")
-  CountOfRightBraces = Utils.CountOccurrences(This.EvaluationLogic, ")")
+  CountOfLeftBraces = Utils.CountOccurrences(CStr(This.EvaluationLogic), "(")
+  CountOfRightBraces = Utils.CountOccurrences(CStr(This.EvaluationLogic), ")")
   If Not (CountOfLeftBraces = CountOfRightBraces) Then
     EvaluationLogicIsOk = False
     ErrorLogging.LogError Errors.FaultyEvaluationLogicMismatchBracketsError, "The evaluation logic is faulty, there are mismatchng brackets: '" & This.EvaluationLogic & "'"

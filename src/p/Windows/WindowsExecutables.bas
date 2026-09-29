@@ -42,7 +42,7 @@ Public Function Chromium() As Phosphorus.Executable
   Dim myExecutable As Phosphorus.Executable
   myExecutable.Name = "Chromium"
   myExecutable.ExeFile = "chrome.exe"
-  myExecutable.FullPath = GetFolderBySHGetKnownFolderPath(KNOWNFOLDERIDS.FOLDERID_ProgramFiles) & "\Chromium\Application\" & myExecutable.ExeFile
+  myExecutable.FullPath = GetFolderBySHGetKnownFolderPath(KNOWNFOLDERIDS.FOLDERID_ProgramFilesX86) & "\Chromium\Application\" & myExecutable.ExeFile
   Chromium = myExecutable
 End Function
 

@@ -109,7 +109,10 @@ Public Function GetTextValue(UIElement As UIAutomationClient.IUIAutomationElemen
   On Error GoTo 0
 
   If Not TextPattern Is Nothing Then
+    'Get the text ... if we can
+    On Error Resume Next
     TextContent = TextPattern.DocumentRange.GetText(-1) 'Get all text
+    On Error GoTo 0
   End If
 
   GetTextValue = TextContent

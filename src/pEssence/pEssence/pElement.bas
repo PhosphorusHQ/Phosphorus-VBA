@@ -22,6 +22,58 @@ Public GivenName As String
 Public UIAElement As IUIAutomationElement
 Public ParentLocator As pLocator
 
+'Declarations for SendInput
+#If VBA7 Then
+  Private Declare PtrSafe Function SendInput Lib "user32" ( _
+    ByVal nInputs As LongPtr, _
+    ByRef pInputs As Any, _
+    ByVal cbSize As LongPtr) As LongPtr
+
+  Private Declare PtrSafe Function VkKeyScan Lib "user32" Alias "VkKeyScanA" ( _
+    ByVal cChar As Byte) As Integer
+
+  Private Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+#Else
+  Private Declare Function SendInput Lib "user32" ( _
+    ByVal nInputs As Long, _
+    ByRef pInputs As Any, _
+    ByVal cbSize As Long) As Long
+
+  Private Declare Function VkKeyScan Lib "user32" Alias "VkKeyScanA" ( _
+    ByVal cChar As Byte) As Integer
+
+  Private Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+#End If
+
+Private Const INPUT_KEYBOARD As Long = 1
+Private Const KEYEVENTF_KEYUP As Long = &H2
+Private Const KEYEVENTF_UNICODE As Long = &H4
+Private Const KEYEVENTF_EXTENDEDKEY As Long = &H1
+
+' Common virtual-key codes
+Private Const VK_CONTROL As Integer = &H11
+Private Const VK_SHIFT As Integer = &H10
+Private Const VK_MENU As Integer = &H12      ' Alt
+Private Const VK_RETURN As Integer = &HD
+Private Const VK_TAB As Integer = &H9
+Private Const VK_ESCAPE As Integer = &H1B
+Private Const VK_BACK As Integer = &H8
+
+Private Type KEYBDINPUT
+  wVk As Integer
+  wScan As Integer
+  dwFlags As Long
+  time As Long
+  dwExtraInfo As LongPtr          ' Long on 32-bit
+End Type
+
+Private Type INPUT_TYPE
+  dwType As Long
+  ki As KEYBDINPUT
+  ' Padding is often needed for correct structure size on 64-bit
+  extra As Currency               ' or use a byte array / careful sizing
+End Type
+
 Private Sub Class_Terminate()
   Set UIAElement = Nothing
 End Sub
@@ -58,14 +110,14 @@ Public Sub CloseWindow()
   AutoFindElement
   Toaster.Message "Close Window " & Name, Action
   Actions.IsElementReady Me
-  If GetProperty(UIAProperties.ControlType) = UIAControlTypeIDs.Window Then
+  'If (GetProperty(UIAProperties.ControlType) = UIAControlTypeIDs.Window) Or (GetProperty(UIAProperties.ControlType) = UIAControlTypeIDs.Pane) Then
     If HasProperty(UIAProperties.IsWindowPatternAvailable) Then
       Dim patt As IUIAutomationWindowPattern
       Set patt = GetPattern(UIAPatterns.Window, RaiseError:=True)
       patt.Close
       Exit Sub
     End If
-  End If
+  'End If
 End Sub
 
 'Tools > References > OLE Automation needed for IUnknown type
@@ -185,9 +237,47 @@ Public Sub SetValue(Value As String)
   If HasPattern(UIAPatterns.Value) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
     Set CurrentElementValuePattern = GetPattern(UIAPatterns.Value, RaiseError:=True)
+    On Error Resume Next
     CurrentElementValuePattern.SetValue Value
+    Dim InputOK As Boolean
+    InputOK = (Err.Number = 0)
+    If Not InputOK Then
+      'Use WinAPI as a fallback option
+      UIAElement.SetFocus
+      SendUnicodeText Value
+    End If
   End If
   Window.ReleaseHighlighting
+End Sub
+
+Private Sub SendUnicodeText(ByVal Text As String)
+    Dim i As Long, n As Long
+    Dim inputs() As INPUT_TYPE
+    Dim ch As Long
+
+'    n = Len(text) * 2               ' down + up for each character
+    n = Len(Text) 'This stops the text being duplicated!
+    ReDim inputs(0 To n - 1)
+
+    For i = 1 To Len(Text)
+        ch = AscW(Mid$(Text, i, 1))
+        
+        ' Key down
+        inputs((i - 1) * 2).dwType = INPUT_KEYBOARD
+        inputs((i - 1) * 2).ki.wVk = 0
+        inputs((i - 1) * 2).ki.wScan = ch
+        inputs((i - 1) * 2).ki.dwFlags = KEYEVENTF_UNICODE
+
+        ' Key up
+        inputs((i - 1) * 2 + 1).dwType = INPUT_KEYBOARD
+        inputs((i - 1) * 2 + 1).ki.wVk = 0
+        inputs((i - 1) * 2 + 1).ki.wScan = ch
+        inputs((i - 1) * 2 + 1).ki.dwFlags = KEYEVENTF_UNICODE Or KEYEVENTF_KEYUP
+    
+    Next i
+
+    Call SendInput(n, inputs(0), LenB(inputs(0)))
+
 End Sub
 
 Public Sub WaitForPropertyValue( _

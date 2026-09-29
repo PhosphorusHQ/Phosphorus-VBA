@@ -23,22 +23,11 @@ Private Type BrowserAttributes
   URL As String
   WebAppPageTitle As String
   MasterWindow As pLocator
-  RootView As pLocator
-  NonClientView As pLocator
-  BrowserNonClient As pLocator
-  BrowserClientView As pLocator
-  LiveBackgroundView As pLocator
-  DefaultContentWrapper As pLocator
-  SidebarItemContentViewDockerView As pLocator
-  View As pLocator
-  TopBarContainerView As pLocator
   LastTabView As pLocator
   CloseOtherTabs As pLocator
-  ToolbarView As pLocator
   BackButton As pLocator
-  AddressBar As pLocator
+  RefreshButton As pLocator
   AddressField As pLocator
-  PageContainerView As pLocator
   RootWebArea As pLocator
 End Type
 
@@ -57,43 +46,21 @@ End Sub
 
 Private Sub GetAllLocators()
   Set This.MasterWindow = Factory.GetNewLocator
-  Set This.RootView = Factory.GetNewLocator
-  Set This.NonClientView = Factory.GetNewLocator
-  Set This.BrowserNonClient = Factory.GetNewLocator
-  Set This.BrowserClientView = Factory.GetNewLocator
-  Set This.LiveBackgroundView = Factory.GetNewLocator
-  Set This.DefaultContentWrapper = Factory.GetNewLocator
-  Set This.SidebarItemContentViewDockerView = Factory.GetNewLocator
-  Set This.View = Factory.GetNewLocator
-  Set This.TopBarContainerView = Factory.GetNewLocator
   Set This.LastTabView = Factory.GetNewLocator
   Set This.CloseOtherTabs = Factory.GetNewLocator
-  Set This.ToolbarView = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
-  Set This.AddressBar = Factory.GetNewLocator
+  Set This.RefreshButton = Factory.GetNewLocator
   Set This.AddressField = Factory.GetNewLocator
-  Set This.PageContainerView = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
 End Sub
 
 Private Sub DestroyLocators()
   Set This.MasterWindow = Nothing
-  Set This.RootView = Nothing
-  Set This.NonClientView = Nothing
-  Set This.BrowserNonClient = Nothing
-  Set This.BrowserClientView = Nothing
-  Set This.LiveBackgroundView = Nothing
-  Set This.DefaultContentWrapper = Nothing
-  Set This.SidebarItemContentViewDockerView = Nothing
-  Set This.View = Nothing
-  Set This.TopBarContainerView = Nothing
   Set This.LastTabView = Nothing
   Set This.CloseOtherTabs = Nothing
-  Set This.ToolbarView = Nothing
   Set This.BackButton = Nothing
-  Set This.AddressBar = Nothing
+  Set This.RefreshButton = Nothing
   Set This.AddressField = Nothing
-  Set This.PageContainerView = Nothing
   Set This.RootWebArea = Nothing
 End Sub
 
@@ -104,7 +71,10 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String,
   This.WebAppPageTitle = WebAppPageTitle
   LaunchExecutable Phosphorus.WindowsExecutables.Opera, "--force-renderer-accessibility " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  If AbsoluteWaitTimeSeconds > 0 Then
+  If AbsoluteWaitTimeSeconds = 0 Then
+    AbsoluteWaitTimeSeconds = BaseWaitTimeSeconds
+  End If
+  If AbsoluteWaitTimeSeconds >= 0 Then
     This.RootWebArea.Find AbsoluteWaitTimeSeconds
   Else
     This.RootWebArea.Find BaseWaitTimeSeconds * (1000 / WebBrowserCommon.DownloadSpeedMbps)
@@ -121,65 +91,32 @@ Private Sub InitialiseAllLocators()
     .WindowInteractionState ReadyForUserInteraction
   End With
 
-  With This.RootView
-    .Initialise "RootView", This.MasterWindow, Children, By.ClassName, "RootView"
+  With This.LastTabView
+    .Initialise "LastTabView", This.MasterWindow, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
+    .ClassName "TabView": .NameIs This.WebAppPageTitle: .PositionInMatchingSet -1
   End With
 
-  This.NonClientView.Initialise "NonClientView", This.RootView, Children, By.ClassName, "NonClientView"
-
-  This.BrowserNonClient.Initialise "BrowserNonClient", This.NonClientView, Children, By.NameIs, "Browser non-client"
-
-  This.BrowserClientView.Initialise "BrowserClientView", This.BrowserNonClient, Children, By.ClassName, "BrowserClientView"
-
-  This.LiveBackgroundView.Initialise "LiveBackgroundView", This.BrowserClientView, Children, By.ClassName, "LiveBackgroundView"
-
-  This.DefaultContentWrapper.Initialise "DefaultContentWrapper", This.LiveBackgroundView, Children, By.ClassName, "DefaultContentWrapper"
-
-  This.SidebarItemContentViewDockerView.Initialise "SidebarItemContentViewDockerView", This.DefaultContentWrapper, Children, By.ClassName, "SidebarItemContentViewDockerView"
-
-    This.View.Initialise "View", This.SidebarItemContentViewDockerView, Children, By.ClassName, "View"
-
-      This.TopBarContainerView.Initialise "TopBarContainerView", This.View, Descendants, By.ClassName, "TopBarContainerView", FindFirst:=True
-
-        With This.LastTabView
-          .Initialise "LastTabView", This.TopBarContainerView, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
-          .ClassName "TabView": .NameIs This.WebAppPageTitle: .PositionInMatchingSet -1
-        End With
-
-        'Right click & close all other tabs
-        This.LastTabView.Element.RightClick
-        With This.CloseOtherTabs
-          .Initialise "CloseOtherTabs", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
-          .ControlType MenuItem: .NameIs "Close other tabs"
-          .Element.ClickIfEnabled This.MasterWindow.Element
-        End With
-
-      With This.ToolbarView
-        .Initialise "ToolbarView", This.View, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
-        .ClassName "ToolbarView": .NameIs "Navigation"
-      End With
+  'Right click & close all other tabs
+  This.LastTabView.Element.RightClick
+  With This.CloseOtherTabs
+    .Initialise "CloseOtherTabs", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
+    .ControlType MenuItem: .NameIs "Close other tabs"
+    .Element.ClickIfEnabled This.MasterWindow.Element
+  End With
       
-        With This.BackButton
-          .Initialise "BackButton", This.ToolbarView, Descendants, By.pConditions, "AND(AriaRoleButton, NameIs)", FindFirst:=True
-          .AriaRoleButton: .NameIs "Back"
-        End With
+  With This.BackButton
+    .Initialise "BackButton", This.MasterWindow, Descendants, By.pConditions, "AND(AriaRoleButton, NameIs)", FindFirst:=True
+    .AriaRoleButton: .NameIs "Back"
+  End With
  
-        With This.AddressBar
-          .Initialise "AddressBar", This.ToolbarView, Descendants, By.pConditions, "AND(AriaRoleTextBox, ClassName, NameIs)", FindFirst:=True
-          .AriaRoleTextBox: .ClassName "AddressBarView": .NameIs "Address bar"
-        End With
+  This.RefreshButton.Initialise "RefreshButton", This.MasterWindow, Descendants, By.NameIs, "Reload"
 
-          With This.AddressField
-            .Initialise "AddressField", This.AddressBar, Descendants, By.pConditions, "AND(AriaRoleTextBox, ClassName, NameIs)", FindFirst:=True
-            .AriaRoleTextBox: .ClassName "AddressTextfieldView": .NameIs "Address field"
-          End With
-
-    With This.PageContainerView
-      .Initialise "PageContainerView", This.View, Descendants, By.pConditions, "AND(ClassName, NameIs)", FindFirst:=True
-      .ClassName "PageContainerView": .NameIs "Page container"
-    End With
+  With This.AddressField
+    .Initialise "AddressField", This.MasterWindow, Descendants, By.pConditions, "AND(AriaRoleTextBox, ClassName, NameIs)", FindFirst:=True
+    .AriaRoleTextBox: .ClassName "AddressTextfieldView": .NameIs "Address field"
+  End With
         
-         This.RootWebArea.Initialise "RootWebArea", This.PageContainerView, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
+  This.RootWebArea.Initialise "RootWebArea", This.MasterWindow, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
    
 End Sub
 
@@ -191,6 +128,13 @@ Public Function GetRootWebArea(Optional NewWebPage As Boolean) As pLocator
     This.RootWebArea.Find 10
   End If
   Set GetRootWebArea = This.RootWebArea
+End Function
+
+Public Function GetRefreshButton() As pLocator
+  If This.RefreshButton.Element.UIAElement Is Nothing Then
+    This.RefreshButton.Find 0
+  End If
+  Set GetRefreshButton = This.RefreshButton
 End Function
 
 Public Function GetCurrentURL() As String

@@ -25,6 +25,7 @@ Private Type BrowserAttributes
   MasterWindow As pLocator
   BrowserRootView As pLocator
   BackButton As pLocator
+  RefreshButton As pLocator
   AddressAndSearchBar As pLocator
   RootWebArea As pLocator
 End Type
@@ -46,6 +47,7 @@ Private Sub GetAllLocators()
   Set This.MasterWindow = Factory.GetNewLocator
   Set This.BrowserRootView = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
+  Set This.RefreshButton = Factory.GetNewLocator
   Set This.AddressAndSearchBar = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
 End Sub
@@ -54,6 +56,7 @@ Private Sub DestroyLocators()
   Set This.MasterWindow = Nothing
   Set This.BrowserRootView = Nothing
   Set This.BackButton = Nothing
+  Set This.RefreshButton = Nothing
   Set This.AddressAndSearchBar = Nothing
   Set This.RootWebArea = Nothing
 End Sub
@@ -65,7 +68,10 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String,
   This.WebAppPageTitle = WebAppPageTitle
   LaunchExecutable Phosphorus.WindowsExecutables.Chrome, "--force-renderer-accessibility " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  If AbsoluteWaitTimeSeconds > 0 Then
+  If AbsoluteWaitTimeSeconds = 0 Then
+    AbsoluteWaitTimeSeconds = BaseWaitTimeSeconds
+  End If
+  If AbsoluteWaitTimeSeconds >= 0 Then
     This.RootWebArea.Find AbsoluteWaitTimeSeconds
   Else
     This.RootWebArea.Find BaseWaitTimeSeconds * (1000 / WebBrowserCommon.DownloadSpeedMbps)
@@ -88,7 +94,9 @@ Private Sub InitialiseAllLocators()
   With This.BackButton
     .Initialise "BackButton", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
   End With
-  
+
+  This.RefreshButton.Initialise "RefreshButton", This.MasterWindow, Descendants, By.NameIs, "Reload"
+
   With This.AddressAndSearchBar
     .Initialise "AddressAndSearchBar", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
   End With
@@ -105,6 +113,13 @@ Public Function GetRootWebArea(Optional NewWebPage As Boolean) As pLocator
     This.RootWebArea.Find 10
   End If
   Set GetRootWebArea = This.RootWebArea
+End Function
+
+Public Function GetRefreshButton() As pLocator
+  If This.RefreshButton.Element.UIAElement Is Nothing Then
+    This.RefreshButton.Find 0
+  End If
+  Set GetRefreshButton = This.RefreshButton
 End Function
 
 Public Function GetCurrentURL() As String

@@ -23,12 +23,9 @@ Private Type BrowserAttributes
   URL As String
   WebAppPageTitle As String
   MasterWindow As pLocator
-  NavigationToolbar As pLocator
   BackButton As pLocator
-  URLbar As pLocator
+  RefreshButton As pLocator
   URLInputBox As pLocator
-  TabBrowserPanels As pLocator
-  TabBrowserPanel As pLocator
   RootWebArea As pLocator
 End Type
 
@@ -47,23 +44,17 @@ End Sub
 
 Private Sub GetAllLocators()
   Set This.MasterWindow = Factory.GetNewLocator
-  Set This.NavigationToolbar = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
-  Set This.URLbar = Factory.GetNewLocator
+  Set This.RefreshButton = Factory.GetNewLocator
   Set This.URLInputBox = Factory.GetNewLocator
-  Set This.TabBrowserPanels = Factory.GetNewLocator
-  Set This.TabBrowserPanel = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
 End Sub
 
 Private Sub DestroyLocators()
   Set This.MasterWindow = Nothing
-  Set This.NavigationToolbar = Nothing
   Set This.BackButton = Nothing
-  Set This.URLbar = Nothing
+  Set This.RefreshButton = Nothing
   Set This.URLInputBox = Nothing
-  Set This.TabBrowserPanels = Nothing
-  Set This.TabBrowserPanel = Nothing
   Set This.RootWebArea = Nothing
 End Sub
 
@@ -76,7 +67,10 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String,
 '  LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -P Phosphorus -url " & This.URL, Phosphorus.WindowShowStates.Maximized
   LaunchExecutable Phosphorus.WindowsExecutables.Firefox, " -url " & This.URL, Phosphorus.WindowShowStates.Maximized
   InitialiseAllLocators
-  If AbsoluteWaitTimeSeconds > 0 Then
+  If AbsoluteWaitTimeSeconds = 0 Then
+    AbsoluteWaitTimeSeconds = BaseWaitTimeSeconds
+  End If
+  If AbsoluteWaitTimeSeconds >= 0 Then
     This.RootWebArea.Find AbsoluteWaitTimeSeconds
   Else
     This.RootWebArea.Find BaseWaitTimeSeconds * (1000 / WebBrowserCommon.DownloadSpeedMbps)
@@ -90,42 +84,24 @@ Private Sub InitialiseAllLocators()
     .NameIs This.WebAppPageTitle & " — Mozilla Firefox"
     .ControlType UIAControlTypeIDs.Window: .ClassName "MozillaWindowClass": .WindowInteractionState ReadyForUserInteraction
   End With
-
-  With This.NavigationToolbar
-    .Initialise "NavigationToolbar", This.MasterWindow, Children, pConditions, "AND(AriaRoleToolbar, NameIs)"
-    .AriaRoleToolbar: .NameIs "Navigation"
-  End With
   
-    With This.BackButton
-     .Initialise "BackButton", This.NavigationToolbar, Children, pConditions, _
-      "AND(AriaRoleButton, OR(NameIsBackwards, NameIsBack))": .AriaRoleButton: .NameIs_ "Backwards": .NameIs_ "Back" 'Need Backwards BEFORE Back!
-    End With
-
-    With This.URLbar
-     .Initialise "URLbar", This.NavigationToolbar, Children, pConditions, _
-      "AND(AriaRoleGroup, AutomationId)": .AriaRoleGroup: .AutomationId "urlbar"
-    End With
-
-      With This.URLInputBox
-       .Initialise "URLInputBox", This.URLbar, Descendants, pConditions, _
-        "AND(AriaRoleComboBox, OR(ClassName1, ClassName2))"
-        .AriaRoleComboBox
-        .Condition "ClassName1", UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, "urlbar-input-box"
-        .Condition "ClassName2", UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, "urlbar-input textbox-input" 'Firefox v 151.0.2
-      End With
- 
- With This.TabBrowserPanels
-    .Initialise "TabBrowserPanels", This.MasterWindow, Children, pConditions, "AND(AutomationId, ControlType)"
-    .AutomationId "tabbrowser-tabpanels": .ControlType Pane
+  With This.BackButton
+   .Initialise "BackButton", This.MasterWindow, Descendants, pConditions, _
+    "AND(AriaRoleButton, OR(NameIsBackwards, NameIsBack))": .AriaRoleButton: .NameIs_ "Backwards": .NameIs_ "Back" 'Need Backwards BEFORE Back!
   End With
 
-  With This.TabBrowserPanel
-    .Initialise "TabBrowserPanel", This.TabBrowserPanels, Children, pConditions, "AND(AriaRoleTabPanel, AutomationId)"
-    .AriaRoleTabPanel: .AutomationId "panel-1-1"
+  This.RefreshButton.Initialise "RefreshButton", This.MasterWindow, Descendants, By.NameIs, "Reload"
+
+  With This.URLInputBox
+   .Initialise "URLInputBox", This.MasterWindow, Descendants, pConditions, _
+     "AND(AriaRoleComboBox, OR(ClassName1, ClassName2))"
+   .AriaRoleComboBox
+   .Condition "ClassName1", UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, "urlbar-input-box"
+   .Condition "ClassName2", UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, "urlbar-input textbox-input" 'Firefox v 151.0.2
   End With
 
   With This.RootWebArea
-    .Initialise "RootWebArea", This.TabBrowserPanel, Descendants, pConditions, "AND(AriaRoleDocument, NameIs)"
+    .Initialise "RootWebArea", This.MasterWindow, Descendants, pConditions, "AND(AriaRoleDocument, NameIs)"
     .AriaRoleDocument: .NameIs This.WebAppPageTitle
   End With
 
@@ -139,6 +115,13 @@ Public Function GetRootWebArea(Optional NewWebPage As Boolean) As pLocator
     This.RootWebArea.Find 10
   End If
   Set GetRootWebArea = This.RootWebArea
+End Function
+
+Public Function GetRefreshButton() As pLocator
+  If This.RefreshButton.Element.UIAElement Is Nothing Then
+    This.RefreshButton.Find 0
+  End If
+  Set GetRefreshButton = This.RefreshButton
 End Function
 
 Public Function GetCurrentURL() As String

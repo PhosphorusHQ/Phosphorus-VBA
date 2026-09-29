@@ -42,7 +42,8 @@ Private Sub GetInternetSpeedsFromOokla()
   Dim DOWNLOAD As pLocator
   Dim UPLOAD As pLocator
 
-Phosphorus.Log4PStatic.GetLogger
+  'Needed to run on it's own!
+  'Phosphorus.Log4PStatic.GetLogger
 
   Factory.CurrentWebBrowserType = Chrome 'Switched to Chrome from Edge as using Edge here causes problems for launching later Edge browser
   Set WebBrowser = Factory.GetNewWebBrowser
@@ -120,13 +121,18 @@ Phosphorus.Log4PStatic.GetLogger
   Set DOWNLOAD = Nothing
   Set UPLOAD = Nothing
   
-Phosphorus.Log4PStatic.CloseLogger
+  'Phosphorus.Log4PStatic.CloseLogger
   
   Debug.Print "Download speed is (Mbps): " & DownloadSpeedMbps & ", " & "Upload speed is (Mbps): " & UploadSpeedMbps
 
 End Sub
 
-Public Sub Navigate(CurrentWebBrowser As Object, NavigationButton As pLocator, AddressElement As pLocator, RootWebArea As pLocator)
+Public Sub Navigate( _
+  CurrentWebBrowser As Object, _
+  NavigationButton As pLocator, _
+  AddressElement As pLocator, _
+  RootWebArea As pLocator, _
+  Optional RefreshButton As pLocator)
   Dim CurrentURL As String
   CurrentURL = CurrentWebBrowser.GetCurrentURL
   With NavigationButton
@@ -134,7 +140,25 @@ Public Sub Navigate(CurrentWebBrowser As Object, NavigationButton As pLocator, A
     .Element.Click
   End With
   AddressElement.Element.WaitForPatternState UIAPatterns.Value, CurrentURL, 10, True
-  RootWebArea.Find 10, FindElementAgain:=True
+  If RefreshButton Is Nothing Then
+    RootWebArea.Find 10, FindElementAgain:=True
+  Else
+    'We are able to try refreshing!
+    Dim Continue As Boolean, i As Integer
+    Continue = True
+    i = 0
+    While Continue
+      i = i + 1
+      Continue = (i <= 3)
+      If Continue Then
+        If RootWebArea.ElementExists(10) Then
+          Continue = False
+        Else
+          RefreshButton.Element.Click
+        End If
+      End If
+    Wend
+  End If
 End Sub
 
 Public Sub WaitForNewURL(CurrentURL As String, AddressElement As pLocator, RootWebArea As pLocator, TimeoutInSeconds As Integer)

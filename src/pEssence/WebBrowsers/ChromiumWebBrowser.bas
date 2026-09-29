@@ -23,16 +23,9 @@ Private Type BrowserAttributes
   URL As String
   WebAppPageTitle As String
   MasterWindow As pLocator
-  BrowserRootView As pLocator
-  NonClientView As pLocator
-  BrowserFrameViewWin As pLocator
-  BrowserView As pLocator
-  TopContainerView As pLocator
-  ToolbarView As pLocator
   BackButton As pLocator
-  LocationBarView As pLocator
+  RefreshButton As pLocator
   AddressAndSearchBar As pLocator
-  BrowserViewSubView1 As pLocator
   RootWebArea As pLocator
 End Type
 
@@ -51,36 +44,25 @@ End Sub
 
 Private Sub GetAllLocators()
   Set This.MasterWindow = Factory.GetNewLocator
-  Set This.BrowserRootView = Factory.GetNewLocator
-  Set This.NonClientView = Factory.GetNewLocator
-  Set This.BrowserFrameViewWin = Factory.GetNewLocator
-  Set This.BrowserView = Factory.GetNewLocator
-  Set This.TopContainerView = Factory.GetNewLocator
-  Set This.ToolbarView = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
-  Set This.LocationBarView = Factory.GetNewLocator
+  Set This.RefreshButton = Factory.GetNewLocator
   Set This.AddressAndSearchBar = Factory.GetNewLocator
-  Set This.BrowserViewSubView1 = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
 End Sub
 
 Private Sub DestroyLocators()
   Set This.MasterWindow = Nothing
-  Set This.BrowserRootView = Nothing
-  Set This.NonClientView = Nothing
-  Set This.BrowserFrameViewWin = Nothing
-  Set This.BrowserView = Nothing
-  Set This.TopContainerView = Nothing
-  Set This.ToolbarView = Nothing
   Set This.BackButton = Nothing
-  Set This.LocationBarView = Nothing
+  Set This.RefreshButton = Nothing
   Set This.AddressAndSearchBar = Nothing
-  Set This.BrowserViewSubView1 = Nothing
   Set This.RootWebArea = Nothing
 End Sub
 
 'Download latest stable Chromium binaries (64-bit and 32-bit)
-'https://chromium.woolyss.com/
+'XXXhttps://chromium.woolyss.com/
+
+'https://www.chromium.org/getting-involved/download-chromium/
+'https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=win_rel/
 
 'How to install Chromium for all users on Windows
 'https://martinrotter.github.io/it-programming/2016/07/17/install-chromium-system-wide-windows/
@@ -92,7 +74,10 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String,
   This.WebAppPageTitle = WebAppPageTitle
   LaunchExecutable Phosphorus.WindowsExecutables.Chromium, "--force-renderer-accessibility " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  If AbsoluteWaitTimeSeconds > 0 Then
+  If AbsoluteWaitTimeSeconds = 0 Then
+    AbsoluteWaitTimeSeconds = BaseWaitTimeSeconds
+  End If
+  If AbsoluteWaitTimeSeconds >= 0 Then
     This.RootWebArea.Find AbsoluteWaitTimeSeconds
   Else
     This.RootWebArea.Find BaseWaitTimeSeconds * (1000 / WebBrowserCommon.DownloadSpeedMbps)
@@ -104,41 +89,22 @@ Private Sub InitialiseAllLocators()
   With This.MasterWindow
     .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState)"
     .NameIs This.WebAppPageTitle & " - Chromium"
-    .ControlType UIAControlTypeIDs.Window
+    .ControlType UIAControlTypeIDs.Pane
     .ClassName "Chrome_WidgetWin_1"
     .WindowInteractionState ReadyForUserInteraction
   End With
+    
+  With This.BackButton
+    .Initialise "BackButton", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
+  End With
+  
+  This.RefreshButton.Initialise "RefreshButton", This.MasterWindow, Descendants, By.NameIs, "Reload"
 
-  With This.BrowserRootView
-    .Initialise "BrowserRootView", This.MasterWindow, Children, By.ClassName, "BrowserRootView"
+  With This.AddressAndSearchBar
+    .Initialise "AddressAndSearchBar", This.MasterWindow, Descendants, By.NameIs, "Address and search bar"
   End With
 
-  This.NonClientView.Initialise "NonClientView", This.BrowserRootView, Children, By.ClassName, "NonClientView"
-  This.BrowserFrameViewWin.Initialise "BrowserFrameViewWin", This.NonClientView, Children, By.ClassName, "BrowserFrameViewWin"
-  This.BrowserView.Initialise "BrowserView", This.BrowserFrameViewWin, Children, By.ClassName, "BrowserView"
-    
-    'First Pane Below Browser View
-    This.TopContainerView.Initialise "TopContainerView", This.BrowserView, Children, By.ClassName, "TopContainerView"
-      This.ToolbarView.Initialise "ToolbarView", This.TopContainerView, Children, By.ClassName, "ToolbarView"
-        
-        With This.BackButton
-          .Initialise "BackButton", This.ToolbarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
-        End With
-
-        With This.LocationBarView
-          .Initialise "LocationBarView", This.ToolbarView, Children, pConditions, "AND(ControlType, ClassName)": .ControlType UIAControlTypeIDs.Group: .ClassName "LocationBarView"
-        End With
-  
-          With This.AddressAndSearchBar
-            .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
-          End With
-
-    'Second Pane Below Browser View
-    With This.BrowserViewSubView1
-      .Initialise "BrowserViewSubView1", This.BrowserView, Children, By.ClassName, "View", FindFirst:=True
-    End With
-
-      This.RootWebArea.Initialise "RootWebArea", This.BrowserViewSubView1, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
+  This.RootWebArea.Initialise "RootWebArea", This.MasterWindow, Descendants, By.ControlType, UIAControlTypeIDs.Document, FindFirst:=True
 
 End Sub
 
@@ -152,9 +118,15 @@ Public Function GetRootWebArea(Optional NewWebPage As Boolean) As pLocator
   Set GetRootWebArea = This.RootWebArea
 End Function
 
+Public Function GetRefreshButton() As pLocator
+  If This.RefreshButton.Element.UIAElement Is Nothing Then
+    This.RefreshButton.Find 0
+  End If
+  Set GetRefreshButton = This.RefreshButton
+End Function
+
 Public Function GetCurrentURL() As String
   With This.AddressAndSearchBar
-    .Find 10
     GetCurrentURL = .Element.GetValue()
   End With
 End Function
@@ -171,33 +143,37 @@ Public Sub AcknowledgeChangeYourPasswordAlert()
 
   Application.Wait (Now + TimeValue("0:00:01"))
   
-  Dim RootView As pLocator
-  Set RootView = Factory.GetNewLocator
-  With RootView
-    .Initialise "RootView", This.BrowserRootView, Children, By.ClassName, "RootView"
-    .WaitForElementExists 10:  .Find 10
-  End With
+'  Dim RootView As pLocator
+'  Set RootView = Factory.GetNewLocator
+'  With RootView
+'    .Initialise "RootView", This.BrowserRootView, Children, By.ClassName, "RootView"
+'    .WaitForElementExists 10:  .Find 10
+'  End With
    
   Dim PasswordAlertOkButton As pLocator
   Set PasswordAlertOkButton = Factory.GetNewLocator
   Dim Continue As Boolean
   With PasswordAlertOkButton
-    .Initialise "RootView", RootView, Descendants, By.AriaRole, AriaRoles.Button
-    .ElementExists 10
-    .Find 10
-    Continue = True
-    While Continue
-      .Element.Click
-      Application.Wait (Now + TimeValue("0:00:01"))
-      Continue = False
-      On Error Resume Next
-      Continue = .ElementExists(0)
-      On Error GoTo 0
-    Wend
-    This.RootWebArea.Find 10, FindElementAgain:=True
+'    .Initialise "RootView", This.MasterWindow, Descendants, By.AriaRole, AriaRoles.Button
+    .Initialise "RootView", This.MasterWindow, Descendants, By.pConditions, "AND(AriaRole, NameIs)": .PositionInMatchingSet 1
+    .AriaRole AriaRoles.Button
+    .NameIs "Close"
+    If .ElementExists(3) Then
+      .Find 10
+      Continue = True
+      While Continue
+        .Element.Click
+        Application.Wait (Now + TimeValue("0:00:01"))
+        Continue = False
+        On Error Resume Next
+        Continue = .ElementExists(0)
+        On Error GoTo 0
+      Wend
+      This.RootWebArea.Find 10, FindElementAgain:=True
+    End If
   End With
   
-  Set RootView = Nothing
+'  Set RootView = Nothing
   Set PasswordAlertOkButton = Nothing
   
 End Sub

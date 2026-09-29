@@ -23,16 +23,9 @@ Private Type BrowserAttributes
   URL As String
   WebAppPageTitle As String
   MasterWindow As pLocator
-  BrowserRootView As pLocator
-  NonClientView As pLocator
-  EdgeBrowserFrameViewWin As pLocator
-  BrowserView As pLocator
-  TopContainerView As pLocator
-  EdgeToolbarView As pLocator
   BackButton As pLocator
-  LocationBarView As pLocator
+  RefreshButton As pLocator
   AddressAndSearchBar As pLocator
-  SidebarContentsSplitView As pLocator
   RootWebArea As pLocator
 End Type
 
@@ -43,7 +36,6 @@ Private Sub Class_Initialize()
 End Sub
 
 Private Sub Class_Terminate()
-'Stop
   Dim ProcessId As Long
   ProcessId = This.MasterWindow.Element.UIAElement.CurrentProcessId
   On Error Resume Next
@@ -54,16 +46,9 @@ Private Sub Class_Terminate()
     Phosphorus.WindowsProcesses.KillProcessByID ProcessId
   End If
   Set This.MasterWindow = Nothing
-  Set This.BrowserRootView = Nothing
-  Set This.NonClientView = Nothing
-  Set This.EdgeBrowserFrameViewWin = Nothing
-  Set This.BrowserView = Nothing
-  Set This.TopContainerView = Nothing
-  Set This.EdgeToolbarView = Nothing
   Set This.BackButton = Nothing
-  Set This.LocationBarView = Nothing
+  Set This.RefreshButton = Nothing
   Set This.AddressAndSearchBar = Nothing
-  Set This.SidebarContentsSplitView = Nothing
   Set This.RootWebArea = Nothing
 End Sub
 
@@ -73,16 +58,9 @@ End Sub
 
 Private Sub DestroyLocators()
   Set This.MasterWindow = Factory.GetNewLocator
-  Set This.BrowserRootView = Factory.GetNewLocator
-  Set This.NonClientView = Factory.GetNewLocator
-  Set This.EdgeBrowserFrameViewWin = Factory.GetNewLocator
-  Set This.BrowserView = Factory.GetNewLocator
-  Set This.TopContainerView = Factory.GetNewLocator
-  Set This.EdgeToolbarView = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
-  Set This.LocationBarView = Factory.GetNewLocator
+  Set This.RefreshButton = Factory.GetNewLocator
   Set This.AddressAndSearchBar = Factory.GetNewLocator
-  Set This.SidebarContentsSplitView = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
 End Sub
 
@@ -94,7 +72,10 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String,
   LaunchCommandByProtocol This.WebAppName, "microsoft-edge:", This.URL, WindowShowStates.Maximized
 '  LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  If AbsoluteWaitTimeSeconds > 0 Then
+  If AbsoluteWaitTimeSeconds = 0 Then
+    AbsoluteWaitTimeSeconds = BaseWaitTimeSeconds
+  End If
+  If AbsoluteWaitTimeSeconds >= 0 Then
     This.RootWebArea.Find AbsoluteWaitTimeSeconds
   Else
     This.RootWebArea.Find BaseWaitTimeSeconds * (1000 / WebBrowserCommon.DownloadSpeedMbps)
@@ -112,35 +93,25 @@ Private Sub InitialiseAllLocators()
     .WindowInteractionState ReadyForUserInteraction
   End With
 
-  This.BrowserRootView.Initialise "BrowserRootView", This.MasterWindow, Children, By.ClassName, "BrowserRootView"
-  This.NonClientView.Initialise "NonClientView", This.BrowserRootView, Children, By.ClassName, "NonClientView"
-  This.EdgeBrowserFrameViewWin.Initialise "EdgeBrowserFrameViewWin", This.NonClientView, Children, By.ClassName, "EdgeBrowserFrameViewWin"
-  This.BrowserView.Initialise "BrowserView", This.EdgeBrowserFrameViewWin, Children, By.ClassName, "BrowserView"
+  With This.BackButton
+    .Initialise "BackButton", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
+  End With
 
-    'First Pane Below Browser View
-    This.TopContainerView.Initialise "TopContainerView", This.BrowserView, Children, By.ClassName, "TopContainerView"
-      This.EdgeToolbarView.Initialise "EdgeToolbarView", This.TopContainerView, Children, By.ClassName, "EdgeToolbarView"
+  With This.RefreshButton
+    .Initialise "RefreshButton", This.MasterWindow, Descendants, pConditions, "AND(NameIs,ClassName)"
+    .NameIs "Refresh"
+    .ClassName "ReloadButton"
+  End With
 
-        With This.BackButton
-          .Initialise "BackButton", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
-        End With
+  With This.AddressAndSearchBar
+    .Initialise "AddressAndSearchBar", This.MasterWindow, Descendants, pConditions, "AND(ControlType, NameIs, ClassName)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar": .ClassName "OmniboxViewViews"
+    'Seems we need to force finding this here fro Edge
+    .Find 10
+  End With
   
-        With This.LocationBarView
-          .Initialise "LocationBarView", This.EdgeToolbarView, Children, pConditions, "AND(ControlType, ClassName)": .ControlType UIAControlTypeIDs.Group: .ClassName "LocationBarView"
-        End With
-  
-          With This.AddressAndSearchBar
-            .Initialise "AddressAndSearchBar", This.LocationBarView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Edit: .NameIs "Address and search bar"
-          End With
-  
-    'Second Pane Below Browser View
-    With This.SidebarContentsSplitView
-      .Initialise "SidebarContentsSplitView", This.BrowserView, Children, By.ClassName, "SidebarContentsSplitView"
-    End With
-
-      With This.RootWebArea
-        .Initialise "RootWebArea", This.SidebarContentsSplitView, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
-      End With
+  With This.RootWebArea
+    .Initialise "RootWebArea", This.MasterWindow, Descendants, By.AutomationId, "RootWebArea", FindFirst:=True
+  End With
 
 End Sub
 
@@ -152,6 +123,17 @@ Public Function GetRootWebArea(Optional NewWebPage As Boolean) As pLocator
     This.RootWebArea.Find 10
   End If
   Set GetRootWebArea = This.RootWebArea
+End Function
+
+Public Function GetRefreshButton() As pLocator
+  With This.RefreshButton
+    If .Element.UIAElement Is Nothing Then
+      'This seems to help!
+      This.MasterWindow.Element.Click
+      .Find 0
+    End If
+  End With
+  Set GetRefreshButton = This.RefreshButton
 End Function
 
 Public Function GetCurrentURL() As String
@@ -168,5 +150,4 @@ End Sub
 Public Sub WaitForNewURL(TimeoutInSeconds As Integer)
   WebBrowserCommon.WaitForNewURL GetCurrentURL, This.AddressAndSearchBar, This.RootWebArea, TimeoutInSeconds
 End Sub
-
 

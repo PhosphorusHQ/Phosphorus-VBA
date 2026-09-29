@@ -23,22 +23,12 @@ Private Type BrowserAttributes
   URL As String
   WebAppPageTitle As String
   MasterWindow As pLocator
-  BrowserRootView As pLocator
-  BrowserRootView2 As pLocator
-  CustoTopContainerViewPlaceholderView As pLocator
-  TabsAccessiblePaneView As pLocator
   FirstTab As pLocator
   CloseOtherTabs As pLocator
-  NonClientView As pLocator
-  FrameView As pLocator
-  BrowserView As pLocator
-  View As pLocator
   RootWebArea As pLocator
-  RootView4 As pLocator
-  SuggestContents As pLocator
   AddressAndSearchBar As pLocator
-  TitleBarView As pLocator
   BackButton As pLocator
+  RefreshButton As pLocator
 End Type
 
 Private This As BrowserAttributes
@@ -56,42 +46,22 @@ End Sub
 
 Private Sub GetAllLocators()
   Set This.MasterWindow = Factory.GetNewLocator
-  Set This.BrowserRootView = Factory.GetNewLocator
-  Set This.BrowserRootView2 = Factory.GetNewLocator
-  Set This.NonClientView = Factory.GetNewLocator
-  Set This.FrameView = Factory.GetNewLocator
-  Set This.BrowserView = Factory.GetNewLocator
-  Set This.View = Factory.GetNewLocator
   Set This.RootWebArea = Factory.GetNewLocator
-  Set This.CustoTopContainerViewPlaceholderView = Factory.GetNewLocator
-  Set This.TabsAccessiblePaneView = Factory.GetNewLocator
   Set This.FirstTab = Factory.GetNewLocator
   Set This.CloseOtherTabs = Factory.GetNewLocator
-  Set This.RootView4 = Factory.GetNewLocator
-  Set This.SuggestContents = Factory.GetNewLocator
   Set This.AddressAndSearchBar = Factory.GetNewLocator
-  Set This.TitleBarView = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
+  Set This.RefreshButton = Factory.GetNewLocator
 End Sub
 
 Private Sub DestroyLocators()
   Set This.MasterWindow = Nothing
-  Set This.BrowserRootView = Nothing
-  Set This.BrowserRootView2 = Nothing
-  Set This.NonClientView = Nothing
-  Set This.NonClientView = Nothing
-  Set This.BrowserView = Nothing
-  Set This.View = Nothing
   Set This.RootWebArea = Nothing
-  Set This.CustoTopContainerViewPlaceholderView = Nothing
-  Set This.TabsAccessiblePaneView = Nothing
   Set This.FirstTab = Nothing
   Set This.CloseOtherTabs = Nothing
-  Set This.RootView4 = Nothing
-  Set This.SuggestContents = Nothing
   Set This.AddressAndSearchBar = Nothing
-  Set This.TitleBarView = Nothing
   Set This.BackButton = Nothing
+  Set This.RefreshButton = Nothing
 End Sub
 
 Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String, Optional BaseWaitTimeSeconds As Long = 10, Optional AbsoluteWaitTimeSeconds As Long)
@@ -102,7 +72,10 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String,
   'We need to disable Background Running in settings (browser://settings/)
   LaunchExecutable Phosphorus.WindowsExecutables.YandexWebBrowser, " --force-renderer-accessibility=complete " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  If AbsoluteWaitTimeSeconds > 0 Then
+  If AbsoluteWaitTimeSeconds = 0 Then
+    AbsoluteWaitTimeSeconds = BaseWaitTimeSeconds
+  End If
+  If AbsoluteWaitTimeSeconds >= 0 Then
     This.RootWebArea.Find AbsoluteWaitTimeSeconds
   Else
     This.RootWebArea.Find BaseWaitTimeSeconds * (1000 / WebBrowserCommon.DownloadSpeedMbps)
@@ -119,69 +92,38 @@ Private Sub InitialiseAllLocators()
     .WindowInteractionState ReadyForUserInteraction
   End With
 
-  With This.BrowserRootView
-    .Initialise "BrowserRootView", This.MasterWindow, Children, By.ClassName, "BrowserRootView"
+  With This.FirstTab
+    .Initialise "FirstTab", This.MasterWindow, Descendants, By.pConditions, "ControlType"
+    .ControlType UIAControlTypeIDs.TabItem
+    .PositionInMatchingSet 1
   End With
 
-    With This.BrowserRootView2
-      .Initialise "BrowserRootView2", This.BrowserRootView, Children, By.ClassName, "BrowserRootView"
-    End With
+  'Right click & close all other tabs
+  This.FirstTab.Element.RightClick
+  With This.CloseOtherTabs
+    .Initialise "CloseOtherTabs", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
+    .ControlType MenuItem: .NameIs "Close other tabs"
+    .Element.ClickIfEnabled This.MasterWindow.Element
+  End With
 
-      With This.CustoTopContainerViewPlaceholderView
-        .Initialise "CustoTopContainerView::PlaceholderView", This.BrowserRootView2, Children, By.ClassName, "CustoTopContainerView::PlaceholderView"
-        .PositionInMatchingSet 1
-      End With
+  This.BackButton.Initialise "BackButton", This.MasterWindow, Descendants, By.NameIs, "Back"
     
-        This.TabsAccessiblePaneView.Initialise "TabsAccessiblePaneView", This.CustoTopContainerViewPlaceholderView, Children, By.ClassName, "TabsAccessiblePaneView"
-        
-        With This.FirstTab
-          .Initialise "FirstTab", This.TabsAccessiblePaneView, Children, By.pConditions, "ControlType"
-          .ControlType UIAControlTypeIDs.TabItem
-          .PositionInMatchingSet 1
-        End With
-
-        'Right click & close all other tabs
-        This.FirstTab.Element.RightClick
-        With This.CloseOtherTabs
-          .Initialise "CloseOtherTabs", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
-          .ControlType MenuItem: .NameIs "Close other tabs"
-          .Element.ClickIfEnabled This.MasterWindow.Element
-        End With
-
-      With This.TitleBarView
-        .Initialise "TitleBarView", This.BrowserRootView2, Descendants, By.pConditions, "AND(AriaRoleToolbar, ClassName)", FindFirst:=True
-        .AriaRoleToolbar: .ClassName "TitleBarView"
-      End With
-
-        This.BackButton.Initialise "BackButton", This.TitleBarView, Children, By.NameIs, "Back"
-
-  This.NonClientView.Initialise "NonClientView", This.BrowserRootView, Children, By.ClassName, "NonClientView"
-
-    This.FrameView.Initialise "FrameView", This.NonClientView, Children, By.ClassName, "FrameView"
-
-      This.BrowserView.Initialise "BrowserView", This.FrameView, Children, By.ClassName, "BrowserView"
-
-        This.View.Initialise "View", This.BrowserView, Children, By.AutomationId, "view_1103"
-
-          With This.RootWebArea
-            .Initialise "RootWebArea", This.View, Descendants, By.AutomationId, "RootWebArea", True
-            'On Yandex, the Root view seems to take longer to appear so find her here & give it some time to load
-            .Find 10
-          End With
-  
-  With This.RootView4
-    .Initialise "RootView4", This.BrowserRootView, Children, By.ClassName, "RootView": .PositionInMatchingSet 4
+  With This.AddressAndSearchBar
+    .Initialise "AddressAndSearchBar", This.MasterWindow, Descendants, By.pConditions, "AND(AriaRoleTextBox, NameIs)"
+    .AriaRoleTextBox: .NameIs "Address and search bar"
   End With
-  
-    With This.SuggestContents
-      .Initialise "SuggestContents", This.RootView4, Children, By.ClassName, "SuggestContents"
-    End With
-
-      With This.AddressAndSearchBar
-        .Initialise "AddressAndSearchBar", This.SuggestContents, Descendants, By.pConditions, "AND(AriaRoleTextBox, NameIs)"
-        .AriaRoleTextBox: .NameIs "Address and search bar"
-      End With
-
+ 
+  With This.RefreshButton
+    .Initialise "RefreshButton", This.MasterWindow, Descendants, By.NameIs, "Reload this page"
+  End With
+ 
+  With This.RootWebArea
+    .Initialise "RootWebArea", This.MasterWindow, Descendants, By.AutomationId, "RootWebArea", True
+    'On Yandex, the Root view seems to take longer to appear so find here & give it some extra time to load
+    .Find 20
+  End With
+ 
+ 
 End Sub
 
 Public Function GetRootWebArea(Optional NewWebPage As Boolean) As pLocator
@@ -189,9 +131,17 @@ Public Function GetRootWebArea(Optional NewWebPage As Boolean) As pLocator
     DestroyLocators
     GetAllLocators
     InitialiseAllLocators
-    This.RootWebArea.Find 10
+    'On Yandex, the Root view seems to take longer to appear
+    This.RootWebArea.Find 20
   End If
   Set GetRootWebArea = This.RootWebArea
+End Function
+
+Public Function GetRefreshButton() As pLocator
+  If This.RefreshButton.Element.UIAElement Is Nothing Then
+    This.RefreshButton.Find 0
+  End If
+  Set GetRefreshButton = This.RefreshButton
 End Function
 
 Public Function GetCurrentURL() As String
@@ -202,7 +152,7 @@ Public Function GetCurrentURL() As String
 End Function
 
 Public Sub NavigateBack()
-  WebBrowserCommon.Navigate Me, This.BackButton, This.AddressAndSearchBar, This.RootWebArea
+  WebBrowserCommon.Navigate Me, This.BackButton, This.AddressAndSearchBar, This.RootWebArea, RefreshButton:=This.RefreshButton
 End Sub
 
 Public Sub WaitForNewURL(TimeoutInSeconds As Integer)

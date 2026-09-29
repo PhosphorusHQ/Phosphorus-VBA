@@ -31,6 +31,7 @@ Private Type BrowserAttributes
   ToolbarView As pLocator
   ToolbarViewContainerView As pLocator
   BackButton As pLocator
+  RefreshButton As pLocator
   LocationBarView As pLocator
   AddressAndSearchBar As pLocator
   BrowserViewSubView1 As pLocator
@@ -60,6 +61,7 @@ Private Sub GetAllLocators()
   Set This.ToolbarView = Factory.GetNewLocator
   Set This.ToolbarViewContainerView = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
+  Set This.RefreshButton = Factory.GetNewLocator
   Set This.LocationBarView = Factory.GetNewLocator
   Set This.AddressAndSearchBar = Factory.GetNewLocator
   Set This.BrowserViewSubView1 = Factory.GetNewLocator
@@ -76,6 +78,7 @@ Private Sub DestroyLocators()
   Set This.ToolbarView = Nothing
   Set This.TopContainerView = Nothing
   Set This.BackButton = Nothing
+  Set This.RefreshButton = Nothing
   Set This.LocationBarView = Nothing
   Set This.AddressAndSearchBar = Nothing
   Set This.BrowserViewSubView1 = Nothing
@@ -95,7 +98,10 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String,
   This.WebAppPageTitle = WebAppPageTitle
   LaunchExecutable Phosphorus.WindowsExecutables.Epic, "--force-renderer-accessibility " & URL, WindowShowStates.Maximized
   InitialiseAllLocators
-  If AbsoluteWaitTimeSeconds > 0 Then
+  If AbsoluteWaitTimeSeconds = 0 Then
+    AbsoluteWaitTimeSeconds = BaseWaitTimeSeconds
+  End If
+  If AbsoluteWaitTimeSeconds >= 0 Then
     This.RootWebArea.Find AbsoluteWaitTimeSeconds
   Else
     This.RootWebArea.Find BaseWaitTimeSeconds * (1000 / WebBrowserCommon.DownloadSpeedMbps)
@@ -130,6 +136,8 @@ Private Sub InitialiseAllLocators()
             .Initialise "BackButton", This.ToolbarViewContainerView, Children, pConditions, "AND(ControlType, NameIs)": .ControlType UIAControlTypeIDs.Button: .NameIs "Back"
           End With
 
+          This.RefreshButton.Initialise "RefreshButton", This.ToolbarViewContainerView, Descendants, By.NameIs, "Reload"
+ 
         With This.LocationBarView
           .Initialise "LocationBarView", This.ToolbarViewContainerView, Children, pConditions, "AND(ControlType, ClassName)": .ControlType UIAControlTypeIDs.Group: .ClassName "LocationBarView"
         End With
@@ -155,6 +163,13 @@ Public Function GetRootWebArea(Optional NewWebPage As Boolean) As pLocator
     This.RootWebArea.Find 10
   End If
   Set GetRootWebArea = This.RootWebArea
+End Function
+
+Public Function GetRefreshButton() As pLocator
+  If This.RefreshButton.Element.UIAElement Is Nothing Then
+    This.RefreshButton.Find 0
+  End If
+  Set GetRefreshButton = This.RefreshButton
 End Function
 
 Public Function GetCurrentURL() As String

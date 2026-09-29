@@ -29,6 +29,7 @@ Public Enum UIAPropertyComparisons
   IsTheString
   IsLikeTheString
   EqualsNumber
+  NotEqualsNumber
   StartsWithTheString
   EndsWithTheString
 End Enum
@@ -66,6 +67,8 @@ Public Function GetUIAPropertyComparisonsName(Comparison As UIAPropertyCompariso
       R = "IsLike"
     Case UIAPropertyComparisons.EqualsNumber
       R = "Equals"
+    Case UIAPropertyComparisons.NotEqualsNumber
+      R = "NotEquals"
     Case UIAPropertyComparisons.StartsWithTheString
       R = "StartsWith"
     Case UIAPropertyComparisons.EndsWithTheString

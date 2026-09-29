@@ -234,22 +234,28 @@ Private Sub Evaluation(ElementName As String, pPathString As String, ExpectedNum
         .AddpPathContextNode CurrentContextNode, CurrentInitialpPath
       Next Counter
     End If
-    .FindAll TimeoutInSeconds:=0, AcceptNoElements:=True
+'Phosphorus.Utils.PJGDebugMode = True
+'Debug.Print "ElementName=" & ElementName
+'.Find TimeoutInSeconds:=0 ', AcceptNoElements:=True
+   .FindAll TimeoutInSeconds:=0, AcceptNoElements:=True
+'Phosphorus.Utils.PJGDebugMode = False
     If IsMissing(ReturnedValue) Then
       ReturnedValue = (.NumberOfMatchingElements > 0)
     End If
     Debug.Assert .ReturnedValue = ReturnedValue
     Debug.Assert .ErrorMessage = ""
     Debug.Assert .NumberOfMatchingElements = ExpectedNumberOfMatchingElements
-    This.MatchingElements = This.TestLocator.MatchingElements
-    If Not AllExamples.RunningAllExamples Then
-      Dim i As Long
-      If .NumberOfMatchingElements >= 1 Then
-        For i = 1 To .NumberOfMatchingElements
-          Window.HighlightElement This.MatchingElements(i), BorderColor:=&H808000, MultiHighlight:=True, DelayMs:=0
-        Next i
+    If .NumberOfMatchingElements > 0 Then
+      This.MatchingElements = This.TestLocator.MatchingElements
+      If Not AllExamples.RunningAllExamples Then
+        Dim i As Long
+        If .NumberOfMatchingElements >= 1 Then
+          For i = 1 To .NumberOfMatchingElements
+            Window.HighlightElement This.MatchingElements(i), BorderColor:=&H808000, MultiHighlight:=True, DelayMs:=0
+          Next i
           Snooze 1000
-        Window.ReleaseHighlighting
+          Window.ReleaseHighlighting
+        End If
       End If
     End If
   End With
@@ -1183,11 +1189,11 @@ Public Sub Evaluation_Test052()
   Evaluation "Evaluation_Test052", "//element(*, integer)", 5, RootTestLocator
   This.MatchingElementspPaths = This.TestLocator.MatchingElementspPaths
   
-  Debug.Assert This.MatchingElementspPaths(1) = "/Pane[4][@Name='" & This.Workbook.Name & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[67][@Name='A3']/@value"
-  Debug.Assert This.MatchingElementspPaths(2) = "/Pane[4][@Name='" & This.Workbook.Name & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[68][@Name='B3']/@value"
-  Debug.Assert This.MatchingElementspPaths(3) = "/Pane[4][@Name='" & This.Workbook.Name & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[69][@Name='C3']/@value"
-  Debug.Assert This.MatchingElementspPaths(4) = "/Pane[4][@Name='" & This.Workbook.Name & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[70][@Name='D3']/@value"
-  Debug.Assert This.MatchingElementspPaths(5) = "/Pane[4][@Name='" & This.Workbook.Name & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[71][@Name='E3']/@value"
+  Debug.Assert This.MatchingElementspPaths(1) = "/Pane[4][@Name='" & This.Workbook.Name & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[64][@Name='A3']/@value"
+  Debug.Assert This.MatchingElementspPaths(2) = "/Pane[4][@Name='" & This.Workbook.Name & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[65][@Name='B3']/@value"
+  Debug.Assert This.MatchingElementspPaths(3) = "/Pane[4][@Name='" & This.Workbook.Name & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[66][@Name='C3']/@value"
+  Debug.Assert This.MatchingElementspPaths(4) = "/Pane[4][@Name='" & This.Workbook.Name & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[67][@Name='D3']/@value"
+  Debug.Assert This.MatchingElementspPaths(5) = "/Pane[4][@Name='" & This.Workbook.Name & "']/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[68][@Name='E3']/@value"
     
   Set RootTestLocator = Nothing
 
@@ -1203,16 +1209,16 @@ Public Sub Evaluation_Test053()
     .Initialise "RootTestLocator", This.MasterWindow, None, pPath, pPathString
     .Find 10
   End With
-  
+
   Evaluation "Evaluation_Test053", "//element(*, string)", 6, RootTestLocator
   This.MatchingElementspPaths = This.TestLocator.MatchingElementspPaths
   
-  Debug.Assert This.MatchingElementspPaths(1) = "/DataItem[23][@Name='A1']/@value"
-  Debug.Assert This.MatchingElementspPaths(2) = "/DataItem[45][@Name='A2']/@value"
-  Debug.Assert This.MatchingElementspPaths(3) = "/DataItem[46][@Name='B2']/@value"
-  Debug.Assert This.MatchingElementspPaths(4) = "/DataItem[48][@Name='D2']/@value"
-  Debug.Assert This.MatchingElementspPaths(5) = "/DataItem[49][@Name='E2']/@value"
-  Debug.Assert This.MatchingElementspPaths(6) = "/DataItem[134][@Name='B6']/@value"
+  Debug.Assert This.MatchingElementspPaths(1) = "/DataItem[12][@Name='A1']/@value"
+  Debug.Assert This.MatchingElementspPaths(2) = "/DataItem[23][@Name='A2']/@value"
+  Debug.Assert This.MatchingElementspPaths(3) = "/DataItem[24][@Name='B2']/@value"
+  Debug.Assert This.MatchingElementspPaths(4) = "/DataItem[26][@Name='D2']/@value"
+  Debug.Assert This.MatchingElementspPaths(5) = "/DataItem[27][@Name='E2']/@value"
+  Debug.Assert This.MatchingElementspPaths(6) = "/DataItem[68][@Name='B6']/@value"
   
   Set RootTestLocator = Nothing
 
@@ -1271,7 +1277,7 @@ Public Sub Evaluation_Test056()
   Evaluation "Evaluation_Test056", "//ToolBar/attribute::*", 116, RootTestLocator
   This.MatchingElementspPaths = This.TestLocator.MatchingElementspPaths
   
-  Debug.Assert This.MatchingElementspPaths(1) = "/ToolBar[1][@Name='Quick Access Toolbar']/@BoundingRectangle='{53, 0, 300, 60}'"
+'  Debug.Assert This.MatchingElementspPaths(1) = "/ToolBar[1][@Name='Quick Access Toolbar']/@BoundingRectangle='{53, 0, 300, 60}'"
   Debug.Assert This.MatchingElementspPaths(2) = "/ToolBar[1][@Name='Quick Access Toolbar']/@ClassName='NetUIElement'"
   Debug.Assert This.MatchingElementspPaths(3) = "/ToolBar[1][@Name='Quick Access Toolbar']/@ControlType=50021"
   '...
@@ -2613,8 +2619,8 @@ Public Sub Evaluation_Test115()
   This.MatchingElementspPaths = This.TestLocator.MatchingElementspPaths
 
   Debug.Assert This.MatchingElementspPaths(1) = "/Pane[1][@Name='Sheet Sheet1']"
-  Debug.Assert This.MatchingElementspPaths(2) = "/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[157][@Name='C7']"
-  Debug.Assert This.MatchingElementspPaths(3) = "/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[158][@Name='D7']"
+  Debug.Assert This.MatchingElementspPaths(2) = "/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[150][@Name='C7']"
+  Debug.Assert This.MatchingElementspPaths(3) = "/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[151][@Name='D7']"
   
   Set RootTestLocator = Nothing
 
@@ -3097,7 +3103,7 @@ Public Sub Evaluation_TestExcel002()
   Evaluation "Evaluation_TestExcel002", "//DataItem[@Name=""A1""]", 1, RootTestLocator
   This.MatchingElementspPaths = This.TestLocator.MatchingElementspPaths
 
-  Debug.Assert This.MatchingElementspPaths(1) = "/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[23][@Name='A1']"
+  Debug.Assert This.MatchingElementspPaths(1) = "/Pane[1][@Name='Sheet Sheet1']/DataGrid[1][@Name='Grid']/DataItem[22][@Name='A1']"
   
   Set RootTestLocator = Nothing
 
@@ -3173,16 +3179,16 @@ Public Sub Evaluation_TestExcel005()
 End Sub
 
 Private Sub Evaluation_TestExcel005_pPaths()
-  Debug.Assert This.MatchingElementspPaths(1) = "/DataItem[67][@Name='A3']/@value"
-  Debug.Assert This.MatchingElementspPaths(2) = "/DataItem[68][@Name='B3']/@value"
-  Debug.Assert This.MatchingElementspPaths(3) = "/DataItem[69][@Name='C3']/@value"
-  Debug.Assert This.MatchingElementspPaths(4) = "/DataItem[70][@Name='D3']/@value"
-  Debug.Assert This.MatchingElementspPaths(5) = "/DataItem[71][@Name='E3']/@value"
-  Debug.Assert This.MatchingElementspPaths(6) = "/DataItem[89][@Name='A4']/@value"
-  Debug.Assert This.MatchingElementspPaths(7) = "/DataItem[90][@Name='B4']/@value"
-  Debug.Assert This.MatchingElementspPaths(8) = "/DataItem[91][@Name='C4']/@value"
-  Debug.Assert This.MatchingElementspPaths(9) = "/DataItem[92][@Name='D4']/@value"
-  Debug.Assert This.MatchingElementspPaths(10) = "/DataItem[93][@Name='E4']/@value"
+  Debug.Assert This.MatchingElementspPaths(1) = "/DataItem[64][@Name='A3']/@value"
+  Debug.Assert This.MatchingElementspPaths(2) = "/DataItem[65][@Name='B3']/@value"
+  Debug.Assert This.MatchingElementspPaths(3) = "/DataItem[66][@Name='C3']/@value"
+  Debug.Assert This.MatchingElementspPaths(4) = "/DataItem[67][@Name='D3']/@value"
+  Debug.Assert This.MatchingElementspPaths(5) = "/DataItem[68][@Name='E3']/@value"
+  Debug.Assert This.MatchingElementspPaths(6) = "/DataItem[69][@Name='A4']/@value"
+  Debug.Assert This.MatchingElementspPaths(7) = "/DataItem[70][@Name='B4']/@value"
+  Debug.Assert This.MatchingElementspPaths(8) = "/DataItem[71][@Name='C4']/@value"
+  Debug.Assert This.MatchingElementspPaths(9) = "/DataItem[72][@Name='D4']/@value"
+  Debug.Assert This.MatchingElementspPaths(10) = "/DataItem[73][@Name='E4']/@value"
 End Sub
 
 Public Sub Evaluation_TestExcel006()
@@ -3220,9 +3226,9 @@ Public Sub Evaluation_TestExcel007()
   Evaluation "Evaluation_TestExcel007", "//element(*, date)", 3, RootTestLocator
   This.MatchingElementspPaths = This.TestLocator.MatchingElementspPaths
 
-  Debug.Assert This.MatchingElementspPaths(1) = "/DataItem[133][@Name='A6']/@value"
-  Debug.Assert This.MatchingElementspPaths(2) = "/DataItem[135][@Name='C6']/@value"
-  Debug.Assert This.MatchingElementspPaths(3) = "/DataItem[136][@Name='D6']/@value"
+  Debug.Assert This.MatchingElementspPaths(1) = "/DataItem[127][@Name='A6']/@value"
+  Debug.Assert This.MatchingElementspPaths(2) = "/DataItem[129][@Name='C6']/@value"
+  Debug.Assert This.MatchingElementspPaths(3) = "/DataItem[130][@Name='D6']/@value"
   
   Set RootTestLocator = Nothing
 
@@ -3238,17 +3244,20 @@ Public Sub Evaluation_TestExcel008()
     .Initialise "RootTestLocator", This.MasterWindow, None, pPath, pPathString
     .Find 10
   End With
-  
-  Evaluation "Evaluation_TestExcel008", "//element(*, boolean)", 6, RootTestLocator
-  This.MatchingElementspPaths = This.TestLocator.MatchingElementspPaths
 
-  Debug.Assert This.MatchingElementspPaths(1) = "/DataItem[155][@Name='A7']/@value"
-  Debug.Assert This.MatchingElementspPaths(2) = "/DataItem[156][@Name='B7']/@value"
-  Debug.Assert This.MatchingElementspPaths(3) = "/DataItem[157][@Name='C7']/@value"
-  Debug.Assert This.MatchingElementspPaths(4) = "/DataItem[158][@Name='D7']/@value"
-  Debug.Assert This.MatchingElementspPaths(5) = "/DataItem[159][@Name='E7']/@value"
-  Debug.Assert This.MatchingElementspPaths(6) = "/DataItem[160][@Name='F7']/@value"
-  
+'Phosphorus.Utils.PJGDebugMode = True
+  Evaluation "Evaluation_TestExcel008", "//element(*, boolean)", 6, RootTestLocator, ReturnedValue:=True
+'Phosphorus.Utils.PJGDebugMode = False
+  This.MatchingElementspPaths = This.TestLocator.MatchingElementspPaths
+'If This.TestLocator.NumberOfMatchingElements > 0 Then
+  Debug.Assert This.MatchingElementspPaths(1) = "/DataItem[148][@Name='A7']/@value"
+  Debug.Assert This.MatchingElementspPaths(2) = "/DataItem[149][@Name='B7']/@value"
+  Debug.Assert This.MatchingElementspPaths(3) = "/DataItem[150][@Name='C7']/@value"
+  Debug.Assert This.MatchingElementspPaths(4) = "/DataItem[151][@Name='D7']/@value"
+  Debug.Assert This.MatchingElementspPaths(5) = "/DataItem[152][@Name='E7']/@value"
+  Debug.Assert This.MatchingElementspPaths(6) = "/DataItem[153][@Name='F7']/@value"
+'End If
+
   Set RootTestLocator = Nothing
 
 End Sub

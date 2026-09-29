@@ -53,9 +53,17 @@ Public Sub Initialize()
   
   Set This.Heading = Factory.GetNewLocator
   With This.Heading
-    .Initialise "Heading", This.RootWebArea, Children, pConditions, "AND(AriaRoleHeading, NameIs)"
-    .AriaRoleHeading
-    .NameIs "Example Domain"
+    .Initialise "Heading", This.RootWebArea, Element + Children, pConditions, _
+       "OR(" & _
+         "AND(AriaRoleHeading, NameIsExampleDomain)," & _
+         "AND(ControlTypeDocument, NameIsExampleDomain), " & _
+         "AND(ControlTypeText, NameIsExampleDomain)" & _
+           ")"
+    .Condition "AriaRoleHeading", UIAProperties.AriaRole, IsTheString, AriaRoles.Heading
+    .Condition "ControlTypeDocument", UIAProperties.ControlType, EqualsNumber, UIAControlTypeIDs.Document
+    .Condition "ControlTypeText", UIAProperties.ControlType, EqualsNumber, UIAControlTypeIDs.Text
+    .Condition "NameIsExampleDomain", UIAProperties.Name, IsTheString, "Example Domain"
+    .PositionInMatchingSet -1
   End With
   
   Set This.Description = Factory.GetNewLocator
@@ -69,8 +77,9 @@ Public Sub Initialize()
     
   Set This.Link = Factory.GetNewLocator
   With This.Link
-    .Initialise "Link", This.RootWebArea, Children, pConditions, "AND(AriaRoleLink, NameIs)"
+    .Initialise "Link", This.RootWebArea, Children, pConditions, "OR(AND(AriaRoleLink, NameIs),AND(ControlTypeHyperlink, NameIs))"
     .AriaRoleLink
+    .Condition "ControlTypeHyperlink", UIAProperties.ControlType, EqualsNumber, UIAControlTypeIDs.Hyperlink
     .NameIs "Learn more"
   End With
   

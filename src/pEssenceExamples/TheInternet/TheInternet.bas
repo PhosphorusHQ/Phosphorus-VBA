@@ -10,8 +10,11 @@ Attribute VB_Name = "TheInternet"
 ' =======================================================================
 Option Explicit
 
-Sub TheInternet()
+Function TheInternet() As Boolean
 
+  Dim Succeeded As Boolean
+  Succeeded = False
+  
   On Error GoTo ErrorHandler
 
   If Not RunningAllExamples Then
@@ -30,20 +33,27 @@ Sub TheInternet()
     .DragAndDrop
     .FormAuthentication
   End With
+  Succeeded = True
   GoTo ExitSub
 
 ErrorHandler:
-  MsgBox _
-    Err.Description & " (Error Number #" & Err.Number & ") " & _
-      "for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser " & _
-      "in 'TheInternet' Example!", _
-    vbCritical
-  GoTo ExitSub
-
+  If RunningAllExamples Then
+    Debug.Print Err.Description & " (Error Number #" & Err.Number & ") for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser in 'TheInternet' Example!"
+  Else
+    MsgBox _
+      Err.Description & " (Error Number #" & Err.Number & ") " & _
+        "for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser " & _
+        "in 'TheInternet' Example!", _
+      vbCritical
+      GoTo ExitSub
+  End If
+  
 ExitSub:
   Set The_Internet = Nothing
   If Not RunningAllExamples Then
     Window.HighlightElements = False
   End If
-  
-End Sub
+
+  TheInternet = Succeeded
+
+End Function

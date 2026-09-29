@@ -12,10 +12,13 @@ Option Explicit
 
 Private ExampleDomain As ExampleDomainDotComPage
 
-Sub ExampleDomainDotCom()
+Function ExampleDomainDotCom() As Boolean
 
+  Dim Succeeded As Boolean
+  Succeeded = False
+  
   On Error GoTo ErrorHandler
-
+    
   If Not RunningAllExamples Then
     WebBrowserCommon.GetInternetSpeeds
     Window.HighlightElements = True
@@ -26,14 +29,19 @@ Sub ExampleDomainDotCom()
   
   ExampleDomain.Initialize
   ExampleDomain.RunChecks
+  Succeeded = True
   GoTo ExitSub
 
 ErrorHandler:
-  MsgBox _
-    Err.Description & " (Error Number #" & Err.Number & ") " & _
-      "for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser " & _
-      "in 'ExampleDomainDotCom' Example!", _
-    vbCritical
+  If RunningAllExamples Then
+    Debug.Print Err.Description & " (Error Number #" & Err.Number & ") for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser in 'ExampleDomainDotCom' Example!"
+  Else
+    MsgBox _
+      Err.Description & " (Error Number #" & Err.Number & ") " & _
+        "for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser " & _
+        "in 'ExampleDomainDotCom' Example!", _
+      vbCritical
+  End If
   GoTo ExitSub
   
 ExitSub:
@@ -42,4 +50,6 @@ ExitSub:
     Window.HighlightElements = False
   End If
   
-End Sub
+  ExampleDomainDotCom = Succeeded
+
+End Function

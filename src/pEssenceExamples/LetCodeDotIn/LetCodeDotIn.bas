@@ -10,14 +10,17 @@ Attribute VB_Name = "LetCodeDotIn"
 ' =======================================================================
 Option Explicit
 
-Sub RadioButtonsAndCheckboxes()
+Function RadioButtonsAndCheckboxes() As Boolean
 
+  Dim Succeeded As Boolean
+  Succeeded = False
+  
   On Error GoTo ErrorHandler
 
   If Not RunningAllExamples Then
     WebBrowserCommon.GetInternetSpeeds
     Window.HighlightElements = True
-    Factory.CurrentWebBrowserType = 1
+    Factory.CurrentWebBrowserType = Chromium
   End If
   
   Dim LetCodeDotIn As LetCodeDotInPageRadio
@@ -27,20 +30,27 @@ Sub RadioButtonsAndCheckboxes()
     .Initialize
     .Automate
   End With
+  Succeeded = True
   GoTo ExitSub
 
 ErrorHandler:
-  MsgBox _
-    Err.Description & " (Error Number #" & Err.Number & ") " & _
-      "for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser " & _
-      "in 'LetCodeDotIn' Example!", _
-    vbCritical
-  
+  If RunningAllExamples Then
+    Debug.Print Err.Description & " (Error Number #" & Err.Number & ") for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser in 'LetCodeDotIn' Example!"
+  Else
+    MsgBox _
+      Err.Description & " (Error Number #" & Err.Number & ") " & _
+        "for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser " & _
+        "in 'LetCodeDotIn' Example!", _
+      vbCritical
+  End If
+
 ExitSub:
   Set LetCodeDotIn = Nothing
   If Not RunningAllExamples Then
     Window.HighlightElements = False
   End If
   
-End Sub
+  RadioButtonsAndCheckboxes = Succeeded
+
+End Function
 

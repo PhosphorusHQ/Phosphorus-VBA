@@ -20,7 +20,7 @@ Option Explicit
 
 Const WEB_APP_NAME = "Letcode"
 Const TARGET_PAGE_URL = "https://letcode.in/radio"
-Const TARGET_PAGE_TITLE = "Radio Buttons | LetCode with Koushik"
+Dim TARGET_PAGE_TITLE  As String
 
 Private Type PageAttributes
   WebBrowser As Object
@@ -85,12 +85,17 @@ End Sub
 
 Public Sub Initialize()
 
+  If Factory.CurrentWebBrowserType = WebBrowserType.Chromium Then
+    TARGET_PAGE_TITLE = "LetCode with Koushik"
+  Else
+    TARGET_PAGE_TITLE = "Radio Buttons | LetCode with Koushik"
+  End If
+  
   With This.WebBrowser
     .Start WEB_APP_NAME, TARGET_PAGE_URL, TARGET_PAGE_TITLE
     Set This.RootWebArea = .GetRootWebArea
   End With
-
-    
+  
   Dim AllControls() As pElement
   With This.AllControls
     .Initialise "AllControls", This.RootWebArea, Descendants, pConditions, _
@@ -127,7 +132,9 @@ Public Sub Initialize()
     AllControls = .Elements
   End With
 
-  If Not pEssence.Utils.IsArrayEmpty(AllControls) Then
+  If pEssence.Utils.IsArrayEmpty(AllControls) Then
+    Err.Raise Err.Number + 1, "LetCodeDotInPageRadio", "No matching controls found!"
+  Else
     Dim i As Integer
     Dim CurrentUIAElement As IUIAutomationElement
     For i = 0 To UBound(AllControls)

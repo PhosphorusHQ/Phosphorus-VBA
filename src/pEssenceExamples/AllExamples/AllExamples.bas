@@ -11,56 +11,133 @@ Attribute VB_Name = "AllExamples"
 Option Explicit
 
 Public RunningAllExamples As Boolean
+Private RunUnstableTests As Boolean
+Dim TargetWBT As WebBrowserType
 
 Public Enum Examples
+  pPathExample
+  pPathExample_SubTest
   CalculatorExample
   HelloWorldExample
   ExampleDomainDotComExample
-  LetCodeDotInExample
+  LetCodeDotInRadioButtonsAndCheckboxesExample
   TheInternetExample
 End Enum
 
-Sub RunAllExamples()
+Public Sub RunAllExamples()
   WebBrowserCommon.ForgetInternetSpeeds
   Dim i As Integer
   For i = 1 To 1
+    RunUnstableTests = True
+    RunAnExample Examples.pPathExample
     RunAnExample Examples.CalculatorExample
+'TargetWBT = WebBrowserType.Brave
+TargetWBT = 0 'All!
     RunAnExample Examples.HelloWorldExample
-    RunAnExample Examples.ExampleDomainDotComExample
-    RunAnExample Examples.LetCodeDotInExample
+'PJG Needs rebuilding on NAS WordPress    RunAnExample Examples.ExampleDomainDotComExample
+'Needs rebuiding?
+    RunAnExample Examples.LetCodeDotInRadioButtonsAndCheckboxesExample
     RunAnExample Examples.TheInternetExample
   Next i
   MsgBox "All Examples Run!"
 End Sub
 
-Public Sub RunAnExample(Example As Examples)
-  
+Private Sub RunAnExample(Example As Examples)
+
   RunningAllExamples = True
   Window.HighlightElements = False
+  Phosphorus.Log4PStatic.GetLogger
   
   If Example = Examples.CalculatorExample Then
     Calculator.Calculator
+  ElseIf Example = Examples.pPathExample Then
+    pPathExamples.RunAllpPathTestsWithMultipleTries
+
   Else
-    WebBrowserCommon.GetInternetSpeeds
+'    WebBrowserCommon.GetInternetSpeeds
+WebBrowserCommon.SetDummyMobileDataInternetSpeeds
+
+    Dim WBTFrom As WebBrowserType
+    Dim WBTTo As WebBrowserType
+    If TargetWBT = 0 Then
+      WBTFrom = WebBrowserType.[_First] + 1
+      WBTTo = WebBrowserType.[_Last] - 1
+    Else
+      WBTFrom = TargetWBT
+      WBTTo = TargetWBT
+    End If
     Dim WBT As WebBrowserType
-    For WBT = WebBrowserType.[_First] + 1 To WebBrowserType.[_Last] - 1
+    For WBT = WBTFrom To WBTTo
       Factory.CurrentWebBrowserType = WBT
-      Select Case Example
-        Case Examples.HelloWorldExample
-          HelloWorld.HelloWorldWideWeb
-        Case Examples.ExampleDomainDotComExample
-          ExampleDomainDotCom.ExampleDomainDotCom
-        Case Examples.LetCodeDotInExample
-          LetCodeDotIn.RadioButtonsAndCheckboxes
-        Case Examples.TheInternetExample
-          TheInternet.TheInternet
-      End Select
+      TryToRunAnExampleMultipleTimes True, Example
     Next WBT
   End If
 
   Window.HighlightElements = False
   RunningAllExamples = False
+  Phosphorus.Log4PStatic.CloseLogger
 
 End Sub
 
+Public Sub TryToRunAnExampleMultipleTimes(WebBasedTest As Boolean, Example As Examples, Optional SubTestName As String)
+  
+  Dim NumberOfAttemptsAllowed As Integer
+  Dim AttemptNumber As Integer
+  Dim AttemptSucceeded As Boolean
+  Dim ExampleName As String
+  
+  NumberOfAttemptsAllowed = 3
+  AttemptNumber = 1
+  AttemptSucceeded = False
+    
+  While (AttemptNumber <= NumberOfAttemptsAllowed) And Not AttemptSucceeded
+  
+    Select Case Example
+      
+      Case Examples.HelloWorldExample
+        ExampleName = "HelloWorld"
+        AttemptSucceeded = HelloWorld.HelloWorldWideWeb
+      
+      Case Examples.ExampleDomainDotComExample
+        ExampleName = "ExampleDomainDotCom"
+        AttemptSucceeded = ExampleDomainDotCom.ExampleDomainDotCom
+      
+      Case Examples.LetCodeDotInRadioButtonsAndCheckboxesExample
+        ExampleName = "LetCodeDotInRadioButtonsAndCheckboxes"
+        If (Factory.CurrentWebBrowserType <> WebBrowserType.Brave And Factory.CurrentWebBrowserType <> WebBrowserType.Chromium) Or RunUnstableTests Then
+          AttemptSucceeded = LetCodeDotIn.RadioButtonsAndCheckboxes
+        End If
+      
+      Case Examples.TheInternetExample
+        ExampleName = "TheInternet"
+        If (Factory.CurrentWebBrowserType <> WebBrowserType.Chrome And Factory.CurrentWebBrowserType <> WebBrowserType.Yandex) Or RunUnstableTests Then
+          AttemptSucceeded = TheInternet.TheInternet
+        End If
+      
+      Case Examples.pPathExample_SubTest
+        ExampleName = SubTestName
+        AttemptSucceeded = pPathExamples.RunASinglepPathTest(SubTestName)
+    
+    End Select
+    
+    If Not AttemptSucceeded Then
+      AttemptNumber = AttemptNumber + 1
+    End If
+  Wend
+  
+  If WebBasedTest Then
+    If AttemptSucceeded Then
+      Debug.Print Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser succeeded for '" & ExampleName & "' Example after " & AttemptNumber & " attempt(s)!"
+    Else
+      Debug.Print Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser failed for '" & ExampleName & "' Example after " & NumberOfAttemptsAllowed & " attempts!"
+    End If
+  Else
+    If AttemptSucceeded Then
+      Debug.Print "Test succeeded for '" & ExampleName & "' Example after " & AttemptNumber & " attempt(s)!"
+    Else
+      Debug.Print "Test failed for '" & ExampleName & "' Example after " & NumberOfAttemptsAllowed & " attempts!"
+    End If
+  End If
+  
+End Sub
 

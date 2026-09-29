@@ -23,7 +23,11 @@ Public Function IsArrayEmpty(arrInput As Variant) As Boolean
   Dim lngTemp As Long
   On Error GoTo HandleError
   lngTemp = UBound(arrInput)
-  IsArrayEmpty = False
+  If lngTemp = -1 Then
+    IsArrayEmpty = True
+  Else
+    IsArrayEmpty = False
+  End If
   Exit Function
 
 HandleError:

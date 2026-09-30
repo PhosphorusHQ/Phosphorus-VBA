@@ -261,9 +261,23 @@ Private Sub RunEvaluationExcelTests()
 End Sub
 
 Public Sub RunAllpPathTestsWithMultipleTries()
+  
+  Set pPathPage = New pPathExamplesPage
+  
+  'Always HighlightElements for pPath examples
+  Window.HighlightElements = True
+
   RunAllPreValidationTests
   RunAllEvaluationTests
   RunAllEvaluationExcelTests
+  
+  If Not RunningAllExamples Then
+    Window.HighlightElements = False
+  End If
+  
+  Set pPathPage = Nothing
+  
+
 End Sub
 
 Private Sub RunAllPreValidationTests()
@@ -482,12 +496,7 @@ Public Function RunASinglepPathTest(TestName As String) As Boolean
   Succeeded = False
   
   On Error GoTo ErrorHandler
-  
-  'Always HighlightElements for pPath examples
-  Window.HighlightElements = True
-  
-  Set pPathPage = New pPathExamplesPage
-  
+    
   With pPathPage
     
     Select Case TestName
@@ -921,11 +930,6 @@ ErrorHandler:
   GoTo ExitSub
   
 ExitSub:
-  If Not RunningAllExamples Then
-    Window.HighlightElements = False
-  End If
-  Set pPathPage = Nothing
-  
   RunASinglepPathTest = Succeeded
 
 End Function

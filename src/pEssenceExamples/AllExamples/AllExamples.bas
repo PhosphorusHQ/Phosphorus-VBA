@@ -117,6 +117,10 @@ Public Sub TryToRunAnExampleMultipleTimes(WebBasedTest As Boolean, Example As Ex
         ExampleName = SubTestName
         AttemptSucceeded = pPathExamples.RunASinglepPathTest(SubTestName)
     
+      Case Else
+        MsgBox "Uhandled Example #" & Example
+        AttemptSucceeded = True
+        
     End Select
     
     If Not AttemptSucceeded Then

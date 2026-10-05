@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html>
+   <head>
+     <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+    <title>Selections</title>
+  </head>
+  <body>
+    <div name="Single Select">
+      <p>Single select</p>
+        <select id="single-select">
+          <option value="atl">Atlanta</option>
+          <option value="ber">Berlin</option>
+          <option value="bos">Boston</option>
+          <option value="chi">Chicago</option>
+          <option value="lon">London</option>
+          <option value="la">Los Angeles</option>
+          <option value="ny">New York</option>
+          <option value="par">Paris</option>
+          <option value="sf">San Francisco</option>
+        </select>
+      </div>
+      <div name="Multi Select">
+      <p>Multi select</p>
+       <select id="multiple-select" multiple="">
+         <option value="1">Books</option>
+        <option value="2">Movies, Music &amp; Games</option>
+        <option value="3">Electronics &amp; Computers</option>
+        <option value="4">Home, Garden &amp; Tools</option>
+        <option value="5">Health &amp; Beauty</option>
+        <option value="6">Toys, Kids &amp; Baby</option>
+        <option value="7">Clothing &amp; Jewelry</option>
+        <option value="8">Sports &amp; Outdoors</option>
+      </select>
+    </div>
+  </body>
+</html>

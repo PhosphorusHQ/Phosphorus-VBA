@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+     <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+    <title>Radio Buttons And Checkboxes</title>
+  </head>
+ <body>
+    <div name="Radio Buttons1">
+      <label>Answer yes or no</label>
+      <div>
+        <label>
+          <input type="radio" name="answer" id="yes" checked="">
+          <span>Yes</span>
+        </label>
+        <label>
+          <input type="radio" name="answer" id="no">
+            <span>No</span>
+        </label>
+        <p></p>
+      </div>
+    </div>
+    <div name="Radio Buttons2">
+        <label>Confirm last field is disabled</label>
+        <div>
+          <label>
+            <input type="radio" name="plan" id="going">
+            <span>Going</span>
+          </label>
+          <label>
+            <input type="radio" name="plan" id="notG">
+            <span>Not going</span>
+          </label>
+          <label>
+            <input type="radio" name="plan" id="maybe" disabled="">
+            <span>Maybe</span>
+          </label>
+        </div>
+        <p></p>
+      </div>
+       <p></p>
+      <div name="Checkbox">
+       <label>Tick the check</label>
+       <label>
+         <input type="checkbox">
+         <span>I agree to the <a>Terms and Conditions</a>
+         </span>
+       </label>
+      </div>
+    </div>
+  </body>
+</html>

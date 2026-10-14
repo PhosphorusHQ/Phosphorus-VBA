@@ -371,7 +371,7 @@ Public Sub Find( _
   PassedEndTime = False
   
   While Not (SomeElementsFound Or PassedEndTime)
-    FoundElements = Findlements(TimeoutInSeconds, True)
+    FoundElements = FindAllElements(TimeoutInSeconds, True)
     CountOfFoundElements = 0
     If Not pEssence.Utils.IsArrayEmpty(FoundElements) Then
       CountOfFoundElements = UBound(FoundElements) + 1
@@ -415,10 +415,34 @@ End Sub
 Public Sub FindAll(TimeoutInSeconds As Long, Optional AcceptNoElements As Boolean)
 'Find more than 1 elements with no timeout
   Toaster.Message "Finding all elements " & This.Element.GivenName, Finding
-  This.Elements = Findlements(TimeoutInSeconds, AcceptNoElements)
+  This.Elements = FindAllElements(TimeoutInSeconds, AcceptNoElements)
 End Sub
 
-Private Function Findlements(TimeoutInSeconds As Long, AcceptNoElements As Boolean) As pElement() ' IUIAutomationElement()
+Public Function FindElement( _
+  ElementName As String, _
+  FindBy As By, _
+  EvaluationLogic As Variant, _
+  Optional ElementScope As TreeScope = -1, _
+  Optional RelativeElementNumber As Integer, _
+  Optional FindFirst As Boolean _
+  ) As pElement
+  If ElementScope = -1 Then
+    ElementScope = TreeScope.Descendants
+  End If
+  Dim NewElementLocator As pLocator
+  Set NewElementLocator = Factory.GetNewLocator
+  With NewElementLocator
+    .Initialise ElementName, Me, ElementScope, FindBy, EvaluationLogic
+    If RelativeElementNumber <> 0 Then
+      .RelativeElementNumber RelativeElementNumber
+    End If
+    .Find
+    Set FindElement = .Element
+  End With
+  Set NewElementLocator = Nothing
+End Function
+
+Private Function FindAllElements(TimeoutInSeconds As Long, AcceptNoElements As Boolean) As pElement() ' IUIAutomationElement()
 'Find 1 or more elements with no timeout
 
   If This.FindBy <> By.pPath Then 'pPath has it's only pre-checks
@@ -610,7 +634,7 @@ Private Function Findlements(TimeoutInSeconds As Long, AcceptNoElements As Boole
       ErrorLogging.LogError Errors.FindElementsFindNoElements, "Locator : By " & UIACommon.GetByName(This.FindBy) & " '" & This.EvaluationLogic & "'"
     End If
   Else
-    Findlements = ReturnElements
+    FindAllElements = ReturnElements
   End If
 
 End Function

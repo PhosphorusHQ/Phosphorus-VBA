@@ -14,3 +14,5 @@ PhosphorusPackage.tar.SHA256.txt
 lib/
 /Releases
 Tests/WebPages/PlainHTML/Notes.docx
+*.docx
+*.gdoc

@@ -84,9 +84,27 @@ Private Sub AutoFindElement()
   End If
 End Sub
 
-Public Sub Click()
+Public Function Click() As pElement
+  
+  Dim InitialState As Boolean
+  InitialState = False
+  
   Actions.Click Me
-End Sub
+    
+  If HasPattern(UIAPatterns.SelectionItem) Then
+    WaitForPatternState UIAPatterns.SelectionItem, Not InitialState
+    GoTo ExitFunction
+  End If
+  
+  If HasPattern(UIAPatterns.Toggle) Then
+    WaitForPatternState UIAPatterns.Toggle, Not InitialState
+    GoTo ExitFunction
+  End If
+  
+ExitFunction:
+  Set Click = Me
+
+End Function
 
 Public Sub ClickIfEnabled(Optional NonClickItem As pElement)
   If Me.IsEnabled Then
@@ -101,6 +119,10 @@ End Sub
 Public Sub RightClick()
   Actions.RightClick Me
 End Sub
+
+Public Function ControlType() As Long
+  ControlType = GetProperty(UIAProperties.ControlType)
+End Function
 
 Public Sub DragAndDrop(ToElement As pElement)
   Actions.DragAndDrop Me, ToElement
@@ -182,6 +204,10 @@ Public Function IsAlive() As Boolean
   On Error GoTo 0
 End Function
 
+Public Function IsDisabled() As Boolean
+  IsDisabled = Not IsEnabled()
+End Function
+
 Public Function IsEnabled() As Boolean
   AutoFindElement
   Window.HighlightElement Me.UIAElement
@@ -194,7 +220,7 @@ Public Function IsSelected() As Boolean
   AutoFindElement
             
   Window.HighlightElement Me.UIAElement
-            
+
   ' Method 1: Preferred - Use SelectionItemPattern
   If HasPattern(UIAPatterns.SelectionItem) Then
      Dim SelectionItemPattern As IUIAutomationSelectionItemPattern
@@ -224,6 +250,10 @@ Public Function IsSelected() As Boolean
 CleanUp:
   Window.ReleaseHighlighting
     
+End Function
+
+Public Function IsNotSelected() As Boolean
+  IsNotSelected = Not IsSelected
 End Function
 
 Public Function Name() As String

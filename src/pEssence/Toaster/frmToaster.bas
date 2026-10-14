@@ -40,7 +40,7 @@ Option Explicit
 #End If
 
 Private Sub UserForm_Initialize()
-  Logo.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\Logo.png")
+  Logo.Picture = WindowsImageAcquisition.LoadImage(ThisWorkbook.Path & "\images\Logo 512x512.png")
 End Sub
 
 ' This event fires AFTER the form is fully visible

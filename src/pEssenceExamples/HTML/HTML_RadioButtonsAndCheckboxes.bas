@@ -2,7 +2,7 @@ Attribute VB_Name = "HTML_RadioButtonsAndCheckboxes"
 '@Folder HTML
 ' =======================================================================
 '  Phosphorus Test & Automation Suite
-'  Copyright (c) 2025 Peter Jeffrey Gale
+'  Copyright (c) 2026 Peter Jeffrey Gale
 '
 '  Licensed under the GNU GENERAL PUBLIC License
 '  Full licence: see LICENCE in the distribution folder & main module
@@ -22,10 +22,6 @@ Public Function RadioButtonsAndCheckboxes() As Boolean
   On Error GoTo ErrorHandler
   
   If Not RunningAllExamples Then
-    'pPath always requires the Logger class
-    Phosphorus.Log4PStatic.GetLogger
-'    WebBrowserCommon.GetInternetSpeeds
-    WebBrowserCommon.SetDummyMobileDataInternetSpeeds
     Factory.CurrentWebBrowserType = 1
   End If
   
@@ -175,9 +171,9 @@ ErrorTrap:
    
 ErrorHandler:
   If RunningAllExamples Then
-    Debug.Print Err.Description & " (Error Number #" & Err.Number & ") for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser in 'ExampleDomainDotCom' Example!"
+    Debug.Print Err.Description & " (Error Number #" & Err.Number & ") for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser in 'RadioButtonsAndCheckboxes' Example!"
   Else
-    MsgBox Err.Description & " (Error Number #" & Err.Number & ") for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser in 'ExampleDomainDotCom' Example!", vbCritical
+    MsgBox Err.Description & " (Error Number #" & Err.Number & ") for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser in 'RadioButtonsAndCheckboxes' Example!", vbCritical
   End If
   GoTo ExitSub
   

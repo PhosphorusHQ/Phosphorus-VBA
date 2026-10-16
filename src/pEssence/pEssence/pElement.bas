@@ -84,11 +84,19 @@ Private Sub AutoFindElement()
   End If
 End Sub
 
+Public Function AriaRole() As String
+  AriaRole = GetProperty(UIAProperties.AriaRole)
+End Function
+
+Public Function AriaProperties() As String
+  AriaProperties = GetProperty(UIAProperties.AriaProperties)
+End Function
+
 Public Function Click() As pElement
   
   Dim InitialState As Boolean
-  InitialState = False
-  
+  InitialState = Me.IsSelected
+
   Actions.Click Me
     
   If HasPattern(UIAPatterns.SelectionItem) Then

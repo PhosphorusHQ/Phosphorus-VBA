@@ -2,7 +2,7 @@ Attribute VB_Name = "WebBrowserCommon"
 '@Folder WebBrowsers
 ' =======================================================================
 '  Phosphorus Test & Automation Suite
-'  Copyright (c) 2025 Peter Jeffrey Gale
+'  Copyright (c) 2026 Peter Jeffrey Gale
 '
 '  Licensed under the GNU GENERAL PUBLIC License
 '  Full licence: see LICENCE in the distribution folder & main module
@@ -38,12 +38,8 @@ Private Sub GetInternetSpeedsFromOokla()
 
   Dim WebBrowser As Object
   Dim Go As pLocator
-  Dim ResultID As pLocator
   Dim DOWNLOAD As pLocator
   Dim UPLOAD As pLocator
-
-  'Needed to run on it's own!
-  'Phosphorus.Log4PStatic.GetLogger
 
   Factory.CurrentWebBrowserType = Chrome 'Switched to Chrome from Edge as using Edge here causes problems for launching later Edge browser
   Set WebBrowser = Factory.GetNewWebBrowser
@@ -56,11 +52,7 @@ Private Sub GetInternetSpeedsFromOokla()
   
   Set Go = Factory.GetNewLocator
   With Go
-'Edge
-'    .Initialise _
-      "Go", Root, TreeScope_Descendants, By.pConditions, _
-      "AND(AriaRoleHeading, NameIs)", FindFirst:=True: .AriaRoleHeading: .NameIs "GO"
-'Chrome
+    'Always uses Chrome!
     .Initialise _
       "Go", Root, TreeScope_Descendants, By.pConditions, _
       "AND(AriaRoleButton, NameIs)", FindFirst:=True: .AriaRoleButton: .NameIs "start speed test - connection type multi"
@@ -69,59 +61,26 @@ Private Sub GetInternetSpeedsFromOokla()
     .Element.Click
   End With
 
-  Set ResultID = Factory.GetNewLocator
-  With ResultID
-'Edge
-'    .Initialise _
-      "ResultID", Root, TreeScope_Descendants, By.pConditions, _
-      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "Result ID:":
-'Chrome
-'     .Initialise _
-'      "ResultID", Root, TreeScope_Descendants, By.pConditions, _
-'      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "Result ID":
-'     .Find 120
-  End With
-
   WebBrowser.WaitForNewURL 120
     
   Set DOWNLOAD = New pLocator
   With DOWNLOAD
-'Edge
-'    .Initialise _
-      "DOWNLOAD", Root, TreeScope_Descendants, By.pConditions, _
-      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "DOWNLOAD", True: .RelativeElementNumber 3
-'Chrome
-'    .Initialise _
-'      "DOWNLOAD", Root, TreeScope_Descendants, By.pConditions, _
-'      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "DOWNLOAD", True: .RelativeElementNumber 3
-     Snooze 2000 ' This helps!?
-    .Initialise "DOWNLOAD", Root, TreeScope.None, By.pPath, "//*[@ClassName=""py-2 font-mono text-5xl MuiBox-root css-s31qlv""][1]"
+    .Initialise "DOWNLOAD", Root, TreeScope.Descendants, By.NameIs, "Mbps": .PositionInMatchingSet 1: .RelativeElementNumber 1
     .Find 2
   End With
   DownloadSpeedMbps = DOWNLOAD.Element.Name
   
   Set UPLOAD = New pLocator
   With UPLOAD
-'Edge
-'    .Initialise _
-      "UPLOAD", Root, TreeScope_Descendants, By.pConditions, _
-      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "UPLOAD", True: .RelativeElementNumber 3
-'Chrome
-'    .Initialise _
-'      "UPLOAD", Root, TreeScope_Descendants, By.pConditions, _
-'      "AND(AriaRoleDescription, NameIs)": .AriaRoleDescription: .NameIs "UPLOAD", True: .RelativeElementNumber 3
-    .Initialise "UPLOAD", Root, TreeScope.None, By.pPath, "//*[@ClassName=""py-2 font-mono text-5xl MuiBox-root css-s31qlv""][2]"
+    .Initialise "UPLOAD", Root, TreeScope.Descendants, By.NameIs, "Mbps": .PositionInMatchingSet 2: .RelativeElementNumber 1
     .Find 2
   End With
   UploadSpeedMbps = UPLOAD.Element.Name
 
   Set WebBrowser = Nothing
   Set Go = Nothing
-  Set ResultID = Nothing
   Set DOWNLOAD = Nothing
   Set UPLOAD = Nothing
-  
-  'Phosphorus.Log4PStatic.CloseLogger
   
   Debug.Print "Download speed is (Mbps): " & DownloadSpeedMbps & ", " & "Upload speed is (Mbps): " & UploadSpeedMbps
 

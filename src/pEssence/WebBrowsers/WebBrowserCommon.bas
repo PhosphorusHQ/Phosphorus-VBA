@@ -30,13 +30,14 @@ End Sub
 
 Public Sub GetInternetSpeeds()
   If DownloadSpeedMbps = 0 Or UploadSpeedMbps = 0 Then
-    GetInternetSpeedsFromOokla
+    GetInternetSpeedsFromGoogle
   End If
 End Sub
 
 Private Sub GetInternetSpeedsFromOokla()
 
   Dim WebBrowser As Object
+  Dim Root As pLocator
   Dim Go As pLocator
   Dim DOWNLOAD As pLocator
   Dim UPLOAD As pLocator
@@ -47,12 +48,10 @@ Private Sub GetInternetSpeedsFromOokla()
     "Speedtest by Ookla", "https://www.speedtest.net/", "Speedtest by Ookla - The Global Broadband Speed Test", _
     AbsoluteWaitTimeSeconds:=10
 
-  Dim Root As pLocator
   Set Root = WebBrowser.GetRootWebArea
   
   Set Go = Factory.GetNewLocator
   With Go
-    'Always uses Chrome!
     .Initialise _
       "Go", Root, TreeScope_Descendants, By.pConditions, _
       "AND(AriaRoleButton, NameIs)", FindFirst:=True: .AriaRoleButton: .NameIs "start speed test - connection type multi"
@@ -82,7 +81,65 @@ Private Sub GetInternetSpeedsFromOokla()
   Set DOWNLOAD = Nothing
   Set UPLOAD = Nothing
   
-  Debug.Print "Download speed is (Mbps): " & DownloadSpeedMbps & ", " & "Upload speed is (Mbps): " & UploadSpeedMbps
+  Debug.Print "Ookla: Download speed is (Mbps): " & DownloadSpeedMbps & ", " & "Upload speed is (Mbps): " & UploadSpeedMbps
+
+End Sub
+
+Private Sub GetInternetSpeedsFromGoogle()
+
+  Dim WebBrowser As Object
+  Dim Root As pLocator
+  Dim RunTest As pLocator
+  Dim TestAgain As pLocator
+  Dim DOWNLOAD As pLocator
+  Dim UPLOAD As pLocator
+
+  Factory.CurrentWebBrowserType = Chrome 'Switched to Chrome from Edge as using Edge here causes problems for launching later Edge browser
+  Set WebBrowser = Factory.GetNewWebBrowser
+  WebBrowser.Start _
+    "Speedtest by Google", "https://www.google.com/search?q=Speed+Test", "Speed Test - Google Search", _
+    AbsoluteWaitTimeSeconds:=10
+  
+  Set Root = WebBrowser.GetRootWebArea
+  
+  Set RunTest = Factory.GetNewLocator
+  With RunTest
+    .Initialise _
+      "RunTest", Root, TreeScope_Descendants, By.pConditions, _
+      "AND(AriaRoleButton, NameIs)", FindFirst:=True: .AriaRoleButton: .NameIs "RUN SPEED TEST"
+    .Find 10
+    .Element.Click
+  End With
+
+  Set TestAgain = Factory.GetNewLocator
+  With TestAgain
+    .Initialise _
+      "TestAgain", Root, TreeScope_Descendants, By.pConditions, _
+      "AND(AriaRoleButton, NameIs)", FindFirst:=True: .AriaRoleButton: .NameIs "TEST AGAIN"
+    .ElementExists 60
+  End With
+    
+  Set DOWNLOAD = New pLocator
+  With DOWNLOAD
+    .Initialise "DOWNLOAD", Root, TreeScope.Descendants, By.NameIs, "Mbps download": .RelativeElementNumber -1
+    .Find 2
+  End With
+  DownloadSpeedMbps = DOWNLOAD.Element.Name
+  
+  Set UPLOAD = New pLocator
+  With UPLOAD
+    .Initialise "UPLOAD", Root, TreeScope.Descendants, By.NameIs, "Mbps upload": .RelativeElementNumber -1
+    .Find 2
+  End With
+  UploadSpeedMbps = UPLOAD.Element.Name
+
+  Set WebBrowser = Nothing
+  Set RunTest = Nothing
+  Set TestAgain = Nothing
+  Set DOWNLOAD = Nothing
+  Set UPLOAD = Nothing
+  
+  Debug.Print "Google: Download speed is (Mbps): " & DownloadSpeedMbps & ", " & "Upload speed is (Mbps): " & UploadSpeedMbps
 
 End Sub
 

@@ -64,11 +64,15 @@ Public Function GetNewLocator() As pLocator
   Set GetNewLocator = Locator
 End Function
 
-Public Function GetNewElement(GivenName As String, UIAElement As IUIAutomationElement) As pElement
+Public Function GetNewElement(Optional GivenName As String, Optional UIAElement As IUIAutomationElement) As pElement
   Dim Element As pElement
   Set Element = New pElement
-  Element.GivenName = GivenName
-  Set Element.UIAElement = UIAElement
+  If GivenName <> "" Then
+    Element.GivenName = GivenName
+  End If
+  If Not UIAElement Is Nothing Then
+    Set Element.UIAElement = UIAElement
+  End If
   Set GetNewElement = Element
 End Function
 

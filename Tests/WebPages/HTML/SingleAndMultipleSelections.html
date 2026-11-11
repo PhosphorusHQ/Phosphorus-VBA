@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html>
+   <head>
+    <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+    <title>Single/Multiple Selections</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+  </head>
+  <body>
+    <header name="Single Select">
+      <h1>Single-Select</h1>
+      <label for="single-select">Choose Framework:</label>
+      <select id="single-select">
+        <option value="Playwright">Playwright</option>
+        <option value="Selenium">Selenium</option>
+        <option value="Cypress">Cypress</option>
+        <option value="Phosphorus">Phosphorus</option>
+      </select>
+	  <br><br><br><br><br><br><br><br>
+    </header>	  
+    <header name="Multi Select To Text Box">
+      <h1>Multi-Select To Text Box</h1>
+      <label for="multi-select">Choose Frameworks (Hold Ctrl/Shift to select multiple):</label>
+      <!-- Multi-select dropdown -->
+      <select id="multi-select" multiple size="4">
+        <option value="Playwright">Playwright</option>
+        <option value="Selenium">Selenium</option>
+        <option value="Cypress">Cypress</option>
+        <option value="Phosphorus">Phosphorus</option>
+      </select>
+      <label for="selectedDisplay">Selected Items:</label>
+      <!-- Destination text box -->
+      <input type="text" id="selectedDisplay" readonly style="width: 300px;" />
+      <script>
+        // Get references to the HTML elements
+        const multiSelect = document.getElementById('multi-select');
+        const textBox = document.getElementById('selectedDisplay');
+
+        // Listen for changes on the multi-select control
+        multiSelect.addEventListener('change', function() {
+            // Convert the selected options HTMLCollection into an array
+            const selectedValues = Array.from(multiSelect.selectedOptions).map(option => option.value);
+            // Join the array elements with a comma and space, then output to the text box
+            textBox.value = selectedValues.join(', ');
+        });
+      </script>
+    </header>
+
+  </body>
+</html>

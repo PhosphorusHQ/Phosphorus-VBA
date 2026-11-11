@@ -10,6 +10,8 @@ Attribute VB_Name = "Utils"
 ' =======================================================================
 Option Explicit
 
+Public LiveDebugging As Boolean
+
 Public Function GetSizeOfArray(arr As Variant) As Long
   GetSizeOfArray = 0
   On Error Resume Next
@@ -24,4 +26,8 @@ Public Sub CloseAllOtherWorkbooks()
      wb.Close SaveChanges:=False
    End If
  Next
+End Sub
+
+Public Sub StopIfLiveBugging()
+  If LiveDebugging Then Stop
 End Sub

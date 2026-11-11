@@ -22,6 +22,8 @@ Public Enum Examples
   ExampleDomainDotComExample
   LetCodeDotInRadioButtonsAndCheckboxesExample
   TheInternetExample
+  HTMLRadioButtonsAndCheckboxes
+  HTMLSelections
 End Enum
 
 Public Sub RunAllExamples()
@@ -29,15 +31,16 @@ Public Sub RunAllExamples()
   Dim i As Integer
   For i = 1 To 1
     RunUnstableTests = True
-    RunAnExample Examples.pPathExample
-    RunAnExample Examples.CalculatorExample
-'TargetWBT = WebBrowserType.Brave
-TargetWBT = 0 'All!
+'    RunAnExample Examples.pPathExample
+'    RunAnExample Examples.CalculatorExample
+    TargetWBT = 0 'All!
 '    RunAnExample Examples.HelloWorldExample
 'PJG Needs rebuilding on NAS WordPress    RunAnExample Examples.ExampleDomainDotComExample
 'LetCodeIn Needs rebuiding on NAS WordPress?
-    RunAnExample Examples.LetCodeDotInRadioButtonsAndCheckboxesExample
-    RunAnExample Examples.TheInternetExample
+'    RunAnExample Examples.LetCodeDotInRadioButtonsAndCheckboxesExample
+'    RunAnExample Examples.TheInternetExample
+    RunAnExample Examples.HTMLRadioButtonsAndCheckboxes
+    RunAnExample Examples.HTMLSelections
   Next i
   MsgBox "All Examples Run!"
 End Sub
@@ -116,7 +119,17 @@ Public Sub TryToRunAnExampleMultipleTimes(WebBasedTest As Boolean, Example As Ex
       Case Examples.pPathExample_SubTest
         ExampleName = SubTestName
         AttemptSucceeded = pPathExamples.RunASinglepPathTest(SubTestName)
-    
+      
+      Case Examples.HTMLRadioButtonsAndCheckboxes
+        ExampleName = "RadioButtonsAndCheckboxes"
+        AttemptSucceeded = HTML_RadioButtonsAndCheckboxes.RadioButtonsAndCheckboxes
+        
+      Case Examples.HTMLSelections
+        If Factory.CurrentWebBrowserType <> WebBrowserType.Firefox Then 'Accessibility issues in Firefox?
+          ExampleName = "Selections"
+          AttemptSucceeded = HTML_Selections.Selections
+        End If
+        
       Case Else
         MsgBox "Uhandled Example #" & Example
         AttemptSucceeded = True

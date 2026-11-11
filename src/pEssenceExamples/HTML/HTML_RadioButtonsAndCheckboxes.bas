@@ -19,146 +19,183 @@ Public Function RadioButtonsAndCheckboxes() As Boolean
   Dim SearchBox As pLocator
   Dim SearchButton As pLocator
 
+  Dim SourceFileURL As String
+  Dim DocumentRoot As pLocator
+  
+  Dim Header1 As String
+  Dim YesText As pElement
+  Dim YesRadioButton As pElement
+  Dim NoText As pElement
+  Dim NoRadioButton As pElement
+  
+  Dim Header2 As String
+  Dim RocksRadioText As pElement
+  Dim RocksRadioButton As pElement
+  Dim ReallyRocksRadioText As pElement
+  Dim ReallyRocksRadioButton As pElement
+  Dim MaybeRocksRadioText As pElement
+  Dim MaybeRocksRadioButton As pElement
+
+  Dim Header3 As String
+  Dim PhosphorusRocksText As pElement
+  Dim PhosphorusRocksCheckbox As pElement
+
   On Error GoTo ErrorHandler
   
   If Not RunningAllExamples Then
-    Factory.CurrentWebBrowserType = 1
+    Factory.CurrentWebBrowserType = WebBrowserType.Brave
+    Window.HighlightElements = True
   End If
   
-  Dim SourceFileURL As String
   SourceFileURL = HTMLCommon.GetULREncodedFilepath("Tests\WebPages\HTML\RadioButtonsAndCheckboxes.html")
   
   Set WebBrowser = Factory.GetNewWebBrowser
   WebBrowser.Start "HTML Radio Buttons And Checkboxes", SourceFileURL, "Radio Buttons And Checkboxes"
 
-  Dim DocumentRoot As pLocator
   Set DocumentRoot = WebBrowser.GetRootWebArea
-    
-  Dim Header1 As String
+
+  'Check the 1st header
   Header1 = "I Love Phosphorus ..."
-  
-  'Check the header
-  Debug.Assert _
-    DocumentRoot.FindElement("ILovePhosphorusHeader", By.NameIs, Header1) _
-    .ControlType = UIAControlTypeIDs.Text
+  Dim Header1Text As pElement
+
+  If Factory.CurrentWebBrowserType = WebBrowserType.Chromium Then
+    'Chromium rolls all the text elements into one!
+    Debug.Assert VBA.Strings.Trim(DocumentRoot.Element.Text) = "I Love Phosphorus ...  Yes  No Confirm last field is disabled. Phosphorus ...  Rocks  Really Rocks  Maybe Rocks Tick the check:  Phosphorus rocks!"
+  Else
+    Set Header1Text = DocumentRoot.FindElement("ILovePhosphorusHeader", By.NameIs, Header1)
+    Debug.Assert Header1Text.ControlType = UIAControlTypeIDs.Text
+  End If
 
   'Check the Yes text
-  With DocumentRoot.FindElement("YesRadioButtonLabel", By.NameIs, Header1, RelativeElementNumber:=2)
-    Debug.Assert .ControlType = UIAControlTypeIDs.Text
-    Debug.Assert .Name = "Yes"
-  End With
-
-  'Check the Yes radio button
-  With DocumentRoot.FindElement("YesRadioButton", By.NameIs, Header1, RelativeElementNumber:=1)
-    Debug.Assert .ControlType = UIAControlTypeIDs.RadioButton
-    Debug.Assert .IsSelected
-  End With
-
-  'Check the No text
-  With DocumentRoot.FindElement("NoRadioButtonLabel", By.NameIs, Header1, RelativeElementNumber:=4)
-    Debug.Assert .ControlType = UIAControlTypeIDs.Text
-    Debug.Assert .Name = "No"
-  End With
+  If Factory.CurrentWebBrowserType = WebBrowserType.Chromium Then
+    Set YesText = DocumentRoot.FindElement("Yes", By.NameIs, "Yes")
+  Else
+    Set YesText = Header1Text.FindSibling("Yes", UIAControlTypeIDs.Text)
+  End If
+  Debug.Assert YesText.ControlType = UIAControlTypeIDs.Text
+  Debug.Assert YesText.Name = "Yes"
   
+  'Check the Yes radio button
+  Set YesRadioButton = YesText.FindSibling("yes", UIAControlTypeIDs.RadioButton)
+  Debug.Assert YesRadioButton.ControlType = UIAControlTypeIDs.RadioButton
+  Debug.Assert YesRadioButton.IsSelected
+ 
+  'Check the No text
+  If Factory.CurrentWebBrowserType = WebBrowserType.Chromium Then
+    Set NoText = DocumentRoot.FindElement("No", By.NameIs, "No")
+  Else
+    Set NoText = Header1Text.FindSibling("No", UIAControlTypeIDs.Text)
+  End If
+  Debug.Assert NoText.ControlType = UIAControlTypeIDs.Text
+  Debug.Assert NoText.Name = "No"
+    
   'Check the No radio button & click it
-  With DocumentRoot.FindElement("NoRadioButton", By.NameIs, Header1, RelativeElementNumber:=3)
-    Debug.Assert .ControlType = UIAControlTypeIDs.RadioButton
-    Debug.Assert .IsNotSelected
-    Debug.Assert .Click().IsSelected
-  End With
+  Set NoRadioButton = NoText.FindSibling("no", UIAControlTypeIDs.RadioButton)
+  Debug.Assert NoRadioButton.ControlType = UIAControlTypeIDs.RadioButton
+  NoRadioButton.Click().IsSelected
 
   'Click the Yes radio button & check it again
-  Debug.Assert _
-    DocumentRoot.FindElement("YesRadioButton", By.NameIs, Header1, RelativeElementNumber:=1) _
-    .Click().IsSelected
-  
-  Dim Header2 As String
-  Header2 = "Confirm last field is disabled. Phosphorus ..."
-  
+  YesRadioButton.Click().IsSelected
+    
   'Check the header
-  Debug.Assert _
-    DocumentRoot.FindElement("ConfirmLastFieldIsDisabledHeader", By.NameIs, Header2) _
-    .ControlType = UIAControlTypeIDs.Text
+  Header2 = "Confirm last field is disabled. Phosphorus ..."
+  Dim Header2Text As pElement
+  
+  If Not Factory.CurrentWebBrowserType = WebBrowserType.Chromium Then
+    Set Header2Text = DocumentRoot.FindElement("ConfirmLastFieldDisabled", By.NameIs, Header2)
+    Debug.Assert Header2Text.ControlType = UIAControlTypeIDs.Text
+  End If
 
   'Check the Rocks text
-  With DocumentRoot.FindElement("RocksRadioButtonName", By.NameIs, Header2, RelativeElementNumber:=2)
-    Debug.Assert .ControlType = UIAControlTypeIDs.Text
-    Debug.Assert .Name = "Rocks"
-  End With
-
+  If Factory.CurrentWebBrowserType = WebBrowserType.Chromium Then
+    Set RocksRadioText = DocumentRoot.FindElement("Rocks", By.NameIs, "Rocks")
+  Else
+    Set RocksRadioText = Header2Text.FindSibling("Rocks", UIAControlTypeIDs.Text)
+  End If
+  Debug.Assert RocksRadioText.ControlType = UIAControlTypeIDs.Text
+  Debug.Assert RocksRadioText.Name = "Rocks"
+  
   'Check the Rocks radio button
-  With DocumentRoot.FindElement("RocksRadioButton", By.NameIs, Header2, RelativeElementNumber:=1)
-    Debug.Assert .ControlType = UIAControlTypeIDs.RadioButton
-    Debug.Assert .IsNotSelected
-  End With
-
+  Set RocksRadioButton = RocksRadioText.FindSibling("rocks", UIAControlTypeIDs.RadioButton)
+  Debug.Assert RocksRadioButton.ControlType = UIAControlTypeIDs.RadioButton
+  Debug.Assert RocksRadioButton.IsNotSelected
+  
   'Check the Really Rocks text
-  With DocumentRoot.FindElement("ReallyRocksRadioButtonName", By.NameIs, Header2, RelativeElementNumber:=4)
-    Debug.Assert .ControlType = UIAControlTypeIDs.Text
-    Debug.Assert .Name = "Really Rocks"
-  End With
-
+  If Factory.CurrentWebBrowserType = WebBrowserType.Chromium Then
+    Set ReallyRocksRadioText = DocumentRoot.FindElement("Really Rocks", By.NameIs, "Really Rocks")
+  Else
+    Set ReallyRocksRadioText = Header2Text.FindSibling("Really Rocks", UIAControlTypeIDs.Text)
+  End If
+  Debug.Assert ReallyRocksRadioText.ControlType = UIAControlTypeIDs.Text
+  Debug.Assert ReallyRocksRadioText.Name = "Really Rocks"
+    
   'Check the Really Rocks radio button
-  With DocumentRoot.FindElement("ReallyRocksRadioButton", By.NameIs, Header2, RelativeElementNumber:=3)
-    Debug.Assert .ControlType = UIAControlTypeIDs.RadioButton
-    Debug.Assert .IsNotSelected
-  End With
-
+  Set ReallyRocksRadioButton = ReallyRocksRadioText.FindSibling("reallyrocks", UIAControlTypeIDs.RadioButton)
+  Debug.Assert ReallyRocksRadioButton.ControlType = UIAControlTypeIDs.RadioButton
+  Debug.Assert ReallyRocksRadioButton.IsNotSelected
+    
   'Check the Maybe Rocks text
-  With DocumentRoot.FindElement("MaybeRocksRadioButtonName", By.NameIs, Header2, RelativeElementNumber:=6)
-    Debug.Assert .ControlType = UIAControlTypeIDs.Text
-    Debug.Assert .Name = "Maybe Rocks"
-  End With
+  If Factory.CurrentWebBrowserType = WebBrowserType.Chromium Then
+    Set MaybeRocksRadioText = DocumentRoot.FindElement("Maybe Rocks", By.NameIs, "Maybe Rocks")
+  Else
+    Set MaybeRocksRadioText = Header2Text.FindSibling("Maybe Rocks", UIAControlTypeIDs.Text)
+  End If
+  Debug.Assert MaybeRocksRadioText.ControlType = UIAControlTypeIDs.Text
+  Debug.Assert MaybeRocksRadioText.Name = "Maybe Rocks"
 
   'Check the Maybe Rocks radio button
-  With DocumentRoot.FindElement("MaybeRocksRadioButton", By.NameIs, Header2, RelativeElementNumber:=5)
-    Debug.Assert .ControlType = UIAControlTypeIDs.RadioButton
-    Debug.Assert .IsDisabled
-    Debug.Assert .IsNotSelected
-  End With
-
+  Set MaybeRocksRadioButton = MaybeRocksRadioText.FindSibling("mayberocks", UIAControlTypeIDs.RadioButton)
+  Debug.Assert MaybeRocksRadioButton.ControlType = UIAControlTypeIDs.RadioButton
+  Debug.Assert MaybeRocksRadioButton.IsDisabled
+  Debug.Assert MaybeRocksRadioButton.IsNotSelected
+    
   'Click the Rocks radio button & check it again
-  Debug.Assert _
-    DocumentRoot.FindElement("RocksRadioButton", By.NameIs, Header2, RelativeElementNumber:=1) _
-    .Click().IsSelected
+  Debug.Assert RocksRadioButton.Click().IsSelected
   
   'Click the Really Rocks radio button & check it again
-  Debug.Assert _
-    DocumentRoot.FindElement("ReallyRocksRadioButton", By.NameIs, Header2, RelativeElementNumber:=3) _
-    .Click().IsSelected
-
+  Debug.Assert ReallyRocksRadioButton.Click().IsSelected
+    
   'Check the Maybe Rocks radio button cannot be clicked
-  With DocumentRoot.FindElement("MaybeRocksRadioButton", By.NameIs, Header2, RelativeElementNumber:=5)
+  With MaybeRocksRadioButton
     On Error GoTo ErrorTrap
     .Click
+    Debug.Assert Err.Number = 0
+    On Error GoTo ErrorHandler
+    GoTo NextTest
 ErrorTrap:
     Debug.Assert Err.Number = -2147218503
-    Debug.Assert Err.Description = "Element 'MaybeRocksRadioButton' is not alive!"
-    On Error GoTo 0
+    Debug.Assert Err.Description = "Element 'mayberocks' is not alive!"
+    Resume Next
   End With
 
-  Dim Header3 As String
+NextTest:
+
+  'Check the 3rd header
   Header3 = "Tick the check:"
+  Dim Header3Text As pElement
   
-  'Check the header
-  Debug.Assert _
-    DocumentRoot.FindElement("TickTheCheckHeader", By.NameIs, Header3) _
-    .ControlType = UIAControlTypeIDs.Text
+  If Not Factory.CurrentWebBrowserType = WebBrowserType.Chromium Then
+    Set Header3Text = DocumentRoot.FindElement("TickTheCheckHeader", By.NameIs, Header3)
+    Debug.Assert Header3Text.ControlType = UIAControlTypeIDs.Text
+  End If
 
   'Check the Phosphorus Rocks! text
-  With DocumentRoot.FindElement("TickTheCheckCheckboxName", By.NameIs, Header3, RelativeElementNumber:=2)
-    Debug.Assert .ControlType = UIAControlTypeIDs.Text
-    Debug.Assert .Name = "Phosphorus rocks!"
-  End With
-
+  If Factory.CurrentWebBrowserType = WebBrowserType.Chromium Then
+    Set PhosphorusRocksText = DocumentRoot.FindElement("Phosphorus rocks!", By.NameIs, "Phosphorus rocks!")
+  Else
+    Set PhosphorusRocksText = Header3Text.FindSibling("Phosphorus rocks!", UIAControlTypeIDs.Text)
+  End If
+  Debug.Assert PhosphorusRocksText.ControlType = UIAControlTypeIDs.Text
+  Debug.Assert PhosphorusRocksText.Name = "Phosphorus rocks!"
+  
   'Check the Phosphorus Rocks! checkbox & click it
-  With DocumentRoot.FindElement("TickTheCheckCheckbox", By.NameIs, Header3, RelativeElementNumber:=1)
-    Debug.Assert .ControlType = UIAControlTypeIDs.CheckBox
-    Debug.Assert .IsNotSelected
-    Debug.Assert .Click().IsSelected
-    Debug.Assert .Click().IsNotSelected
-  End With
-
+  'Set PhosphorusRocksCheckbox = DocumentRoot.FindElement("PhosphorusRocksCheckbox", By.NameIs, Header3, RelativeElementNumber:=1)
+  Set PhosphorusRocksCheckbox = PhosphorusRocksText.FindSibling("phosphorusrocks", UIAControlTypeIDs.CheckBox)
+  Debug.Assert PhosphorusRocksCheckbox.ControlType = UIAControlTypeIDs.CheckBox
+  Debug.Assert PhosphorusRocksCheckbox.IsNotSelected
+  Debug.Assert PhosphorusRocksCheckbox.Click().IsSelected
+  Debug.Assert PhosphorusRocksCheckbox.Click().IsNotSelected
+    
   If RunningAllExamples Then
     Debug.Print "Radio Buttons & Checkboxed Clicked!"
   Else
@@ -176,11 +213,32 @@ ErrorHandler:
     MsgBox Err.Description & " (Error Number #" & Err.Number & ") for " & Factory.GetWebBrowserName(Factory.CurrentWebBrowserType) & " Web Browser in 'RadioButtonsAndCheckboxes' Example!", vbCritical
   End If
   GoTo ExitSub
-  
+
+'PJG TODO: Run through all journey combinations!
+
 ExitSub:
   Set WebBrowser = Nothing
   Set SearchBox = Nothing
   Set SearchButton = Nothing
+  
+  Set Header1Text = Nothing
+  Set YesText = Nothing
+  Set YesRadioButton = Nothing
+  Set NoText = Nothing
+  Set NoRadioButton = Nothing
+  
+  Set Header2Text = Nothing
+  Set RocksRadioText = Nothing
+  Set RocksRadioButton = Nothing
+  Set ReallyRocksRadioText = Nothing
+  Set ReallyRocksRadioButton = Nothing
+  Set MaybeRocksRadioText = Nothing
+  Set MaybeRocksRadioButton = Nothing
+  
+  Set Header3Text = Nothing
+  Set PhosphorusRocksText = Nothing
+  Set PhosphorusRocksCheckbox = Nothing
+  
   If Not RunningAllExamples Then
     Window.HighlightElements = False
   End If

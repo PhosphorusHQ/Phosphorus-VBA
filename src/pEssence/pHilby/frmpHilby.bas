@@ -350,10 +350,14 @@ Private Function GetPatternText(UIAElement As IUIAutomationElement, PatternName 
     Select Case PatternId
       Case UIAPatterns.Invoke
         R = "" 'No current settings
+      Case UIAPatterns.ExpandCollapse
+        R = GetPatternText_ExpandCollapse(UIAElement)
       Case UIAPatterns.LegacyIAccessible
         R = GetPatternText_LegacyIAccessible(UIAElement)
       Case UIAPatterns.Selection
         R = GetPatternText_Selection(UIAElement)
+      Case UIAPatterns.SelectionItem
+        R = GetPatternText_SelectionItem(UIAElement)
       Case UIAPatterns.Text
         R = GetPatternText_Text(UIAElement)
       Case UIAPatterns.Toggle
@@ -364,7 +368,6 @@ Private Function GetPatternText(UIAElement As IUIAutomationElement, PatternName 
         R = GetPatternText_Window(UIAElement)
       Case Else
         If Not UnhandledPatterns.Exists(PatternId) Then
-          'MsgBox PatternName & " Pattern not handled!", vbInformation, "Phosphorus - pHilby"
           Debug.Print PatternName & " Pattern not handled! (" & UIAElement.CurrentName & ")"
           UnhandledPatterns.Add PatternId, PatternName
         End If
@@ -376,6 +379,25 @@ Private Function GetPatternText(UIAElement As IUIAutomationElement, PatternName 
     End If
   End If
   GetPatternText = R
+End Function
+
+Private Function GetPatternText_ExpandCollapse(UIAElement As IUIAutomationElement) As String
+  Dim Pattern As IUIAutomationExpandCollapsePattern
+  Set Pattern = UIAElement.GetCurrentPattern(UIAPatterns.ExpandCollapse)
+  Dim R As String
+  R = vbCrLf
+  Select Case Pattern.CurrentExpandCollapseState
+    Case ExpandCollapseState.ExpandCollapseState_Expanded
+      R = R & "Expanded"
+    Case ExpandCollapseState.ExpandCollapseState_Collapsed
+      R = R & "Collapsed"
+    Case ExpandCollapseState.ExpandCollapseState_LeafNode
+      R = R & "LeafNode"
+    Case ExpandCollapseState.ExpandCollapseState_PartiallyExpanded
+      R = R & "PartiallyExpanded"
+  End Select
+  R = R & vbCrLf
+  GetPatternText_ExpandCollapse = R
 End Function
 
 Private Function GetPatternText_LegacyIAccessible(UIAElement As IUIAutomationElement) As String
@@ -399,11 +421,14 @@ Private Function GetPatternText_Selection(UIAElement As IUIAutomationElement) As
      "  SelectionRequired:" & vbTab & (Pattern.CurrentIsSelectionRequired = 1) & vbCrLf
 End Function
 
+Private Function GetPatternText_SelectionItem(UIAElement As IUIAutomationElement) As String
+  Dim Pattern As IUIAutomationSelectionItemPattern
+  Set Pattern = UIAElement.GetCurrentPattern(UIAPatterns.SelectionItem)
+  GetPatternText_SelectionItem = vbCrLf & _
+     "  CurrentIsSelected:" & vbTab & (Pattern.CurrentIsSelected = 1) & vbCrLf
+End Function
+
 Private Function GetPatternText_Text(UIAElement As IUIAutomationElement) As String
-'  Dim Pattern As IUIAutomationTextPattern
-'  Set Pattern = UIAElement.GetCurrentPattern(UIAPatterns.UIA_TextPatternId)
-'  GetPatternText_Text = vbCrLf & _
-'     "  Text:" & vbTab & Pattern.DocumentRange.GetText(-1) & vbCrLf
   GetPatternText_Text = vbCrLf & _
      "  Text:" & vbTab & UIAPatts.GetTextValue(UIAElement) & vbCrLf
 End Function

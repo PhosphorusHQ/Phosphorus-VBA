@@ -69,8 +69,12 @@ Public Sub Start(WebAppName As String, URL As String, WebAppPageTitle As String,
   This.WebAppName = WebAppName
   This.URL = URL
   This.WebAppPageTitle = WebAppPageTitle
-  LaunchCommandByProtocol This.WebAppName, "microsoft-edge:", This.URL, WindowShowStates.Maximized
-'  LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, URL, WindowShowStates.Maximized
+  If VBA.Strings.Left(This.URL, 5) = "file:" Then
+    'Changed to this for local file issues:
+    LaunchExecutable Phosphorus.WindowsExecutables.MicrosoftEdge, This.URL, WindowShowStates.Maximized
+  Else
+    LaunchCommandByProtocol This.WebAppName, "microsoft-edge:", This.URL, WindowShowStates.Maximized
+  End If
   InitialiseAllLocators
   If AbsoluteWaitTimeSeconds = 0 Then
     AbsoluteWaitTimeSeconds = BaseWaitTimeSeconds
@@ -139,7 +143,7 @@ End Function
 Public Function GetCurrentURL() As String
   With This.AddressAndSearchBar
     .Find 10
-    GetCurrentURL = .Element.GetValue()
+    GetCurrentURL = .Element.Value()
   End With
 End Function
 

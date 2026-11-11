@@ -21,6 +21,7 @@ Option Explicit
 Public GivenName As String
 Public UIAElement As IUIAutomationElement
 Public ParentLocator As pLocator
+Public ParentElement As pElement
 
 'Declarations for SendInput
 #If VBA7 Then
@@ -76,6 +77,8 @@ End Type
 
 Private Sub Class_Terminate()
   Set UIAElement = Nothing
+  Set ParentLocator = Nothing
+  Set ParentElement = Nothing
 End Sub
 
 Private Sub AutoFindElement()
@@ -92,26 +95,64 @@ Public Function AriaProperties() As String
   AriaProperties = GetProperty(UIAProperties.AriaProperties)
 End Function
 
-Public Function Click() As pElement
-  
-  Dim InitialState As Boolean
-  InitialState = Me.IsSelected
+'Public Function SureSelect() As pElement
+'  Dim Delay As Integer
+'  Delay = 10
+'  While Me.IsNotSelected
+'    Me.Click
+'    snooze Delay
+'If Me.IsNotSelected And Delay < 100 Then
+''Stop
+'  Delay = Delay + 10
+'End If
+'
+'  Wend
+'  Set SureSelect = Me
+'End Function
 
-  Actions.Click Me
+Public Function Click(Optional PlusShift As Boolean = False, Optional PlusCtrl As Boolean = False, Optional ShiftAnchorElement As pElement) As pElement
+
+  Dim InitialSelectionState As Boolean
+  Dim ExpectedExpandedState As Integer
+  
+  If Me.HasPattern(UIAPatterns.ExpandCollapse) Then
+    If Me.IsExpanded Then
+      ExpectedExpandedState = ExpandCollapseState.ExpandCollapseState_Collapsed
+    Else
+      ExpectedExpandedState = ExpandCollapseState.ExpandCollapseState_Expanded
+    End If
+  Else
+    InitialSelectionState = Me.IsSelected
+  End If
+  
+  Actions.Click Me, PlusShift, PlusCtrl, ShiftAnchorElement
     
   If HasPattern(UIAPatterns.SelectionItem) Then
-    WaitForPatternState UIAPatterns.SelectionItem, Not InitialState
+    WaitForPatternState UIAPatterns.SelectionItem, Not InitialSelectionState
     GoTo ExitFunction
   End If
   
   If HasPattern(UIAPatterns.Toggle) Then
-    WaitForPatternState UIAPatterns.Toggle, Not InitialState
+    WaitForPatternState UIAPatterns.Toggle, Not InitialSelectionState
+    GoTo ExitFunction
+  End If
+  
+  If HasPattern(UIAPatterns.ExpandCollapse) Then
+    WaitForPatternState UIAPatterns.ExpandCollapse, ExpectedExpandedState
     GoTo ExitFunction
   End If
   
 ExitFunction:
   Set Click = Me
 
+End Function
+
+Public Function CtrlClick() As pElement
+  Set CtrlClick = Me.Click(PlusCtrl:=True)
+End Function
+
+Public Function ShiftClick(Optional ShiftAnchorElement As pElement) As pElement
+  Set ShiftClick = Me.Click(PlusShift:=True, ShiftAnchorElement:=ShiftAnchorElement)
 End Function
 
 Public Sub ClickIfEnabled(Optional NonClickItem As pElement)
@@ -140,15 +181,24 @@ Public Sub CloseWindow()
   AutoFindElement
   Toaster.Message "Close Window " & Name, Action
   Actions.IsElementReady Me
-  'If (GetProperty(UIAProperties.ControlType) = UIAControlTypeIDs.Window) Or (GetProperty(UIAProperties.ControlType) = UIAControlTypeIDs.Pane) Then
-    If HasProperty(UIAProperties.IsWindowPatternAvailable) Then
-      Dim patt As IUIAutomationWindowPattern
-      Set patt = GetPattern(UIAPatterns.Window, RaiseError:=True)
-      patt.Close
-      Exit Sub
-    End If
-  'End If
+  If HasProperty(UIAProperties.IsWindowPatternAvailable) Then
+    Dim patt As IUIAutomationWindowPattern
+    Set patt = GetPattern(UIAPatterns.Window, RaiseError:=True)
+    patt.Close
+    Set patt = Nothing
+    Exit Sub
+  End If
 End Sub
+
+Public Function IsExpanded() As Boolean
+  IsExpanded = CBool(ExpandCollapseState.ExpandCollapseState_Expanded)
+End Function
+
+Public Function ExpandedCollapsedState() As Integer
+  Dim Pattern As IUIAutomationExpandCollapsePattern
+  Set Pattern = Me.UIAElement.GetCurrentPattern(UIAPatterns.ExpandCollapse)
+  ExpandedCollapsedState = Pattern.CurrentExpandCollapseState
+End Function
 
 'Tools > References > OLE Automation needed for IUnknown type
 Public Function GetPattern(PatternId As Long, Optional RaiseError As Boolean) As IUnknown
@@ -171,21 +221,140 @@ Public Function GetProperty(PropertyId As Long) As Variant
   On Error GoTo 0
 End Function
 
-Public Function GetToggleState() As Integer
+Public Function FindDescendant(NameOrId As String, Optional TargetControlTypeOrAriaRole As Variant) As pElement
+  If (Me.UIAElement.CurrentControlType = UIAControlTypeIDs.List) Or _
+     (Me.UIAElement.CurrentControlType = UIAControlTypeIDs.ComboBox) Then
+     TargetControlTypeOrAriaRole = UIAControlTypeIDs.ListItem
+  End If
+  Dim Descendants As IUIAutomationElementArray
+  Dim Descendant As IUIAutomationElement
+  Set Descendants = Me.UIAElement.FindAll(TreeScope.Descendants, UIA.CreateTrueCondition)
+  If Descendants.Length = 0 Then
+    ' No children, just exit
+  Else
+    Dim Counter As Long
+    For Counter = 0 To Descendants.Length - Counter
+      Set Descendant = Descendants.GetElement(Counter)
+      If Descendant.CurrentName = NameOrId Then
+        If Not IsMissing(TargetControlTypeOrAriaRole) Then
+          If Descendant.CurrentControlType = TargetControlTypeOrAriaRole Then
+            Set FindDescendant = Factory.GetNewElement(NameOrId, Descendant, Me)
+            Exit Function
+          End If
+        Else
+          Set FindDescendant = Factory.GetNewElement(NameOrId, Descendant)
+          Exit Function
+        End If
+      End If
+    Next Counter
+  End If
+  Set Descendant = Nothing
+  Set Descendants = Nothing
+End Function
+
+Public Function FindSibling(NameOrId As String, Optional TargetControlTypeOrAriaRole As Variant = "") As pElement
+  
+  Dim SiblingUIAElement As IUIAutomationElement
+  
+  If (Me.UIAElement.CurrentControlType = UIAControlTypeIDs.Text) And _
+     ((TargetControlTypeOrAriaRole = UIAControlTypeIDs.RadioButton) Or _
+      (TargetControlTypeOrAriaRole = UIAControlTypeIDs.CheckBox)) Then
+    'Radio Buttons/Checkboxes preceed their labels
+    'Look for previous sibling
+    Set TreeWalker = UIA.ControlViewWalker
+    Set SiblingUIAElement = TreeWalker.GetPreviousSiblingElement(Me.UIAElement)
+    While Not SiblingUIAElement Is Nothing
+      If (SiblingUIAElement.CurrentAutomationId = NameOrId) Then
+        Set FindSibling = Factory.GetNewElement(NameOrId, SiblingUIAElement)
+        Exit Function
+      End If
+      Set SiblingUIAElement = TreeWalker.GetPreviousSiblingElement(SiblingUIAElement)
+    Wend
+    'Prevent looking for following items!
+    Exit Function
+  End If
+  
+  'Else Look for next sibling
+  Set TreeWalker = UIA.ControlViewWalker
+  Set SiblingUIAElement = TreeWalker.GetNextSiblingElement(Me.UIAElement)
+  While Not SiblingUIAElement Is Nothing
+    If TargetControlTypeOrAriaRole = "" Then
+      If (SiblingUIAElement.CurrentName = NameOrId) Then
+        Set FindSibling = Factory.GetNewElement(NameOrId, SiblingUIAElement)
+        Exit Function
+      End If
+    Else
+      If (SiblingUIAElement.CurrentName = NameOrId) And _
+         ((SiblingUIAElement.CurrentControlType = TargetControlTypeOrAriaRole) Or _
+          (SiblingUIAElement.CurrentAriaRole = TargetControlTypeOrAriaRole)) Then
+        Set FindSibling = Factory.GetNewElement(NameOrId, SiblingUIAElement)
+        Exit Function
+      End If
+    End If
+    Set SiblingUIAElement = TreeWalker.GetNextSiblingElement(SiblingUIAElement)
+  Wend
+
+End Function
+
+Public Function FindLabelledElement() As pElement
+'Labelled element must be a sibling
+  Dim SiblingUIAElement As IUIAutomationElement
+  Dim FirstSiblingUIAElement As IUIAutomationElement
+  Dim LabelRuntimeID As String
+  Dim CurrentRuntimeID As String
+  Set TreeWalker = UIA.ControlViewWalker
+  LabelRuntimeID = pPath.RuntimeIDs.GetElementRuntimeId(Me.UIAElement)
+  Set SiblingUIAElement = TreeWalker.GetNextSiblingElement(Me.UIAElement)
+    While Not SiblingUIAElement Is Nothing
+      If FirstSiblingUIAElement Is Nothing Then
+        'Ignore any text elements - these will not be labelled
+        If SiblingUIAElement.CurrentControlType <> UIAControlTypeIDs.Text Then
+          Set FirstSiblingUIAElement = SiblingUIAElement
+        End If
+      End If
+      If Not SiblingUIAElement.CurrentLabeledBy Is Nothing Then
+        CurrentRuntimeID = pPath.RuntimeIDs.GetElementRuntimeId(SiblingUIAElement.CurrentLabeledBy)
+        If (CurrentRuntimeID = LabelRuntimeID) Then
+          Set FindLabelledElement = Factory.GetNewElement(Me.UIAElement.CurrentName, SiblingUIAElement, Me.ParentElement)
+          Exit Function
+        End If
+      Else
+        If SiblingUIAElement.CurrentName = Me.UIAElement.CurrentName Then
+          'Some browsers just link labels by the Name!
+          Set FindLabelledElement = Factory.GetNewElement(Me.UIAElement.CurrentName, SiblingUIAElement)
+          Exit Function
+        End If
+      End If
+      Set SiblingUIAElement = TreeWalker.GetNextSiblingElement(SiblingUIAElement)
+    Wend
+    'If no clean linking element is found, just return the first item found
+    If FindLabelledElement Is Nothing Then
+      Set FindLabelledElement = Factory.GetNewElement(Me.UIAElement.CurrentName, FirstSiblingUIAElement, Me.ParentElement)
+    End If
+End Function
+
+Public Function Text() As String
+  AutoFindElement
+  Text = UIAPatts.GetTextValue(Me.UIAElement)
+End Function
+
+Public Function ToggleState() As Integer
   AutoFindElement
   If HasPattern(UIAPatterns.Toggle) Then
     Dim CurrentElementTogglePattern As IUIAutomationTogglePattern
     Set CurrentElementTogglePattern = GetPattern(UIAPatterns.Toggle, RaiseError:=True)
-    GetToggleState = CurrentElementTogglePattern.CurrentToggleState
+    ToggleState = CurrentElementTogglePattern.CurrentToggleState
+    Set CurrentElementTogglePattern = Nothing
   End If
 End Function
 
-Public Function GetValue() As String
+Public Function Value() As String
   AutoFindElement
   If HasPattern(UIAPatterns.Value) Then
     Dim CurrentElementValuePattern As IUIAutomationValuePattern
     Set CurrentElementValuePattern = GetPattern(UIAPatterns.Value, RaiseError:=True)
-    GetValue = CurrentElementValuePattern.CurrentValue
+    Value = CurrentElementValuePattern.CurrentValue
+    Set CurrentElementValuePattern = Nothing
   End If
 End Function
 
@@ -223,6 +392,19 @@ Public Function IsEnabled() As Boolean
   Window.ReleaseHighlighting
 End Function
 
+Public Function IsFocussed() As Boolean
+  AutoFindElement
+  Dim FocusedElement As IUIAutomationElement
+  Set FocusedElement = UIA.GetFocusedElement
+  If FocusedElement Is Nothing Then
+    IsFocussed = False
+  Else
+    Dim IsMatch As Long
+    IsMatch = UIA.CompareElements(Me.UIAElement, FocusedElement)
+    IsFocussed = CBool(IsMatch)
+  End If
+End Function
+
 Public Function IsSelected() As Boolean
   
   AutoFindElement
@@ -231,18 +413,20 @@ Public Function IsSelected() As Boolean
 
   ' Method 1: Preferred - Use SelectionItemPattern
   If HasPattern(UIAPatterns.SelectionItem) Then
-     Dim SelectionItemPattern As IUIAutomationSelectionItemPattern
-     Set SelectionItemPattern = GetPattern(UIAPatterns.SelectionItem)
-     IsSelected = SelectionItemPattern.CurrentIsSelected
-     GoTo CleanUp
+    Dim SelectionItemPattern As IUIAutomationSelectionItemPattern
+    Set SelectionItemPattern = GetPattern(UIAPatterns.SelectionItem)
+    IsSelected = SelectionItemPattern.CurrentIsSelected
+    Set SelectionItemPattern = Nothing
+    GoTo CleanUp
   End If
   
   ' Method 2: try TogglePattern
   If HasPattern(UIAPatterns.Toggle) Then
-     Dim TogglePattern As IUIAutomationTogglePattern
-     Set TogglePattern = GetPattern(UIAPatterns.Toggle)
-     IsSelected = TogglePattern.CurrentToggleState
-     GoTo CleanUp
+    Dim TogglePattern As IUIAutomationTogglePattern
+    Set TogglePattern = GetPattern(UIAPatterns.Toggle)
+    IsSelected = TogglePattern.CurrentToggleState
+    Set TogglePattern = Nothing
+    GoTo CleanUp
   End If
   
   ' Method 2: Fallback - Direct property (works on many controls)
@@ -277,6 +461,7 @@ Public Sub SetValue(Value As String)
     Set CurrentElementValuePattern = GetPattern(UIAPatterns.Value, RaiseError:=True)
     On Error Resume Next
     CurrentElementValuePattern.SetValue Value
+    Set CurrentElementValuePattern = Nothing
     Dim InputOK As Boolean
     InputOK = (Err.Number = 0)
     If Not InputOK Then
@@ -289,32 +474,32 @@ Public Sub SetValue(Value As String)
 End Sub
 
 Private Sub SendUnicodeText(ByVal Text As String)
-    Dim i As Long, n As Long
-    Dim inputs() As INPUT_TYPE
-    Dim ch As Long
+  Dim i As Long, n As Long
+  Dim inputs() As INPUT_TYPE
+  Dim ch As Long
 
 '    n = Len(text) * 2               ' down + up for each character
-    n = Len(Text) 'This stops the text being duplicated!
-    ReDim inputs(0 To n - 1)
+  n = Len(Text) 'This stops the text being duplicated!
+  ReDim inputs(0 To n - 1)
 
-    For i = 1 To Len(Text)
-        ch = AscW(Mid$(Text, i, 1))
+  For i = 1 To Len(Text)
+    ch = AscW(Mid$(Text, i, 1))
         
-        ' Key down
-        inputs((i - 1) * 2).dwType = INPUT_KEYBOARD
-        inputs((i - 1) * 2).ki.wVk = 0
-        inputs((i - 1) * 2).ki.wScan = ch
-        inputs((i - 1) * 2).ki.dwFlags = KEYEVENTF_UNICODE
+    ' Key down
+    inputs((i - 1) * 2).dwType = INPUT_KEYBOARD
+    inputs((i - 1) * 2).ki.wVk = 0
+    inputs((i - 1) * 2).ki.wScan = ch
+    inputs((i - 1) * 2).ki.dwFlags = KEYEVENTF_UNICODE
 
-        ' Key up
-        inputs((i - 1) * 2 + 1).dwType = INPUT_KEYBOARD
-        inputs((i - 1) * 2 + 1).ki.wVk = 0
-        inputs((i - 1) * 2 + 1).ki.wScan = ch
-        inputs((i - 1) * 2 + 1).ki.dwFlags = KEYEVENTF_UNICODE Or KEYEVENTF_KEYUP
+    ' Key up
+    inputs((i - 1) * 2 + 1).dwType = INPUT_KEYBOARD
+    inputs((i - 1) * 2 + 1).ki.wVk = 0
+    inputs((i - 1) * 2 + 1).ki.wScan = ch
+    inputs((i - 1) * 2 + 1).ki.dwFlags = KEYEVENTF_UNICODE Or KEYEVENTF_KEYUP
     
-    Next i
+  Next i
 
-    Call SendInput(n, inputs(0), LenB(inputs(0)))
+  Call SendInput(n, inputs(0), LenB(inputs(0)))
 
 End Sub
 
@@ -369,15 +554,20 @@ Private Sub WaitForPropertyValueOrPatternState( _
       End If
     Else
       Select Case UIAPatternID
+        Case UIAPatterns.ExpandCollapse
+          Dim ExpandCollapsePattern As IUIAutomationExpandCollapsePattern
+          Set ExpandCollapsePattern = GetPattern(UIAPatterns.ExpandCollapse)
+          PropertyValuePatternStateFound = (ExpandCollapsePattern.CurrentExpandCollapseState = PatternState)
         Case UIAPatterns.SelectionItem
           Dim SelectionItemPattern As IUIAutomationSelectionItemPattern
           Set SelectionItemPattern = GetPattern(UIAPatterns.SelectionItem)
           Select Case PatternState
-            Case "CurrentIsSelected"
+            Case "CurrentIsSelected", True
               PropertyValuePatternStateFound = (SelectionItemPattern.CurrentIsSelected = 1)
-            Case "CurrentIsNotSelected"
+            Case "CurrentIsNotSelected", False
               PropertyValuePatternStateFound = (SelectionItemPattern.CurrentIsSelected = 0)
           End Select
+          Set SelectionItemPattern = Nothing
         Case UIAPatterns.Toggle
           Dim TogglePattern As IUIAutomationTogglePattern
           Set TogglePattern = GetPattern(UIAPatterns.Toggle)
@@ -387,8 +577,9 @@ Private Sub WaitForPropertyValueOrPatternState( _
             Case "CurrentToggleStateOff"
               PropertyValuePatternStateFound = (TogglePattern.CurrentToggleState = 0)
           End Select
+          Set TogglePattern = Nothing
         Case UIAPatterns.Value
-          PropertyValuePatternStateFound = (Me.GetValue = PatternState)
+          PropertyValuePatternStateFound = (Me.Value = PatternState)
         Case Else
           MsgBox "PatternID not handled: " & UIAPatternID
       End Select
@@ -406,4 +597,3 @@ Private Sub WaitForPropertyValueOrPatternState( _
   Wend
 
 End Sub
-

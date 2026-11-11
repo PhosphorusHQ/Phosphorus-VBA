@@ -150,7 +150,11 @@ End Sub
 '**********
 '* Clicks *
 '**********
-Public Sub Click(Element As pElement)
+Public Sub Click( _
+  Element As pElement, _
+  Optional PlusShift As Boolean = False, _
+  Optional PlusCtrl As Boolean = False, _
+  Optional ShiftAnchorElement As pElement)
   
   AutoFindUIAElement Element
   
@@ -160,8 +164,8 @@ Public Sub Click(Element As pElement)
   Window.HighlightElement Element.UIAElement
   MoveMouseToElement Element
 
+  If TrySelectionItemPatternSelect(Element, PlusShift, PlusCtrl, ShiftAnchorElement) Then GoTo CleanUp 'Items with Selection pattern may also have the invoke pattern, so need to try this first!
   If TryInvokePattern(Element) Then GoTo CleanUp
-  If TrySelectionItemPatternSelect(Element) Then GoTo CleanUp
   If TryTogglePattern(Element) Then GoTo CleanUp
   If TryLegacyIAccessibleDefaultAction(Element) Then GoTo CleanUp
   If TryLegacyIAccessiblePatternSelect(Element, SELFLAG_TAKEFOCUS + SELFLAG_TAKESELECTION) Then GoTo CleanUp
@@ -204,6 +208,7 @@ Private Function TryInvokePattern(Element As pElement) As Boolean
     Dim Pattern As IUIAutomationInvokePattern
     Set Pattern = Element.GetPattern(UIAPatterns.Invoke)
     Pattern.Invoke
+    Snooze 10
     TryInvokePattern = True
   End If
 Finish:
@@ -222,25 +227,278 @@ Private Function GetPatternPreChecks(Element As pElement, IsPatternAvailableProp
   End If
 End Function
 
-Private Function TrySelectionItemPatternSelect(Element As pElement) As Boolean
-  On Error GoTo Finish
-  TrySelectionItemPatternSelect = False
-  If GetPatternPreChecks2(Element, UIAControlTypeIDs.ListItem, IsSelectionItemPatternAvailable) Then
-    Dim Pattern As IUIAutomationSelectionItemPattern
-    Set Pattern = Element.GetPattern(UIAPatterns.SelectionItem)
-    Pattern.Select
-    TrySelectionItemPatternSelect = True
+Private Function GetPatternPreChecksByControlType(Element As pElement, ControlType As UIAControlTypeIDs, IsPatternAvailableProperty As UIAProperties) As Boolean
+  GetPatternPreChecksByControlType = False
+  If Element.HasProperty(UIAProperties.ControlType) Then
+    If Element.GetProperty(UIAProperties.ControlType) = ControlType Then
+      If Element.HasProperty(IsPatternAvailableProperty) Then
+        GetPatternPreChecksByControlType = True
+        Exit Function
+      End If
+    End If
   End If
+End Function
+
+Private Function TrySelectionItemPatternSelect(Element As pElement, PlusShift As Boolean, PlusCtrl As Boolean, ShiftAnchorElement As pElement) As Boolean
+  
+  Dim SelectionItemPattern As IUIAutomationSelectionItemPattern
+  Dim SelectionContainer As IUIAutomationElement
+  Dim InitialCurrentIsSelected As Integer
+  Dim NotInitialCurrentIsSelected As Integer
+  Dim SelectionContainerSelectionPattern As IUIAutomationSelectionPattern
+  Dim CurrentlySelectedItem As IUIAutomationElement
+  Dim CurrentlySelectedItemElement As pElement
+  Dim CurrentlySelectedItemPattern As IUIAutomationSelectionItemPattern
+  Dim CurrentSelectionItem As IUIAutomationElement
+  Dim CurrentlySelectedElement As pElement
+  Dim Counter  As Integer
+  
+  On Error GoTo Finish
+  On Error GoTo 0
+  
+  TrySelectionItemPatternSelect = False
+  If GetPatternPreChecksByControlType(Element, UIAControlTypeIDs.ListItem, IsSelectionItemPatternAvailable) Then
+
+    Set SelectionItemPattern = Element.UIAElement.GetCurrentPattern(UIAPatterns.SelectionItem)
+    
+    Set SelectionContainer = SelectionItemPattern.CurrentSelectionContainer
+    InitialCurrentIsSelected = SelectionItemPattern.CurrentIsSelected
+    If InitialCurrentIsSelected = 0 Then NotInitialCurrentIsSelected = 1 Else NotInitialCurrentIsSelected = 0
+    
+    If SelectionContainer Is Nothing Then
+      'Try Parent Element
+      'Debug.Print UIAPatts.GetTextValue(Element.UIAElement)
+      TryInvokePattern Element
+      Element.ParentElement.WaitForPropertyValue LegacyIAccessibleValue, Element.Name
+      Element.WaitForPatternState SelectionItem, NotInitialCurrentIsSelected
+      'Does this help?
+      Element.ParentElement.Click
+      TrySelectionItemPatternSelect = True
+      GoTo Finish
+    End If
+ 
+    Set SelectionContainerSelectionPattern = SelectionContainer.GetCurrentPattern(UIAPatterns.Selection)
+    If SelectionContainerSelectionPattern Is Nothing Then
+      GoTo Finish
+    End If
+    
+    If Not PlusShift And Not PlusCtrl Then
+ 
+      If SelectionContainerSelectionPattern.CurrentCanSelectMultiple Then
+        If SelectionContainerSelectionPattern.GetCurrentSelection.Length = 0 Then
+          'Nothing is yet selected so select current item
+          Element.UIAElement.SetFocus
+          SelectionItemPattern.Select
+          Element.WaitForPatternState SelectionItem, 1
+          Element.ParentElement.UIAElement.SetFocus
+          'Does this help?
+          SelectionItemPattern.Select
+          If SelectionItemPattern.CurrentIsSelected = InitialCurrentIsSelected Then
+            TryInvokePattern Element
+            Element.WaitForPatternState SelectionItem, NotInitialCurrentIsSelected
+          End If
+        Else
+        
+          If SelectionItemPattern.CurrentIsSelected Then
+            If SelectionContainerSelectionPattern.CurrentIsSelectionRequired And SelectionContainerSelectionPattern.GetCurrentSelection.Length = 1 Then
+              'The current item is the only one selected  and a selection is required so do nothing!
+            Else
+              'A selected item is not is required so just deselect it
+              Element.UIAElement.SetFocus
+              SelectionItemPattern.RemoveFromSelection
+              Element.WaitForPatternState SelectionItem, 0
+              Element.ParentElement.UIAElement.SetFocus
+              If SelectionItemPattern.CurrentIsSelected = InitialCurrentIsSelected Then
+                TryInvokePattern Element
+                Element.WaitForPatternState SelectionItem, NotInitialCurrentIsSelected
+              End If
+            End If
+          Else
+            If SelectionContainerSelectionPattern.GetCurrentSelection.Length >= 0 Then
+              For Counter = 0 To (SelectionContainerSelectionPattern.GetCurrentSelection.Length - 1)
+                'Always delete the first (0-based) still selected item!
+                Set CurrentlySelectedItem = SelectionContainerSelectionPattern.GetCurrentSelection.GetElement(0)
+                Set CurrentlySelectedItemElement = Factory.GetNewElement("CurrentlySelectedItem", CurrentlySelectedItem, Element.ParentElement)
+                'Debug.Print CurrentlySelectedItem.CurrentName
+                Set CurrentlySelectedItemPattern = CurrentlySelectedItem.GetCurrentPattern(UIAPatterns.SelectionItem)
+                If CBool(UIA.CompareElements(CurrentlySelectedItem, Element.UIAElement)) Then
+                'If CurrentlySelectedItem Is Element.UIAElement Then
+                  'Do nothing
+                Else
+                  'Remove all other selected items
+                  Element.UIAElement.SetFocus
+                  CurrentlySelectedItemPattern.RemoveFromSelection
+                  CurrentlySelectedItemElement.WaitForPatternState SelectionItem, 0
+                  Element.ParentElement.UIAElement.SetFocus
+                  If CurrentlySelectedItemPattern.CurrentIsSelected = 1 Then
+                    Set CurrentlySelectedElement = Factory.GetNewElement("CurrentlySelectedElement", CurrentlySelectedItem)
+                    TryInvokePattern CurrentlySelectedElement
+                    CurrentlySelectedElement.WaitForPatternState SelectionItem, Not InitialCurrentIsSelected
+                  End If
+                  Set CurrentlySelectedItemElement = Nothing
+                End If
+                Set CurrentlySelectedItem = Nothing
+              Next Counter
+              Element.UIAElement.SetFocus
+              SelectionItemPattern.Select
+              Element.ParentElement.UIAElement.SetFocus
+              Element.WaitForPatternState SelectionItem, 1
+              If SelectionItemPattern.CurrentIsSelected = 0 Then
+                'Set CurrentlySelectedElement = Factory.GetNewElement("CurrentlySelectedElement", CurrentlySelectedItem)
+                TryInvokePattern Element
+                Element.WaitForPatternState SelectionItem, 1
+              End If
+            End If
+          End If
+        End If
+      Else
+        Element.UIAElement.SetFocus
+        SelectionItemPattern.Select
+        Element.ParentElement.UIAElement.SetFocus
+        Element.WaitForPatternState SelectionItem, 1
+        If SelectionItemPattern.CurrentIsSelected = InitialCurrentIsSelected Then
+          TryInvokePattern Element
+          Element.WaitForPatternState SelectionItem, NotInitialCurrentIsSelected
+        End If
+      End If
+      
+    ElseIf PlusCtrl Then
+
+      If SelectionItemPattern.CurrentIsSelected Then
+        If SelectionContainerSelectionPattern.CurrentIsSelectionRequired And SelectionContainerSelectionPattern.GetCurrentSelection.Length = 1 Then
+          'The current item is the only one selected  and a selection is required so do nothing!
+        Else
+          'A selected item is not is required so just deselect
+          Element.UIAElement.SetFocus
+          SelectionItemPattern.RemoveFromSelection
+          Element.ParentElement.UIAElement.SetFocus
+          Element.WaitForPatternState SelectionItem, 0
+          If SelectionItemPattern.CurrentIsSelected = InitialCurrentIsSelected Then
+            TryInvokePattern Element
+            Element.WaitForPatternState SelectionItem, NotInitialCurrentIsSelected
+          End If
+        End If
+      Else
+        Element.UIAElement.SetFocus
+        SelectionItemPattern.AddToSelection
+        Element.ParentElement.UIAElement.SetFocus
+        Element.WaitForPatternState SelectionItem, 1
+        If SelectionItemPattern.CurrentIsSelected = InitialCurrentIsSelected Then
+          TryInvokePattern Element
+          Element.WaitForPatternState SelectionItem, NotInitialCurrentIsSelected
+        End If
+      End If
+      
+    ElseIf PlusShift Then
+
+      If SelectionItemPattern.CurrentIsSelected And _
+        CBool(SelectionContainerSelectionPattern.CurrentIsSelectionRequired) And _
+        (SelectionContainerSelectionPattern.GetCurrentSelection.Length = 1) Then
+          'The current item is the only one selected and a selection is required so do nothing!
+      Else
+        If SelectionContainerSelectionPattern.GetCurrentSelection.Length = 0 Then
+          SelectionItemPattern.AddToSelection
+          If SelectionItemPattern.CurrentIsSelected = InitialCurrentIsSelected Then
+            TryInvokePattern Element
+            Element.WaitForPatternState SelectionItem, NotInitialCurrentIsSelected
+          End If
+        Else
+          Dim EnableNext As Boolean
+          'Get first item in container
+          Set CurrentSelectionItem = UIA.ControlViewWalker.GetFirstChildElement(SelectionContainer)
+          Do While Not CurrentSelectionItem Is Nothing
+            Set CurrentlySelectedItemPattern = CurrentSelectionItem.GetCurrentPattern(UIAPatterns.SelectionItem)
+            'Debug.Print CurrentSelectionItem.CurrentName, SelectionItemPattern.CurrentIsSelected
+            'Have we started adding items yet?
+            If (Not EnableNext) Then
+              'Have we found the current element or the anchor element
+              If (CurrentSelectionItem.CurrentName = Element.UIAElement.CurrentName) Or _
+                 (CurrentSelectionItem.CurrentName = ShiftAnchorElement.UIAElement.CurrentName) Then
+                'Is the current item already slected?
+                If Not CBool(CurrentlySelectedItemPattern.CurrentIsSelected) Then
+                  CurrentSelectionItem.SetFocus
+                  CurrentlySelectedItemPattern.AddToSelection
+                  SelectionContainer.SetFocus
+                  Element.WaitForPatternState SelectionItem, 1
+                  If CurrentlySelectedItemPattern.CurrentIsSelected = 0 Then
+                    'Set CurrentlySelectedElement = Factory.GetNewElement("CurrentlySelectedElement", CurrentSelectionItem)
+                    TryInvokePattern Element
+                    Element.WaitForPatternState SelectionItem, SelectionItemPattern.CurrentIsSelected
+                  End If
+                End If
+                EnableNext = True
+              Else
+                If CBool(CurrentlySelectedItemPattern.CurrentIsSelected) Then
+                  CurrentSelectionItem.SetFocus
+                  CurrentlySelectedItemPattern.RemoveFromSelection
+                  SelectionContainer.SetFocus
+                  Set CurrentlySelectedElement = Factory.GetNewElement("CurrentlySelectedElement", CurrentSelectionItem)
+                  CurrentlySelectedElement.WaitForPatternState SelectionItem, 0
+                  If CurrentlySelectedItemPattern.CurrentIsSelected = 1 Then
+                    TryInvokePattern CurrentlySelectedElement
+                    CurrentlySelectedElement.WaitForPatternState SelectionItem, 0
+                  End If
+                End If
+              End If
+            Else
+              If (CurrentSelectionItem.CurrentName = Element.UIAElement.CurrentName) Or _
+                 (CurrentSelectionItem.CurrentName = ShiftAnchorElement.UIAElement.CurrentName) Then
+                If Not CBool(CurrentlySelectedItemPattern.CurrentIsSelected) Then
+                  CurrentSelectionItem.SetFocus
+                  CurrentlySelectedItemPattern.AddToSelection
+                  SelectionContainer.SetFocus
+                  Set CurrentlySelectedElement = Factory.GetNewElement("CurrentlySelectedElement", CurrentSelectionItem)
+                  CurrentlySelectedElement.WaitForPatternState SelectionItem, 1
+                  If CurrentlySelectedItemPattern.CurrentIsSelected = 0 Then
+                    TryInvokePattern CurrentlySelectedElement
+                    CurrentlySelectedElement.WaitForPatternState SelectionItem, 1
+                  End If
+                End If
+                EnableNext = False
+              Else
+                If Not CBool(SelectionItemPattern.CurrentIsSelected) Then
+                  Element.UIAElement.SetFocus
+                  SelectionItemPattern.AddToSelection
+                  Element.ParentElement.UIAElement.SetFocus
+                  Element.WaitForPatternState SelectionItem, 1
+                  If CurrentlySelectedItemPattern.CurrentIsSelected = 0 Then
+                    Set CurrentlySelectedElement = Factory.GetNewElement("CurrentlySelectedElement", CurrentSelectionItem)
+                    TryInvokePattern CurrentlySelectedElement
+                    Element.WaitForPatternState SelectionItem, 1
+                  End If
+                End If
+              End If
+            End If
+            'Get next item in container
+            Set CurrentSelectionItem = UIA.ControlViewWalker.GetNextSiblingElement(CurrentSelectionItem)
+          Loop
+        End If
+      End If
+    
+    End If
+    
+    TrySelectionItemPatternSelect = True
+  
+  End If
+  
 Finish:
   On Error Resume Next
+  Set SelectionContainer = Nothing
+  Set SelectionItemPattern = Nothing
+  Set SelectionContainerSelectionPattern = Nothing
+  Set CurrentlySelectedItem = Nothing
+  Set CurrentlySelectedItemPattern = Nothing
+  Set CurrentSelectionItem = Nothing
+  Set CurrentlySelectedElement = Nothing
+  
 End Function
 
 Private Function TryTogglePattern(Element As pElement) As Boolean
   On Error GoTo Finish
   TryTogglePattern = False
-  If GetPatternPreChecks2(Element, UIAControlTypeIDs.CheckBox, IsTogglePatternAvailable) Then
+  If GetPatternPreChecksByControlType(Element, UIAControlTypeIDs.CheckBox, IsTogglePatternAvailable) Then
     Dim InitialToggleState As Integer
-    InitialToggleState = Element.GetToggleState()
+    InitialToggleState = Element.ToggleState()
     Dim Pattern As IUIAutomationTogglePattern
     Set Pattern = Element.GetPattern(UIAPatterns.Toggle)
     Pattern.Toggle
@@ -258,7 +516,7 @@ End Function
 Private Function TryLegacyIAccessibleDefaultAction(Element As pElement) As Boolean
   On Error GoTo Finish
   TryLegacyIAccessibleDefaultAction = False
-  If GetPatternPreChecks2(Element, UIAControlTypeIDs.ListItem, IsLegacyIAccessiblePatternAvailable) Then
+  If GetPatternPreChecksByControlType(Element, UIAControlTypeIDs.ListItem, IsLegacyIAccessiblePatternAvailable) Then
     Dim Pattern As IUIAutomationLegacyIAccessiblePattern
     Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessible)
     Pattern.DoDefaultAction
@@ -271,7 +529,7 @@ End Function
 Private Function TryLegacyIAccessiblePatternSelect(Element As pElement, Flags As Integer)
   On Error GoTo Finish
   TryLegacyIAccessiblePatternSelect = False
-  If GetPatternPreChecks2(Element, UIAControlTypeIDs.ListItem, IsLegacyIAccessiblePatternAvailable) Then
+  If GetPatternPreChecksByControlType(Element, UIAControlTypeIDs.ListItem, IsLegacyIAccessiblePatternAvailable) Then
     Dim Pattern As IUIAutomationLegacyIAccessiblePattern
     Set Pattern = Element.GetPattern(UIAPatterns.LegacyIAccessible)
     Pattern.Select Flags
@@ -279,18 +537,6 @@ Private Function TryLegacyIAccessiblePatternSelect(Element As pElement, Flags As
   End If
 Finish:
   On Error Resume Next
-End Function
-
-Private Function GetPatternPreChecks2(Element As pElement, ControlType As UIAControlTypeIDs, IsPatternAvailableProperty As UIAProperties) As Boolean
-  GetPatternPreChecks2 = False
-  If Element.HasProperty(UIAProperties.ControlType) Then
-    If Element.GetProperty(UIAProperties.ControlType) = ControlType Then
-      If Element.HasProperty(IsPatternAvailableProperty) Then
-        GetPatternPreChecks2 = True
-        Exit Function
-      End If
-    End If
-  End If
 End Function
 
 Private Function TryMouseClickByMessage(Element As pElement, ClickType As MouseClickType) As Boolean

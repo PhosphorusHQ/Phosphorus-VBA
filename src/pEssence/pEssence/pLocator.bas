@@ -432,7 +432,7 @@ Public Function FindElement( _
   Dim NewElementLocator As pLocator
   Set NewElementLocator = Factory.GetNewLocator
   With NewElementLocator
-    .Initialise ElementName, Me, ElementScope, FindBy, EvaluationLogic
+    .Initialise ElementName, Me, ElementScope, FindBy, EvaluationLogic, FindFirst:=FindFirst
     If RelativeElementNumber <> 0 Then
       .RelativeElementNumber RelativeElementNumber
     End If
@@ -634,9 +634,9 @@ Private Function FindAllElements(TimeoutInSeconds As Long, AcceptNoElements As B
       ErrorLogging.LogError Errors.FindElementsFindNoElements, "Locator : By " & UIACommon.GetByName(This.FindBy) & " '" & This.EvaluationLogic & "'"
     End If
   Else
+    This.NumberOfMatchingElements = CountOfMatchingElements
     FindAllElements = ReturnElements
   End If
-
 End Function
 
 Public Sub RelativeElementNumber(RelativeElementNumber As Integer)

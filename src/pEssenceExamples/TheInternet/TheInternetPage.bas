@@ -246,18 +246,18 @@ Public Sub Checkboxes()
   End With
   
   'The second checkbox is already checked!
-  Debug.Assert SecondCheckbox.Element.GetToggleState()
+  Debug.Assert SecondCheckbox.Element.ToggleState()
   
   FirstCheckbox.Element.Click
   Snooze 1000
-  Debug.Assert (FirstCheckbox.Element.GetToggleState() = 1)
+  Debug.Assert (FirstCheckbox.Element.ToggleState() = 1)
   
   SecondCheckbox.Element.Click
   Snooze 1000
-  Debug.Assert Not (SecondCheckbox.Element.GetToggleState() = 1)
+  Debug.Assert Not (SecondCheckbox.Element.ToggleState() = 1)
   
   FirstCheckbox.Element.Click
-  Debug.Assert Not FirstCheckbox.Element.GetToggleState()
+  Debug.Assert Not FirstCheckbox.Element.ToggleState()
 
   This.WebBrowser.NavigateBack
   Snooze 1000

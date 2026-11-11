@@ -140,7 +140,7 @@ End Function
 Public Function GetCurrentURL() As String
   With This.AddressField
     .Find 10
-    GetCurrentURL = .Element.GetValue()
+    GetCurrentURL = .Element.Value()
   End With
 End Function
 

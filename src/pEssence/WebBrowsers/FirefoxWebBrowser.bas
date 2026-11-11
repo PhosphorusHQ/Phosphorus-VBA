@@ -23,6 +23,10 @@ Private Type BrowserAttributes
   URL As String
   WebAppPageTitle As String
   MasterWindow As pLocator
+  AllTabs As pLocator
+  LastTab As pLocator
+  CloseMultipleTabs As pLocator
+  CloseOtherTabs As pLocator
   BackButton As pLocator
   RefreshButton As pLocator
   URLInputBox As pLocator
@@ -44,6 +48,10 @@ End Sub
 
 Private Sub GetAllLocators()
   Set This.MasterWindow = Factory.GetNewLocator
+  Set This.AllTabs = Factory.GetNewLocator
+  Set This.LastTab = Factory.GetNewLocator
+  Set This.CloseMultipleTabs = Factory.GetNewLocator
+  Set This.CloseOtherTabs = Factory.GetNewLocator
   Set This.BackButton = Factory.GetNewLocator
   Set This.RefreshButton = Factory.GetNewLocator
   Set This.URLInputBox = Factory.GetNewLocator
@@ -52,6 +60,10 @@ End Sub
 
 Private Sub DestroyLocators()
   Set This.MasterWindow = Nothing
+  Set This.AllTabs = Nothing
+  Set This.LastTab = Nothing
+  Set This.CloseMultipleTabs = Nothing
+  Set This.CloseOtherTabs = Nothing
   Set This.BackButton = Nothing
   Set This.RefreshButton = Nothing
   Set This.URLInputBox = Nothing
@@ -83,6 +95,7 @@ Private Sub InitialiseAllLocators()
     .Initialise "MasterWindow", Nothing, Children, pConditions, "AND(NameIs, ControlType, ClassName, WindowInteractionState)"
     .NameIs This.WebAppPageTitle & " — Mozilla Firefox"
     .ControlType UIAControlTypeIDs.Window: .ClassName "MozillaWindowClass": .WindowInteractionState ReadyForUserInteraction
+    .PositionInMatchingSet -1
   End With
   
   With This.BackButton
@@ -100,6 +113,38 @@ Private Sub InitialiseAllLocators()
    .Condition "ClassName2", UIAProperties.ClassName, UIAPropertyComparisons.IsTheString, "urlbar-input textbox-input" 'Firefox v 151.0.2
   End With
 
+  This.MasterWindow.Find 10
+  With This.AllTabs
+    .Initialise "AllTabs", This.MasterWindow, Descendants, By.ControlType, UIAControlTypeIDs.TabItem
+    .FindAll 10
+  End With
+  
+  With This.LastTab
+    .Initialise "LastTab", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
+    .ControlType UIAControlTypeIDs.TabItem: .NameIs This.WebAppPageTitle: .PositionInMatchingSet -1
+  End With
+    
+  If This.AllTabs.NumberOfMatchingElements > 1 Then
+  
+    'Right click & close all other tabs
+    This.LastTab.Element.RightClick
+
+    With This.CloseMultipleTabs
+      .Initialise "CloseMultipleTabs", This.MasterWindow, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
+      .ControlType MenuItem: .NameIs "Close Multiple Tabs"
+      .Find 10
+      .Element.Click
+    End With
+       
+    With This.CloseOtherTabs
+      .Initialise "CloseOtherTabs", This.CloseMultipleTabs, Descendants, By.pConditions, "AND(ControlType, NameIs)", FindFirst:=True
+      .ControlType MenuItem: .NameIs "Close Other Tabs"
+      .Find 10
+      .Element.Click
+    End With
+ 
+  End If
+  
   With This.RootWebArea
     .Initialise "RootWebArea", This.MasterWindow, Descendants, pConditions, "AND(AriaRoleDocument, NameIs)"
     .AriaRoleDocument: .NameIs This.WebAppPageTitle
@@ -127,7 +172,7 @@ End Function
 Public Function GetCurrentURL() As String
   With This.URLInputBox
     .Find 10
-    GetCurrentURL = .Element.GetValue()
+    GetCurrentURL = .Element.Value()
   End With
 End Function
 

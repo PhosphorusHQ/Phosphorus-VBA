@@ -90,5 +90,5 @@ Public Sub RunChecks()
   Debug.Assert This.Heading.ElementExists(10) = True
   Debug.Assert This.Description.ElementExists(10) = True
   Debug.Assert This.Link.ElementExists(10) = True
-  Debug.Assert This.Link.Element.GetValue() = TARGET_PAGE_LINK
+  Debug.Assert This.Link.Element.Value() = TARGET_PAGE_LINK
 End Sub

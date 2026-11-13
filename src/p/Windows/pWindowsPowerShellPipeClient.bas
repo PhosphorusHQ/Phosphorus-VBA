@@ -120,7 +120,7 @@ Private Const NMPWAIT_WAIT_FOREVER As Long = -1
 Private PipeHandle As LongPtr
 Private ProcessId As Long
 Private ProcessHandle As LongPtr
-Private myWshShell As wshShell
+Private myWshShell As WshShell
 'https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb776890(v=vs.85)
 'Microsoft Shell Controls and Automation (Shell32)
 Private ScriptPath As String
@@ -156,7 +156,7 @@ Private Sub Class_Initialize()
   End If
   
   ' Start the PowerShell server
-  Set myWshShell = New wshShell 'CreateObject("WScript.Shell")
+  Set myWshShell = New WshShell 'CreateObject("WScript.Shell")
   
   Dim WindowStyle As Integer
   WindowStyle = VBA.Interaction.IIf(Phosphorus.WindowsPowerShell.PSSERVER_VISIBLE, 1, 0) ' 1 = visible, 0 = hidden

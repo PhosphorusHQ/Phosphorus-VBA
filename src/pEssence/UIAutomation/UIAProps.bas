@@ -234,7 +234,7 @@ Public Enum UIAWindowInteractionStates 'UIAutomationClient.WindowInteractionStat
   Closing = WindowInteractionState_Closing
   NotResponding = WindowInteractionState_NotResponding
   ReadyForUserInteraction = WindowInteractionState_ReadyForUserInteraction
-  running = WindowInteractionState_Running
+  Running = WindowInteractionState_Running
 End Enum
 
 Public Type Rectangle

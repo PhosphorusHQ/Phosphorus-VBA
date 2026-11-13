@@ -25,8 +25,8 @@ End Sub
 
 Public Function ReadRegistry(KeyPath As String) As Variant
   On Error Resume Next
-  Dim WShell As wshShell
-  Set WShell = New wshShell
+  Dim WShell As WshShell
+  Set WShell = New WshShell
   ReadRegistry = WShell.RegRead(KeyPath)
 '  If Err.Number <> 0 Then
 '    ReadRegistry = Null
@@ -37,8 +37,8 @@ End Function
 
 Public Sub WriteRegistry(KeyPath As String, Value As Variant, ValueType As String)
   On Error Resume Next
-  Dim WShell As wshShell
-  Set WShell = New wshShell
+  Dim WShell As WshShell
+  Set WShell = New WshShell
   WShell.RegWrite KeyPath, Value, ValueType
   If Err.Number <> 0 Then
     MsgBox "Error writing to registry: " & Err.Description, vbExclamation
@@ -48,8 +48,8 @@ End Sub
 
 Sub DeleteRegistry(KeyPath As String)
   On Error Resume Next
-  Dim WShell As wshShell
-  Set WShell = New wshShell
+  Dim WShell As WshShell
+  Set WShell = New WshShell
   WShell.RegDelete KeyPath
   If Err.Number <> 0 Then
     MsgBox "Error deleting from registry: " & Err.Description, vbExclamation
